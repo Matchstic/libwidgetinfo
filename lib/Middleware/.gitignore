@@ -7,4 +7,3 @@ src/**.js
 coverage
 .nyc_output
 *.log
-lex.backup
