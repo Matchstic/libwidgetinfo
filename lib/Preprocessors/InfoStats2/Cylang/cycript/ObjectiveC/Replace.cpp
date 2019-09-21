@@ -204,7 +204,7 @@ CYTarget *CYSendDirect::Replace(CYContext &context) {
             argument = &(*argument)->next_;
     }
 
-    return $C2($V("WidgetInfo._middleware.infostats2.objc_msgSend"), self_, selector->Replace(context), arguments_);
+    return $C2($V("objc_msgSend"), self_, selector->Replace(context), arguments_);
 }
 
 CYTarget *CYSendSuper::Replace(CYContext &context) {
