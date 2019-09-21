@@ -10,6 +10,7 @@
 
 // Provider imports
 #import "../Data Providers/XENDSystemDataProvider.h"
+#import "../Data Providers/XENDMediaDataProvider.h"
 
 @interface XENDWidgetManager ()
 @property (nonatomic, strong) NSMutableArray<WKWebView*> *managedWebViews;
@@ -186,6 +187,10 @@
     XENDSystemDataProvider *system = [[XENDSystemDataProvider alloc] init];
     [system registerDelegate:self];
     [result setObject:system forKey:[XENDSystemDataProvider providerNamespace]];
+    
+    XENDMediaDataProvider *media = [[XENDMediaDataProvider alloc] init];
+    [media registerDelegate:self];
+    [result setObject:media forKey:[XENDMediaDataProvider providerNamespace]];
     
     return result;
 }
