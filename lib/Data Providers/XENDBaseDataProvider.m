@@ -56,4 +56,10 @@
     return input;
 }
 
+- (void)notifyWidgetManagerForNewProperties {
+    // TODO: Call with cachedData contents
+    
+    NSString *providerNamespace = [[self class] providerNamespace];
+}
+
 @end

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C920500023365A7F00F9F535 /* libwidgetinfodaemon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9204FFF2336577000F9F535 /* libwidgetinfodaemon.a */; };
 		C98AE086218B95A800E78D8F /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = C98AE085218B95A800E78D8F /* AppDelegate.mm */; };
 		C98AE089218B95A800E78D8F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C98AE088218B95A800E78D8F /* ViewController.m */; };
 		C98AE08B218B95A900E78D8F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C98AE08A218B95A900E78D8F /* Assets.xcassets */; };
@@ -25,6 +26,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		C9204FFB2336577000F9F535 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C9F2F3FE2301C02D00E4863B /* libwidgetdata.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = C9204FC723317EBD00F9F535;
+			remoteInfo = Daemon;
+		};
+		C9204FFE2336577000F9F535 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C9F2F3FE2301C02D00E4863B /* libwidgetdata.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C9204FC823317EBD00F9F535;
+			remoteInfo = Daemon;
+		};
 		C9F2F4022301C02D00E4863B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C9F2F3FE2301C02D00E4863B /* libwidgetdata.xcodeproj */;
@@ -86,6 +101,7 @@
 				C9F2F4132301C6FE00E4863B /* libc++.tbd in Frameworks */,
 				C9F2F4152301CB9C00E4863B /* WebKit.framework in Frameworks */,
 				C9F2F4112301C6B000E4863B /* libwidgetdata.a in Frameworks */,
+				C920500023365A7F00F9F535 /* libwidgetinfodaemon.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -160,6 +176,7 @@
 			isa = PBXGroup;
 			children = (
 				C9F2F4032301C02D00E4863B /* libwidgetdata.a */,
+				C9204FFF2336577000F9F535 /* libwidgetinfodaemon.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -195,6 +212,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				C9204FFC2336577000F9F535 /* PBXTargetDependency */,
 				C9F2F4052301C03800E4863B /* PBXTargetDependency */,
 			);
 			name = "Testbed (iOS)";
@@ -250,6 +268,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		C9204FFF2336577000F9F535 /* libwidgetinfodaemon.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libwidgetinfodaemon.a;
+			remoteRef = C9204FFE2336577000F9F535 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		C9F2F4032301C02D00E4863B /* libwidgetdata.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -305,6 +330,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		C9204FFC2336577000F9F535 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Daemon;
+			targetProxy = C9204FFB2336577000F9F535 /* PBXContainerItemProxy */;
+		};
 		C9F2F4052301C03800E4863B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = libwidgetdata;
@@ -491,6 +521,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = MWMJ98X6F2;
 				ENABLE_BITCODE = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = "Testbed (iOS)/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -515,6 +546,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = MWMJ98X6F2;
 				ENABLE_BITCODE = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = "Testbed (iOS)/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (

@@ -1,20 +1,22 @@
 //
-//  XENDBaseDataProvider.h
-//  libwidgetdata
+//  XENDBaseRemoteDataProvider.h
+//  Daemon
 //
-//  Created by Matt Clarke on 16/09/2019.
+//  Created by Matt Clarke on 17/09/2019.
 //
 
 #import <Foundation/Foundation.h>
-#import "../Internal/XENDWidgetManager-Protocol.h"
+#import "../Connection/XENDBaseDaemonListener.h"
 
-@interface XENDBaseDataProvider : NSObject
+@interface XENDBaseRemoteDataProvider : NSObject
 
-// Delegate is stored to communicate data back to widgets
-@property (nonatomic, weak) id<XENDWidgetManagerDelegate> delegate;
+// Used to communicate data back to connected processes
+@property (nonatomic, weak) XENDBaseDaemonListener *connection;
 
 @property (nonatomic, strong) NSDictionary *cachedStaticProperties;
 @property (nonatomic, strong) NSMutableDictionary *cachedDynamicProperties;
+
+- (instancetype)initWithConnection:(XENDBaseDaemonListener*)connection;
 
 /**
  * The data namespace provided by the data provider
@@ -32,16 +34,10 @@
 - (void)noteDeviceDidExitSleep;
 
 /**
- * Register a delegate object to call upon when new data becomes available.
- * @param delegate The delegate to register
+ * Called when the daemon is connected to by a remote process
+ * @return Cached data for the provider, in the form: "static": ..., "dynamic": ...
  */
-- (void)registerDelegate:(id<XENDWidgetManagerDelegate>)delegate;
-
-/**
- * Called when a new widget is added, and it needs to be provided new data on load.
- * @return Cached data for the provider
- */
-- (NSDictionary*)cachedData;
+- (NSDictionary*)currentData;
 
 /**
  * Called when a widget message has been received for this provider
@@ -68,8 +64,8 @@
 - (NSString*)escapeString:(NSString*)input;
 
 /**
- * Notifies the widget manager of updated data
+ * Notifies the origin counterpart of updated dynamic data
  */
-- (void)notifyWidgetManagerForNewProperties;
+- (void)notifyRemoteForNewDynamicProperties;
 
 @end
