@@ -45,3 +45,8 @@ int main() {
     - Run `yarn package`
     - Copy `libwidgetinfo/lib/Middleware/build/libwidgetinfo.js` to `/Library/Application Support/libwidgetinfo/` in the end `.deb`
     
+    ### Testbed
+    
+    The Testbed Xcode project allows for running libwidgetinfo in a Simulated mode.
+    
+    This works out of the box, but you will need to update ViewController.m to point to a widget on your local filesystem.
