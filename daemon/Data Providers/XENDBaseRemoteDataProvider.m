@@ -14,6 +14,11 @@
     
     if (self) {
         self.connection = connection;
+        
+        self.cachedStaticProperties = [NSDictionary dictionary];
+        self.cachedDynamicProperties = [NSMutableDictionary dictionary];
+        
+        [self intialiseProvider];
     }
     
     return self;
@@ -23,6 +28,7 @@
     return @"_base_";
 }
 
+- (void)intialiseProvider {}
 - (void)noteDeviceDidEnterSleep {}
 - (void)noteDeviceDidExitSleep {}
 - (void)networkWasDisconnected {}

@@ -20,7 +20,7 @@
 		C9F2F22C2301B8E500E4863B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C9F2F22B2301B8E500E4863B /* Assets.xcassets */; };
 		C9F2F22F2301B8E500E4863B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C9F2F22D2301B8E500E4863B /* LaunchScreen.storyboard */; };
 		C9F2F2322301B8E500E4863B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C9F2F2312301B8E500E4863B /* main.m */; };
-		C9F2F4112301C6B000E4863B /* libwidgetdata.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9F2F4032301C02D00E4863B /* libwidgetdata.a */; };
+		C9F2F4112301C6B000E4863B /* libwidgetinfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9F2F4032301C02D00E4863B /* libwidgetinfo.a */; };
 		C9F2F4132301C6FE00E4863B /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C9F2F4122301C6FE00E4863B /* libc++.tbd */; };
 		C9F2F4152301CB9C00E4863B /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9F2F4142301CB9C00E4863B /* WebKit.framework */; };
 /* End PBXBuildFile section */
@@ -100,7 +100,7 @@
 			files = (
 				C9F2F4132301C6FE00E4863B /* libc++.tbd in Frameworks */,
 				C9F2F4152301CB9C00E4863B /* WebKit.framework in Frameworks */,
-				C9F2F4112301C6B000E4863B /* libwidgetdata.a in Frameworks */,
+				C9F2F4112301C6B000E4863B /* libwidgetinfo.a in Frameworks */,
 				C920500023365A7F00F9F535 /* libwidgetinfodaemon.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -175,7 +175,7 @@
 		C9F2F3FF2301C02D00E4863B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C9F2F4032301C02D00E4863B /* libwidgetdata.a */,
+				C9F2F4032301C02D00E4863B /* libwidgetinfo.a */,
 				C9204FFF2336577000F9F535 /* libwidgetinfodaemon.a */,
 			);
 			name = Products;
@@ -275,10 +275,10 @@
 			remoteRef = C9204FFE2336577000F9F535 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		C9F2F4032301C02D00E4863B /* libwidgetdata.a */ = {
+		C9F2F4032301C02D00E4863B /* libwidgetinfo.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = libwidgetdata.a;
+			path = libwidgetinfo.a;
 			remoteRef = C9F2F4022301C02D00E4863B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};

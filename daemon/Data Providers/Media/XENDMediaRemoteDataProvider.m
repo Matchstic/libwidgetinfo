@@ -24,9 +24,7 @@
     }
 }
 
-/////////////////////////////////////////////////
-// Message implementation
-/////////////////////////////////////////////////
+#pragma mark Message implementation
 
 - (NSDictionary*)nextTrack {
     
@@ -38,6 +36,12 @@
     
     
     return @{};
+}
+
+#pragma mark MediaRemote.framework notifications
+
+- (void)intialiseProvider {
+    // TODO: Setup notifications
 }
 
 @end

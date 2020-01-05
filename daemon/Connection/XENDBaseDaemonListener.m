@@ -7,6 +7,8 @@
 
 #import "XENDBaseDaemonListener.h"
 #import "../Data Providers/XENDBaseRemoteDataProvider.h"
+#import "../Data Providers/Media/XENDMediaRemoteDataProvider.h"
+#import "../Data Providers/Weather/XENDWeatherRemoteDataProvider.h"
 
 @interface XENDBaseDaemonListener ()
 
@@ -29,12 +31,18 @@
 - (NSDictionary*)_loadDataProviders {
     NSMutableDictionary *result = [NSMutableDictionary dictionary];
     
+    // Remote data providers are initialised here
+    
+    XENDMediaRemoteDataProvider *media = [[XENDMediaRemoteDataProvider alloc] initWithConnection:self];
+    [result setObject:media forKey:[[media class] providerNamespace]];
+    
+    XENDWeatherRemoteDataProvider *weather = [[XENDWeatherRemoteDataProvider alloc] initWithConnection:self];
+    [result setObject:weather forKey:[[weather class] providerNamespace]];
+    
     return result;
 }
 
-//////////////////////////////////////////////////
-// Daemon connection implementation
-//////////////////////////////////////////////////
+#pragma mark Daemon connection implementation
 
 - (void)noteDeviceDidEnterSleepInNamespace:(NSString*)providerNamespace {
     XENDBaseRemoteDataProvider *provider = [self.dataProviders objectForKey:providerNamespace];

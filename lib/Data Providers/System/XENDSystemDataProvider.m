@@ -25,9 +25,7 @@
     
 }
 
-///////////////////////////////////////////////////////////////
-// Message handlers
-///////////////////////////////////////////////////////////////
+#pragma mark Message handlers
 
 - (NSDictionary*)handleLogMessage:(NSDictionary*)data {
     if (!data || ![data objectForKey:@"message"]) {
@@ -35,25 +33,16 @@
         return @{};
     }
     
-    NSLog(@"libwidgetinfo :: LOG :: %@", [data objectForKey:@"message"]);
+    NSLog(@"%@", [data objectForKey:@"message"]);
     
     return @{};
 }
 
-///////////////////////////////////////////////////////////////
-// Private initialisation
-///////////////////////////////////////////////////////////////
+#pragma mark Private initialisation
 
-- (instancetype)init {
-    self = [super init];
-    
-    if (self) {
-        [self _setupStaticProperties];
-        
-        // TODO: Do initial load for dynamics, and setup watchers
-    }
-    
-    return self;
+- (void)intialiseProvider {
+    [self _setupStaticProperties];
+    // TODO: Do initial load for dynamics, and setup watchers
 }
 
 - (void)_setupStaticProperties {

@@ -19,6 +19,11 @@
 - (instancetype)initWithConnection:(XENDBaseDaemonListener*)connection;
 
 /**
+ * Called to initialise the data provider. Useful for subclasses
+ */
+- (void)intialiseProvider;
+
+/**
  * The data namespace provided by the data provider
  */
 + (NSString*)providerNamespace;

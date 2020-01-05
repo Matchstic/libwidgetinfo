@@ -14,6 +14,21 @@
     return @"_base_";
 }
 
+- (instancetype)init{
+    self = [super init];
+    
+    if (self) {
+        self.cachedStaticProperties = [NSDictionary dictionary];
+        self.cachedDynamicProperties = [NSMutableDictionary dictionary];
+        
+        [self intialiseProvider];
+    }
+    
+    return self;
+}
+
+- (void)intialiseProvider {}
+
 - (void)noteDeviceDidEnterSleep {}
 - (void)noteDeviceDidExitSleep {}
 
@@ -57,9 +72,9 @@
 }
 
 - (void)notifyWidgetManagerForNewProperties {
-    // TODO: Call with cachedData contents
-    
+    // Call with cachedData contents
     NSString *providerNamespace = [[self class] providerNamespace];
+    [self.delegate updateWidgetsWithNewData:[self cachedData] forNamespace:providerNamespace];
 }
 
 @end

@@ -9,8 +9,9 @@
 #import "../Data Providers/XENDBaseDataProvider.h"
 
 // Provider imports
-#import "../Data Providers/XENDSystemDataProvider.h"
-#import "../Data Providers/XENDMediaDataProvider.h"
+#import "../Data Providers/System/XENDSystemDataProvider.h"
+#import "../Data Providers/Media/XENDMediaDataProvider.h"
+#import "../Data Providers/Weather/XENDWeatherDataProvider.h"
 
 @interface XENDWidgetManager ()
 @property (nonatomic, strong) NSMutableArray<WKWebView*> *managedWebViews;
@@ -93,9 +94,7 @@
     [contentController addScriptMessageHandler:self.messageHandler name:@"libwidgetinfo"];
 }
 
-//////////////////////////////////////////////////////////////
-// Message handler delegate
-//////////////////////////////////////////////////////////////
+#pragma mark Message handler delegate
 
 - (void)onMessageReceivedWithPayload:(NSDictionary*)payload forWebView:(WKWebView*)webview {
     // Payload is an NSDictionary conforming to NativeInterfaceMessage
@@ -162,9 +161,7 @@
     }
 }
 
-/////////////////////////////////////////////////////////////
-// Data provider handling
-/////////////////////////////////////////////////////////////
+#pragma mark Data provider handling
 
 - (void)updateWidgetsWithNewData:(NSDictionary*)data forNamespace:(NSString*)providerNamespace {
     NSDictionary *payload = @{ @"namespace": providerNamespace, @"payload": data };
@@ -191,6 +188,10 @@
     XENDMediaDataProvider *media = [[XENDMediaDataProvider alloc] init];
     [media registerDelegate:self];
     [result setObject:media forKey:[XENDMediaDataProvider providerNamespace]];
+    
+    XENDWeatherDataProvider *weather = [[XENDWeatherDataProvider alloc] init];
+    [weather registerDelegate:self];
+    [result setObject:weather forKey:[XENDWeatherDataProvider providerNamespace]];
     
     return result;
 }
