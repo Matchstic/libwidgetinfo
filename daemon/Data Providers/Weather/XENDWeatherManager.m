@@ -55,6 +55,8 @@
         
         // Do initial refresh on startup
         [self refreshWeather];
+        
+        // TODO: Monitor for locale changes
     }
     
     return self;
@@ -121,9 +123,14 @@
 #pragma mark Update implementation
 
 - (void)refreshWeather {
-    // Queue if no network
+    // Queue if no network, and update from cached data for now
     if (self.networkIsDisconnected) {
         self.refreshQueuedDuringNetworkDisconnected = YES;
+        
+        // Notify delegate of updates from cached data
+        NSDictionary *parsed = [self parseWeatherData:@{} airQualityData:@{} updateCache:NO];
+        [self.delegate onUpdatedWeatherConditions:parsed];
+        
         return;
     }
     
@@ -148,8 +155,6 @@
         }
         
         // 2. Create necessary requests for forecast and air quality
-        // TODO: Check network availability, and just use existing cached data if necessary
-        
         
         NSURLRequest *forecastRequest = [self urlRequestForForecast:location];
         NSURLRequest *airQualityRequest = [self urlRequestForAirQuality:location];
