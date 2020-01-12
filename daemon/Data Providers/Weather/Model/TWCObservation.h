@@ -36,8 +36,10 @@
 @property (nonatomic, strong) NSString *windDirectionCardinal;
 @property (nonatomic, strong) NSNumber *windSpeed;
 @property (nonatomic, strong) NSNumber *waterTemperature;
+@property (nonatomic, readwrite) uint64_t validFromUNIXTime;
 
 - (instancetype)initWithData:(NSDictionary*)data metric:(BOOL)useMetric;
+- (instancetype)initWithFakeData:(BOOL)useMetric;
 
 @end
 

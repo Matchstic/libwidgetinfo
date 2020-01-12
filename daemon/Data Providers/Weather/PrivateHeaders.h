@@ -6,7 +6,8 @@
 //
 
 @interface City : NSObject
-@property (nonatomic, retain) id location;
+@property (copy) id location;
+@property (nonatomic) bool isLocalWeatherCity;
 @end
 
 @interface WeatherPreferences : NSObject

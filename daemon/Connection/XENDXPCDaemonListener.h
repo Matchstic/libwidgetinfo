@@ -19,7 +19,7 @@ extern "C" {
 #endif
     /**
      * Defines the entrypoint for a daemon to call from main()
-     * @param A custom mach service name to advertise under. This must match whatever is specified in your launchd plist
+     * @param machServiceName A custom mach service name to advertise under. This must match whatever is specified in your launchd plist
      */
     int libwidgetinfo_main(NSString *machServiceName);
     

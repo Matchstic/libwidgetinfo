@@ -82,7 +82,7 @@
 #if TARGET_IPHONE_SIMULATOR==0
     NSString *scriptLocation = @"/Library/Application Support/Xen HTML/libwidgetinfo.js";
 #else
-    NSString *scriptLocation = @"/Users/matt/iOS/Projects/Xen-HTML/deps/libwidgetdata/lib/Middleware/build/libwidgetinfo.js";
+    NSString *scriptLocation = @"/Users/matt/iOS/Projects/Xen-HTML/deps/libwidgetinfo/lib/Middleware/build/libwidgetinfo.js";
 #endif
     
     NSString *content = [NSString stringWithContentsOfFile:scriptLocation encoding:NSUTF8StringEncoding error:NULL];

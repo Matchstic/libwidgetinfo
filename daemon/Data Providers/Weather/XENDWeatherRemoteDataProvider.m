@@ -110,6 +110,11 @@
         return NO;
     }
     
+    if (![[objc_getClass("WeatherPreferences") sharedPreferences]
+          respondsToSelector:@selector(loadSavedCities)]) {
+        return NO;
+    }
+    
     return YES;
 }
 
@@ -138,6 +143,27 @@
     }
     
     [self notifyRemoteForNewDynamicProperties];
+}
+
+- (CLLocation*)fallbackWeatherLocation {
+    // Fetch the first non-local city from the weather preferences
+    NSArray *savedCities = [[objc_getClass("WeatherPreferences") sharedPreferences] loadSavedCities];
+    City *result;
+
+    for (City *city in savedCities) {
+        if (!city.isLocalWeatherCity) {
+            result = city;
+            break;
+        }
+    }
+    
+    if (result) {
+        return result.location;
+    }
+    
+    // Cupertino
+    // return [[CLLocation alloc] initWithLatitude:37.323 longitude:-122.0322];
+    return [[CLLocation alloc] initWithLatitude:52.9548 longitude:1.1581];
 }
 
 @end

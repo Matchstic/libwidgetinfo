@@ -11,6 +11,7 @@
 @protocol XENDWeatherManagerDelegate <NSObject>
 
 - (void)onUpdatedWeatherConditions:(NSDictionary*)transformedConditions;
+- (CLLocation*)fallbackWeatherLocation;
 
 @end
 

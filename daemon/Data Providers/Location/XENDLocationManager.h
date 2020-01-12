@@ -8,6 +8,9 @@
 #import <CoreLocation/CoreLocation.h>
 #import <Foundation/Foundation.h>
 
+#define kXENLocationErrorNotAvailable 100 // No location data is available e.g. due to Location Services being disabled
+#define kXENLocationErrorCachedOnly   101 // Cached data is provided in place of new data
+
 @interface XENDLocationManager : NSObject
 
 /**
