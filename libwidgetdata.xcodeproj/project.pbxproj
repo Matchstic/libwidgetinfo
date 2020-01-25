@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C90DE50123D396EA00D0FAFD /* XTWCHourlyForecast.m in Sources */ = {isa = PBXBuildFile; fileRef = C90DE50023D396EA00D0FAFD /* XTWCHourlyForecast.m */; };
 		C919CA6223302171001391A5 /* XENDProxyDataProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = C919CA6023302171001391A5 /* XENDProxyDataProvider.h */; };
 		C919CA6323302171001391A5 /* XENDProxyDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = C919CA6123302171001391A5 /* XENDProxyDataProvider.m */; };
 		C919CA67233022E8001391A5 /* XENDSystemDataProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = C919CA65233022E8001391A5 /* XENDSystemDataProvider.h */; };
@@ -28,18 +29,22 @@
 		C9204FF623364FD800F9F535 /* XENDMediaRemoteDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = C9204FF523364FD800F9F535 /* XENDMediaRemoteDataProvider.m */; };
 		C9204FF92336509900F9F535 /* XENDMediaDataProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = C9204FF72336509900F9F535 /* XENDMediaDataProvider.h */; };
 		C9204FFA2336509900F9F535 /* XENDMediaDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = C9204FF82336509900F9F535 /* XENDMediaDataProvider.m */; };
+		C93045B623D84DA800B0D561 /* XTWCAirQualityObservation.m in Sources */ = {isa = PBXBuildFile; fileRef = C93045B523D84DA800B0D561 /* XTWCAirQualityObservation.m */; };
 		C97CF9F323217A1200A3A014 /* XENDHijackedWebViewDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = C97CF9F123217A1200A3A014 /* XENDHijackedWebViewDelegate.h */; };
 		C97CF9F423217A1200A3A014 /* XENDHijackedWebViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C97CF9F223217A1200A3A014 /* XENDHijackedWebViewDelegate.m */; };
 		C97CF9FD2321834F00A3A014 /* XIPreProcessor.h in Headers */ = {isa = PBXBuildFile; fileRef = C97CF9FB2321834F00A3A014 /* XIPreProcessor.h */; };
 		C97CF9FE2321834F00A3A014 /* XIPreProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = C97CF9FC2321834F00A3A014 /* XIPreProcessor.m */; };
+		C993D33323DCE6D60084ED1E /* XENDStateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C993D33223DCE6D60084ED1E /* XENDStateManager.m */; };
+		C993D33623DCEFCE0084ED1E /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = C993D33523DCEFCE0084ED1E /* Reachability.m */; };
+		C993D33823DCF5CE0084ED1E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C993D33723DCF5CE0084ED1E /* SystemConfiguration.framework */; };
 		C9AFC0572389617C007FD971 /* XENDWeatherDataProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = C9AFC0552389617C007FD971 /* XENDWeatherDataProvider.h */; };
 		C9AFC0582389617C007FD971 /* XENDWeatherDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = C9AFC0562389617C007FD971 /* XENDWeatherDataProvider.m */; };
 		C9AFC05B23896298007FD971 /* XENDWeatherRemoteDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = C9AFC05A23896298007FD971 /* XENDWeatherRemoteDataProvider.m */; };
 		C9AFC06423896E1D007FD971 /* XENDWeatherHooks.m in Sources */ = {isa = PBXBuildFile; fileRef = C9AFC06323896E1D007FD971 /* XENDWeatherHooks.m */; };
 		C9AFC0672389738B007FD971 /* XENDWeatherManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C9AFC0662389738B007FD971 /* XENDWeatherManager.m */; };
 		C9AFC06B2389A216007FD971 /* XENDLocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C9AFC06A2389A216007FD971 /* XENDLocationManager.m */; };
-		C9BFD61423C154AD001F46F2 /* TWCObservation.m in Sources */ = {isa = PBXBuildFile; fileRef = C9BFD61323C154AD001F46F2 /* TWCObservation.m */; };
-		C9BFD61723C154BD001F46F2 /* TWCDailyForecast.m in Sources */ = {isa = PBXBuildFile; fileRef = C9BFD61623C154BD001F46F2 /* TWCDailyForecast.m */; };
+		C9BFD61423C154AD001F46F2 /* XTWCObservation.m in Sources */ = {isa = PBXBuildFile; fileRef = C9BFD61323C154AD001F46F2 /* XTWCObservation.m */; };
+		C9BFD61723C154BD001F46F2 /* XTWCDailyForecast.m in Sources */ = {isa = PBXBuildFile; fileRef = C9BFD61623C154BD001F46F2 /* XTWCDailyForecast.m */; };
 		C9BFD61A23C159C4001F46F2 /* NSDictionary+XENSafeObjectForKey.m in Sources */ = {isa = PBXBuildFile; fileRef = C9BFD61923C159C4001F46F2 /* NSDictionary+XENSafeObjectForKey.m */; };
 		C9F2F3822301BE4100E4863B /* IS2PreProcessor.mm in Sources */ = {isa = PBXBuildFile; fileRef = C9F2F3592301BE4100E4863B /* IS2PreProcessor.mm */; };
 		C9F2F3842301BE4100E4863B /* Compile.hpp in Headers */ = {isa = PBXBuildFile; fileRef = C9F2F35C2301BE4100E4863B /* Compile.hpp */; };
@@ -137,6 +142,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C90DE4FF23D396EA00D0FAFD /* XTWCHourlyForecast.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XTWCHourlyForecast.h; path = "daemon/Data Providers/Weather/Model/XTWCHourlyForecast.h"; sourceTree = SOURCE_ROOT; };
+		C90DE50023D396EA00D0FAFD /* XTWCHourlyForecast.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XTWCHourlyForecast.m; path = "daemon/Data Providers/Weather/Model/XTWCHourlyForecast.m"; sourceTree = SOURCE_ROOT; };
+		C90DE50223D3C4C200D0FAFD /* XTWCUnits.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XTWCUnits.h; path = "daemon/Data Providers/Weather/Model/XTWCUnits.h"; sourceTree = SOURCE_ROOT; };
 		C919CA6023302171001391A5 /* XENDProxyDataProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XENDProxyDataProvider.h; sourceTree = "<group>"; };
 		C919CA6123302171001391A5 /* XENDProxyDataProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XENDProxyDataProvider.m; sourceTree = "<group>"; };
 		C919CA642330225D001391A5 /* XENDWidgetManager-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "XENDWidgetManager-Protocol.h"; sourceTree = "<group>"; };
@@ -166,11 +174,18 @@
 		C9204FF523364FD800F9F535 /* XENDMediaRemoteDataProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XENDMediaRemoteDataProvider.m; path = "Daemon/Data Providers/Media/XENDMediaRemoteDataProvider.m"; sourceTree = SOURCE_ROOT; };
 		C9204FF72336509900F9F535 /* XENDMediaDataProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XENDMediaDataProvider.h; sourceTree = "<group>"; };
 		C9204FF82336509900F9F535 /* XENDMediaDataProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XENDMediaDataProvider.m; sourceTree = "<group>"; };
+		C93045B423D84DA800B0D561 /* XTWCAirQualityObservation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XTWCAirQualityObservation.h; path = "daemon/Data Providers/Weather/Model/XTWCAirQualityObservation.h"; sourceTree = SOURCE_ROOT; };
+		C93045B523D84DA800B0D561 /* XTWCAirQualityObservation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XTWCAirQualityObservation.m; path = "daemon/Data Providers/Weather/Model/XTWCAirQualityObservation.m"; sourceTree = SOURCE_ROOT; };
 		C97CF9ED23216ED600A3A014 /* XENDPreProcessor-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "XENDPreProcessor-Protocol.h"; sourceTree = "<group>"; };
 		C97CF9F123217A1200A3A014 /* XENDHijackedWebViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XENDHijackedWebViewDelegate.h; sourceTree = "<group>"; };
 		C97CF9F223217A1200A3A014 /* XENDHijackedWebViewDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XENDHijackedWebViewDelegate.m; sourceTree = "<group>"; };
 		C97CF9FB2321834F00A3A014 /* XIPreProcessor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XIPreProcessor.h; sourceTree = "<group>"; };
 		C97CF9FC2321834F00A3A014 /* XIPreProcessor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XIPreProcessor.m; sourceTree = "<group>"; };
+		C993D33123DCE6D60084ED1E /* XENDStateManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XENDStateManager.h; path = daemon/State/XENDStateManager.h; sourceTree = SOURCE_ROOT; };
+		C993D33223DCE6D60084ED1E /* XENDStateManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XENDStateManager.m; path = daemon/State/XENDStateManager.m; sourceTree = SOURCE_ROOT; };
+		C993D33423DCEFCE0084ED1E /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		C993D33523DCEFCE0084ED1E /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		C993D33723DCF5CE0084ED1E /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/SystemConfiguration.framework; sourceTree = DEVELOPER_DIR; };
 		C9AFC0552389617C007FD971 /* XENDWeatherDataProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XENDWeatherDataProvider.h; sourceTree = "<group>"; };
 		C9AFC0562389617C007FD971 /* XENDWeatherDataProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XENDWeatherDataProvider.m; sourceTree = "<group>"; };
 		C9AFC05923896298007FD971 /* XENDWeatherRemoteDataProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XENDWeatherRemoteDataProvider.h; path = "Daemon/Data Providers/Weather/XENDWeatherRemoteDataProvider.h"; sourceTree = SOURCE_ROOT; };
@@ -182,10 +197,10 @@
 		C9AFC0662389738B007FD971 /* XENDWeatherManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XENDWeatherManager.m; path = "daemon/Data Providers/Weather/XENDWeatherManager.m"; sourceTree = SOURCE_ROOT; };
 		C9AFC0692389A216007FD971 /* XENDLocationManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XENDLocationManager.h; path = "daemon/Data Providers/Location/XENDLocationManager.h"; sourceTree = SOURCE_ROOT; };
 		C9AFC06A2389A216007FD971 /* XENDLocationManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XENDLocationManager.m; path = "daemon/Data Providers/Location/XENDLocationManager.m"; sourceTree = SOURCE_ROOT; };
-		C9BFD61223C154AD001F46F2 /* TWCObservation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TWCObservation.h; path = "daemon/Data Providers/Weather/Model/TWCObservation.h"; sourceTree = SOURCE_ROOT; };
-		C9BFD61323C154AD001F46F2 /* TWCObservation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = TWCObservation.m; path = "daemon/Data Providers/Weather/Model/TWCObservation.m"; sourceTree = SOURCE_ROOT; };
-		C9BFD61523C154BD001F46F2 /* TWCDailyForecast.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TWCDailyForecast.h; path = "daemon/Data Providers/Weather/Model/TWCDailyForecast.h"; sourceTree = SOURCE_ROOT; };
-		C9BFD61623C154BD001F46F2 /* TWCDailyForecast.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = TWCDailyForecast.m; path = "daemon/Data Providers/Weather/Model/TWCDailyForecast.m"; sourceTree = SOURCE_ROOT; };
+		C9BFD61223C154AD001F46F2 /* XTWCObservation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XTWCObservation.h; path = "daemon/Data Providers/Weather/Model/XTWCObservation.h"; sourceTree = SOURCE_ROOT; };
+		C9BFD61323C154AD001F46F2 /* XTWCObservation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XTWCObservation.m; path = "daemon/Data Providers/Weather/Model/XTWCObservation.m"; sourceTree = SOURCE_ROOT; };
+		C9BFD61523C154BD001F46F2 /* XTWCDailyForecast.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XTWCDailyForecast.h; path = "daemon/Data Providers/Weather/Model/XTWCDailyForecast.h"; sourceTree = SOURCE_ROOT; };
+		C9BFD61623C154BD001F46F2 /* XTWCDailyForecast.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XTWCDailyForecast.m; path = "daemon/Data Providers/Weather/Model/XTWCDailyForecast.m"; sourceTree = SOURCE_ROOT; };
 		C9BFD61823C159C4001F46F2 /* NSDictionary+XENSafeObjectForKey.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "NSDictionary+XENSafeObjectForKey.h"; path = "Daemon/Data Providers/Weather/Model/NSDictionary+XENSafeObjectForKey.h"; sourceTree = SOURCE_ROOT; };
 		C9BFD61923C159C4001F46F2 /* NSDictionary+XENSafeObjectForKey.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "NSDictionary+XENSafeObjectForKey.m"; path = "Daemon/Data Providers/Weather/Model/NSDictionary+XENSafeObjectForKey.m"; sourceTree = SOURCE_ROOT; };
 		C9F2F3592301BE4100E4863B /* IS2PreProcessor.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = IS2PreProcessor.mm; sourceTree = "<group>"; };
@@ -281,6 +296,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C993D33823DCF5CE0084ED1E /* SystemConfiguration.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -315,6 +331,7 @@
 		C9204FC923317EBD00F9F535 /* Daemon */ = {
 			isa = PBXGroup;
 			children = (
+				C993D33023DCE6C80084ED1E /* State */,
 				C9204FE02331818A00F9F535 /* Connection */,
 				C9204FDB2331806300F9F535 /* Data Providers */,
 			);
@@ -366,6 +383,17 @@
 				C97CF9FC2321834F00A3A014 /* XIPreProcessor.m */,
 			);
 			path = XenInfo;
+			sourceTree = "<group>";
+		};
+		C993D33023DCE6C80084ED1E /* State */ = {
+			isa = PBXGroup;
+			children = (
+				C993D33123DCE6D60084ED1E /* XENDStateManager.h */,
+				C993D33223DCE6D60084ED1E /* XENDStateManager.m */,
+				C993D33423DCEFCE0084ED1E /* Reachability.h */,
+				C993D33523DCEFCE0084ED1E /* Reachability.m */,
+			);
+			path = State;
 			sourceTree = "<group>";
 		};
 		C9AFC05C23896697007FD971 /* System */ = {
@@ -433,10 +461,15 @@
 			children = (
 				C9BFD61823C159C4001F46F2 /* NSDictionary+XENSafeObjectForKey.h */,
 				C9BFD61923C159C4001F46F2 /* NSDictionary+XENSafeObjectForKey.m */,
-				C9BFD61223C154AD001F46F2 /* TWCObservation.h */,
-				C9BFD61323C154AD001F46F2 /* TWCObservation.m */,
-				C9BFD61523C154BD001F46F2 /* TWCDailyForecast.h */,
-				C9BFD61623C154BD001F46F2 /* TWCDailyForecast.m */,
+				C90DE50223D3C4C200D0FAFD /* XTWCUnits.h */,
+				C93045B423D84DA800B0D561 /* XTWCAirQualityObservation.h */,
+				C93045B523D84DA800B0D561 /* XTWCAirQualityObservation.m */,
+				C9BFD61223C154AD001F46F2 /* XTWCObservation.h */,
+				C9BFD61323C154AD001F46F2 /* XTWCObservation.m */,
+				C9BFD61523C154BD001F46F2 /* XTWCDailyForecast.h */,
+				C9BFD61623C154BD001F46F2 /* XTWCDailyForecast.m */,
+				C90DE4FF23D396EA00D0FAFD /* XTWCHourlyForecast.h */,
+				C90DE50023D396EA00D0FAFD /* XTWCHourlyForecast.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -641,6 +674,7 @@
 		C9F2F40E2301C3E000E4863B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C993D33723DCF5CE0084ED1E /* SystemConfiguration.framework */,
 				C9F2F40F2301C3E100E4863B /* WebKit.framework */,
 			);
 			name = Frameworks;
@@ -790,17 +824,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				C9204FD323317EE000F9F535 /* XENDXPCDaemonListener.mm in Sources */,
-				C9BFD61423C154AD001F46F2 /* TWCObservation.m in Sources */,
+				C9BFD61423C154AD001F46F2 /* XTWCObservation.m in Sources */,
+				C993D33323DCE6D60084ED1E /* XENDStateManager.m in Sources */,
 				C9AFC0672389738B007FD971 /* XENDWeatherManager.m in Sources */,
 				C9204FF623364FD800F9F535 /* XENDMediaRemoteDataProvider.m in Sources */,
 				C9204FD623317EF300F9F535 /* XENDSimulatedDaemonListener.m in Sources */,
 				C9204FE32331834300F9F535 /* XENDBaseRemoteDataProvider.m in Sources */,
 				C9AFC06423896E1D007FD971 /* XENDWeatherHooks.m in Sources */,
-				C9BFD61723C154BD001F46F2 /* TWCDailyForecast.m in Sources */,
+				C9BFD61723C154BD001F46F2 /* XTWCDailyForecast.m in Sources */,
 				C9BFD61A23C159C4001F46F2 /* NSDictionary+XENSafeObjectForKey.m in Sources */,
+				C993D33623DCEFCE0084ED1E /* Reachability.m in Sources */,
 				C9AFC05B23896298007FD971 /* XENDWeatherRemoteDataProvider.m in Sources */,
 				C9AFC06B2389A216007FD971 /* XENDLocationManager.m in Sources */,
+				C93045B623D84DA800B0D561 /* XTWCAirQualityObservation.m in Sources */,
 				C9204FDF2331817E00F9F535 /* XENDBaseDaemonListener.m in Sources */,
+				C90DE50123D396EA00D0FAFD /* XTWCHourlyForecast.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

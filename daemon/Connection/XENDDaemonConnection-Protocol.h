@@ -11,16 +11,6 @@
 @protocol XENDRemoteDaemonConnection <NSObject>
 
 /**
- * Called when the device enters sleep mode
- */
-- (void)noteDeviceDidEnterSleepInNamespace:(NSString*)providerNamespace;
-
-/**
- * Called when the device leaves sleep mode
- */
-- (void)noteDeviceDidExitSleepInNamespace:(NSString*)providerNamespace;
-
-/**
  * Called when a widget message has been received for this provider
  * The callback MUST always be called into
  * @param data The data of the message received
@@ -30,19 +20,21 @@
 - (void)didReceiveWidgetMessage:(NSDictionary*)data functionDefinition:(NSString*)definition inNamespace:(NSString*)providerNamespace callback:(void(^)(NSDictionary*))callback;
 
 /**
- * Called when network access is lost
- */
-- (void)networkWasDisconnectedInNamespace:(NSString*)providerNamespace;
-
-/**
- * Called when network access is restored
- */
-- (void)networkWasConnectedInNamespace:(NSString*)providerNamespace;
-
-/**
  * Fetchs the current properties for the given namespace
  */
 - (void)requestCurrentPropertiesInNamespace:(NSString*)providerNamespace callback:(void(^)(NSDictionary*))callback;
+
+
+/**
+ Requests the current device state to be sent to the calling client
+ Reponse format:
+ {
+    "sleep": boolean,
+    "network": boolean
+ }
+ */
+@optional
+- (void)requestCurrentDeviceStateWithCallback:(void(^)(NSDictionary*))callback;
 
 @end
 
@@ -55,5 +47,24 @@
  * Called into the origin process to update current dynamic properties in its cache.
  */
 - (void)notifyUpdatedDynamicProperties:(NSDictionary*)dynamicProperties forNamespace:(NSString*)dataProviderNamespace;
+
+/**
+ * Called when the device enters sleep mode
+ */
+- (void)noteDeviceDidEnterSleep;
+
+/**
+ * Called when the device leaves sleep mode
+ */
+- (void)noteDeviceDidExitSleep;
+/**
+ * Called when network access is lost
+ */
+- (void)networkWasDisconnected;
+
+/**
+ * Called when network access is restored
+ */
+- (void)networkWasConnected;
 
 @end

@@ -29,4 +29,20 @@
     [self.delegate notifyUpdatedDynamicProperties:dynamicProperties forNamespace:dataProviderNamespace];
 }
 
+- (void)noteDeviceDidEnterSleep {
+    [self.delegate noteDeviceDidEnterSleep];
+}
+
+- (void)noteDeviceDidExitSleep {
+    [self.delegate noteDeviceDidExitSleep];
+}
+
+- (void)networkWasConnected {
+    [self.delegate networkWasConnected];
+}
+
+- (void)networkWasDisconnected {
+    [self.delegate networkWasDisconnected];
+}
+
 @end

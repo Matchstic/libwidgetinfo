@@ -36,24 +36,8 @@
 // Protocol stuff - overrides
 //////////////////////////////////////////////////////////////
 
-- (void)noteDeviceDidEnterSleepInNamespace:(NSString*)providerNamespace {
-    [self.connection noteDeviceDidEnterSleepInNamespace:providerNamespace];
-}
-
-- (void)noteDeviceDidExitSleepInNamespace:(NSString*)providerNamespace {
-    [self.connection noteDeviceDidExitSleepInNamespace:providerNamespace];
-}
-
 - (void)didReceiveWidgetMessage:(NSDictionary*)data functionDefinition:(NSString*)definition inNamespace:(NSString*)providerNamespace callback:(void(^)(NSDictionary*))callback {
     [self.connection didReceiveWidgetMessage:data functionDefinition:definition inNamespace:providerNamespace callback:callback];
-}
-
-- (void)networkWasDisconnectedInNamespace:(NSString*)providerNamespace {
-    [self.connection networkWasDisconnectedInNamespace:providerNamespace];
-}
-
-- (void)networkWasConnectedInNamespace:(NSString*)providerNamespace {
-    [self.connection networkWasConnectedInNamespace:providerNamespace];
 }
 
 - (void)requestCurrentPropertiesInNamespace:(NSString*)providerNamespace callback:(void(^)(NSDictionary*))callback {

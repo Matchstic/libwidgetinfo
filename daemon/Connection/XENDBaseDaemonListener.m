@@ -13,6 +13,7 @@
 @interface XENDBaseDaemonListener ()
 
 @property (nonatomic, strong) NSDictionary<NSString*, XENDBaseRemoteDataProvider*> *dataProviders;
+@property (nonatomic, strong) XENDStateManager *stateManager;
 
 @end
 
@@ -23,6 +24,7 @@
     
     if (self) {
         self.dataProviders = [self _loadDataProviders];
+        self.stateManager = [[XENDStateManager alloc] initWithDelegate:self];
     }
     
     return self;
@@ -44,31 +46,11 @@
 
 #pragma mark Daemon connection implementation
 
-- (void)noteDeviceDidEnterSleepInNamespace:(NSString*)providerNamespace {
-    XENDBaseRemoteDataProvider *provider = [self.dataProviders objectForKey:providerNamespace];
-    [provider noteDeviceDidEnterSleep];
-}
-
-- (void)noteDeviceDidExitSleepInNamespace:(NSString*)providerNamespace {
-    XENDBaseRemoteDataProvider *provider = [self.dataProviders objectForKey:providerNamespace];
-    [provider noteDeviceDidExitSleep];
-}
-
 - (void)didReceiveWidgetMessage:(NSDictionary*)data functionDefinition:(NSString*)definition inNamespace:(NSString*)providerNamespace callback:(void(^)(NSDictionary*))callback {
     
     XENDBaseRemoteDataProvider *provider = [self.dataProviders objectForKey:providerNamespace];
     [provider didReceiveWidgetMessage:data functionDefinition:definition callback:callback];
     
-}
-
-- (void)networkWasDisconnectedInNamespace:(NSString*)providerNamespace {
-    XENDBaseRemoteDataProvider *provider = [self.dataProviders objectForKey:providerNamespace];
-    [provider networkWasDisconnected];
-}
-
-- (void)networkWasConnectedInNamespace:(NSString*)providerNamespace {
-    XENDBaseRemoteDataProvider *provider = [self.dataProviders objectForKey:providerNamespace];
-    [provider networkWasConnected];
 }
 
 - (void)requestCurrentPropertiesInNamespace:(NSString*)providerNamespace callback:(void(^)(NSDictionary*))callback {
@@ -79,6 +61,28 @@
 }
 
 - (void)notifyUpdatedDynamicProperties:(NSDictionary*)dynamicProperties forNamespace:(NSString*)dataProviderNamespace {
+    // Allow subclass to override this
+}
+
+#pragma mark State related things
+
+- (void)requestCurrentDeviceStateWithCallback:(void(^)(NSDictionary*))callback {
+    callback([self.stateManager summariseState]);
+}
+
+- (void)noteDeviceDidEnterSleep {
+    // Allow subclass to override this
+}
+
+- (void)noteDeviceDidExitSleep {
+    // Allow subclass to override this
+}
+
+- (void)networkWasConnected {
+    // Allow subclass to override this
+}
+
+- (void)networkWasDisconnected {
     // Allow subclass to override this
 }
 

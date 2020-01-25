@@ -7,8 +7,9 @@
 
 #import <Foundation/Foundation.h>
 #import "XENDDaemonConnection-Protocol.h"
+#import "../State/XENDStateManager.h"
 
-@interface XENDBaseDaemonListener : NSObject <XENDRemoteDaemonConnection>
+@interface XENDBaseDaemonListener : NSObject <XENDRemoteDaemonConnection, XENDStateManagerDelegate>
 
 - (void)notifyUpdatedDynamicProperties:(NSDictionary*)dynamicProperties forNamespace:(NSString*)dataProviderNamespace;
 

@@ -71,26 +71,10 @@ static NSString *customMachServiceName = @"com.matchstic.libwidgetinfo";
 // Protocol stuff - overrides
 //////////////////////////////////////////////////////////////
 
-- (void)noteDeviceDidEnterSleepInNamespace:(NSString*)providerNamespace {
-    [self.daemonConnection.remoteObjectProxy noteDeviceDidEnterSleepInNamespace:providerNamespace];
-}
-
-- (void)noteDeviceDidExitSleepInNamespace:(NSString*)providerNamespace {
-    [self.daemonConnection.remoteObjectProxy noteDeviceDidExitSleepInNamespace:providerNamespace];
-}
-
 - (void)didReceiveWidgetMessage:(NSDictionary*)data functionDefinition:(NSString*)definition inNamespace:(NSString*)providerNamespace callback:(void(^)(NSDictionary*))callback {
     [self.daemonConnection.remoteObjectProxy didReceiveWidgetMessage:data functionDefinition:definition inNamespace:providerNamespace callback:^(NSDictionary *res) {
         callback(res);
     }];
-}
-
-- (void)networkWasDisconnectedInNamespace:(NSString*)providerNamespace {
-    [self.daemonConnection.remoteObjectProxy networkWasDisconnectedInNamespace:providerNamespace];
-}
-
-- (void)networkWasConnectedInNamespace:(NSString*)providerNamespace {
-    [self.daemonConnection.remoteObjectProxy networkWasConnectedInNamespace:providerNamespace];
 }
 
 - (void)requestCurrentPropertiesInNamespace:(NSString*)providerNamespace callback:(void(^)(NSDictionary*))callback {

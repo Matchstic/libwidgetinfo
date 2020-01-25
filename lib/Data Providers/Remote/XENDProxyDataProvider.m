@@ -45,11 +45,11 @@
 /////////////////////////////////////////////////////////
 
 - (void)noteDeviceDidEnterSleep {
-    [[[XENDProxyManager sharedInstance] connection] noteDeviceDidEnterSleepInNamespace:[self _subclassNamespace]];
+    // Handle any specific things here in the client-side
 }
 
 - (void)noteDeviceDidExitSleep {
-    [[[XENDProxyManager sharedInstance] connection] noteDeviceDidExitSleepInNamespace:[self _subclassNamespace]];
+    // Handle any specific things here in the client-side
 }
 
 - (void)didReceiveWidgetMessage:(NSDictionary*)data functionDefinition:(NSString*)definition callback:(void(^)(NSDictionary*))callback {
@@ -62,11 +62,11 @@
 }
 
 - (void)networkWasDisconnected {
-    [[[XENDProxyManager sharedInstance] connection] networkWasDisconnectedInNamespace:[self _subclassNamespace]];
+    // Handle any specific things here in the client-side
 }
 
 - (void)networkWasConnected {
-    [[[XENDProxyManager sharedInstance] connection] networkWasConnectedInNamespace:[self _subclassNamespace]];
+    // Handle any specific things here in the client-side
 }
 
 @end

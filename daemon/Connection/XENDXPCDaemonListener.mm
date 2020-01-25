@@ -113,4 +113,28 @@ int libwidgetinfo_main(NSString *customMachServiceName) {
     }
 }
 
+- (void)noteDeviceDidEnterSleep {
+    for (NSXPCConnection *connection in self.xpcConnections) {
+        [connection.remoteObjectProxy noteDeviceDidEnterSleep];
+    }
+}
+
+- (void)noteDeviceDidExitSleep {
+    for (NSXPCConnection *connection in self.xpcConnections) {
+        [connection.remoteObjectProxy noteDeviceDidExitSleep];
+    }
+}
+
+- (void)networkWasConnected {
+    for (NSXPCConnection *connection in self.xpcConnections) {
+        [connection.remoteObjectProxy networkWasConnected];
+    }
+}
+
+- (void)networkWasDisconnected {
+    for (NSXPCConnection *connection in self.xpcConnections) {
+        [connection.remoteObjectProxy networkWasDisconnected];
+    }
+}
+
 @end

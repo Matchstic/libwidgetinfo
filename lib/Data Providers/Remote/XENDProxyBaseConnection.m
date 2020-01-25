@@ -6,6 +6,7 @@
 //
 
 #import "XENDProxyBaseConnection.h"
+#import "XENDWidgetManager.h"
 
 @interface XENDProxyBaseConnection ()
 
@@ -29,13 +30,10 @@
 // Protocol stuff - empty implementation
 //////////////////////////////////////////////////////////////
 
-- (void)noteDeviceDidEnterSleepInNamespace:(NSString*)providerNamespace {}
-- (void)noteDeviceDidExitSleepInNamespace:(NSString*)providerNamespace {}
 - (void)didReceiveWidgetMessage:(NSDictionary*)data functionDefinition:(NSString*)definition inNamespace:(NSString*)providerNamespace callback:(void(^)(NSDictionary*))callback {
     callback(@{});
 }
-- (void)networkWasDisconnectedInNamespace:(NSString*)providerNamespace {}
-- (void)networkWasConnectedInNamespace:(NSString*)providerNamespace {}
+
 - (void)requestCurrentPropertiesInNamespace:(NSString*)providerNamespace callback:(void(^)(NSDictionary*))callback {}
 
 //////////////////////////////////////////////////////////////
@@ -46,6 +44,26 @@
     XENDProxyDataProvider *provider = [self.registeredProxyProviders objectForKey:dataProviderNamespace];
     if (provider)
         [provider notifyUpdatedDynamicProperties:dynamicProperties];
+}
+
+- (void)noteDeviceDidEnterSleep {
+    // Notify widget manager of device state change
+    [[XENDWidgetManager sharedInstance] noteDeviceDidEnterSleep];
+}
+
+- (void)noteDeviceDidExitSleep {
+    // Notify widget manager of device state change
+    [[XENDWidgetManager sharedInstance] noteDeviceDidExitSleep];
+}
+
+- (void)networkWasDisconnected {
+    // Notify widget manager of device state change
+    [[XENDWidgetManager sharedInstance] networkWasDisconnected];
+}
+
+- (void)networkWasConnected {
+    // Notify widget manager of device state change
+    [[XENDWidgetManager sharedInstance] networkWasConnected];
 }
 
 @end

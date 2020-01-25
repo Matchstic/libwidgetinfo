@@ -29,6 +29,7 @@
     dispatch_once(&onceToken, ^{
         sharedInstance = [[XENDWidgetManager alloc] init];
     });
+    
     return sharedInstance;
 }
 
@@ -194,6 +195,30 @@
     [result setObject:weather forKey:[XENDWeatherDataProvider providerNamespace]];
     
     return result;
+}
+
+- (void)noteDeviceDidEnterSleep {
+    for (XENDBaseDataProvider *provider in self.dataProviders.allValues) {
+        [provider noteDeviceDidEnterSleep];
+    }
+}
+
+- (void)noteDeviceDidExitSleep {
+    for (XENDBaseDataProvider *provider in self.dataProviders.allValues) {
+        [provider noteDeviceDidExitSleep];
+    }
+}
+
+- (void)networkWasDisconnected {
+    for (XENDBaseDataProvider *provider in self.dataProviders.allValues) {
+        [provider networkWasDisconnected];
+    }
+}
+
+- (void)networkWasConnected {
+    for (XENDBaseDataProvider *provider in self.dataProviders.allValues) {
+        [provider networkWasConnected];
+    }
 }
 
 @end

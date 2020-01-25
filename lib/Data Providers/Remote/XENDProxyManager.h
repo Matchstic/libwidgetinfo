@@ -14,6 +14,7 @@
  */
 @interface XENDProxyManager : NSObject
 
+
 + (instancetype)sharedInstance;
 
 /**
