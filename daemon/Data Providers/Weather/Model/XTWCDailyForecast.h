@@ -1,18 +1,18 @@
 //
-//  TWCDailyForecast.h
+//  XTWCDailyForecast.h
 //  Daemon
 //
 //  Created by Matt Clarke on 04/01/2020.
 //
 
 #import <Foundation/Foundation.h>
+#import "XTWCUnits.h"
 
-@interface TWCDailyForecast : NSObject
+@interface XTWCDailyForecast : NSObject
 
 @property (nonatomic, strong) NSString *blurb;
 @property (nonatomic, strong) NSString *blurbAuthor;
 @property (nonatomic, strong) NSString *dayOfWeek;
-@property (nonatomic, readwrite) uint64_t expirationUNIXTime;
 @property (nonatomic, strong) NSNumber *forecastDayIndex;
 @property (nonatomic, strong) NSNumber *lunarPhaseDay;
 @property (nonatomic, strong) NSString *lunarPhaseDescription;
@@ -29,16 +29,20 @@
 @property (nonatomic, strong) NSString *sunRiseISOTime;
 @property (nonatomic, strong) NSString *sunSetISOTime;
 @property (nonatomic, strong) NSNumber *tornadoLikelihood;
+
+/**
+Time from which this forecast is valid.
+Validity lasts for 24 hours from this time.
+*/
 @property (nonatomic, readwrite) uint64_t validUNIXTime;
 
 // From day/part things
-@property (nonatomic, strong) NSString *cloudCoverDescription;
+@property (nonatomic, strong) NSString *cloudCoverPercentage;
 @property (nonatomic, strong) NSNumber *conditionIcon;
 @property (nonatomic, strong) NSString *conditionDescription;
 @property (nonatomic, strong) NSString *dayIndicator;
 @property (nonatomic, strong) NSNumber *heatIndex;
 @property (nonatomic, strong) NSNumber *precipProbability;
-@property (nonatomic, strong) NSString *precipProbabilityDescription;
 @property (nonatomic, strong) NSString *precipType;
 @property (nonatomic, strong) NSNumber *relativeHumidity;
 @property (nonatomic, strong) NSString *uvDescription;
@@ -48,7 +52,9 @@
 @property (nonatomic, strong) NSString *windDirectionCardinal;
 @property (nonatomic, strong) NSNumber *windSpeed;
 
-- (instancetype)initWithData:(NSDictionary*)data metric:(BOOL)useMetric;
-- (BOOL)isForecastCurrentDay;
+/**
+Initialises properties with API response
+*/
+- (instancetype)initWithData:(NSDictionary*)data units:(struct XTWCUnits)units;
 
 @end

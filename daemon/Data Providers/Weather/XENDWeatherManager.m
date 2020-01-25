@@ -6,8 +6,11 @@
 //
 
 #import "XENDWeatherManager.h"
-#import "Model/TWCObservation.h"
-#import "Model/TWCDailyForecast.h"
+#import "Model/XTWCObservation.h"
+#import "Model/XTWCDailyForecast.h"
+#import "Model/XTWCHourlyForecast.h"
+#import "Model/XTWCAirQualityObservation.h"
+#import "Model/XTWCUnits.h"
 
 #define UPDATE_INTERVAL 15 // minutes
 
@@ -29,7 +32,8 @@
 // Caching
 @property (nonatomic, strong) NSArray* dailyPredictionCache;
 @property (nonatomic, strong) NSArray* hourlyPredictionCache;
-@property (nonatomic, strong) TWCObservation *observationCache;
+@property (nonatomic, strong) XTWCObservation *observationCache;
+@property (nonatomic, strong) XTWCAirQualityObservation *airQualityCache;
 
 @end
 
@@ -221,7 +225,7 @@
 }
 
 - (NSURLRequest*)urlRequestForForecast:(CLLocation*)location {
-    // https://api.weather.com/v1/geocode/37.323002/-122.032204/aggregate.json?
+    // https://api.weather.com/v1/geocode/<lat>/<lon>/aggregate.json?
     // products=conditionsshort,fcstdaily10short,fcsthourly24short,nowlinks&apiKey=xxx
     
     NSString *endpoint = @"https://api.weather.com/v1/geocode";
@@ -261,18 +265,51 @@
     if (updateCache)
         [self updateForecastCache:forecastData :airQualityData];
     
+    struct XTWCUnits units = [self _units];
+    
     return @{
-        @"_useMetric": [NSNumber numberWithBool:[self _useMetric]],
+        @"units": @{
+            @"isMetric": [NSNumber numberWithBool:[self _useMetric]],
+            @"temperature": units.temperature == METRIC ? @"°C" : @"°F",
+            @"speed": units.speed == METRIC ? @"kph" : @"mph",
+            @"distance": units.distance == METRIC ? @"km" : @"miles",
+            @"pressure": units.pressure == METRIC ? @"hPa" : @"Hg",
+            @"amount": units.amount == METRIC ? @"cm" : @"in",
+        },
         @"now": [self nowFieldFromCache],
-        @"hourly": @{},
+        @"hourly": [self hourlyFieldFromCache],
         @"daily": [self dailyFieldFromCache]
     };
 }
 
+- (struct XTWCUnits)_units {
+    struct XTWCUnits units;
+    
+    BOOL isHybridBritish = [[self _deviceLanguage] isEqualToString:@"en-GB"];
+    
+    if (isHybridBritish) {
+        units.speed = IMPERIAL;
+        units.temperature = METRIC;
+        units.distance = METRIC;
+        units.pressure = METRIC;
+        units.amount = METRIC;
+    } else {
+        units.speed = [self _useMetric] ? METRIC : IMPERIAL;
+        units.temperature = [self _useMetric] ? METRIC : IMPERIAL;
+        units.distance = [self _useMetric] ? METRIC : IMPERIAL;
+        units.pressure = [self _useMetric] ? METRIC : IMPERIAL;
+        units.amount = [self _useMetric] ? METRIC : IMPERIAL;
+    }
+    
+    return units;
+}
+
 - (void)updateForecastCache:(NSDictionary*)forecastData :(NSDictionary*)airQualityData {
+    struct XTWCUnits units = [self _units];
+    
     // Observation
     NSDictionary *observationData = [[forecastData objectForKey:@"conditionsshort"] objectForKey:@"observation"];
-    TWCObservation *observation = [[TWCObservation alloc] initWithData:observationData metric:[self _useMetric]];
+    XTWCObservation *observation = [[XTWCObservation alloc] initWithData:observationData units:units];
     
     self.observationCache = observation;
     
@@ -280,25 +317,37 @@
     NSMutableArray *dailyCache = [@[] mutableCopy];
     NSArray *predictions = [[forecastData objectForKey:@"fcstdaily10short"] objectForKey:@"forecasts"];
     for (NSDictionary *data in predictions) {
-        TWCDailyForecast *prediction = [[TWCDailyForecast alloc] initWithData:data metric:[self _useMetric]];
+        XTWCDailyForecast *prediction = [[XTWCDailyForecast alloc] initWithData:data units:units];
         [dailyCache addObject:prediction];
     }
     
     self.dailyPredictionCache = dailyCache;
     
-    // TODO: Hourly forecasts
+    // Hourly forecasts
+    NSMutableArray *hourlyCache = [@[] mutableCopy];
+    NSArray *hourlyPredictions = [[forecastData objectForKey:@"fcsthourly24short"] objectForKey:@"forecasts"];
+    for (NSDictionary *data in hourlyPredictions) {
+        XTWCHourlyForecast *prediction = [[XTWCHourlyForecast alloc] initWithData:data units:units];
+        [hourlyCache addObject:prediction];
+    }
+    
+    self.hourlyPredictionCache = hourlyCache;
+    
+    // Air quality
+    XTWCAirQualityObservation *airQualityObservation = [[XTWCAirQualityObservation alloc] initWithData:airQualityData];
+    self.airQualityCache = airQualityObservation;
 }
 
-- (BOOL)_validateObservation:(TWCObservation*)observation {
+- (BOOL)_validateObservation:(XTWCObservation*)observation {
     uint64_t now = [[NSDate date] timeIntervalSince1970];
     return observation.validFromUNIXTime + (60 * 60 * 24) >= now;
 }
 
-- (TWCDailyForecast*)_cachedDailyPredictionForNow {
+- (XTWCDailyForecast*)_cachedDailyPredictionForNow {
     // From cached data, fetch the daily prediction that is for today
     uint64_t now = [[NSDate date] timeIntervalSince1970];
     
-    for (TWCDailyForecast *prediction in self.dailyPredictionCache) {
+    for (XTWCDailyForecast *prediction in self.dailyPredictionCache) {
         if (prediction.validUNIXTime <= now &&
             prediction.validUNIXTime + (60 * 60 * 24) > now)
             return prediction;
@@ -313,8 +362,22 @@
     
     NSMutableArray *result = [NSMutableArray array];
     
-    for (TWCDailyForecast *prediction in self.dailyPredictionCache) {
+    for (XTWCDailyForecast *prediction in self.dailyPredictionCache) {
         if (prediction.validUNIXTime + (60 * 60 * 24) > now)
+            [result addObject:prediction];
+    }
+    
+    return result;
+}
+
+- (NSArray*)_cachedHourlyPredictionSinceNow {
+    // From cached data, fetch the predictions that include and follow the current hour
+    uint64_t now = [[NSDate date] timeIntervalSince1970];
+    
+    NSMutableArray *result = [NSMutableArray array];
+    
+    for (XTWCHourlyForecast *prediction in self.hourlyPredictionCache) {
+        if (prediction.validUNIXTime + (60 * 60) > now)
             [result addObject:prediction];
     }
     
@@ -323,19 +386,30 @@
 
 - (NSDictionary*)nowFieldFromCache {
     
-    TWCObservation *observation = self.observationCache;
-    TWCDailyForecast *prediction = [self _cachedDailyPredictionForNow];
+    XTWCObservation *observation = self.observationCache;
+    XTWCAirQualityObservation *airQuality = self.airQualityCache;
+    XTWCDailyForecast *prediction = [self _cachedDailyPredictionForNow];
     
     // Validate the observation
     BOOL isObservationValid = [self _validateObservation:observation];
     if (!isObservationValid) {
-        observation = [[TWCObservation alloc] initWithFakeData:[self _useMetric]];
+        observation = [[XTWCObservation alloc] initWithFakeData:[self _units]];
     }
     
     // See: https://www.worldcommunitygrid.org/lt/images/climate/The_Weather_Company_APIs.pdf
     // This includes full descriptions for every field for documentation
     NSDictionary *now = @{
         @"_isValid": [NSNumber numberWithBool:isObservationValid],
+        
+        @"airQuality": @{
+            @"categoryLevel": airQuality.categoryLevel,
+            @"categoryIndex": airQuality.categoryIndex,
+            @"comment": airQuality.comment,
+            @"index": airQuality.index,
+            @"scale": airQuality.scale,
+            @"source": airQuality.source,
+            @"pollutants": airQuality.pollutants
+        },
         
         @"cloudCover": observation.cloudCoverDescription,
         
@@ -348,7 +422,6 @@
             @"hourly": observation.precipHourly,
             @"total": observation.precipTotal,
             @"type": prediction ? prediction.precipType : @"rain",
-            @"snowHourly": observation.snowHourly
         },
         
         @"pressure": @{
@@ -402,10 +475,10 @@
     NSMutableArray *result = [NSMutableArray array];
     
     NSArray *predictions = [self _cachedDailyPredictionSinceNow];
-    for (TWCDailyForecast *prediction in predictions) {
+    for (XTWCDailyForecast *prediction in predictions) {
         
         NSDictionary *item = @{
-            @"cloudCover": prediction.cloudCoverDescription,
+            @"cloudCoverPercentage": prediction.cloudCoverPercentage,
             
             @"condition": @{
                 @"code": prediction.conditionIcon,
@@ -428,7 +501,6 @@
             
             @"precipitation": @{
                 @"probability": prediction.precipProbability,
-                @"description": prediction.precipProbabilityDescription,
                 @"type": prediction.precipType,
                 @"stormLikelihood": prediction.stormLikelihood,
                 @"tornadoLikelihood": prediction.tornadoLikelihood,
@@ -450,6 +522,56 @@
                 @"degrees": prediction.windDirection,
                 @"cardinal": prediction.windDirectionCardinal,
                 @"speed": prediction.windSpeed
+            }
+        };
+        
+        [result addObject:item];
+    }
+    
+    return result;
+}
+
+- (NSArray*)hourlyFieldFromCache {
+    NSMutableArray *result = [NSMutableArray array];
+    
+    NSArray *predictions = [self _cachedHourlyPredictionSinceNow];
+    for (XTWCHourlyForecast *prediction in predictions) {
+        
+        NSDictionary *item = @{
+            @"cloudCoverPercentage": prediction.cloudCoverPercentage,
+            
+            @"condition": @{
+                @"code": prediction.conditionIcon,
+                @"description": prediction.conditionDescription,
+            },
+            
+            @"dayOfWeek": prediction.dayOfWeek,
+            
+            @"precipitation": @{
+                @"probability": prediction.precipProbability,
+                @"type": prediction.precipType,
+            },
+            
+            @"temperature": @{
+                @"forecast": prediction.temperature,
+                @"dewpoint": prediction.dewpoint,
+                @"feelsLike": prediction.feelsLike,
+                @"relativeHumidity": prediction.relativeHumidity,
+                @"heatIndex": prediction.heatIndex
+            },
+            
+            @"ultraviolet": @{
+                @"index": prediction.uvIndex,
+                @"description": prediction.uvDescription,
+            },
+            
+            @"visibility": prediction.visibility,
+            
+            @"wind": @{
+                @"degrees": prediction.windDirection,
+                @"cardinal": prediction.windDirectionCardinal,
+                @"gust": prediction.gust,
+                @"speed": prediction.windSpeed,
             }
         };
         

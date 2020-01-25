@@ -162,8 +162,7 @@
     }
     
     // Cupertino
-    // return [[CLLocation alloc] initWithLatitude:37.323 longitude:-122.0322];
-    return [[CLLocation alloc] initWithLatitude:52.9548 longitude:1.1581];
+    return [[CLLocation alloc] initWithLatitude:37.323 longitude:-122.0322];
 }
 
 @end
