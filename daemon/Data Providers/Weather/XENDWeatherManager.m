@@ -61,6 +61,12 @@
         [self refreshWeather];
         
         // TODO: Monitor for locale changes
+        
+        // Notification from location manager about authorisation changes
+        [self.locationManager addAuthorisationStatusListener:^(BOOL available) {
+            NSLog(@"Refreshing weather due to location authorisation changes");
+            [self refreshWeather];
+        }];
     }
     
     return self;
@@ -334,7 +340,13 @@
     self.hourlyPredictionCache = hourlyCache;
     
     // Air quality
-    XTWCAirQualityObservation *airQualityObservation = [[XTWCAirQualityObservation alloc] initWithData:airQualityData];
+    NSArray *airqualitySingleItemArray = [airQualityData objectForKey:@"globalairquality"];
+    NSDictionary *airqualityDataItem = @{};
+    if (airqualitySingleItemArray.count > 0)
+        airqualityDataItem = airqualitySingleItemArray[0];
+    
+    XTWCAirQualityObservation *airQualityObservation = [[XTWCAirQualityObservation alloc]
+                                                            initWithData:airqualityDataItem];
     self.airQualityCache = airQualityObservation;
 }
 
