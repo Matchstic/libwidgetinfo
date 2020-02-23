@@ -53,27 +53,30 @@
         return;
     }
     
-    // Start waiting on API key notification
-    [[NSNotificationCenter defaultCenter] addObserver:self
-        selector:@selector(onAPIKeyNotification:)
-            name:@"XENDWeatherAPIKeyNotification"
-          object:nil];
+    // Specify a geocode request specifically
+    // iOS 13.3 now points to weather-data.apple.com for everything else
+    WFLocation *location = [[objc_getClass("WFLocation") alloc] init];
+    [location setGeoLocation:[self defaultLocation]];
+    NSURLRequest *request = [objc_getClass("WFWeatherChannelRequestFormatterV2") forecastRequest:2
+                                                             forLocation:location
+                                                                  locale:nil
+                                                                    date:[NSDate date]
+                                                                   rules:@[]];
     
-    // Ping off a dummy request to fetch the API key
-    City *defaultCity = [self _defaultCity];
-    [[objc_getClass("TWCLocationUpdater") sharedLocationUpdater]
-        updateWeatherForLocation:defaultCity.location
-                            city:defaultCity];
-}
+    // Read off the API key
+    NSMutableDictionary *queryStringDictionary = [[NSMutableDictionary alloc] init];
+    NSArray *urlComponents = [[request URL].query componentsSeparatedByString:@"&"];
+    
+    for (NSString *keyValuePair in urlComponents) {
+        NSArray *pairComponents = [keyValuePair componentsSeparatedByString:@"="];
+        NSString *key = [[pairComponents firstObject] stringByRemovingPercentEncoding];
+        NSString *value = [[pairComponents lastObject] stringByRemovingPercentEncoding];
 
-- (void)onAPIKeyNotification:(NSNotification*)notification {
-    // Grab out the API key
-    if ([[notification name] isEqualToString:@"XENDWeatherAPIKeyNotification"]) {
-        // Ensure we don't get notified for subsequent requests
-        [[NSNotificationCenter defaultCenter] removeObserver:self];
-        
-        [self configureWeatherManager:[[notification userInfo] objectForKey:@"apiKey"]];
+        [queryStringDictionary setObject:value forKey:key];
     }
+    
+    NSString *apiKey = [queryStringDictionary objectForKey:@"apiKey"];
+    [self configureWeatherManager:apiKey];
 }
 
 - (BOOL)_privateFrameworkUsageIsValid {
@@ -83,22 +86,8 @@
     if (!objc_getClass("WeatherPreferences"))
         return NO;
     
-    if (!objc_getClass("TWCLocationUpdater"))
+    if (!objc_getClass("WFWeatherChannelRequestFormatterV2"))
         return NO;
-    
-    if (!objc_getClass("City"))
-        return NO;
-    
-    // Validate selectors
-    if (![objc_getClass("TWCLocationUpdater")
-          respondsToSelector:@selector(sharedLocationUpdater)]) {
-        return NO;
-    }
-    
-    if (![[objc_getClass("TWCLocationUpdater") sharedLocationUpdater]
-          respondsToSelector:@selector(updateWeatherForLocation:city:)]) {
-        return NO;
-    }
     
     if (![objc_getClass("WeatherPreferences")
           respondsToSelector:@selector(sharedPreferences)]) {
@@ -118,16 +107,6 @@
     return YES;
 }
 
-- (City*)_defaultCity {
-    NSMutableDictionary *newCity = [NSMutableDictionary dictionary];
-    
-    [newCity setObject:[NSNumber numberWithFloat:37.323] forKey:@"Lat"];
-    [newCity setObject:[NSNumber numberWithFloat:-122.0322] forKey:@"Lon"];
-    [newCity setObject:@"Cupertino" forKey:@"Name"];
-    
-    return [[objc_getClass("WeatherPreferences") sharedPreferences] cityFromPreferencesDictionary:newCity];
-}
-
 #pragma mark Weather manager handling
 
 - (void)configureWeatherManager:(NSString*)apiKey {
@@ -143,6 +122,10 @@
     }
     
     [self notifyRemoteForNewDynamicProperties];
+}
+
+- (CLLocation*)defaultLocation {
+    return [[CLLocation alloc] initWithLatitude:37.323 longitude:-122.0322];
 }
 
 - (CLLocation*)fallbackWeatherLocation {
@@ -162,7 +145,7 @@
     }
     
     // Cupertino
-    return [[CLLocation alloc] initWithLatitude:37.323 longitude:-122.0322];
+    return [self defaultLocation];
 }
 
 @end
