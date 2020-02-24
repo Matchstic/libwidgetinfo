@@ -28,6 +28,24 @@
  * Registers a callback for when the authorisation status of the internal location manager changes.
  * This can be to update data in light of location state changes.
  */
-- (void)addAuthorisationStatusListener:(void(^)(BOOL available))listener ;
+- (void)addAuthorisationStatusListener:(void(^)(BOOL available))listener;
+
+/**
+ * Reverse geocodes the provided location.
+ * A cached geocode response may be provided.
+ *
+ * Response format:
+ *
+ * {
+     "street": "123 Something Lane",
+     "neighbourhood": "Somewhere close",
+     "city": "Big city",
+     "postalCode": "ABC 123",
+     "state": "West Upwards",
+     "country": "LaLaLand",
+     "countryISOCode": "LLA"
+ * }
+ */
+- (void)reverseGeocodeLocation:(CLLocation*)location completionHandler:(void(^)(NSDictionary *data, NSError *error))completionHandler;
 
 @end

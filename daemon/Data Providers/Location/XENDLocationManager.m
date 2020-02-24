@@ -17,6 +17,9 @@
 
 @property (nonatomic, readwrite) CLAuthorizationStatus authorisationStatus;
 
+@property (nonatomic, strong) CLGeocoder *geocoder;
+@property (nonatomic, strong) NSMutableDictionary *cachedGeocodeResponses;
+
 @end
 
 @implementation XENDLocationManager
@@ -44,6 +47,9 @@
             
             self.lastKnownLocation = self.locationManager.location;
             self.authorisationStatus = [CLLocationManager authorizationStatus];
+            
+            self.geocoder = [CLGeocoder new];
+            self.cachedGeocodeResponses = [NSMutableDictionary dictionary];
             
             NSLog(@"Starting location manager with authorisation: %d", self.authorisationStatus);
             
@@ -120,6 +126,50 @@
     }
     
     [self.pendingLocationCompletions removeAllObjects];
+}
+
+- (void)reverseGeocodeLocation:(CLLocation*)location completionHandler:(void(^)(NSDictionary *data, NSError *error))completionHandler {
+    NSString *locationKey = [NSString stringWithFormat:@"%f,%f", location.coordinate.latitude, location.coordinate.longitude];
+    
+    NSDictionary *cachedGeocodeResponse = [self.cachedGeocodeResponses objectForKey:locationKey];
+    if (cachedGeocodeResponse) {
+        completionHandler(cachedGeocodeResponse, nil);
+        return;
+    } else {
+        [self.geocoder reverseGeocodeLocation:location completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
+            if (error) {
+                completionHandler(nil, error);
+            } else {
+                CLPlacemark *placemark = [placemarks objectAtIndex:0];
+                
+                NSString *streetComponent = @"";
+                if (placemark.subThoroughfare != nil && placemark.thoroughfare != nil) {
+                    streetComponent = [NSString stringWithFormat:@"%@ %@", placemark.subThoroughfare, placemark.thoroughfare];
+                } else if (placemark.thoroughfare != nil) {
+                    streetComponent = [NSString stringWithFormat:@"%@", placemark.thoroughfare];
+                } else if (placemark.subLocality != nil) { // handle no street address somewhat
+                    streetComponent = [NSString stringWithFormat:@"%@", placemark.subLocality];
+                } else { // fallback
+                    streetComponent = @"Unknown street";
+                }
+                
+                NSDictionary *reverseGeocodedAddress = @{
+                    @"street": streetComponent,
+                    @"neighbourhood": placemark.subLocality ? placemark.subLocality : @"",
+                    @"city": placemark.locality ? placemark.locality : @"",
+                    @"postalCode": placemark.postalCode ? placemark.postalCode : @"",
+                    @"county": placemark.subAdministrativeArea ? placemark.subAdministrativeArea : @"",
+                    @"state": placemark.administrativeArea ? placemark.administrativeArea : @"",
+                    @"country": placemark.country ? placemark.country : @"",
+                    @"countryISOCode": placemark.ISOcountryCode ? placemark.ISOcountryCode : @""
+                };
+                
+                [self.cachedGeocodeResponses setObject:reverseGeocodedAddress forKey:locationKey];
+                
+                completionHandler(reverseGeocodedAddress, nil);
+            }
+        }];
+    }
 }
 
 #pragma mark CLLocationManagerDelegate
