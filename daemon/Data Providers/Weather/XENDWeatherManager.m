@@ -452,6 +452,9 @@
         @"sun": @{
             @"sunset": prediction.sunSetISOTime,
             @"sunrise": prediction.sunRiseISOTime,
+            @"isDay": [prediction.dayIndicator isEqual:[NSNull null]] ?
+                        @NO :
+                        [NSNumber numberWithBool:[prediction.dayIndicator isEqualToString:@"D"]]
         },
         
         @"temperature": @{
@@ -491,6 +494,7 @@
         
         NSDictionary *item = @{
             @"cloudCoverPercentage": prediction.cloudCoverPercentage,
+            @"timestamp": [NSNumber numberWithInt:(int)prediction.validUNIXTime],
             
             @"condition": @{
                 @"code": prediction.conditionIcon,
@@ -498,9 +502,11 @@
             },
             
             @"dayOfWeek": prediction.dayOfWeek,
+            @"dayIndex": prediction.forecastDayIndex,
             
             @"moon": @{
                 @"phaseCode": prediction.lunarPhaseCode,
+                @"phaseDay": prediction.lunarPhaseDay,
                 @"phaseDescription": prediction.lunarPhaseDescription,
                 @"moonrise": prediction.moonRiseISOTime,
                 @"moonset": prediction.moonSetISOTime
@@ -558,6 +564,8 @@
             },
             
             @"dayOfWeek": prediction.dayOfWeek,
+            @"hourIndex": prediction.forecastHourIndex,
+            @"timestamp": [NSNumber numberWithInt:(int)prediction.validUNIXTime],
             
             @"precipitation": @{
                 @"probability": prediction.precipProbability,
