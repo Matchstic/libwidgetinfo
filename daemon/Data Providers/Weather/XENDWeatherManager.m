@@ -34,6 +34,7 @@
 @property (nonatomic, strong) NSArray* hourlyPredictionCache;
 @property (nonatomic, strong) XTWCObservation *observationCache;
 @property (nonatomic, strong) XTWCAirQualityObservation *airQualityCache;
+@property (nonatomic, strong) NSDictionary* metadataCache;
 
 @end
 
@@ -138,7 +139,7 @@
         self.refreshQueuedDuringNetworkDisconnected = YES;
         
         // Notify delegate of updates from cached data
-        NSDictionary *parsed = [self parseWeatherData:@{} airQualityData:@{} updateCache:NO];
+        NSDictionary *parsed = [self parseWeatherData:@{} airQualityData:@{} metadata:@{} updateCache:NO];
         [self.delegate onUpdatedWeatherConditions:parsed];
         
         return;
@@ -174,6 +175,7 @@
         
         __block NSDictionary *forecastData = nil;
         __block NSDictionary *airQualityData = nil;
+        __block NSDictionary *addressData = nil;
         
         dispatch_group_t serviceGroup = dispatch_group_create();
 
@@ -211,9 +213,29 @@
         }];
         [airQualityTask resume];
         
+        dispatch_group_enter(serviceGroup);
+        [self.locationManager reverseGeocodeLocation:location completionHandler:^(NSDictionary *data, NSError *error) {
+            if (!error) {
+                addressData = data;
+            }
+            
+            // Exit dispatch group
+            dispatch_group_leave(serviceGroup);
+        }];
+        
         dispatch_group_notify(serviceGroup, dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),^{
+            // 3.a. Setup metadata object
+            NSDictionary *metadata = @{
+                @"address": addressData != nil ? addressData : [NSNull null],
+                @"updated": [NSDate date],
+                @"location": location != nil ? location : [NSNull null]
+            };
+            
             // 4. Now that downloads are done, parse the downloaded data
-            NSDictionary *parsed = [self parseWeatherData:forecastData airQualityData:airQualityData updateCache:YES];
+            NSDictionary *parsed = [self parseWeatherData:forecastData
+                                           airQualityData:airQualityData
+                                              metadata:metadata
+                                              updateCache:YES];
             
             // 5. Notify delegate of new parsed data
             [self.delegate onUpdatedWeatherConditions:parsed];
@@ -267,9 +289,14 @@
     return [NSURLRequest requestWithURL:url];
 }
 
-- (NSDictionary*)parseWeatherData:(NSDictionary*)forecastData airQualityData:(NSDictionary*)airQualityData updateCache:(BOOL)updateCache {
+- (NSDictionary*)parseWeatherData:(NSDictionary*)forecastData
+                   airQualityData:(NSDictionary*)airQualityData
+                         metadata:(NSDictionary*)metadata
+                      updateCache:(BOOL)updateCache {
     if (updateCache)
-        [self updateForecastCache:forecastData :airQualityData];
+        [self updateForecastCache:forecastData
+                                 :airQualityData
+                                 :metadata];
     
     struct XTWCUnits units = [self _units];
     
@@ -284,7 +311,20 @@
         },
         @"now": [self nowFieldFromCache],
         @"hourly": [self hourlyFieldFromCache],
-        @"daily": [self dailyFieldFromCache]
+        @"daily": [self dailyFieldFromCache],
+        @"metadata": @{
+            @"address": [self.metadataCache objectForKey:@"address"],
+            @"updateTimestamp": [NSNumber numberWithLong:[(NSDate*)[self.metadataCache objectForKey:@"updated"] timeIntervalSince1970] * 1000],
+            @"location": ![[self.metadataCache objectForKey:@"location"] isEqual:[NSNull null]] ? @{
+                @"latitude": [NSNumber numberWithDouble:
+                              [(CLLocation*)[self.metadataCache objectForKey:@"location"] coordinate].latitude],
+                @"longitude": [NSNumber numberWithDouble:
+                              [(CLLocation*)[self.metadataCache objectForKey:@"location"] coordinate].longitude],
+            } : @{
+                @"latitude": @0.0,
+                @"longitude": @0.0
+            }
+        }
     };
 }
 
@@ -310,7 +350,9 @@
     return units;
 }
 
-- (void)updateForecastCache:(NSDictionary*)forecastData :(NSDictionary*)airQualityData {
+- (void)updateForecastCache:(NSDictionary*)forecastData
+                           :(NSDictionary*)airQualityData
+                           :(NSDictionary*)metadata {
     struct XTWCUnits units = [self _units];
     
     // Observation
@@ -348,6 +390,8 @@
     XTWCAirQualityObservation *airQualityObservation = [[XTWCAirQualityObservation alloc]
                                                             initWithData:airqualityDataItem];
     self.airQualityCache = airQualityObservation;
+    
+    self.metadataCache = metadata;
 }
 
 - (BOOL)_validateObservation:(XTWCObservation*)observation {

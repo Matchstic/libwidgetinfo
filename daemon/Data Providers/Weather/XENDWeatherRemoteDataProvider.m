@@ -53,15 +53,49 @@
         return;
     }
     
-    // Specify a geocode request specifically
-    // iOS 13.3 now points to weather-data.apple.com for everything else
-    WFLocation *location = [[objc_getClass("WFLocation") alloc] init];
-    [location setGeoLocation:[self defaultLocation]];
-    NSURLRequest *request = [objc_getClass("WFWeatherChannelRequestFormatterV2") forecastRequest:2
-                                                             forLocation:location
-                                                                  locale:nil
-                                                                    date:[NSDate date]
-                                                                   rules:@[]];
+    NSURLRequest *request = nil;
+    
+    // iOS 13+
+    if (objc_getClass("WFWeatherChannelRequestFormatterV2")) {
+        // Specify a geocode request specifically
+        // iOS 13.3 now points to weather-data.apple.com for everything else
+        
+        WFLocation *location = [[objc_getClass("WFLocation") alloc] init];
+        [location setGeoLocation:[self defaultLocation]];
+        
+        request = [objc_getClass("WFWeatherChannelRequestFormatterV2") forecastRequest:2
+                                                                 forLocation:location
+                                                                      locale:nil
+                                                                        date:[NSDate date]
+                                                                       rules:@[]];
+    } else if (objc_getClass("WFWeatherChannelRequestFormatter")) {
+        WFLocation *location = [[objc_getClass("WFLocation") alloc] init];
+        [location setGeoLocation:[self defaultLocation]];
+        
+        request = [objc_getClass("WFWeatherChannelRequestFormatter") forecastRequestForLocation:location
+                                                                                           date:[NSDate date]];
+    } else {
+        // Fallback approach
+        
+        // Start waiting on API key notification
+        [[NSNotificationCenter defaultCenter] addObserver:self
+            selector:@selector(onAPIKeyNotification:)
+                name:@"XENDWeatherAPIKeyNotification"
+              object:nil];
+        
+        // Ping off a dummy request to fetch the API key
+        
+        NSMutableDictionary *newCity = [NSMutableDictionary dictionary];
+        
+        [newCity setObject:[NSNumber numberWithFloat:37.323] forKey:@"Lat"];
+        [newCity setObject:[NSNumber numberWithFloat:-122.0322] forKey:@"Lon"];
+        [newCity setObject:@"Cupertino" forKey:@"Name"];
+        
+        City *defaultCity = [[objc_getClass("WeatherPreferences") sharedPreferences] cityFromPreferencesDictionary:newCity];
+        [[objc_getClass("TWCLocationUpdater") sharedLocationUpdater]
+            updateWeatherForLocation:defaultCity.location
+                                city:defaultCity];
+    }
     
     // Read off the API key
     NSMutableDictionary *queryStringDictionary = [[NSMutableDictionary alloc] init];
@@ -86,7 +120,10 @@
     if (!objc_getClass("WeatherPreferences"))
         return NO;
     
-    if (!objc_getClass("WFWeatherChannelRequestFormatterV2"))
+    // Check our request formatters exist for grabbing API key
+    if (!objc_getClass("WFWeatherChannelRequestFormatterV2") &&
+        !objc_getClass("WFWeatherChannelRequestFormatter") &&
+        !objc_getClass("TWCLocationUpdater"))
         return NO;
     
     if (![objc_getClass("WeatherPreferences")
@@ -105,6 +142,16 @@
     }
     
     return YES;
+}
+
+- (void)onAPIKeyNotification:(NSNotification*)notification {
+    // Grab out the API key
+    if ([[notification name] isEqualToString:@"XENDWeatherAPIKeyNotification"]) {
+        // Ensure we don't get notified for subsequent requests
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
+        
+        [self configureWeatherManager:[[notification userInfo] objectForKey:@"apiKey"]];
+    }
 }
 
 #pragma mark Weather manager handling

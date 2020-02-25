@@ -185,11 +185,32 @@ export class XENDWeatherPropertiesUnits {
     distance: string;
 }
 
+export class XENDWeatherPropertiesMetadata {
+    address: {
+        street: string;
+        neighbourhood: string;
+        city: string;
+        postalCode: string;
+        county: string;
+        state: string;
+        country: string;
+        countryISOCode: string;
+    };
+
+    updateTimestamp: Date;
+
+    location: {
+        latitude: number;
+        longitude: number;
+    };
+}
+
 export class XENDWeatherProperties {
-    now:    XENDWeatherPropertiesNow;
-    hourly: XENDWeatherPropertiesHourly[];
-    daily:  XENDWeatherPropertiesDaily[];
-    units:  XENDWeatherPropertiesUnits;
+    now:        XENDWeatherPropertiesNow;
+    hourly:     XENDWeatherPropertiesHourly[];
+    daily:      XENDWeatherPropertiesDaily[];
+    units:      XENDWeatherPropertiesUnits;
+    metadata:   XENDWeatherPropertiesMetadata;
 }
 
 export default class XENDWeatherProvider extends XENDBaseProvider {
@@ -223,6 +244,9 @@ export default class XENDWeatherProvider extends XENDBaseProvider {
             newPayload.daily[i].sun.sunset = this.datestringToInstance(payload.daily[i].sun.sunset as any);
         }
 
+        // Metadata
+        newPayload.metadata.updateTimestamp = new Date(newPayload.metadata.updateTimestamp);
+
         console.log(newPayload);
 
         // Pass through to implementation
@@ -230,7 +254,14 @@ export default class XENDWeatherProvider extends XENDBaseProvider {
     }
 
     private datestringToInstance(str: string) {
-        return new Date(str.replace(/-/g, '/').replace(/[a-z]+/gi, ' '));
+        // Example: 2020-03-05T03:48:34-0800
+        const parts = str.split('T');
+        if (parts.length !== 2) {
+            return new Date(0);
+        }
+
+        const fixedFormat = parts[0].replace(/-/g, '/') + 'T' + parts[1];
+        return new Date(fixedFormat.replace(/[a-z]+/gi, ' '));
     }
 
     public get data(): XENDWeatherProperties {

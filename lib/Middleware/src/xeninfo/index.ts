@@ -40,37 +40,37 @@ export default class XenInfoMiddleware implements XenHTMLMiddleware {
         let weather = {
             dayForecasts: [],
             hourlyForecasts: [],
-            city: 'CITY NAME TODO', // TODO: City name
+            city: newData.metadata.address.city,
             address: {
-                street: '123 Test Avenue',
-                neighbourhood: 'Testville',
-                city: 'London',
-                zipCode: 'LN1 1BG',
-                county: 'London',
-                state: '',
-                country: 'United Kingdown',
-                countryISOCode: 'GB'
-            }, // TODO: Address of the location
+                street: newData.metadata.address.street,
+                neighbourhood: newData.metadata.address.neighbourhood,
+                city: newData.metadata.address.city,
+                postalCode: newData.metadata.address.postalCode,
+                county: newData.metadata.address.country,
+                state: newData.metadata.address.state,
+                country: newData.metadata.address.country,
+                countryISOCode: newData.metadata.address.countryISOCode
+            },
             temperature: newData.now.temperature.current,
             low: newData.now.temperature.minimum,
             high: newData.now.temperature.maximum,
             feelsLike: newData.now.temperature.feelsLike,
             chanceofrain: newData.now.precipitation.total,
             condition: newData.now.condition.description,
-            naturalCondition: 'NAT DESC TODO', // TODO: Fancy description of the conditions
-            latlong: '0.0,0.0', // TODO: Get from location
+            naturalCondition: newData.now.condition.description,
+            latlong: newData.metadata.location.latitude + ',' + newData.metadata.location.longitude,
             celsius: newData.units.isMetric ? 'C' : 'F',
             isDay: newData.now.sun.isDay,
             conditionCode: newData.now.condition.code,
-            updateTimeString: 'UPDATE TIME TODO', // TODO: Last update time
+            updateTimeString: newData.metadata.updateTimestamp.toLocaleString(),
             humidity: newData.now.temperature.relativeHumidity,
             dewPoint: newData.now.temperature.dewpoint,
             windChill: newData.now.temperature.feelsLike,
             windDirection: newData.now.wind.degrees,
             windSpeed: newData.now.wind.speed,
             visibility: newData.now.visibility,
-            sunsetTime: '1800', // TODO: Time of sunset as military time
-            sunriseTime: '0730', // TODO: Time of sunset as military time
+            sunsetTime: this.militaryIshTime(newData.now.sun.sunset),
+            sunriseTime: this.militaryIshTime(newData.now.sun.sunrise),
             sunsetTimeFormatted: this.localeTimeString(newData.now.sun.sunset),
             sunriseTimeFormatted: this.localeTimeString(newData.now.sun.sunrise),
             precipitationForecast: newData.hourly.length > 0 ? newData.hourly[0].precipitation.probability : 0,
@@ -78,7 +78,7 @@ export default class XenInfoMiddleware implements XenHTMLMiddleware {
             precipitation24hr: -1, // TODO: Last 24hr precipitation
             heatIndex: newData.now.temperature.heatIndex,
             moonPhase: newData.now.moon.phaseDay,
-            cityState: 'CITY NAME TODO' // TODO: re-use city name
+            cityState: newData.metadata.address.city
         }
 
         // Add hourly and daily forecasts
@@ -87,7 +87,7 @@ export default class XenInfoMiddleware implements XenHTMLMiddleware {
             const fcast = newData.hourly[i];
 
             hourlyForecasts.push({
-                time: this.localeTimeString(fcast.timestamp), // TODO: Locale specific time for the forecast
+                time: this.localeTimeString(fcast.timestamp),
                 conditionCode: fcast.condition.code,
                 temperature: fcast.temperature.forecast,
                 percentPrecipitation: fcast.precipitation.probability,
@@ -121,5 +121,10 @@ export default class XenInfoMiddleware implements XenHTMLMiddleware {
 
         // Remove whitespace
         return time.replace(/\s/g, '');
+    }
+
+    private militaryIshTime(date: Date): string {
+        const minutes = date.getMinutes() >= 10 ? date.getMinutes() : '0' + date.getMinutes();
+        return '' + date.getHours() + minutes;
     }
 }
