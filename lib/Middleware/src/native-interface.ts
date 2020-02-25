@@ -23,12 +23,13 @@ export default class NativeInterface {
     private _pendingCallbackIdentifier: number = 0;
 
     get _connectionAvailable(): boolean {
-        return (window as any).webkit !== undefined && 
+        return (window as any).webkit !== undefined &&
                (window as any).webkit.messageHandlers !== undefined &&
                (window as any).webkit.messageHandlers.libwidgetinfo !== undefined;
     }
 
     protected onDataProviderUpdate(body: any) {}
+    protected onLoad() {}
     private onInternalNativeMessage(message: NativeInterfaceInternalMessage) {
         const messageType = message.type;
         if (messageType === NativeMessageType.Callback) {

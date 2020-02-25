@@ -34,16 +34,20 @@ class XENDMiddleware extends NativeInterface {
         this.dataProviders.set(DataProviderUpdateNamespace.Weather, new XENDWeatherProvider(this));
         this.dataProviders.set(DataProviderUpdateNamespace.Applications, new XENDApplicationsProvider(this));
         this.dataProviders.set(DataProviderUpdateNamespace.Resources, new XENDResourceStatisticsProvider(this));
-
-        // Setup backwards compatibility middlewares
-        this.infostats2.initialise(this, this.dataProviders);
-        this.groovyAPI.initialise(this, this.dataProviders);
-        this.xeninfo.initialise(this, this.dataProviders);
     }
 
     protected onDataProviderUpdate(update: DataProviderUpdate) {
         // Forward new data to correct provider
         this.dataProviders.get(update.namespace)._setData(update.payload);
+    }
+
+    protected onLoad() {
+        this.dataProviderInNamespace(DataProviderUpdateNamespace.System).log('Middleware onLoad');
+
+        // Setup backwards compatibility middlewares
+        this.infostats2.initialise(this, this.dataProviders);
+        this.groovyAPI.initialise(this, this.dataProviders);
+        this.xeninfo.initialise(this, this.dataProviders);
     }
 
     public dataProviderInNamespace(namespace: DataProviderUpdateNamespace) {

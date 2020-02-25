@@ -62,6 +62,10 @@
     // Inject cached data
     
     NSString *updateString = @"";
+    
+    // Add loaded method call
+    updateString = [updateString stringByAppendingString:@"WidgetInfo._middleware.onLoad();\n"];
+    
     for (NSString *providerNamespace in self.dataProviders.allKeys) {
         XENDBaseDataProvider *provider = [self.dataProviders objectForKey:providerNamespace];
         
