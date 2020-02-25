@@ -79,4 +79,6 @@ The source of the data. e.g., DEFRA
  */
 - (instancetype)initWithData:(NSDictionary*)data;
 
+- (instancetype)initWithFakeData;
+
 @end

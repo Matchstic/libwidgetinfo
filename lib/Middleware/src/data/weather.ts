@@ -254,6 +254,10 @@ export default class XENDWeatherProvider extends XENDBaseProvider {
     }
 
     private datestringToInstance(str: string) {
+        if (str === null || str === undefined) {
+            return new Date(0);
+        }
+
         // Example: 2020-03-05T03:48:34-0800
         const parts = str.split('T');
         if (parts.length !== 2) {

@@ -20,6 +20,16 @@
     return self;
 }
 
+- (instancetype)initWithFakeData {
+    self = [super init];
+    
+    if (self) {
+        [self _parseData:@{}];
+    }
+    
+    return self;
+}
+
 - (void)_parseData:(NSDictionary*)data {
     self.categoryLevel      = [data objectForKey:@"air_quality_cat" defaultValue:[NSNull null]];
     self.categoryIndex      = [data objectForKey:@"air_quality_cat_idx" defaultValue:[NSNull null]];

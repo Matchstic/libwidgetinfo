@@ -54,6 +54,17 @@
         self.delegate = delegate;
         self.locationManager = locationManager;
         
+        // Initial cache states
+        self.dailyPredictionCache = @[];
+        self.hourlyPredictionCache = @[];
+        self.observationCache = [[XTWCObservation alloc] initWithFakeData:[self _units]];
+        self.airQualityCache = [[XTWCAirQualityObservation alloc] initWithFakeData];
+        self.metadataCache = @{
+            @"address": [NSNull null],
+            @"updated": [NSNull null],
+            @"location": [NSNull null]
+        };
+        
         // Start update timer
         self.lastUpdateTime = nil;
         [self _restartUpdateTimerWithInterval:UPDATE_INTERVAL * 60];
@@ -313,17 +324,30 @@
         @"hourly": [self hourlyFieldFromCache],
         @"daily": [self dailyFieldFromCache],
         @"metadata": @{
-            @"address": [self.metadataCache objectForKey:@"address"],
+            @"address": ![[self.metadataCache objectForKey:@"address"] isEqual:[NSNull null]] ?
+                            [self.metadataCache objectForKey:@"address"] :
+                            @{
+                                @"street": @"",
+                                @"neighbourhood": @"",
+                                @"city": @"",
+                                @"postalCode": @"",
+                                @"county": @"",
+                                @"state": @"",
+                                @"country": @"",
+                                @"countryISOCode": @""
+                            },
             @"updateTimestamp": [NSNumber numberWithLong:[(NSDate*)[self.metadataCache objectForKey:@"updated"] timeIntervalSince1970] * 1000],
-            @"location": ![[self.metadataCache objectForKey:@"location"] isEqual:[NSNull null]] ? @{
-                @"latitude": [NSNumber numberWithDouble:
-                              [(CLLocation*)[self.metadataCache objectForKey:@"location"] coordinate].latitude],
-                @"longitude": [NSNumber numberWithDouble:
-                              [(CLLocation*)[self.metadataCache objectForKey:@"location"] coordinate].longitude],
-            } : @{
-                @"latitude": @0.0,
-                @"longitude": @0.0
-            }
+            @"location": ![[self.metadataCache objectForKey:@"location"] isEqual:[NSNull null]] ?
+                            @{
+                                @"latitude": [NSNumber numberWithDouble:
+                                              [(CLLocation*)[self.metadataCache objectForKey:@"location"] coordinate].latitude],
+                                @"longitude": [NSNumber numberWithDouble:
+                                              [(CLLocation*)[self.metadataCache objectForKey:@"location"] coordinate].longitude],
+                            } :
+                            @{
+                                @"latitude": @0.0,
+                                @"longitude": @0.0
+                            }
         }
     };
 }
@@ -487,18 +511,18 @@
         },
         
         @"moon": @{
-            @"phaseCode": prediction.lunarPhaseCode,
-            @"phaseDescription": prediction.lunarPhaseDescription,
-            @"moonrise": prediction.moonRiseISOTime,
-            @"moonset": prediction.moonSetISOTime
+            @"phaseCode": prediction ? prediction.lunarPhaseCode : [NSNull null],
+            @"phaseDescription": prediction ? prediction.lunarPhaseDescription : [NSNull null],
+            @"moonrise": prediction ? prediction.moonRiseISOTime : [NSNull null],
+            @"moonset": prediction ? prediction.moonSetISOTime : [NSNull null],
         },
         
         @"sun": @{
-            @"sunset": prediction.sunSetISOTime,
-            @"sunrise": prediction.sunRiseISOTime,
-            @"isDay": [prediction.dayIndicator isEqual:[NSNull null]] ?
+            @"sunset": prediction ? prediction.sunSetISOTime : [NSNull null],
+            @"sunrise": prediction ? prediction.sunRiseISOTime : [NSNull null],
+            @"isDay": prediction ? ([prediction.dayIndicator isEqual:[NSNull null]] ?
                         @NO :
-                        [NSNumber numberWithBool:[prediction.dayIndicator isEqualToString:@"D"]]
+                        [NSNumber numberWithBool:[prediction.dayIndicator isEqualToString:@"D"]]) : [NSNull null]
         },
         
         @"temperature": @{
