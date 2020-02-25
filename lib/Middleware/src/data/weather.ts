@@ -217,8 +217,6 @@ export default class XENDWeatherProvider extends XENDBaseProvider {
 
     // Overridden to inject Date objects
     _setData(payload: XENDWeatherProperties) {
-        console.log(payload);
-
         let newPayload = Object.assign({}, payload);
 
         // `now` properties
@@ -246,8 +244,6 @@ export default class XENDWeatherProvider extends XENDBaseProvider {
 
         // Metadata
         newPayload.metadata.updateTimestamp = new Date(newPayload.metadata.updateTimestamp);
-
-        console.log(newPayload);
 
         // Pass through to implementation
         super._setData(newPayload);
