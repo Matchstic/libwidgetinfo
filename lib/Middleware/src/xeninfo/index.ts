@@ -20,11 +20,11 @@ export default class XenInfoMiddleware implements XenHTMLMiddleware {
     }
 
     private requiresXenInfoCompat(): boolean {
-        return true; // check for mainUpdate()
+        return (window as any).mainUpdate !== undefined;
     }
 
     private notifyXenInfoDataChanged(namespace: string) {
-        // Call mainUpdate with changes namespace
+        // Call mainUpdate with changed namespace
         if ((window as any).mainUpdate !== undefined) {
             (window as any).mainUpdate(namespace);
         }
