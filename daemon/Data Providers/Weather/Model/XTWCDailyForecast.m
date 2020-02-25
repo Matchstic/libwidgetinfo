@@ -140,8 +140,12 @@
 - (BOOL)_useDayPart {
     if (self.day.validUNIXTime == 0) return NO;
     
+    // If this day has not yet begun, assume to use day info
+    if ([[NSDate date] timeIntervalSince1970] < self.day.validUNIXTime) return YES;
+    
+    // Otherwise, use day info if it slots into the right timeframe
     return [[NSDate date] timeIntervalSince1970] < self.night.validUNIXTime &&
-           [[NSDate date] timeIntervalSince1970] >= self.day.validUNIXTime;
+                [[NSDate date] timeIntervalSince1970] >= self.day.validUNIXTime;
 }
 
 - (NSString*)cloudCoverPercentage {
