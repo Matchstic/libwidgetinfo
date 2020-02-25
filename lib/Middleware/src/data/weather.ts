@@ -263,7 +263,7 @@ export default class XENDWeatherProvider extends XENDBaseProvider {
 
     /**
      * Parses the timezone offset off the datestring.
-     * @param str
+     * @param str Datestring to parse
      */
     private timezoneOffset(str: string) {
         // Used in ISO 8061 spec for "no timezone"
@@ -282,18 +282,26 @@ export default class XENDWeatherProvider extends XENDBaseProvider {
             };
         }
 
-        const timezone = parts[1].substring(8);
+        try {
+            const timezone = parts[1].substring(8);
 
-        // Parse out all relevant metadata from the date
-        const parsed = {
-            negative: timezone.charAt(0) === '-',
-            hour: parseInt(timezone.substring(1, 3)),
-            minutes: parseInt(timezone.substring(3))
-        };
+            // Parse out all relevant metadata from the date
+            const parsed = {
+                negative: timezone.charAt(0) === '-',
+                hour: parseInt(timezone.substring(1, 3)),
+                minutes: parseInt(timezone.substring(3))
+            };
 
-        return {
-            hour: parsed.negative ? 0 - parsed.hour : parsed.hour,
-            minute: parsed.negative ? 0 - parsed.minutes : parsed.minutes,
+            return {
+                hour: parsed.negative ? 0 - parsed.hour : parsed.hour,
+                minute: parsed.negative ? 0 - parsed.minutes : parsed.minutes,
+            }
+        } catch (e) {
+            console.error(e);
+            return {
+                hour: 0,
+                minute: 0
+            };
         }
     }
 
@@ -301,7 +309,7 @@ export default class XENDWeatherProvider extends XENDBaseProvider {
      * Converts an ISO 8601 date string into local time
      * This intentionally ignores timezone offsets, to enable displaying weather times in
      * the local time of the weather location.
-     * @param str
+     * @param str Datestring to parse
      */
     private datestringToInstance(str: string) {
         if (str === null || str === undefined) {
@@ -331,8 +339,6 @@ export default class XENDWeatherProvider extends XENDBaseProvider {
             let date: Date = new Date();
             date.setFullYear(parsed.year, parsed.month - 1, parsed.day);
             date.setHours(parsed.hour, parsed.minutes, parsed.seconds);
-
-            console.log(str + '\n' + JSON.stringify(parsed) + '\n' + JSON.stringify(date));
 
             return date;
         } catch (e) {
