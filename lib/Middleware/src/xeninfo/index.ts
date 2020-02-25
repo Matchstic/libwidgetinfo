@@ -2,10 +2,7 @@ import { XenHTMLMiddleware, DataProviderUpdateNamespace } from '../types';
 import NativeInterface from '../native-interface';
 
 import {
-    XENDWeatherProperties,
-    XENDWeatherPropertiesNow,
-    XENDWeatherPropertiesHourly,
-    XENDWeatherPropertiesDaily
+    XENDWeatherProperties
 } from '../data/weather';
 
 export default class XenInfoMiddleware implements XenHTMLMiddleware {
@@ -30,9 +27,7 @@ export default class XenInfoMiddleware implements XenHTMLMiddleware {
         }
     }
 
-    invokeAction(action: any): void {
-
-    }
+    invokeAction(action: any): void {}
 
     onWeatherDataChanged(newData: XENDWeatherProperties): void {
         // Map weather data to XI format on global object
@@ -116,11 +111,8 @@ export default class XenInfoMiddleware implements XenHTMLMiddleware {
     }
 
     private localeTimeString(date: Date): string {
-        // Should return in format: 07:12PM
-        const time = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-        // Remove whitespace
-        return time.replace(/\s/g, '');
+        // Should return in format: 07:12PM or 07:12
+        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     }
 
     private militaryIshTime(date: Date): string {

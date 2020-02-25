@@ -68,5 +68,5 @@ export default class WidgetInfo {
     public system: XENDSystemProvider                 = this._middleware.dataProviderInNamespace(DataProviderUpdateNamespace.System);
     public weather: XENDWeatherProvider               = this._middleware.dataProviderInNamespace(DataProviderUpdateNamespace.Weather);
     public apps: XENDApplicationsProvider             = this._middleware.dataProviderInNamespace(DataProviderUpdateNamespace.Applications);
-    public resources: XENDResourceStatisticsProvider = this._middleware.dataProviderInNamespace(DataProviderUpdateNamespace.Resources);
+    public resources: XENDResourceStatisticsProvider  = this._middleware.dataProviderInNamespace(DataProviderUpdateNamespace.Resources);
 }
