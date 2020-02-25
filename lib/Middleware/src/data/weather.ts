@@ -219,6 +219,8 @@ export default class XENDWeatherProvider extends XENDBaseProvider {
     _setData(payload: XENDWeatherProperties) {
         let newPayload = Object.assign({}, payload);
 
+        const timezoneOffset = this.timezoneOffset(payload.now.sun.sunset as any);
+
         // `now` properties
         newPayload.now.moon.moonrise = this.datestringToInstance(payload.now.moon.moonrise as any);
         newPayload.now.moon.moonset = this.datestringToInstance(payload.now.moon.moonset as any);
@@ -228,13 +230,23 @@ export default class XENDWeatherProvider extends XENDBaseProvider {
         // `hourly` properties
         for (let i = 0; i < payload.hourly.length; i++) {
             // Comes through as UNIX timestamp
-            newPayload.hourly[i].timestamp = new Date(payload.hourly[i].timestamp as any);
+            let _date = new Date(payload.hourly[i].timestamp as any);
+
+            // Apply timezone offset to get local apparent time
+            _date.setHours(_date.getHours() + timezoneOffset.hour, _date.getMinutes() + timezoneOffset.minute);
+
+            newPayload.hourly[i].timestamp = _date;
         }
 
         // `daily` properties
         for (let i = 0; i < payload.daily.length; i++) {
             // Comes through as UNIX timestamp
-            newPayload.daily[i].timestamp = new Date(payload.daily[i].timestamp as any);
+            let _date = new Date(payload.daily[i].timestamp as any);
+
+            // Apply timezone offset to get local apparent time
+            _date.setHours(_date.getHours() + timezoneOffset.hour, _date.getMinutes() + timezoneOffset.minute);
+
+            newPayload.daily[i].timestamp = _date;
 
             newPayload.daily[i].moon.moonrise = this.datestringToInstance(payload.daily[i].moon.moonrise as any);
             newPayload.daily[i].moon.moonset = this.datestringToInstance(payload.daily[i].moon.moonset as any);
@@ -242,13 +254,55 @@ export default class XENDWeatherProvider extends XENDBaseProvider {
             newPayload.daily[i].sun.sunset = this.datestringToInstance(payload.daily[i].sun.sunset as any);
         }
 
-        // Metadata
+        // Metadata - do not convert to local apparent time
         newPayload.metadata.updateTimestamp = new Date(newPayload.metadata.updateTimestamp);
 
         // Pass through to implementation
         super._setData(newPayload);
     }
 
+    /**
+     * Parses the timezone offset off the datestring.
+     * @param str
+     */
+    private timezoneOffset(str: string) {
+        // Used in ISO 8061 spec for "no timezone"
+        if (str.endsWith('Z')) {
+            return {
+                hour: 0,
+                minute: 0
+            };
+        }
+
+        const parts = str.split('T');
+        if (parts.length !== 2) {
+            return {
+                hour: 0,
+                minute: 0
+            };
+        }
+
+        const timezone = parts[1].substring(8);
+
+        // Parse out all relevant metadata from the date
+        const parsed = {
+            negative: timezone.charAt(0) === '-',
+            hour: parseInt(timezone.substring(1, 3)),
+            minutes: parseInt(timezone.substring(3))
+        };
+
+        return {
+            hour: parsed.negative ? 0 - parsed.hour : parsed.hour,
+            minute: parsed.negative ? 0 - parsed.minutes : parsed.minutes,
+        }
+    }
+
+    /**
+     * Converts an ISO 8601 date string into local time
+     * This intentionally ignores timezone offsets, to enable displaying weather times in
+     * the local time of the weather location.
+     * @param str
+     */
     private datestringToInstance(str: string) {
         if (str === null || str === undefined) {
             return new Date(0);
@@ -260,8 +314,31 @@ export default class XENDWeatherProvider extends XENDBaseProvider {
             return new Date(0);
         }
 
-        const fixedFormat = parts[0].replace(/-/g, '/') + 'T' + parts[1];
-        return new Date(fixedFormat.replace(/[a-z]+/gi, ' '));
+        try {
+            const datePortion = parts[0];
+            const timePortion = parts[1].substring(0, 8);
+
+            // Parse out all relevant metadata from the date
+            const parsed = {
+                year: parseInt(datePortion.substring(0, 4)),
+                month: parseInt(datePortion.substring(5, 7)),
+                day: parseInt(datePortion.substring(8, 10)),
+                hour: parseInt(timePortion.substring(0, 2)),
+                minutes: parseInt(timePortion.substring(3, 5)),
+                seconds: parseInt(timePortion.substring(6, 8)),
+            };
+
+            let date: Date = new Date();
+            date.setFullYear(parsed.year, parsed.month - 1, parsed.day);
+            date.setHours(parsed.hour, parsed.minutes, parsed.seconds);
+
+            console.log(str + '\n' + JSON.stringify(parsed) + '\n' + JSON.stringify(date));
+
+            return date;
+        } catch (e) {
+            console.error(e);
+            return new Date(0);
+        }
     }
 
     public get data(): XENDWeatherProperties {
