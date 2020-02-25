@@ -24,8 +24,6 @@ export default class XenInfoMiddleware implements XenHTMLMiddleware {
     }
 
     private notifyXenInfoDataChanged(namespace: string) {
-        (window as any).WidgetInfo.system.log('notifyXenInfoDataChanged');
-
         // Call mainUpdate with changes namespace
         if ((window as any).mainUpdate !== undefined) {
             (window as any).mainUpdate(namespace);
@@ -36,7 +34,7 @@ export default class XenInfoMiddleware implements XenHTMLMiddleware {
 
     }
 
-    onWeatherDataChanged(newData: XENDWeatherProperties) {
+    onWeatherDataChanged(newData: XENDWeatherProperties): void {
         // Map weather data to XI format on global object
 
         let weather = {
@@ -73,9 +71,9 @@ export default class XenInfoMiddleware implements XenHTMLMiddleware {
             visibility: newData.now.visibility,
             sunsetTime: '1800', // TODO: Time of sunset as military time
             sunriseTime: '0730', // TODO: Time of sunset as military time
-            sunsetTimeFormatted: '18:00', // TODO: Convert to 12hr if locale demands it
-            sunriseTimeFormatted: '07:30', // TODO: Convert to 12hr if locale demands it
-            precipitationForecast: newData.hourly[0].precipitation.probability, // TODO: check hourly entry exists
+            sunsetTimeFormatted: this.localeTimeString(newData.now.sun.sunset),
+            sunriseTimeFormatted: this.localeTimeString(newData.now.sun.sunrise),
+            precipitationForecast: newData.hourly.length > 0 ? newData.hourly[0].precipitation.probability : 0,
             pressure: newData.now.pressure.current,
             precipitation24hr: -1, // TODO: Last 24hr precipitation
             heatIndex: newData.now.temperature.heatIndex,
@@ -89,7 +87,7 @@ export default class XenInfoMiddleware implements XenHTMLMiddleware {
             const fcast = newData.hourly[i];
 
             hourlyForecasts.push({
-                time: '00:00', // TODO: Locale specific time for the forecast
+                time: this.localeTimeString(fcast.timestamp), // TODO: Locale specific time for the forecast
                 conditionCode: fcast.condition.code,
                 temperature: fcast.temperature.forecast,
                 percentPrecipitation: fcast.precipitation.probability,
@@ -115,5 +113,13 @@ export default class XenInfoMiddleware implements XenHTMLMiddleware {
 
         // Assign to global namespace
         (window as any).weather = weather;
+    }
+
+    private localeTimeString(date: Date): string {
+        // Should return in format: 07:12PM
+        const time = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        // Remove whitespace
+        return time.replace(/\s/g, '');
     }
 }

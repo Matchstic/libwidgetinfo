@@ -196,31 +196,41 @@ export default class XENDWeatherProvider extends XENDBaseProvider {
 
     // Overridden to inject Date objects
     _setData(payload: XENDWeatherProperties) {
+        console.log(payload);
+
+        let newPayload = Object.assign({}, payload);
+
         // `now` properties
-        payload.now.moon.moonrise = new Date(Date.parse(payload.now.moon.moonrise as any));
-        payload.now.moon.moonset = new Date(Date.parse(payload.now.moon.moonset as any));
-        payload.now.sun.sunrise = new Date(Date.parse(payload.now.sun.sunrise as any));
-        payload.now.sun.sunset = new Date(Date.parse(payload.now.sun.sunset as any));
+        newPayload.now.moon.moonrise = this.datestringToInstance(payload.now.moon.moonrise as any);
+        newPayload.now.moon.moonset = this.datestringToInstance(payload.now.moon.moonset as any);
+        newPayload.now.sun.sunrise = this.datestringToInstance(payload.now.sun.sunrise as any);
+        newPayload.now.sun.sunset = this.datestringToInstance(payload.now.sun.sunset as any);
 
         // `hourly` properties
         for (let i = 0; i < payload.hourly.length; i++) {
             // Comes through as UNIX timestamp
-            payload.hourly[i].timestamp = new Date(payload.hourly[i].timestamp as any);
+            newPayload.hourly[i].timestamp = new Date(payload.hourly[i].timestamp as any);
         }
 
         // `daily` properties
         for (let i = 0; i < payload.daily.length; i++) {
             // Comes through as UNIX timestamp
-            payload.daily[i].timestamp = new Date(payload.hourly[i].timestamp as any);
+            newPayload.daily[i].timestamp = new Date(payload.daily[i].timestamp as any);
 
-            payload.daily[i].moon.moonrise = new Date(Date.parse(payload.daily[i].moon.moonrise as any));
-            payload.daily[i].moon.moonset = new Date(Date.parse(payload.daily[i].moon.moonset as any));
-            payload.daily[i].sun.sunrise = new Date(Date.parse(payload.daily[i].sun.sunrise as any));
-            payload.daily[i].sun.sunset = new Date(Date.parse(payload.daily[i].sun.sunset as any));
+            newPayload.daily[i].moon.moonrise = this.datestringToInstance(payload.daily[i].moon.moonrise as any);
+            newPayload.daily[i].moon.moonset = this.datestringToInstance(payload.daily[i].moon.moonset as any);
+            newPayload.daily[i].sun.sunrise = this.datestringToInstance(payload.daily[i].sun.sunrise as any);
+            newPayload.daily[i].sun.sunset = this.datestringToInstance(payload.daily[i].sun.sunset as any);
         }
 
+        console.log(newPayload);
+
         // Pass through to implementation
-        super._setData(payload);
+        super._setData(newPayload);
+    }
+
+    private datestringToInstance(str: string) {
+        return new Date(str.replace(/-/g, '/').replace(/[a-z]+/gi, ' '));
     }
 
     public get data(): XENDWeatherProperties {

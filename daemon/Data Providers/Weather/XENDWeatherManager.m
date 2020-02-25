@@ -494,7 +494,7 @@
         
         NSDictionary *item = @{
             @"cloudCoverPercentage": prediction.cloudCoverPercentage,
-            @"timestamp": [NSNumber numberWithInt:(int)prediction.validUNIXTime],
+            @"timestamp": [NSNumber numberWithLongLong:(long long)prediction.validUNIXTime * 1000],
             
             @"condition": @{
                 @"code": prediction.conditionIcon,
@@ -565,7 +565,7 @@
             
             @"dayOfWeek": prediction.dayOfWeek,
             @"hourIndex": prediction.forecastHourIndex,
-            @"timestamp": [NSNumber numberWithInt:(int)prediction.validUNIXTime],
+            @"timestamp": [NSNumber numberWithLongLong:(long long)prediction.validUNIXTime * 1000],
             
             @"precipitation": @{
                 @"probability": prediction.precipProbability,
