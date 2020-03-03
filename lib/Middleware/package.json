@@ -39,6 +39,8 @@
     "node": ">=8.9"
   },
   "dependencies": {
+    "@types/core-js": "^2.5.3",
+    "core-js": "^3.6.4",
     "ts-loader": "^6.1.0",
     "typedoc": "^0.15.0",
     "webpack": "^4.40.2",
