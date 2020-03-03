@@ -1,3 +1,6 @@
+// Polyfill support
+import 'core-js/stable';
+
 import IS2Middleware from './infostats2';
 import GroovyAPIMiddlware from './groovyapi';
 import XenInfoMiddleware from './xeninfo';
@@ -42,7 +45,7 @@ class XENDMiddleware extends NativeInterface {
     }
 
     protected onLoad() {
-        this.dataProviderInNamespace(DataProviderUpdateNamespace.System).log('Middleware onLoad');
+        console.log('Middleware onLoad');
 
         // Setup backwards compatibility middlewares
         this.infostats2.initialise(this, this.dataProviders);
