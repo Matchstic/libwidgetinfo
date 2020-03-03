@@ -6,7 +6,7 @@ export enum XENDBatteryStatus {
     FullyCharged
 }
 
-export class XENDResourceStatisticsProperties {
+export interface XENDResourceStatisticsProperties {
     batteryPercentRemaining: number;
     batteryStatus: XENDBatteryStatus;
 

@@ -1,6 +1,6 @@
 import { XENDBaseProvider } from '../types';
 
-export class XENDCalendarEntry {
+export interface XENDCalendarEntry {
     title: string;
     location: string;
     allDay: boolean;
@@ -9,13 +9,13 @@ export class XENDCalendarEntry {
     calendar: XENDCalendar;
 }
 
-export class XENDCalendar {
+export interface XENDCalendar {
     name: string;
     identifier: string;
     hexColor: string;
 }
 
-export class XENDCalendarProperties {
+export interface XENDCalendarProperties {
     userCalendars: XENDCalendar[];
     upcomingWeekEvents: XENDCalendarEntry[];
 }
@@ -27,12 +27,12 @@ export default class XENDCalendarProvider extends XENDBaseProvider {
     }
 
     /**
-     * 
-     * @param startTimestamp 
-     * @param endTimestamp 
-     * @param calendars 
+     *
+     * @param startTimestamp
+     * @param endTimestamp
+     * @param calendars
      */
-    public async fetchEntries(startTimestamp: number, endTimestamp?: number, 
+    public async fetchEntries(startTimestamp: number, endTimestamp?: number,
                               calendars?: XENDCalendar[]): Promise<XENDCalendarEntry[]> {
         return new Promise<XENDCalendarEntry[]>((resolve, reject) => {
             resolve([]);

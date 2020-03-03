@@ -1,7 +1,7 @@
 import { XENDBaseProvider, DataProviderUpdateNamespace } from '../types';
 import NativeInterface, { NativeInterfaceMessage } from '../native-interface';
 
-export class XENDSystemProperties {
+export interface XENDSystemProperties {
     deviceName: string;
     deviceType: string;
     deviceModel: string;
@@ -24,21 +24,21 @@ export default class XENDSystemProvider extends XENDBaseProvider {
 
         // Override console.log etc with our own
 
-        let newConsole = (oldConsole) => {
+        let newConsole = (oldConsole: any) => {
             return {
-                log: (text) => {
+                log: (text: string) => {
                     oldConsole.log(text);
                     this.log(text);
                 },
-                info: (text) => {
+                info: (text: string) => {
                     oldConsole.info(text);
                     this.log('INFO: ' + text);
                 },
-                warn: (text) => {
+                warn: (text: string) => {
                     oldConsole.warn(text);
                     this.log('WARN: ' + text);
                 },
-                error: (text) => {
+                error: (text: string) => {
                     oldConsole.error(text);
                     this.log('ERROR: ' + text);
                 }

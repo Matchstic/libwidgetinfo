@@ -1,10 +1,10 @@
 import { XENDBaseProvider, NativeError, DataProviderUpdateNamespace } from '../types';
 
-export class XENDApplicationsProperties {
+export interface XENDApplicationsProperties {
     allApplications: XENDApplication[];
 }
 
-export class XENDApplication {
+export interface XENDApplication {
     displayName: string;
     bundleIdentifier: string;
     applicationIcon: string;

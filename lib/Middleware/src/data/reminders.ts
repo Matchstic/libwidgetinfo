@@ -1,7 +1,7 @@
 import { XENDBaseProvider } from '../types';
 
-export class XENDRemindersProperties {
-    
+export interface XENDRemindersProperties {
+
 }
 
 export default class XENDRemindersProvider extends XENDBaseProvider {

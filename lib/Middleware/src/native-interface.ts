@@ -5,13 +5,13 @@ enum NativeMessageType {
     Callback = 'callback',
 }
 
-class NativeInterfaceInternalMessage {
+interface NativeInterfaceInternalMessage {
     type: NativeMessageType;
     data: any;
     callbackId?: number;
 }
 
-export class NativeInterfaceMessage {
+export interface NativeInterfaceMessage {
     namespace: DataProviderUpdateNamespace;
     functionDefinition: string;
     data: any;

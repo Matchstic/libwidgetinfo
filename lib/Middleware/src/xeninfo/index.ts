@@ -33,8 +33,8 @@ export default class XenInfoMiddleware implements XenHTMLMiddleware {
         // Map weather data to XI format on global object
 
         let weather = {
-            dayForecasts: [],
-            hourlyForecasts: [],
+            dayForecasts: [] as any[],
+            hourlyForecasts: [] as any[],
             city: newData.metadata.address.city,
             address: {
                 street: newData.metadata.address.street,

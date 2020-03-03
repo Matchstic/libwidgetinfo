@@ -1,6 +1,6 @@
 import { XENDBaseProvider } from '../types';
 
-export class XENDWeatherPropertiesAirQualityPollutant {
+export interface XENDWeatherPropertiesAirQualityPollutant {
     amount: number;
     categoryLevel: string;
     categoryIndex: number;
@@ -10,7 +10,7 @@ export class XENDWeatherPropertiesAirQualityPollutant {
     index: number;
 }
 
-export class XENDWeatherPropertiesNow {
+export interface XENDWeatherPropertiesNow {
     _isValid: boolean;
 
     condition: {
@@ -81,7 +81,7 @@ export class XENDWeatherPropertiesNow {
     };
 }
 
-export class XENDWeatherPropertiesHourly {
+export interface XENDWeatherPropertiesHourly {
     wind: {
         degrees: number;
         cardinal: string;
@@ -123,7 +123,7 @@ export class XENDWeatherPropertiesHourly {
     visibility: number;
 }
 
-export class XENDWeatherPropertiesDaily {
+export interface XENDWeatherPropertiesDaily {
     wind: {
         degrees: number;
         cardinal: string;
@@ -176,7 +176,7 @@ export class XENDWeatherPropertiesDaily {
     };
 }
 
-export class XENDWeatherPropertiesUnits {
+export interface XENDWeatherPropertiesUnits {
     temperature: string;
     amount: string;
     speed: string;
@@ -185,7 +185,7 @@ export class XENDWeatherPropertiesUnits {
     distance: string;
 }
 
-export class XENDWeatherPropertiesMetadata {
+export interface XENDWeatherPropertiesMetadata {
     address: {
         street: string;
         neighbourhood: string;
@@ -205,7 +205,7 @@ export class XENDWeatherPropertiesMetadata {
     };
 }
 
-export class XENDWeatherProperties {
+export interface XENDWeatherProperties {
     now:        XENDWeatherPropertiesNow;
     hourly:     XENDWeatherPropertiesHourly[];
     daily:      XENDWeatherPropertiesDaily[];

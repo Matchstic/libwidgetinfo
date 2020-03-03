@@ -14,12 +14,12 @@ export enum DataProviderUpdateNamespace {
     System = 'system'
 }
 
-export class DataProviderUpdate {
+export interface DataProviderUpdate {
     namespace: DataProviderUpdateNamespace;
     payload: any;
 }
 
-export class NativeError {
+export interface NativeError {
     code: number;
     message: string;
 }
@@ -49,9 +49,9 @@ export class XENDBaseProvider {
     /**
      * Add a function that gets called whenever the data of this
      * provider changes.
-     * 
+     *
      * The new data is provided as the parameter into your callback function.
-     * 
+     *
      * @param callback A callback that is notified whenever the provider's data change
      */
     public observeData(callback: (newData: any) => void) {

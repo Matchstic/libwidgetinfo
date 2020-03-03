@@ -1,34 +1,34 @@
 import { XENDBaseProvider, DataProviderUpdateNamespace } from '../types';
 import { XENDApplication } from './applications';
 
-export class XENDMediaAlbum {
+export interface XENDMediaAlbum {
     title: string;
     tracks: XENDMediaTrack[];
     trackCount: number;
 }
 
-export class XENDMediaArtist {
+export interface XENDMediaArtist {
     name: string;
     albums: XENDMediaAlbum;
 }
 
-export class XENDMediaTrack {
+export interface XENDMediaTrack {
     title: string;
     album: XENDMediaAlbum;
     artist: XENDMediaArtist;
-    artwork: string; // base64 encoded
+    artwork: string; // URL of the artwork, exposed by the native side
     length: number;
     number: number;
 }
 
-export class XENDMediaCurrentItem {
+export interface XENDMediaCurrentItem {
     track: XENDMediaTrack;
     album: XENDMediaAlbum;
     artist: XENDMediaArtist;
     elapsedDuration: number;
 }
 
-export class XENDMediaProperties {
+export interface XENDMediaProperties {
     currentTrack: XENDMediaCurrentItem;
     upcomingTracks: XENDMediaTrack[];
 
@@ -55,14 +55,14 @@ export default class XENDMediaProvider extends XENDBaseProvider {
 
     /**
      * Toggles play/pause of the current media item.
-     * 
+     *
      * Usage:
      * ```
      * WidgetInfo.media.togglePlayState();
-     * 
+     *
      * // Alternatively:
      * WidgetInfo.media.togglePlayState().then(function(newState) {
-     * 
+     *
      * });
      * ```
      * @return A promise that resolves with the new play/pause state
