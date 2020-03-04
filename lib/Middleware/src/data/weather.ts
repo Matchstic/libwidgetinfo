@@ -217,6 +217,9 @@ export default class XENDWeatherProvider extends XENDBaseProvider {
 
     // Overridden to inject Date objects
     _setData(payload: XENDWeatherProperties) {
+        // Don't try to parse an empty object
+        if (payload.now === undefined) return;
+
         let newPayload = Object.assign({}, payload);
 
         const timezoneOffset = this.timezoneOffset(payload.now.sun.sunset as any);
@@ -224,6 +227,7 @@ export default class XENDWeatherProvider extends XENDBaseProvider {
         // `now` properties
         newPayload.now.moon.moonrise = this.datestringToInstance(payload.now.moon.moonrise as any);
         newPayload.now.moon.moonset = this.datestringToInstance(payload.now.moon.moonset as any);
+
         newPayload.now.sun.sunrise = this.datestringToInstance(payload.now.sun.sunrise as any);
         newPayload.now.sun.sunset = this.datestringToInstance(payload.now.sun.sunset as any);
 
@@ -351,4 +355,94 @@ export default class XENDWeatherProvider extends XENDBaseProvider {
         return this._data;
     }
 
+    protected defaultData(): XENDWeatherProperties {
+        return {
+            now: {
+                _isValid: false,
+                condition: {
+                    description: '',
+                    code: 0
+                },
+                temperature: {
+                    minimum: 0,
+                    maximum: 0,
+                    current: 0,
+                    relativeHumidity: 0,
+                    feelsLike: 0,
+                    heatIndex: 0,
+                    dewpoint: 0,
+                },
+                ultraviolet: {
+                    index: 0,
+                    description: '',
+                },
+                cloudCover: '',
+                sun: {
+                    sunrise: new Date(0),
+                    sunset: new Date(0),
+                    isDay: false,
+                },
+                airquality: {
+                    scale: '',
+                    categoryLevel: '',
+                    index: 0,
+                    comment: '',
+                    source: '',
+                    categoryIndex: 0,
+                    pollutants: []
+                },
+                precipitation: {
+                    total: 0,
+                    hourly: 0,
+                    type: '',
+                },
+                wind: {
+                    degrees: 0,
+                    cardinal: '',
+                    gust: 0,
+                    speed: 0,
+                },
+                visibility: 0,
+                moon: {
+                    phase: '',
+                    phaseDay: 0,
+                    phaseDescription: '',
+                    moonrise: new Date(0),
+                    moonset: new Date(0),
+                },
+                pressure: {
+                    current: 0,
+                    tendency: 0,
+                    description: '',
+                }
+            },
+            hourly: [],
+            daily: [],
+            units: {
+                temperature: '',
+                amount: '',
+                speed: '',
+                isMetric: false,
+                pressure: '',
+                distance: '',
+            },
+            metadata: {
+                address: {
+                    street: '',
+                    neighbourhood: '',
+                    city: '',
+                    postalCode: '',
+                    county: '',
+                    state: '',
+                    country: '',
+                    countryISOCode: '',
+                },
+                updateTimestamp: new Date(0),
+                location: {
+                    latitude: 0,
+                    longitude: 0,
+                }
+            },
+        };
+    }
 }

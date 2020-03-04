@@ -37,6 +37,9 @@ class XENDMiddleware extends NativeInterface {
         this.dataProviders.set(DataProviderUpdateNamespace.Weather, new XENDWeatherProvider(this));
         this.dataProviders.set(DataProviderUpdateNamespace.Applications, new XENDApplicationsProvider(this));
         this.dataProviders.set(DataProviderUpdateNamespace.Resources, new XENDResourceStatisticsProvider(this));
+
+        // Initialise some compat stuff that doesn't rely on code that could be loaded a little later
+        this.infostats2.initialise(this, this.dataProviders);
     }
 
     protected onDataProviderUpdate(update: DataProviderUpdate) {
@@ -48,7 +51,7 @@ class XENDMiddleware extends NativeInterface {
         console.log('Middleware onLoad');
 
         // Setup backwards compatibility middlewares
-        this.infostats2.initialise(this, this.dataProviders);
+        // This is post-load
         this.groovyAPI.initialise(this, this.dataProviders);
         this.xeninfo.initialise(this, this.dataProviders);
     }

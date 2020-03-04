@@ -30,6 +30,7 @@
     
     // Sort out objc_msgSend
     output = [output stringByReplacingOccurrencesOfString:@"objc_msgSend" withString:@"WidgetInfo._middleware.infostats2.objc_msgSend"];
+    // output = [self replacingString:output withPattern:@"new Type\\(\"[a-z]+\"\\).blockWith\\(\\)\\(([\\S\\s]+)\\)\\)" withTemplate:@"$1)" error:nil];
     
     // Make the IS2* classes nicer to work with in the TypeScript layer
     output = [output stringByReplacingOccurrencesOfString:@"IS2System" withString:@"\"IS2System\""];
@@ -43,6 +44,16 @@
     output = [output stringByReplacingOccurrencesOfString:@"IS2Calendar" withString:@"\"IS2Calendar\""];
     
     return output;
+}
+
+- (NSString *)replacingString:(NSString*)string withPattern:(NSString *)pattern withTemplate:(NSString *)withTemplate error:(NSError **)error {
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:pattern
+                                                                           options:NSRegularExpressionCaseInsensitive
+                                                                             error:error];
+    return [regex stringByReplacingMatchesInString:string
+                                           options:0
+                                             range:NSMakeRange(0, string.length)
+                                      withTemplate:withTemplate];
 }
 
 @end

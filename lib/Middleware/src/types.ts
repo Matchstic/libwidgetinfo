@@ -27,7 +27,8 @@ export interface NativeError {
 export class XENDBaseProvider {
 
     constructor(protected connection: NativeInterface) {
-
+        // Configure with default data, so that everything has sane defaults
+        this._data = this.defaultData();
     }
 
     private observers: Array<(newData: any) => void> = [];
@@ -35,6 +36,10 @@ export class XENDBaseProvider {
     protected _data: any = {};
     get data() {
         return this._data;
+    }
+
+    protected defaultData(): any {
+        return {};
     }
 
     _setData(payload: any) {
