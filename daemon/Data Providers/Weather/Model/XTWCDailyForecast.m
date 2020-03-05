@@ -37,6 +37,8 @@
 @interface XTWCDailyForecast ()
 @property (nonatomic, strong) TWCDayNightPart *day;
 @property (nonatomic, strong) TWCDayNightPart *night;
+
+@property (nonatomic, readwrite) BOOL nightOverride;
 @end
 
 @implementation XTWCDailyForecast
@@ -45,10 +47,15 @@
     self = [super init];
     
     if (self) {
+        self.nightOverride = NO;
         [self _parseData:data units:units];
     }
     
     return self;
+}
+
+- (void)overrideToNight:(BOOL)isNight {
+    self.nightOverride = isNight;
 }
 
 - (void)_parseData:(NSDictionary*)data units:(struct XTWCUnits)units {
@@ -138,6 +145,7 @@
 // Overriden getters for day/night parts
    
 - (BOOL)_useDayPart {
+    if (self.nightOverride) return NO;
     if (self.day.validUNIXTime == 0) return NO;
     
     // If this day has not yet begun, assume to use day info

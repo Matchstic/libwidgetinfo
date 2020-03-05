@@ -57,4 +57,9 @@ Initialises properties with API response
 */
 - (instancetype)initWithData:(NSDictionary*)data units:(struct XTWCUnits)units;
 
+/**
+ * Overrides data from day/night things to be for night portion
+ */
+- (void)overrideToNight:(BOOL)isNight;
+
 @end

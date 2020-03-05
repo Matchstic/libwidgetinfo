@@ -31,6 +31,7 @@
 
 // Caching
 @property (nonatomic, strong) NSArray* dailyPredictionCache;
+@property (nonatomic, strong) NSArray* nightlyPredictionCache;
 @property (nonatomic, strong) NSArray* hourlyPredictionCache;
 @property (nonatomic, strong) XTWCObservation *observationCache;
 @property (nonatomic, strong) XTWCAirQualityObservation *airQualityCache;
@@ -323,6 +324,7 @@
         @"now": [self nowFieldFromCache],
         @"hourly": [self hourlyFieldFromCache],
         @"daily": [self dailyFieldFromCache],
+        @"nightly": [self nightlyFieldFromCache],
         @"metadata": @{
             @"address": ![[self.metadataCache objectForKey:@"address"] isEqual:[NSNull null]] ?
                             [self.metadataCache objectForKey:@"address"] :
@@ -395,6 +397,16 @@
     
     self.dailyPredictionCache = dailyCache;
     
+    // Nightly forecasts
+    NSMutableArray *nightlyCache = [@[] mutableCopy];
+    for (NSDictionary *data in predictions) {
+        XTWCDailyForecast *prediction = [[XTWCDailyForecast alloc] initWithData:data units:units];
+        [prediction overrideToNight:YES];
+        [nightlyCache addObject:prediction];
+    }
+    
+    self.nightlyPredictionCache = nightlyCache;
+    
     // Hourly forecasts
     NSMutableArray *hourlyCache = [@[] mutableCopy];
     NSArray *hourlyPredictions = [[forecastData objectForKey:@"fcsthourly24short"] objectForKey:@"forecasts"];
@@ -443,6 +455,20 @@
     NSMutableArray *result = [NSMutableArray array];
     
     for (XTWCDailyForecast *prediction in self.dailyPredictionCache) {
+        if (prediction.validUNIXTime + (60 * 60 * 24) > now)
+            [result addObject:prediction];
+    }
+    
+    return result;
+}
+
+- (NSArray*)_cachedNightlyPredictionSinceNow {
+    // From cached data, fetch the predictions that include and follow today's
+    uint64_t now = [[NSDate date] timeIntervalSince1970];
+    
+    NSMutableArray *result = [NSMutableArray array];
+    
+    for (XTWCDailyForecast *prediction in self.nightlyPredictionCache) {
         if (prediction.validUNIXTime + (60 * 60 * 24) > now)
             [result addObject:prediction];
     }
@@ -554,10 +580,9 @@
     return now;
 }
 
-- (NSArray*)dailyFieldFromCache {
+- (NSArray*)_dailyItemsFromArray:(NSArray*)predictions {
     NSMutableArray *result = [NSMutableArray array];
     
-    NSArray *predictions = [self _cachedDailyPredictionSinceNow];
     for (XTWCDailyForecast *prediction in predictions) {
         
         NSDictionary *item = @{
@@ -615,6 +640,14 @@
     }
     
     return result;
+}
+
+- (NSArray*)dailyFieldFromCache {
+    return [self _dailyItemsFromArray:[self _cachedDailyPredictionSinceNow]];
+}
+
+- (NSArray*)nightlyFieldFromCache {
+    return [self _dailyItemsFromArray:[self _cachedNightlyPredictionSinceNow]];
 }
 
 - (NSArray*)hourlyFieldFromCache {
