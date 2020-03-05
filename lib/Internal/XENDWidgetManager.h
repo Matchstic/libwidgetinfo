@@ -4,6 +4,8 @@
 //
 //  Created by Matt Clarke on 15/09/2019.
 //
+// Notes:
+// - Custom URL scheme on iOS 9 and 10: https://github.com/wilddylan/WKWebViewWithURLProtocol
 
 #import <Foundation/Foundation.h>
 #import <WebKit/WebKit.h>

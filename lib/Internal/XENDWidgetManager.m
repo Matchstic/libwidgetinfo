@@ -7,11 +7,21 @@
 
 #import "XENDWidgetManager.h"
 #import "../Data Providers/XENDBaseDataProvider.h"
+#import "../URL Handlers/XENDBaseURLHandler.h"
 
 // Provider imports
 #import "../Data Providers/System/XENDSystemDataProvider.h"
 #import "../Data Providers/Media/XENDMediaDataProvider.h"
 #import "../Data Providers/Weather/XENDWeatherDataProvider.h"
+
+// URL handler imports
+#import "../URL Handlers/XENDWidgetWeatherURLHandler.h"
+
+// Horrible internal hacks for NSURLProtocol to work as intended
+#import <objc/runtime.h>
+@interface WKBrowsingContextController : NSObject
++ (void)registerSchemeForCustomProtocol:(NSString*)arg1;
+@end
 
 @interface XENDWidgetManager ()
 @property (nonatomic, strong) NSMutableArray<WKWebView*> *managedWebViews;
@@ -41,6 +51,9 @@
         self.messageHandler = [[XENDWidgetMessageHandler alloc] initWithDelegate:self];
         
         self.dataProviders = [self _loadDataProviders];
+        
+        // These get registered globally
+        [self _loadURLHandlers];
     }
     
     return self;
@@ -199,6 +212,20 @@
     [result setObject:weather forKey:[XENDWeatherDataProvider providerNamespace]];
     
     return result;
+}
+
+- (void)_loadURLHandlers {
+    // First, register available schemes into WebKit
+    [objc_getClass("WKBrowsingContextController") registerSchemeForCustomProtocol:@"file"];
+    [objc_getClass("WKBrowsingContextController") registerSchemeForCustomProtocol:@"xui"];
+
+    // Now, register them with NSURLProtocol
+    [NSURLProtocol registerClass:[XENDWidgetWeatherURLHandler class]];
+}
+
+// Used internally by the URL handlers
+- (id)providerForNamespace:(NSString*)providerNamespace {
+    return [self.dataProviders objectForKey:providerNamespace];
 }
 
 - (void)noteDeviceDidEnterSleep {

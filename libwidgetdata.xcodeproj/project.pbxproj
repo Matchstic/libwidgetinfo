@@ -14,6 +14,10 @@
 		C919CA68233022E8001391A5 /* XENDSystemDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = C919CA66233022E8001391A5 /* XENDSystemDataProvider.m */; };
 		C919CA6B233026A4001391A5 /* XENDBaseDataProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = C919CA69233026A4001391A5 /* XENDBaseDataProvider.h */; };
 		C919CA6C233026A4001391A5 /* XENDBaseDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = C919CA6A233026A4001391A5 /* XENDBaseDataProvider.m */; };
+		C92013DE2411A704009CBBFB /* XENDWidgetWeatherURLHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = C92013DC2411A704009CBBFB /* XENDWidgetWeatherURLHandler.h */; };
+		C92013DF2411A704009CBBFB /* XENDWidgetWeatherURLHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = C92013DD2411A704009CBBFB /* XENDWidgetWeatherURLHandler.m */; };
+		C92013E22411A711009CBBFB /* XENDBaseURLHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = C92013E02411A711009CBBFB /* XENDBaseURLHandler.h */; };
+		C92013E32411A711009CBBFB /* XENDBaseURLHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = C92013E12411A711009CBBFB /* XENDBaseURLHandler.m */; };
 		C9204FD323317EE000F9F535 /* XENDXPCDaemonListener.mm in Sources */ = {isa = PBXBuildFile; fileRef = C9204FD223317EE000F9F535 /* XENDXPCDaemonListener.mm */; };
 		C9204FD623317EF300F9F535 /* XENDSimulatedDaemonListener.m in Sources */ = {isa = PBXBuildFile; fileRef = C9204FD523317EF300F9F535 /* XENDSimulatedDaemonListener.m */; };
 		C9204FDF2331817E00F9F535 /* XENDBaseDaemonListener.m in Sources */ = {isa = PBXBuildFile; fileRef = C9204FDE2331817E00F9F535 /* XENDBaseDaemonListener.m */; };
@@ -152,6 +156,11 @@
 		C919CA66233022E8001391A5 /* XENDSystemDataProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XENDSystemDataProvider.m; sourceTree = "<group>"; };
 		C919CA69233026A4001391A5 /* XENDBaseDataProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XENDBaseDataProvider.h; sourceTree = "<group>"; };
 		C919CA6A233026A4001391A5 /* XENDBaseDataProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XENDBaseDataProvider.m; sourceTree = "<group>"; };
+		C92013DC2411A704009CBBFB /* XENDWidgetWeatherURLHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XENDWidgetWeatherURLHandler.h; sourceTree = "<group>"; };
+		C92013DD2411A704009CBBFB /* XENDWidgetWeatherURLHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XENDWidgetWeatherURLHandler.m; sourceTree = "<group>"; };
+		C92013E02411A711009CBBFB /* XENDBaseURLHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XENDBaseURLHandler.h; sourceTree = "<group>"; };
+		C92013E12411A711009CBBFB /* XENDBaseURLHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XENDBaseURLHandler.m; sourceTree = "<group>"; };
+		C92013E42411AEA5009CBBFB /* XENDWidgetManager-Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "XENDWidgetManager-Internal.h"; sourceTree = "<group>"; };
 		C9204FC823317EBD00F9F535 /* libwidgetinfodaemon.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libwidgetinfodaemon.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9204FD123317EE000F9F535 /* XENDXPCDaemonListener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XENDXPCDaemonListener.h; path = Daemon/Connection/XENDXPCDaemonListener.h; sourceTree = SOURCE_ROOT; };
 		C9204FD223317EE000F9F535 /* XENDXPCDaemonListener.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = XENDXPCDaemonListener.mm; path = Daemon/Connection/XENDXPCDaemonListener.mm; sourceTree = SOURCE_ROOT; };
@@ -311,6 +320,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C92013DB2411A6E6009CBBFB /* URL Handlers */ = {
+			isa = PBXGroup;
+			children = (
+				C92013DC2411A704009CBBFB /* XENDWidgetWeatherURLHandler.h */,
+				C92013DD2411A704009CBBFB /* XENDWidgetWeatherURLHandler.m */,
+				C92013E02411A711009CBBFB /* XENDBaseURLHandler.h */,
+				C92013E12411A711009CBBFB /* XENDBaseURLHandler.m */,
+			);
+			path = "URL Handlers";
+			sourceTree = "<group>";
+		};
 		C9204FC223317DC800F9F535 /* Remote */ = {
 			isa = PBXGroup;
 			children = (
@@ -372,6 +392,7 @@
 				C9F886FE232ED8E800E87EF3 /* XENDWidgetMessageHandler.h */,
 				C9F886FF232ED8E800E87EF3 /* XENDWidgetMessageHandler.m */,
 				C919CA642330225D001391A5 /* XENDWidgetManager-Protocol.h */,
+				C92013E42411AEA5009CBBFB /* XENDWidgetManager-Internal.h */,
 			);
 			path = Internal;
 			sourceTree = "<group>";
@@ -489,6 +510,7 @@
 		C9F2F3562301BE4100E4863B /* lib */ = {
 			isa = PBXGroup;
 			children = (
+				C92013DB2411A6E6009CBBFB /* URL Handlers */,
 				C97CF9F52321806D00A3A014 /* Internal */,
 				C9F2F4072301C35C00E4863B /* Hooks */,
 				C9F2F4062301C34A00E4863B /* Data Providers */,
@@ -694,6 +716,7 @@
 				C919CA6223302171001391A5 /* XENDProxyDataProvider.h in Headers */,
 				C9F2F3A02301BE4100E4863B /* IdentifierContinue.h in Headers */,
 				C97CF9F323217A1200A3A014 /* XENDHijackedWebViewDelegate.h in Headers */,
+				C92013DE2411A704009CBBFB /* XENDWidgetWeatherURLHandler.h in Headers */,
 				C9F2F39D2301BE4100E4863B /* Parser.tab.hpp in Headers */,
 				C9F2F3A22301BE4100E4863B /* Syntax.hpp in Headers */,
 				C9204FE62336445000F9F535 /* XENDProxyManager.h in Headers */,
@@ -702,6 +725,7 @@
 				C9204FEA2336446400F9F535 /* XENDProxyXPCConnection.h in Headers */,
 				C9F2F3DE2301BE4800E4863B /* tokenizer.h in Headers */,
 				C9F2F3EE2301BE4800E4863B /* gumbo.h in Headers */,
+				C92013E22411A711009CBBFB /* XENDBaseURLHandler.h in Headers */,
 				C9F2F3F32301BE4800E4863B /* OGElement.h in Headers */,
 				C97CF9FD2321834F00A3A014 /* XIPreProcessor.h in Headers */,
 				C9F2F3F12301BE4800E4863B /* OGText.h in Headers */,
@@ -870,6 +894,7 @@
 				C9F2F3DB2301BE4800E4863B /* vector.c in Sources */,
 				C97CF9F423217A1200A3A014 /* XENDHijackedWebViewDelegate.m in Sources */,
 				C9F2F3F82301BE4800E4863B /* NSString+OGString.m in Sources */,
+				C92013E32411A711009CBBFB /* XENDBaseURLHandler.m in Sources */,
 				C9F2F3EC2301BE4800E4863B /* tokenizer.c in Sources */,
 				C9F2F3A42301BE4100E4863B /* Output.cpp in Sources */,
 				C9F2F3DF2301BE4800E4863B /* utf8.c in Sources */,
@@ -880,6 +905,7 @@
 				C9F2F3E62301BE4800E4863B /* tag.c in Sources */,
 				C9F2F3A62301BE4100E4863B /* XENDPreprocessorManager.m in Sources */,
 				C9F2F3852301BE4100E4863B /* Compile.cpp in Sources */,
+				C92013DF2411A704009CBBFB /* XENDWidgetWeatherURLHandler.m in Sources */,
 				C919CA68233022E8001391A5 /* XENDSystemDataProvider.m in Sources */,
 				C9204FEF2336447B00F9F535 /* XENDProxySimulatedConnection.m in Sources */,
 				C97CF9FE2321834F00A3A014 /* XIPreProcessor.m in Sources */,
