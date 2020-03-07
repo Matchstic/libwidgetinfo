@@ -9,10 +9,17 @@
 #import "../Internal/XENDWidgetManager-Internal.h"
 #import "../Data Providers/Weather/XENDWeatherDataProvider.h"
 
+static BOOL handlerEnabled = YES;
+
 @implementation XENDWidgetWeatherURLHandler
 
++ (void)setHandlerEnabled:(BOOL)enabled {
+	handlerEnabled = enabled;
+}
+
 + (BOOL)canHandleURL:(NSURL*)url {	
-    return [[url scheme] isEqualToString:@"file"] &&
+    return handlerEnabled &&
+			[[url scheme] isEqualToString:@"file"] &&
 			[[url absoluteString] containsString:@"/var/mobile/Documents/widgetweather.xml"];
 }
 

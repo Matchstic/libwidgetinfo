@@ -10,4 +10,9 @@
 
 @interface XENDWidgetWeatherURLHandler : XENDBaseURLHandler
 
+/**
+ * Call externally to disable widgetweather.xml compatibility
+ */
++ (void)setHandlerEnabled:(BOOL)enabled;
+
 @end
