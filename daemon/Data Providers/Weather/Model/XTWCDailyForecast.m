@@ -69,7 +69,7 @@
     self.blurbAuthor            = [data objectForKey:@"blurb_author" defaultValue:[NSNull null]];
     self.dayOfWeek              = [data objectForKey:@"dow" defaultValue:[NSNull null]];
     self.forecastDayIndex       = [data objectForKey:@"num" defaultValue:[NSNull null]];
-    self.lunarPhaseDay          = [data objectForKey:@"lunar_phase_day" defaultValue:[NSNull null]];
+    self.lunarPhaseDay          = [data objectForKey:@"lunar_phase_day" defaultValue:[data objectForKey:@"moon_phase_day" defaultValue:[NSNull null]]];
     self.lunarPhaseDescription  = [data objectForKey:@"lunar_phase" defaultValue:[data objectForKey:@"moon_phase" defaultValue:[NSNull null]]];
     self.lunarPhaseCode         = [data objectForKey:@"lunar_phase_code" defaultValue:[data objectForKey:@"moon_phase_code" defaultValue:[NSNull null]]];
     self.moonRiseISOTime        = [data objectForKey:@"moonrise" defaultValue:[NSNull null]];

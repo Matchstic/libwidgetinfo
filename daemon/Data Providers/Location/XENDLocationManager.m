@@ -154,6 +154,7 @@
                 }
                 
                 NSDictionary *reverseGeocodedAddress = @{
+                    @"house": placemark.subThoroughfare ? placemark.subThoroughfare : @"",
                     @"street": streetComponent,
                     @"neighbourhood": placemark.subLocality ? placemark.subLocality : @"",
                     @"city": placemark.locality ? placemark.locality : @"",

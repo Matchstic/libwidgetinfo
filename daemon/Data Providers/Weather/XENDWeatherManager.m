@@ -329,6 +329,7 @@
             @"address": ![[self.metadataCache objectForKey:@"address"] isEqual:[NSNull null]] ?
                             [self.metadataCache objectForKey:@"address"] :
                             @{
+                                @"house": @"",
                                 @"street": @"",
                                 @"neighbourhood": @"",
                                 @"city": @"",
@@ -537,6 +538,7 @@
         },
         
         @"moon": @{
+            @"phaseDay": prediction ? prediction.lunarPhaseDay : [NSNull null],
             @"phaseCode": prediction ? prediction.lunarPhaseCode : [NSNull null],
             @"phaseDescription": prediction ? prediction.lunarPhaseDescription : [NSNull null],
             @"moonrise": prediction ? prediction.moonRiseISOTime : [NSNull null],
@@ -643,11 +645,116 @@
 }
 
 - (NSArray*)dailyFieldFromCache {
-    return [self _dailyItemsFromArray:[self _cachedDailyPredictionSinceNow]];
+    NSArray *predictions = [self _cachedDailyPredictionSinceNow];
+    NSMutableArray *result = [NSMutableArray array];
+    
+    for (XTWCDailyForecast *prediction in predictions) {
+        
+        NSDictionary *item = @{
+            @"cloudCoverPercentage": prediction.cloudCoverPercentage,
+            @"timestamp": [NSNumber numberWithLongLong:(long long)prediction.validUNIXTime * 1000],
+            
+            @"condition": @{
+                @"code": prediction.conditionIcon,
+                @"description": prediction.conditionDescription,
+            },
+            
+            @"dayOfWeek": prediction.dayOfWeek,
+            @"dayIndex": prediction.forecastDayIndex,
+            
+            @"moon": @{
+                @"phaseCode": prediction.lunarPhaseCode,
+                @"phaseDay": prediction.lunarPhaseDay,
+                @"phaseDescription": prediction.lunarPhaseDescription,
+                @"moonrise": prediction.moonRiseISOTime,
+                @"moonset": prediction.moonSetISOTime
+            },
+            
+            @"sun": @{
+                @"sunset": prediction.sunSetISOTime,
+                @"sunrise": prediction.sunRiseISOTime,
+            },
+            
+            @"precipitation": @{
+                @"probability": prediction.precipProbability,
+                @"type": prediction.precipType,
+                @"stormLikelihood": prediction.stormLikelihood,
+                @"tornadoLikelihood": prediction.tornadoLikelihood,
+            },
+            
+            @"temperature": @{
+                @"maximum": prediction.maxTemp,
+                @"minimum": prediction.minTemp,
+                @"relativeHumidity": prediction.relativeHumidity,
+                @"heatIndex": prediction.heatIndex
+            },
+            
+            @"ultraviolet": @{
+                @"index": prediction.uvIndex,
+                @"description": prediction.uvDescription,
+            },
+            
+            @"wind": @{
+                @"degrees": prediction.windDirection,
+                @"cardinal": prediction.windDirectionCardinal,
+                @"speed": prediction.windSpeed
+            }
+        };
+        
+        [result addObject:item];
+    }
+    
+    return result;
 }
 
 - (NSArray*)nightlyFieldFromCache {
-    return [self _dailyItemsFromArray:[self _cachedNightlyPredictionSinceNow]];
+    NSArray *predictions = [self _cachedNightlyPredictionSinceNow];
+    NSMutableArray *result = [NSMutableArray array];
+    
+    for (XTWCDailyForecast *prediction in predictions) {
+        
+        NSDictionary *item = @{
+            @"cloudCoverPercentage": prediction.cloudCoverPercentage,
+            
+            @"condition": @{
+                @"code": prediction.conditionIcon,
+                @"description": prediction.conditionDescription,
+            },
+            
+            @"moon": @{
+                @"phaseCode": prediction.lunarPhaseCode,
+                @"phaseDay": prediction.lunarPhaseDay,
+                @"phaseDescription": prediction.lunarPhaseDescription,
+                @"moonrise": prediction.moonRiseISOTime,
+                @"moonset": prediction.moonSetISOTime
+            },
+            
+            @"precipitation": @{
+                @"probability": prediction.precipProbability,
+                @"type": prediction.precipType,
+            },
+            
+            @"temperature": @{
+                @"relativeHumidity": prediction.relativeHumidity,
+                @"heatIndex": prediction.heatIndex
+            },
+            
+            @"ultraviolet": @{
+                @"index": prediction.uvIndex,
+                @"description": prediction.uvDescription,
+            },
+            
+            @"wind": @{
+                @"degrees": prediction.windDirection,
+                @"cardinal": prediction.windDirectionCardinal,
+                @"speed": prediction.windSpeed
+            }
+        };
+        
+        [result addObject:item];
+    }
+    
+    return result;
 }
 
 - (NSArray*)hourlyFieldFromCache {
@@ -666,6 +773,7 @@
             
             @"dayOfWeek": prediction.dayOfWeek,
             @"hourIndex": prediction.forecastHourIndex,
+			@"dayIndicator": prediction.dayIndicator,
             @"timestamp": [NSNumber numberWithLongLong:(long long)prediction.validUNIXTime * 1000],
             
             @"precipitation": @{

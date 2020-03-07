@@ -98,7 +98,7 @@
 
 - (void)injectRuntime:(WKUserContentController*)contentController {
 #if TARGET_IPHONE_SIMULATOR==0
-    NSString *scriptLocation = @"/Library/Application Support/Xen HTML/libwidgetinfo.js";
+    NSString *scriptLocation = @"/Library/Application Support/Widgets/libwidgetinfo.js";
 #else
     NSString *scriptLocation = @"/Users/matt/iOS/Projects/Xen-HTML/deps/libwidgetinfo/lib/Middleware/build/libwidgetinfo.js";
 #endif

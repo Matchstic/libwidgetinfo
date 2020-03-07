@@ -176,6 +176,44 @@ export interface XENDWeatherPropertiesDaily {
     };
 }
 
+export interface XENDWeatherPropertiesNightly {
+    cloudCoverPercentage: number;
+
+    condition: {
+        code: number;
+        description: string;
+    };
+
+    moon: {
+        phaseCode: string;
+        phaseDay: number;
+        phaseDescription: string;
+        moonrise: Date;
+        moonset: Date;
+    };
+
+    precipitation: {
+        probability: number;
+        type: string;
+    };
+
+    temperature: {
+        relativeHumidity: number;
+        heatIndex: number;
+    };
+
+    ultraviolet: {
+        index: number;
+        description: string;
+    };
+
+    wind: {
+        degrees: number;
+        cardinal: string;
+        speed: number;
+    };
+}
+
 export interface XENDWeatherPropertiesUnits {
     temperature: string;
     amount: string;
@@ -209,6 +247,7 @@ export interface XENDWeatherProperties {
     now:        XENDWeatherPropertiesNow;
     hourly:     XENDWeatherPropertiesHourly[];
     daily:      XENDWeatherPropertiesDaily[];
+    nightly:    XENDWeatherPropertiesNightly[];
     units:      XENDWeatherPropertiesUnits;
     metadata:   XENDWeatherPropertiesMetadata;
 }
@@ -256,6 +295,12 @@ export default class XENDWeatherProvider extends XENDBaseProvider {
             newPayload.daily[i].moon.moonset = this.datestringToInstance(payload.daily[i].moon.moonset as any);
             newPayload.daily[i].sun.sunrise = this.datestringToInstance(payload.daily[i].sun.sunrise as any);
             newPayload.daily[i].sun.sunset = this.datestringToInstance(payload.daily[i].sun.sunset as any);
+        }
+
+        // `nightly` properties
+        for (let i = 0; i < payload.nightly.length; i++) {
+            newPayload.nightly[i].moon.moonrise = this.datestringToInstance(payload.nightly[i].moon.moonrise as any);
+            newPayload.nightly[i].moon.moonset = this.datestringToInstance(payload.nightly[i].moon.moonset as any);
         }
 
         // Metadata - do not convert to local apparent time
