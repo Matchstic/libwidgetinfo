@@ -8,6 +8,29 @@
 
 #import "ViewController.h"
 
+@interface WKPreferences (Private)
+- (void)_setAllowFileAccessFromFileURLs:(BOOL)arg1;
+- (void)_setAntialiasedFontDilationEnabled:(BOOL)arg1;
+- (void)_setCompositingBordersVisible:(BOOL)arg1;
+- (void)_setCompositingRepaintCountersVisible:(BOOL)arg1;
+- (void)_setDeveloperExtrasEnabled:(BOOL)arg1;
+- (void)_setDiagnosticLoggingEnabled:(BOOL)arg1;
+- (void)_setFullScreenEnabled:(BOOL)arg1;
+- (void)_setJavaScriptRuntimeFlags:(unsigned int)arg1;
+- (void)_setLogsPageMessagesToSystemConsoleEnabled:(BOOL)arg1;
+- (void)_setMediaDevicesEnabled:(bool)arg1;
+- (void)_setPageVisibilityBasedProcessSuppressionEnabled:(bool)arg1;
+- (void)_setOfflineApplicationCacheIsEnabled:(BOOL)arg1;
+- (void)_setSimpleLineLayoutDebugBordersEnabled:(BOOL)arg1;
+- (void)_setStandalone:(BOOL)arg1;
+- (void)_setStorageBlockingPolicy:(int)arg1;
+- (void)_setTelephoneNumberDetectionIsEnabled:(BOOL)arg1;
+- (void)_setTiledScrollingIndicatorVisible:(BOOL)arg1;
+- (void)_setVisibleDebugOverlayRegions:(unsigned int)arg1;
+
+- (void)_setResourceUsageOverlayVisible:(bool)arg1 ;
+@end
+
 @interface ViewController ()
 
 @end
@@ -24,7 +47,10 @@
     [self setupWebView];
     
     // Load the webview
-    NSString *testWidget = @"/opt/simject/var/mobile/Library/iWidgets/Xperia Clock DEBUG/Widget.html";
+    // NSString *testWidget = @"/opt/simject/var/mobile/Library/iWidgets/Xperia Clock DEBUG/Widget.html";
+    // NSString *testWidget = @"/opt/simject/var/mobile/Library/iWidgets/AppleishBlur/Widget.html";
+    // NSString *testWidget = @"/opt/simject/var/mobile/Library/iWidgets/IS2 Weather Base/Widget.html";
+    NSString *testWidget = @"/opt/simject/var/mobile/Library/SBHTML/UniAW2018_Base_Matt/Wallpaper.html";
     NSURL *url = [NSURL fileURLWithPath:testWidget];
     
     [self.webView loadFileURL:url allowingReadAccessToURL:[NSURL fileURLWithPath:@"/" isDirectory:YES]];
@@ -32,6 +58,23 @@
 
 - (void)setupWebView {
     WKWebViewConfiguration *config = [[WKWebViewConfiguration alloc] init];
+    
+    // Configure some private settings on WKWebView
+    WKPreferences *preferences = [[WKPreferences alloc] init];
+    [preferences _setAllowFileAccessFromFileURLs:YES];
+    [preferences _setFullScreenEnabled:NO];
+    [preferences _setOfflineApplicationCacheIsEnabled:YES]; // Local storage is needed for Lock+ etc.
+    [preferences _setStandalone:NO];
+    [preferences _setTelephoneNumberDetectionIsEnabled:NO];
+    [preferences _setTiledScrollingIndicatorVisible:NO];
+    [preferences _setLogsPageMessagesToSystemConsoleEnabled:YES];
+    //[preferences _setPageVisibilityBasedProcessSuppressionEnabled:YES];
+    
+    if ([preferences respondsToSelector:@selector(_setMediaDevicesEnabled:)]) {
+        [preferences _setMediaDevicesEnabled:YES];
+    }
+    
+    config.preferences = preferences;
     
     WKUserContentController *userContentController = [[WKUserContentController alloc] init];
     
@@ -80,7 +123,7 @@
 }
 
 - (void)viewDidLayoutSubviews {
-    self.webView.frame = CGRectMake(20, 20, self.view.frame.size.width - 40, self.view.frame.size.height - 40);
+    self.webView.frame = CGRectMake(0, 20, self.view.frame.size.width, self.view.frame.size.height - 20);
 }
 
 @end
