@@ -17,6 +17,7 @@
     self = [super init];
     
     if (self) {
+		[self initialise];
         self.delegate = delegate;
     }
     

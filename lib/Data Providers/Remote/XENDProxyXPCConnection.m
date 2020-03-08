@@ -25,7 +25,7 @@
 @property (nonatomic, strong) NSXPCConnection *daemonConnection;
 @end
 
-static NSString *customMachServiceName = @"com.matchstic.libwidgetinfo";
+static NSString *customMachServiceName = @"com.matchstic.widgetinfod";
 
 @implementation XENDProxyXPCConnection
 
@@ -34,15 +34,26 @@ static NSString *customMachServiceName = @"com.matchstic.libwidgetinfo";
 }
 
 - (void)initialise {
-    self.daemonConnection = [[NSXPCConnection alloc] initWithMachServiceName:customMachServiceName];
+	NSLog(@"*** [libwidgetinfo] :: Connecting to %@", customMachServiceName);
+	
+	if (self.daemonConnection) {
+		[self.daemonConnection invalidate];
+		self.daemonConnection = nil;
+	}
+	
+    self.daemonConnection = [[NSXPCConnection alloc] initWithMachServiceName:customMachServiceName options:NSXPCConnectionPrivileged];
     self.daemonConnection.remoteObjectInterface = [NSXPCInterface interfaceWithProtocol:@protocol(XENDRemoteDaemonConnection)];
     
     self.daemonConnection.exportedInterface = [NSXPCInterface interfaceWithProtocol:@protocol(XENDOriginDaemonConnection)];
     self.daemonConnection.exportedObject = self;
+	
+	[self.daemonConnection resume];
     
     // Handle connection errors
     __weak XENDProxyXPCConnection *weakSelf = self;
     self.daemonConnection.interruptionHandler = ^{
+		NSLog(@"*** [libwidgetinfo] :: interruptionHandler called");
+		
         [weakSelf.daemonConnection invalidate];
         weakSelf.daemonConnection = nil;
         
@@ -50,17 +61,20 @@ static NSString *customMachServiceName = @"com.matchstic.libwidgetinfo";
         [weakSelf initialise];
     };
     self.daemonConnection.invalidationHandler = ^{
+		NSLog(@"*** [libwidgetinfo] :: invalidationHandler called");
+		
         [weakSelf.daemonConnection invalidate];
         weakSelf.daemonConnection = nil;
         
-        // Re-create connection
-        [weakSelf initialise];
     };
-    
-    [self.daemonConnection resume];
+	
+	// Validate the connection
+	[self.daemonConnection remoteObjectProxyWithErrorHandler:^(NSError * _Nonnull error) {
+		NSLog(@"*** [libwidgetinfo] :: Connection error: %@", error);
+	}];
     
     // Notify providers of connection
-    for (XENDProxyDataProvider *dataProvider in self.registeredProxyProviders) {
+    for (XENDProxyDataProvider *dataProvider in self.registeredProxyProviders.allValues) {
         [dataProvider notifyDaemonConnected];
     }
     

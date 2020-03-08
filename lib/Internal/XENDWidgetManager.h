@@ -15,6 +15,11 @@
 
 @interface XENDWidgetManager : NSObject <XENDWidgetMessageHandlerDelegate, XENDWidgetManagerDelegate>
 
+/**
+ Call to setup the library
+ */
++ (void)initialiseLibrary;
+
 + (instancetype)sharedInstance;
 
 /**

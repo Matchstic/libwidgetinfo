@@ -11,6 +11,7 @@
 
 @interface XENDBaseDaemonListener : NSObject <XENDRemoteDaemonConnection, XENDStateManagerDelegate>
 
+- (void)initialise;
 - (void)notifyUpdatedDynamicProperties:(NSDictionary*)dynamicProperties forNamespace:(NSString*)dataProviderNamespace;
 
 @end

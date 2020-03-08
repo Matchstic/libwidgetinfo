@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		C90DE50123D396EA00D0FAFD /* XTWCHourlyForecast.m in Sources */ = {isa = PBXBuildFile; fileRef = C90DE50023D396EA00D0FAFD /* XTWCHourlyForecast.m */; };
+		C91206242414619D0081E307 /* XENDNotifyDaemonListener.m in Sources */ = {isa = PBXBuildFile; fileRef = C91206232414619D0081E307 /* XENDNotifyDaemonListener.m */; };
+		C9120627241466E90081E307 /* XENDProxyNotifyConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = C9120625241466E90081E307 /* XENDProxyNotifyConnection.h */; };
+		C9120628241466E90081E307 /* XENDProxyNotifyConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = C9120626241466E90081E307 /* XENDProxyNotifyConnection.m */; };
 		C919CA6223302171001391A5 /* XENDProxyDataProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = C919CA6023302171001391A5 /* XENDProxyDataProvider.h */; };
 		C919CA6323302171001391A5 /* XENDProxyDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = C919CA6123302171001391A5 /* XENDProxyDataProvider.m */; };
 		C919CA67233022E8001391A5 /* XENDSystemDataProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = C919CA65233022E8001391A5 /* XENDSystemDataProvider.h */; };
@@ -149,6 +152,10 @@
 		C90DE4FF23D396EA00D0FAFD /* XTWCHourlyForecast.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XTWCHourlyForecast.h; path = "daemon/Data Providers/Weather/Model/XTWCHourlyForecast.h"; sourceTree = SOURCE_ROOT; };
 		C90DE50023D396EA00D0FAFD /* XTWCHourlyForecast.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XTWCHourlyForecast.m; path = "daemon/Data Providers/Weather/Model/XTWCHourlyForecast.m"; sourceTree = SOURCE_ROOT; };
 		C90DE50223D3C4C200D0FAFD /* XTWCUnits.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XTWCUnits.h; path = "daemon/Data Providers/Weather/Model/XTWCUnits.h"; sourceTree = SOURCE_ROOT; };
+		C91206222414619D0081E307 /* XENDNotifyDaemonListener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XENDNotifyDaemonListener.h; path = daemon/Connection/XENDNotifyDaemonListener.h; sourceTree = SOURCE_ROOT; };
+		C91206232414619D0081E307 /* XENDNotifyDaemonListener.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XENDNotifyDaemonListener.m; path = daemon/Connection/XENDNotifyDaemonListener.m; sourceTree = SOURCE_ROOT; };
+		C9120625241466E90081E307 /* XENDProxyNotifyConnection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XENDProxyNotifyConnection.h; sourceTree = "<group>"; };
+		C9120626241466E90081E307 /* XENDProxyNotifyConnection.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XENDProxyNotifyConnection.m; sourceTree = "<group>"; };
 		C919CA6023302171001391A5 /* XENDProxyDataProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XENDProxyDataProvider.h; sourceTree = "<group>"; };
 		C919CA6123302171001391A5 /* XENDProxyDataProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XENDProxyDataProvider.m; sourceTree = "<group>"; };
 		C919CA642330225D001391A5 /* XENDWidgetManager-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "XENDWidgetManager-Protocol.h"; sourceTree = "<group>"; };
@@ -344,6 +351,8 @@
 				C9204FED2336447B00F9F535 /* XENDProxySimulatedConnection.m */,
 				C9204FF02336487200F9F535 /* XENDProxyBaseConnection.h */,
 				C9204FF12336487200F9F535 /* XENDProxyBaseConnection.m */,
+				C9120625241466E90081E307 /* XENDProxyNotifyConnection.h */,
+				C9120626241466E90081E307 /* XENDProxyNotifyConnection.m */,
 			);
 			path = Remote;
 			sourceTree = "<group>";
@@ -380,6 +389,8 @@
 				C9204FD223317EE000F9F535 /* XENDXPCDaemonListener.mm */,
 				C9204FD423317EF300F9F535 /* XENDSimulatedDaemonListener.h */,
 				C9204FD523317EF300F9F535 /* XENDSimulatedDaemonListener.m */,
+				C91206222414619D0081E307 /* XENDNotifyDaemonListener.h */,
+				C91206232414619D0081E307 /* XENDNotifyDaemonListener.m */,
 			);
 			path = Connection;
 			sourceTree = "<group>";
@@ -753,6 +764,7 @@
 				C9F886FC232ED8DA00E87EF3 /* XENDWidgetManager.h in Headers */,
 				C9F2F3992301BE4100E4863B /* Location.hpp in Headers */,
 				C9204FF22336487200F9F535 /* XENDProxyBaseConnection.h in Headers */,
+				C9120627241466E90081E307 /* XENDProxyNotifyConnection.h in Headers */,
 				C9F2F3D72301BE4800E4863B /* error.h in Headers */,
 				C9F2F39B2301BE4100E4863B /* Pooling.hpp in Headers */,
 				C9F2F3942301BE4100E4863B /* Replace.hpp in Headers */,
@@ -848,6 +860,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C9F26020240581FF003A5A85 /* XENDWeatherHooks.m in Sources */,
+				C91206242414619D0081E307 /* XENDNotifyDaemonListener.m in Sources */,
 				C9204FD323317EE000F9F535 /* XENDXPCDaemonListener.mm in Sources */,
 				C9BFD61423C154AD001F46F2 /* XTWCObservation.m in Sources */,
 				C993D33323DCE6D60084ED1E /* XENDStateManager.m in Sources */,
@@ -879,6 +892,7 @@
 				C9F2F3F72301BE4800E4863B /* OGNode.m in Sources */,
 				C9F2F3D82301BE4800E4863B /* util.c in Sources */,
 				C9F2F39F2301BE4100E4863B /* Highlight.cpp in Sources */,
+				C9120628241466E90081E307 /* XENDProxyNotifyConnection.m in Sources */,
 				C9F2F3DC2301BE4800E4863B /* attribute.c in Sources */,
 				C9F2F3DD2301BE4800E4863B /* char_ref.c in Sources */,
 				C9204FE72336445000F9F535 /* XENDProxyManager.m in Sources */,

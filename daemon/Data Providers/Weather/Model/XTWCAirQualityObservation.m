@@ -24,7 +24,14 @@
     self = [super init];
     
     if (self) {
-        [self _parseData:@{}];
+		self.categoryLevel      = (id)[NSNull null];
+		self.categoryIndex      = (id)[NSNull null];
+		self.comment            = (id)[NSNull null];
+		self.index              = (id)[NSNull null];
+		self.scale              = (id)[NSNull null];
+		self.source             = (id)[NSNull null];
+		self.validFromUNIXTime  = 0;
+		self.pollutants         = @[];
     }
     
     return self;

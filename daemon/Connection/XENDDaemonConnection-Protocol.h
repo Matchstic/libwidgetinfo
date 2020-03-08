@@ -24,7 +24,6 @@
  */
 - (void)requestCurrentPropertiesInNamespace:(NSString*)providerNamespace callback:(void(^)(NSDictionary*))callback;
 
-
 /**
  Requests the current device state to be sent to the calling client
  Reponse format:
@@ -57,6 +56,7 @@
  * Called when the device leaves sleep mode
  */
 - (void)noteDeviceDidExitSleep;
+
 /**
  * Called when network access is lost
  */

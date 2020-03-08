@@ -22,12 +22,14 @@
 - (instancetype)init {
     self = [super init];
     
-    if (self) {
-        self.dataProviders = [self _loadDataProviders];
-        self.stateManager = [[XENDStateManager alloc] initWithDelegate:self];
-    }
+    if (self) {}
     
     return self;
+}
+
+- (void)initialise {
+	self.dataProviders = [self _loadDataProviders];
+	self.stateManager = [[XENDStateManager alloc] initWithDelegate:self];
 }
 
 - (NSDictionary*)_loadDataProviders {
@@ -71,19 +73,27 @@
 }
 
 - (void)noteDeviceDidEnterSleep {
-    // Allow subclass to override this
+	for (XENDBaseRemoteDataProvider *remoteProvider in self.dataProviders.allValues) {
+		[remoteProvider noteDeviceDidEnterSleep];
+	}
 }
 
 - (void)noteDeviceDidExitSleep {
-    // Allow subclass to override this
+	for (XENDBaseRemoteDataProvider *remoteProvider in self.dataProviders.allValues) {
+		[remoteProvider noteDeviceDidExitSleep];
+	}
 }
 
 - (void)networkWasConnected {
-    // Allow subclass to override this
+	for (XENDBaseRemoteDataProvider *remoteProvider in self.dataProviders.allValues) {
+		[remoteProvider networkWasConnected];
+	}
 }
 
 - (void)networkWasDisconnected {
-    // Allow subclass to override this
+	for (XENDBaseRemoteDataProvider *remoteProvider in self.dataProviders.allValues) {
+		[remoteProvider networkWasDisconnected];
+	}
 }
 
 @end

@@ -43,21 +43,25 @@ int libwidgetinfo_main(NSString *customMachServiceName) {
     
     // initialize our daemon
     XENDXPCDaemonListener *daemon = [[XENDXPCDaemonListener alloc] init];
-    [daemon _initialiseListener];
     
     // Bypass compiler prohibited errors
     Class NSXPCListenerClass = NSClassFromString(@"NSXPCListener");
     
     if (!customMachServiceName || [customMachServiceName isEqualToString:@""])
-        customMachServiceName = @"com.matchstic.libwidgetinfo";
+        customMachServiceName = @"com.matchstic.widgetinfod";
+	
+	NSLog(@"*** [libwidgetinfo] :: Mach service name: %@", customMachServiceName);
     NSXPCListener *listener = [[NSXPCListenerClass alloc] initWithMachServiceName:customMachServiceName];
     listener.delegate = daemon;
+	
+	NSLog(@"*** [libwidgetinfo] :: Listener: %@", listener);
+	
     [listener resume];
     
     // Run the run loop forever.
     [[NSRunLoop currentRunLoop] run];
     
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 @implementation XENDXPCDaemonListener
@@ -74,6 +78,10 @@ int libwidgetinfo_main(NSString *customMachServiceName) {
 
 - (void)_initialiseListener {
     self.xpcConnections = [NSMutableArray array];
+	
+	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) , ^{
+		[self initialise];
+	});
 }
 
 - (BOOL)listener:(NSXPCListener *)listener shouldAcceptNewConnection:(NSXPCConnection *)newConnection {
@@ -114,24 +122,32 @@ int libwidgetinfo_main(NSString *customMachServiceName) {
 }
 
 - (void)noteDeviceDidEnterSleep {
+	[super noteDeviceDidEnterSleep];
+	
     for (NSXPCConnection *connection in self.xpcConnections) {
         [connection.remoteObjectProxy noteDeviceDidEnterSleep];
     }
 }
 
 - (void)noteDeviceDidExitSleep {
+	[super noteDeviceDidExitSleep];
+	
     for (NSXPCConnection *connection in self.xpcConnections) {
         [connection.remoteObjectProxy noteDeviceDidExitSleep];
     }
 }
 
 - (void)networkWasConnected {
+	[super networkWasConnected];
+	
     for (NSXPCConnection *connection in self.xpcConnections) {
         [connection.remoteObjectProxy networkWasConnected];
     }
 }
 
 - (void)networkWasDisconnected {
+	[super networkWasDisconnected];
+	
     for (NSXPCConnection *connection in self.xpcConnections) {
         [connection.remoteObjectProxy networkWasDisconnected];
     }

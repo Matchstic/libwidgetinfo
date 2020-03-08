@@ -8,6 +8,7 @@
 #import "XENDProxyManager.h"
 
 #import "XENDProxyXPCConnection.h"
+#import "XENDProxyNotifyConnection.h"
 #import "XENDProxySimulatedConnection.h"
 
 @interface XENDProxyManager ()
@@ -35,7 +36,7 @@
 #if TARGET_OS_SIMULATOR
         self._underlyingConnection = [[XENDProxySimulatedConnection alloc] init];
 #else
-        self._underlyingConnection = [[XENDProxyXPCConnection alloc] init];
+        self._underlyingConnection = [[XENDProxyNotifyConnection alloc] init];
 #endif
         
         [self._underlyingConnection initialise];

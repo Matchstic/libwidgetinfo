@@ -32,6 +32,10 @@
 
 @implementation XENDWidgetManager
 
++ (void)initialiseLibrary {
+	[WKWebView load];
+}
+
 + (instancetype)sharedInstance {
     static XENDWidgetManager *sharedInstance = nil;
     static dispatch_once_t onceToken;
