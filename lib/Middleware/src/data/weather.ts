@@ -138,8 +138,8 @@ export interface XENDWeatherPropertiesDaily {
     cloudCoverPercentage: number;
 
     timestamp: Date;
-
-    dayIndex: number;
+    weekdayNumber: number;
+    dayOfWeek: string;
 
     ultraviolet: {
         index: number;
@@ -165,8 +165,6 @@ export interface XENDWeatherPropertiesDaily {
         moonrise: Date;
         moonset: Date;
     };
-
-    dayOfWeek: string;
 
     precipitation: {
         type: string;
