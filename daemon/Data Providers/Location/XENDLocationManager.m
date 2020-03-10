@@ -45,7 +45,7 @@
             
             [self.locationManager setDesiredAccuracy:kCLLocationAccuracyKilometer];
             
-            self.lastKnownLocation = self.locationManager.location;
+            self.lastKnownLocation = nil;
             self.authorisationStatus = [CLLocationManager authorizationStatus];
             
             self.geocoder = [CLGeocoder new];
@@ -74,11 +74,17 @@
     return self.authorisationStatus != kCLAuthorizationStatusDenied &&
             self.authorisationStatus != kCLAuthorizationStatusNotDetermined;
 #else
-    return [CLLocationManager locationServicesEnabled];
+    return [CLLocationManager locationServicesEnabled] && self.authorisationStatus != kCLAuthorizationStatusNotDetermined;
 #endif
 }
 
 - (void)fetchCurrentLocationWithCompletionHandler:(void(^)(NSError *error, CLLocation *location))completionHandler {
+    if (self.authorisationStatus == kCLAuthorizationStatusNotDetermined) {
+        NSError *error = [[NSError alloc] initWithDomain:NSCocoaErrorDomain code:kXENLocationErrorNotInitialised userInfo:nil];
+        
+        completionHandler(error, nil);
+    }
+    
     if (![self locationServicesAvailable]) {
         NSError *error = [[NSError alloc] initWithDomain:NSCocoaErrorDomain code:kXENLocationErrorNotAvailable userInfo:nil];
         

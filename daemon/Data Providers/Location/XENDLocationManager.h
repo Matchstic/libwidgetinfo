@@ -11,6 +11,8 @@
 #define kXENLocationErrorNotAvailable 100 // No location data is available e.g. due to Location Services being disabled
 #define kXENLocationErrorCachedOnly   101 // Cached data is provided in place of new data
 
+#define kXENLocationErrorNotInitialised   102 // Wait, dude
+
 @interface XENDLocationManager : NSObject <CLLocationManagerDelegate>
 
 /**
