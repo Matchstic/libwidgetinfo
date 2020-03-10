@@ -163,11 +163,7 @@
 }
 
 - (void)onUpdatedWeatherConditions:(NSDictionary*)transformedConditions {
-    // Only set the changed properties
-    for (NSString *key in transformedConditions.allKeys) {
-        [self.cachedDynamicProperties setValue:[transformedConditions objectForKey:key] forKey:key];
-    }
-    
+	self.cachedDynamicProperties = [transformedConditions mutableCopy];
     [self notifyRemoteForNewDynamicProperties];
 }
 

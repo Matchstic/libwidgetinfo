@@ -13,14 +13,13 @@ extern "C" {
 #endif
     /**
      * Defines the entrypoint for a daemon to call from main()
-     * @param machServiceName A custom mach service name to advertise under. This must match whatever is specified in your launchd plist
      */
-    int libwidgetinfo_main_notify();
+    int libwidgetinfo_main_ipc(void);
     
 #ifdef __cplusplus
 }
 #endif
 
-@interface XENDNotifyDaemonListener : XENDBaseDaemonListener
+@interface XENDIPCDaemonListener : XENDBaseDaemonListener
 
 @end

@@ -55,7 +55,7 @@
     
 }
 
-- (void)requestCurrentPropertiesInNamespace:(NSString*)providerNamespace callback:(void(^)(NSDictionary*))callback {
+- (void)requestCurrentPropertiesInNamespace:(NSString*)providerNamespace callback:(void(^)(NSDictionary*))callback {	
     NSDictionary *result = [self.dataProviders.allKeys containsObject:providerNamespace] ?
                            [[self.dataProviders objectForKey:providerNamespace] currentData] :
                            @{};

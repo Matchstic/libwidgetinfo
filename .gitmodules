@@ -1,0 +1,3 @@
+[submodule "deps/libobjcipc"]
+	path = deps/libobjcipc
+	url = https://github.com/Matchstic/libobjcipc.git
