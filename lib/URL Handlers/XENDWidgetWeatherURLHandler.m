@@ -17,13 +17,15 @@ static BOOL handlerEnabled = YES;
 	handlerEnabled = enabled;
 }
 
-+ (BOOL)canHandleURL:(NSURL*)url {	
++ (BOOL)canHandleURL:(NSURL*)url {
     return handlerEnabled &&
 			[[url scheme] isEqualToString:@"file"] &&
 			[[url absoluteString] containsString:@"/var/mobile/Documents/widgetweather.xml"];
 }
 
 - (void)handleURL:(NSURL*)url withCompletionHandler:(void (^)(NSError *, NSData*, NSString*))completionHandler {
+    NSLog(@"*** WW3 Compatibility: handling URL: %@", url);
+              
 	XENDWeatherDataProvider *weatherProvider = (XENDWeatherDataProvider*)[[XENDWidgetManager sharedInstance] providerForNamespace:@"weather"];
 	
 	// The weather provider may not have finished loading by the time we arrive here
@@ -89,7 +91,7 @@ static BOOL handlerEnabled = YES;
         [section appendFormat:@"<code>%d</code>\n", [[[item objectForKey:@"condition"] objectForKey:@"code"] intValue]];
         [section appendFormat:@"<cardinal>%@</cardinal>\n", [[item objectForKey:@"wind"] objectForKey:@"cardinal"]];
         [section appendFormat:@"<low>%d</low>\n", [[[item objectForKey:@"temperature"] objectForKey:@"minimum"] intValue]];
-        [section appendFormat:@"<dayofweek>%d</dayofweek>\n", [[item objectForKey:@"dayIndex"] intValue]];
+        [section appendFormat:@"<dayofweek>%ld</dayofweek>\n", [[item objectForKey:@"weekdayNumber"] longValue]];
         [section appendFormat:@"<pop>%d</pop>\n", [[[item objectForKey:@"precipitation"] objectForKey:@"probability"] intValue]];
         [section appendFormat:@"<direction>%d</direction>\n", [[[item objectForKey:@"wind"] objectForKey:@"degrees"] intValue]];
 		
@@ -432,7 +434,7 @@ static BOOL handlerEnabled = YES;
     NSDate *date = [NSDate dateWithTimeIntervalSince1970:timestampMillis / 1000];
     
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-    dateFormatter.dateFormat = [self _using24h] ? @"hh:mm" : @"hh:mm A";
+    dateFormatter.dateFormat = [self _using24h] ? @"HH:mm" : @"hh:mm A";
     
     return [dateFormatter stringFromDate:date];
 }
@@ -442,7 +444,7 @@ static BOOL handlerEnabled = YES;
     NSDate *date = [NSDate dateWithTimeIntervalSince1970:timestampMillis / 1000];
     
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-    dateFormatter.dateFormat = [self _using24h] ? @"yyyy-MM-dd hh:mm:ss" : @"yyyy-MM-dd hh:mm:ss A";
+    dateFormatter.dateFormat = [self _using24h] ? @"yyyy-MM-dd HH:mm:ss" : @"yyyy-MM-dd hh:mm:ss A";
     
     return [dateFormatter stringFromDate:date];
 }

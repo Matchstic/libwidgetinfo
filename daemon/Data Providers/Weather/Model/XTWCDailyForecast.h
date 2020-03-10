@@ -13,6 +13,7 @@
 @property (nonatomic, strong) NSString *blurb;
 @property (nonatomic, strong) NSString *blurbAuthor;
 @property (nonatomic, strong) NSString *dayOfWeek;
+@property (nonatomic, strong) NSNumber *weekdayNumber;
 @property (nonatomic, strong) NSNumber *forecastDayIndex;
 @property (nonatomic, strong) NSNumber *lunarPhaseDay;
 @property (nonatomic, strong) NSString *lunarPhaseDescription;

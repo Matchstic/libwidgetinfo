@@ -84,6 +84,12 @@
     self.tornadoLikelihood      = [data objectForKey:@"torcon" defaultValue:[NSNull null]];
     self.validUNIXTime          = [[data objectForKey:@"fcst_valid"] intValue];
     
+    // dayIndex is the position in the array, and dayOfWeek is pre-translated
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:self.validUNIXTime];
+    NSDateComponents* comp = [[NSCalendar currentCalendar] components:NSCalendarUnitWeekday fromDate:date];
+    
+    self.weekdayNumber          = [NSNumber numberWithLong:[comp weekday]];
+    
     // Parse units specific things
     NSDictionary *unitSpecificValues = units.temperature == METRIC ? [data objectForKey:@"metric"] : [data objectForKey:@"imperial"];
     

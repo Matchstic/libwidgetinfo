@@ -169,6 +169,12 @@
     
     // 1. Get current location from the location manager
     [self.locationManager fetchCurrentLocationWithCompletionHandler:^(NSError *error, CLLocation *location) {
+        if (error && error.code == kXENLocationErrorNotInitialised) {
+            NSLog(@"WARN :: Waiting for location manager to gain an authorisation stataus");
+            completionHandler();
+            return;
+        }
+        
         if (error && error.code == kXENLocationErrorNotAvailable) {
             location = [self.delegate fallbackWeatherLocation];
         }
@@ -660,7 +666,7 @@
             },
             
             @"dayOfWeek": prediction.dayOfWeek,
-            @"dayIndex": prediction.forecastDayIndex,
+            @"weekdayNumber": prediction.weekdayNumber,
             
             @"moon": @{
                 @"phaseCode": prediction.lunarPhaseCode,
