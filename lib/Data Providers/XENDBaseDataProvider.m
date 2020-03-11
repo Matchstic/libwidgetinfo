@@ -40,8 +40,13 @@
 // Called when a new widget is added, and it needs to be provided new data on load.
 - (NSDictionary*)cachedData {
     NSMutableDictionary *result = [NSMutableDictionary dictionary];
-    [result addEntriesFromDictionary:self.cachedDynamicProperties];
-    [result addEntriesFromDictionary:self.cachedStaticProperties];
+    
+    if (self.cachedDynamicProperties)
+        [result addEntriesFromDictionary:self.cachedDynamicProperties];
+    
+    if (self.cachedStaticProperties)
+        [result addEntriesFromDictionary:self.cachedStaticProperties];
+    
     return result;
 }
 
