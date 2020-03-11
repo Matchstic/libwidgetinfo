@@ -90,24 +90,32 @@ int libwidgetinfo_main_ipc(void) {
 }
 
 - (void)noteDeviceDidEnterSleep {
+    [super noteDeviceDidEnterSleep];
+    
 	[self requestCurrentDeviceStateWithCallback:^(NSDictionary *result) {
 		[self broadcastMessage:@"deviceState" withData:result];
 	}];
 }
 
 - (void)noteDeviceDidExitSleep {
+    [super noteDeviceDidExitSleep];
+    
 	[self requestCurrentDeviceStateWithCallback:^(NSDictionary *result) {
 		[self broadcastMessage:@"deviceState" withData:result];
 	}];
 }
 
 - (void)networkWasConnected {
+    [super networkWasConnected];
+    
 	[self requestCurrentDeviceStateWithCallback:^(NSDictionary *result) {
 		[self broadcastMessage:@"deviceState" withData:result];
 	}];
 }
 
 - (void)networkWasDisconnected {
+    [super networkWasDisconnected];
+    
 	[self requestCurrentDeviceStateWithCallback:^(NSDictionary *result) {
 		[self broadcastMessage:@"deviceState" withData:result];
 	}];
