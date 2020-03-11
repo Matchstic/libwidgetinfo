@@ -56,6 +56,7 @@
         self.locationManager = locationManager;
         
         // Initial cache states
+        self.networkIsDisconnected = NO;
         self.dailyPredictionCache = @[];
         self.hourlyPredictionCache = @[];
         self.observationCache = [[XTWCObservation alloc] initWithFakeData:[self _units]];
@@ -88,10 +89,12 @@
 #pragma mark Update state management
 
 - (void)networkWasDisconnected {
+    NSLog(@"networkWasDisconnected");
     self.networkIsDisconnected = YES;
 }
 
 - (void)networkWasConnected {
+    NSLog(@"networkWasConnected");
     self.networkIsDisconnected = NO;
     
     // Undertake a refresh if one was queued
@@ -130,11 +133,14 @@
     
     NSLog(@"Restarting weather update timer with interval: %f minutes", (float)interval / 60.0);
     
-    self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:interval
-                                                        target:self
-                                                      selector:@selector(_updateTimerFired:)
-                                                      userInfo:nil
-                                                       repeats:NO];
+    // Needs to be scheduled on the main thread
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:interval
+                                                            target:self
+                                                          selector:@selector(_updateTimerFired:)
+                                                          userInfo:nil
+                                                           repeats:NO];
+    });
     
     self.nextUpdateTime = [[NSDate date] dateByAddingTimeInterval:interval];
 }
@@ -148,6 +154,7 @@
 - (void)refreshWeather {
     // Queue if no network, and update from cached data for now
     if (self.networkIsDisconnected) {
+        NSLog(@"Weather update queue during network disconnection");
         self.refreshQueuedDuringNetworkDisconnected = YES;
         
         // Notify delegate of updates from cached data
