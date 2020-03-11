@@ -257,13 +257,16 @@
             
             // 5. Notify delegate of new parsed data
             [self.delegate onUpdatedWeatherConditions:parsed];
+            
+            // 6. Finish off
+            completionHandler();
         });
 
     }];
 }
 
 - (NSString*)_deviceLanguage {
-    return [[NSLocale preferredLanguages] firstObject];
+    return [[NSLocale preferredLanguages] objectAtIndex:0];
 }
 
 - (BOOL)_useMetric {
@@ -322,9 +325,9 @@
         @"units": @{
             @"isMetric": [NSNumber numberWithBool:[self _useMetric]],
             @"temperature": units.temperature == METRIC ? @"°C" : @"°F",
-            @"speed": units.speed == METRIC ? @"kph" : @"mph",
-            @"distance": units.distance == METRIC ? @"km" : @"miles",
-            @"pressure": units.pressure == METRIC ? @"hPa" : @"Hg",
+            @"speed": units.speed == METRIC ? @"km/h" : @"mph",
+            @"distance": units.distance == METRIC ? @"km" : @"mile",
+            @"pressure": units.pressure == METRIC ? @"hPa" : @"InHg",
             @"amount": units.amount == METRIC ? @"cm" : @"in",
         },
         @"now": [self nowFieldFromCache],
@@ -364,12 +367,14 @@
 - (struct XTWCUnits)_units {
     struct XTWCUnits units;
     
-    BOOL isHybridBritish = [[self _deviceLanguage] isEqualToString:@"en-GB"];
+    BOOL isHybridBritish = [[self _deviceLanguage] isEqualToString:@"en-GB"] || [[self _deviceLanguage] isEqualToString:@"en_GB"];
+    
+    NSLog(@"Checking locale: %@, isMetric: %d, isHybridBritish: %d", [self _deviceLanguage], [self _useMetric], isHybridBritish);
     
     if (isHybridBritish) {
         units.speed = IMPERIAL;
         units.temperature = METRIC;
-        units.distance = METRIC;
+        units.distance = IMPERIAL;
         units.pressure = METRIC;
         units.amount = METRIC;
     } else {
