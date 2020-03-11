@@ -13,6 +13,7 @@
 		C98AE08B218B95A900E78D8F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C98AE08A218B95A900E78D8F /* Assets.xcassets */; };
 		C98AE08E218B95A900E78D8F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C98AE08C218B95A900E78D8F /* Main.storyboard */; };
 		C98AE091218B95A900E78D8F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C98AE090218B95A900E78D8F /* main.m */; };
+		C9A5E9B02419523E00FCD778 /* libobjcipc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9A5E9AF2419523E00FCD778 /* libobjcipc.a */; };
 		C9EF3F3C21D4F7F900611626 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C9EF3F3B21D4F7F900611626 /* libxml2.tbd */; };
 		C9F2F2242301B8E300E4863B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C9F2F2232301B8E300E4863B /* AppDelegate.m */; };
 		C9F2F2272301B8E300E4863B /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9F2F2262301B8E300E4863B /* ViewController.m */; };
@@ -39,6 +40,13 @@
 			proxyType = 2;
 			remoteGlobalIDString = C9204FC823317EBD00F9F535;
 			remoteInfo = Daemon;
+		};
+		C9A5E9AE2419523E00FCD778 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C9F2F3FE2301C02D00E4863B /* libwidgetdata.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C9A5E98D2419519300FCD778;
+			remoteInfo = objcipc;
 		};
 		C9F2F4022301C02D00E4863B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -98,6 +106,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9A5E9B02419523E00FCD778 /* libobjcipc.a in Frameworks */,
 				C9F2F4132301C6FE00E4863B /* libc++.tbd in Frameworks */,
 				C9F2F4152301CB9C00E4863B /* WebKit.framework in Frameworks */,
 				C9F2F4112301C6B000E4863B /* libwidgetinfo.a in Frameworks */,
@@ -177,6 +186,7 @@
 			children = (
 				C9F2F4032301C02D00E4863B /* libwidgetinfo.a */,
 				C9204FFF2336577000F9F535 /* libwidgetinfodaemon.a */,
+				C9A5E9AF2419523E00FCD778 /* libobjcipc.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -273,6 +283,13 @@
 			fileType = archive.ar;
 			path = libwidgetinfodaemon.a;
 			remoteRef = C9204FFE2336577000F9F535 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C9A5E9AF2419523E00FCD778 /* libobjcipc.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libobjcipc.a;
+			remoteRef = C9A5E9AE2419523E00FCD778 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		C9F2F4032301C02D00E4863B /* libwidgetinfo.a */ = {
