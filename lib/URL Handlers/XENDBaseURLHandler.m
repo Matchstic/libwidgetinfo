@@ -14,8 +14,8 @@
     return NO;
 }
 
-- (void)handleURL:(NSURL*)url withCompletionHandler:(void (^)(NSError *, NSData*))completionHandler {
-    completionHandler(nil, nil);
+- (void)handleURL:(NSURL*)url withCompletionHandler:(void (^)(NSError *, NSData*, NSString*))completionHandler {
+    completionHandler(nil, nil, nil);
 }
 
 #pragma mark NSURLProtocol implementation

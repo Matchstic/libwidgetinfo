@@ -25,16 +25,19 @@
 #include "Replace.hpp"
 #include "Syntax.hpp"
 
+CYFunctionExpression *CYNonLocalize(CYContext &context, CYFunctionExpression *function);
 CYFunctionExpression *CYNonLocalize(CYContext &context, CYFunctionExpression *function) {
     function->nonlocal_ = context.nextlocal_;
     return function;
 }
 
+CYFunctionExpression *CYSuperize(CYContext &context, CYFunctionExpression *function);
 CYFunctionExpression *CYSuperize(CYContext &context, CYFunctionExpression *function) {
     function->super_ = context.super_;
     return function;
 }
 
+CYStatement *CYDefineProperty(CYExpression *object, CYExpression *name, bool configurable, bool enumerable, CYProperty *descriptor);
 CYStatement *CYDefineProperty(CYExpression *object, CYExpression *name, bool configurable, bool enumerable, CYProperty *descriptor) {
     return $E($C3($M($V("Object"), $S("defineProperty")), object, name, $ CYObject(CYList<CYProperty>()
         ->* (configurable ? $ CYPropertyValue($S("configurable"), $ CYTrue()) : NULL)
@@ -334,11 +337,12 @@ CYExpression *CYBindings::Replace(CYContext &context, CYIdentifierKind kind) { $
     CYAssignment *assignment(binding_->Replace(context, kind));
     CYExpression *compound(next_->Replace(context, kind));
 
-    if (assignment != NULL)
+    if (assignment != NULL) {
         if (compound == NULL)
             compound = assignment;
         else
             compound = $ CYCompound(assignment, compound);
+    }
     return compound;
 }
 
