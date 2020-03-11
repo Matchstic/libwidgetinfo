@@ -43,7 +43,7 @@
             self.locationManager = [[CLLocationManager alloc] init];
             self.locationManager.delegate = self;
             
-            [self.locationManager setDesiredAccuracy:kCLLocationAccuracyKilometer];
+            [self.locationManager setDesiredAccuracy:kCLLocationAccuracyHundredMeters];
             
             self.lastKnownLocation = nil;
             self.authorisationStatus = [CLLocationManager authorizationStatus];
