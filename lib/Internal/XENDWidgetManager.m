@@ -28,7 +28,10 @@
 @property (nonatomic, strong) XENDWidgetMessageHandler *messageHandler;
 
 @property (nonatomic, strong) NSDictionary<NSString*, XENDBaseDataProvider*> *dataProviders;
+@property (nonatomic, strong) NSTimer *dynamicFlushTimer;
 @end
+
+static NSString *preferencesId = @"com.matchstic.libwidgetinfo";
 
 @implementation XENDWidgetManager
 
@@ -55,6 +58,12 @@
         self.messageHandler = [[XENDWidgetMessageHandler alloc] initWithDelegate:self];
         
         self.dataProviders = [self _loadDataProviders];
+        
+        self.dynamicFlushTimer = [NSTimer scheduledTimerWithTimeInterval:120
+                                                                  target:self
+                                                                selector:@selector(_flushCurrentDynamicStateToDisk:)
+                                                                userInfo:nil
+                                                                 repeats:YES];
         
         // These get registered globally
         [self _loadURLHandlers];
@@ -183,6 +192,46 @@
     }
 }
 
+- (void)_flushCurrentDynamicStateToDisk:(NSTimer*)sender {
+    NSMutableDictionary *currentState = [NSMutableDictionary dictionary];
+    
+    for (XENDBaseDataProvider *provider in self.dataProviders.allValues) {
+        NSString *namespace = [[provider class] providerNamespace];
+        NSDictionary *cachedData = [provider cachedDynamicProperties];
+        
+        if (namespace && cachedData)
+            [currentState setObject:[provider cachedDynamicProperties] forKey:namespace];
+    }
+    
+    // Archive to handle unexpected types
+    NSData *archived = [NSKeyedArchiver archivedDataWithRootObject:currentState];
+    
+    // Write to CFPreferences
+    CFPreferencesSetValue ((__bridge CFStringRef)@"cachedState", (__bridge CFPropertyListRef)archived, (__bridge CFStringRef)preferencesId, kCFPreferencesCurrentUser, kCFPreferencesCurrentHost);
+    
+    CFPreferencesAppSynchronize((__bridge CFStringRef)preferencesId);
+}
+
+- (NSDictionary*)_loadCurrentDynamicStateFromDisk {
+    CFPreferencesAppSynchronize((__bridge CFStringRef)preferencesId);
+    
+    NSDictionary *settings;
+    CFArrayRef keyList = CFPreferencesCopyKeyList((__bridge CFStringRef)preferencesId, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
+    if (!keyList) {
+        settings = [NSMutableDictionary dictionary];
+    } else {
+        CFDictionaryRef dictionary = CFPreferencesCopyMultiple(keyList, (__bridge CFStringRef)preferencesId, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
+        
+        settings = [(__bridge NSDictionary *)dictionary copy];
+        CFRelease(dictionary);
+        CFRelease(keyList);
+    }
+    
+    NSData *state = [settings objectForKey:@"cachedState"];
+    
+    return state ? [NSKeyedUnarchiver unarchiveObjectWithData:state] : nil;
+}
+
 #pragma mark Data provider handling
 
 - (void)updateWidgetsWithNewData:(NSDictionary*)data forNamespace:(NSString*)providerNamespace {
@@ -203,17 +252,26 @@
 - (NSDictionary*)_loadDataProviders {
     NSMutableDictionary *result = [NSMutableDictionary dictionary];
     
+    // Load previous dynamics state
+    NSDictionary *currentCachedDynamicState = [self _loadCurrentDynamicStateFromDisk];
+    
     XENDSystemDataProvider *system = [[XENDSystemDataProvider alloc] init];
     [system registerDelegate:self];
     [result setObject:system forKey:[XENDSystemDataProvider providerNamespace]];
+    if (currentCachedDynamicState)
+        system.cachedDynamicProperties = [currentCachedDynamicState objectForKey:[XENDSystemDataProvider providerNamespace]];
     
     XENDMediaDataProvider *media = [[XENDMediaDataProvider alloc] init];
     [media registerDelegate:self];
     [result setObject:media forKey:[XENDMediaDataProvider providerNamespace]];
+    if (currentCachedDynamicState)
+        media.cachedDynamicProperties = [currentCachedDynamicState objectForKey:[XENDMediaDataProvider providerNamespace]];
     
     XENDWeatherDataProvider *weather = [[XENDWeatherDataProvider alloc] init];
     [weather registerDelegate:self];
     [result setObject:weather forKey:[XENDWeatherDataProvider providerNamespace]];
+    if (currentCachedDynamicState)
+        weather.cachedDynamicProperties = [currentCachedDynamicState objectForKey:[XENDWeatherDataProvider providerNamespace]];
     
     return result;
 }
