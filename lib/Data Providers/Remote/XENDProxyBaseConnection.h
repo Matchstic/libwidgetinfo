@@ -12,6 +12,7 @@
 @interface XENDProxyBaseConnection : NSObject <XENDOriginDaemonConnection, XENDRemoteDaemonConnection>
 
 @property (nonatomic, strong) NSMutableDictionary<NSString*, XENDProxyDataProvider*> *registeredProxyProviders;
+@property (nonatomic, strong) NSDictionary *currentDeviceState;
 
 - (void)initialise;
 - (void)registerDataProvider:(XENDProxyDataProvider*)provider inNamespace:(NSString*)providerNamespace;

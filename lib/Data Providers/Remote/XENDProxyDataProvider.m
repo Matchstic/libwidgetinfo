@@ -25,8 +25,8 @@
     // Fetch current properties from the daemon
     NSLog(@"Daemon connected, requesting current properties for: %@", [self _subclassNamespace]);
     [[[XENDProxyManager sharedInstance] connection] requestCurrentPropertiesInNamespace:[self _subclassNamespace] callback:^(NSDictionary *res) {
-        self.cachedStaticProperties = [res objectForKey:@"static"];
-        self.cachedDynamicProperties = [res objectForKey:@"dynamic"];
+        self.cachedStaticProperties = res ? [res objectForKey:@"static"] : [NSNull null];
+        self.cachedDynamicProperties = res ? [res objectForKey:@"dynamic"] : [NSNull null];
         
         // Notify widget manager of new data
         [self notifyWidgetManagerForNewProperties];

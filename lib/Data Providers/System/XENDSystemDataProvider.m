@@ -171,7 +171,8 @@
 }
 
 - (NSString*)_systemVersion {
-    return [UIDevice currentDevice].systemVersion;
+    NSString *version = [UIDevice currentDevice].systemVersion;
+    return version ? version : @"";
 }
 
 - (NSString*)_deviceName {
