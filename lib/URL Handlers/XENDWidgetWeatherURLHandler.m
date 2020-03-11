@@ -434,7 +434,7 @@ static BOOL handlerEnabled = YES;
     NSDate *date = [NSDate dateWithTimeIntervalSince1970:timestampMillis / 1000];
     
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-    dateFormatter.dateFormat = [self _using24h] ? @"HH:mm" : @"hh:mm A";
+    dateFormatter.dateFormat = @"HH:mm";
     
     return [dateFormatter stringFromDate:date];
 }
