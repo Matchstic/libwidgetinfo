@@ -207,7 +207,7 @@ static BOOL handlerEnabled = YES;
     [section appendFormat:@"<unitsspeed>%@</unitsspeed>\n", [units objectForKey:@"speed"]];
     
     float timezoneoffset = ([[NSTimeZone systemTimeZone] secondsFromGMT] / 3600.0);
-    [section appendFormat:@"<timezone>GMT%@%d</timezone>\n", timezoneoffset < 0 ? @"-" : @"+", (int)timezoneoffset];
+    [section appendFormat:@"<timezone>%@%d</timezone>\n", timezoneoffset < 0 ? @"-" : @"", (int)timezoneoffset];
     
     // Handle location things
     
@@ -307,7 +307,7 @@ static BOOL handlerEnabled = YES;
     [section appendString:@"<settings>"];
     
     [section appendString:@"<weatherunderground>1</weatherunderground>\n"];
-    [section appendString:@"<location1>1</location1>\n"];
+    [section appendString:@"<location1></location1>\n"];
     [section appendString:@"<googlelocation>1</googlelocation>\n"];
     [section appendString:@"<location5></location5>\n"];
     [section appendString:@"<interval>15</interval>\n"];
@@ -426,6 +426,8 @@ static BOOL handlerEnabled = YES;
 
 
 - (NSString*)isoTimeTo24Hr:(NSString*)timestring {
+    if ([timestring isEqual:[NSNull null]]) return @"";
+    
     NSArray *firstSplit = [timestring componentsSeparatedByString:@"T"];
     if (firstSplit.count != 2) return @"";
     
