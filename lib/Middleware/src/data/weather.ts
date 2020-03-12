@@ -313,6 +313,11 @@ export default class XENDWeatherProvider extends XENDBaseProvider {
      * @param str Datestring to parse
      */
     private timezoneOffset(str: string) {
+        if (str === null) return {
+            hour: 0,
+            minute: 0
+        };
+
         // Used in ISO 8061 spec for "no timezone"
         if (str.endsWith('Z')) {
             return {
@@ -461,6 +466,7 @@ export default class XENDWeatherProvider extends XENDBaseProvider {
             },
             hourly: [],
             daily: [],
+            nightly: [],
             units: {
                 temperature: '',
                 amount: '',

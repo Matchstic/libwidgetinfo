@@ -97,7 +97,7 @@ export default class XenInfoMiddleware implements XenHTMLMiddleware {
             dailyForecasts.push({
                 low: fcast.temperature.minimum,
                 high: fcast.temperature.maximum,
-                dayNumber: fcast.dayIndex,
+                dayNumber: fcast.weekdayNumber,
                 dayOfWeek: fcast.timestamp.getDay() + 1, // 1 is Sunday due to US conventions
                 icon: fcast.condition.code
             });
