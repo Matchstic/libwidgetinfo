@@ -334,7 +334,7 @@
             @"temperature": units.temperature == METRIC ? @"°C" : @"°F",
             @"speed": units.speed == METRIC ? @"km/h" : @"mph",
             @"distance": units.distance == METRIC ? @"km" : @"mile",
-            @"pressure": units.pressure == METRIC ? @"hPa" : @"InHg",
+            @"pressure": units.pressure == METRIC ? @"hPa" : @"inHg",
             @"amount": units.amount == METRIC ? @"cm" : @"in",
         },
         @"now": [self nowFieldFromCache],
