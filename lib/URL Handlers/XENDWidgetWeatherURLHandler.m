@@ -166,7 +166,12 @@ static BOOL handlerEnabled = YES;
     BOOL isMetric = [[units objectForKey:@"isMetric"] boolValue];
     [section appendFormat:@"<celsius>%@</celsius>\n", isMetric ? @"YES" : @"NO"];
     
-    [section appendFormat:@"<unitspressure>%@</unitspressure>\n", [units objectForKey:@"pressure"]];
+    // Convert to WW format for pressure
+    NSString *pressureUnits = [units objectForKey:@"pressure"];
+    if ([pressureUnits isEqualToString:@"inHg"]) pressureUnits = @"InHg";
+    if ([pressureUnits isEqualToString:@"hPa"]) pressureUnits = @"mb";
+    
+    [section appendFormat:@"<unitspressure>%@</unitspressure>\n", pressureUnits];
     [section appendString:@"<moonphase></moonphase>\n"];
     [section appendFormat:@"<updatetimestring>%@</updatetimestring>\n", [self updateTimeString:[[metadata objectForKey:@"updateTimestamp"] longLongValue]]];
      
@@ -222,7 +227,7 @@ static BOOL handlerEnabled = YES;
     [section appendString:@"<extraLocCountyCode></extraLocCountyCode>\n"];
     [section appendFormat:@"<extraLocCounty>%@</extraLocCounty>\n", [[metadata objectForKey:@"address"] objectForKey:@"county"]];
     [section appendFormat:@"<extraLocState>%@</extraLocState>\n", [[metadata objectForKey:@"address"] objectForKey:@"state"]];
-    [section appendString:@"<extraLocStateCode></extraLocStateCode>\n"];
+    [section appendFormat:@"<extraLocStateCode>%@</extraLocStateCode>\n", [self USAStateNameLookup:[[metadata objectForKey:@"address"] objectForKey:@"state"]]];
     [section appendFormat:@"<extraLocPostal>%@</extraLocPostal>\n", [[metadata objectForKey:@"address"] objectForKey:@"postalCode"]];
     [section appendFormat:@"<extraLocUzip>%@</extraLocUzip>\n", [[metadata objectForKey:@"address"] objectForKey:@"postalCode"]];
     [section appendFormat:@"<extraLocCountry>%@</extraLocCountry>\n", [[metadata objectForKey:@"address"] objectForKey:@"country"]];
@@ -301,9 +306,9 @@ static BOOL handlerEnabled = YES;
     // No newline suffix here intentionally
     [section appendString:@"<settings>"];
     
-    [section appendString:@"<weatherunderground>0</weatherunderground>\n"];
-    [section appendString:@"<location1></location1>\n"];
-    [section appendString:@"<googlelocation>0</googlelocation>\n"];
+    [section appendString:@"<weatherunderground>1</weatherunderground>\n"];
+    [section appendString:@"<location1>1</location1>\n"];
+    [section appendString:@"<googlelocation>1</googlelocation>\n"];
     [section appendString:@"<location5></location5>\n"];
     [section appendString:@"<interval>15</interval>\n"];
     [section appendString:@"<location2></location2>\n"];
@@ -314,7 +319,7 @@ static BOOL handlerEnabled = YES;
     [section appendString:@"<darksky>1</darksky>\n"];
     [section appendString:@"<autogpsupdate>manual</autogpsupdate>\n"];
     [section appendString:@"<wuinterval>9999</wuinterval>\n"];
-    [section appendString:@"<yahoo>0</yahoo>\n"];
+    [section appendString:@"<yahoo>1</yahoo>\n"];
     [section appendString:@"<location4></location4>\n"];
     
     BOOL isMetric = [[[cachedWeatherData objectForKey:@"units"] objectForKey:@"isMetric"] boolValue];
@@ -323,7 +328,7 @@ static BOOL handlerEnabled = YES;
     BOOL isUsing24h = [self _using24h];
     [section appendFormat:@"<timehour>%@</timehour>\n", isUsing24h ? @"24h" : @"12h"];
     
-    NSString *locale = [[[NSLocale currentLocale] localeIdentifier] stringByReplacingOccurrencesOfString:@"_" withString:@"-"];
+    NSString *locale = [[[NSLocale preferredLanguages] objectAtIndex:0] stringByReplacingOccurrencesOfString:@"_" withString:@"-"];
     [section appendFormat:@"<lang>%@</lang>\n", locale];
      
     [section appendString:@"</settings>\n"];
@@ -444,7 +449,7 @@ static BOOL handlerEnabled = YES;
     NSDate *date = [NSDate dateWithTimeIntervalSince1970:timestampMillis / 1000];
     
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-    dateFormatter.dateFormat = [self _using24h] ? @"yyyy-MM-dd HH:mm:ss" : @"yyyy-MM-dd hh:mm:ss A";
+    dateFormatter.dateFormat = [self _using24h] ? @"yyyy-MM-dd HH:mm:ss" : @"yyyy-MM-dd hh:mm:ss a";
     
     return [dateFormatter stringFromDate:date];
 }
