@@ -464,7 +464,7 @@
             return prediction;
     }
     
-    return nil;
+    return [self.dailyPredictionCache count] > 0 ? [self.dailyPredictionCache firstObject] : nil;
 }
 
 - (NSArray*)_cachedDailyPredictionSinceNow {
