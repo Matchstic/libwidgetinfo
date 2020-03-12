@@ -14,6 +14,13 @@
     // Setup client side connection
     [OBJCIPC activate];
     
+    // Setup reconnection handler
+    
+    [OBJCIPC sharedInstance].reconnectionHandler = ^{
+        NSLog(@"Reconnection occurred, trying a test connection");
+        [self _sendTestConnection];
+    };
+    
     // Monitor for incoming messages
     
     [OBJCIPC registerIncomingMessageFromServerHandlerForMessageName:@"providerState" handler:^(NSDictionary *data, void (^callback)(NSDictionary* response)) {
@@ -32,6 +39,10 @@
         });
     }];
     
+    [self _sendTestConnection];
+}
+
+- (void)_sendTestConnection {
     // Send test connection to server
     NSLog(@"Sending test connection...");
     
@@ -43,7 +54,9 @@
             [dataProvider notifyDaemonConnected];
         }
         
-        // TODO: Current state is included in response
+        // Current state is included in response
+        
+        self.currentDeviceState = [data objectForKey:@"deviceState"];
     }];
 }
 
@@ -94,17 +107,26 @@
     
     NSLog(@"Notified of new device state: %@", args);
     
-    if ([sleep boolValue]) {
-        [self noteDeviceDidEnterSleep];
-    } else {
-        [self noteDeviceDidExitSleep];
+    BOOL currentSleepState = [self.currentDeviceState objectForKey:@"sleep"];
+    BOOL currentNetworkState = [self.currentDeviceState objectForKey:@"network"];
+    
+    if (currentSleepState != [sleep boolValue]) {
+        if ([sleep boolValue]) {
+            [self noteDeviceDidEnterSleep];
+        } else {
+            [self noteDeviceDidExitSleep];
+        }
     }
     
-    if ([network boolValue]) {
-        [self networkWasConnected];
-    } else {
-        [self networkWasDisconnected];
+    if (currentNetworkState != [network boolValue]) {
+        if ([network boolValue]) {
+            [self networkWasConnected];
+        } else {
+            [self networkWasDisconnected];
+        }
     }
+    
+    self.currentDeviceState = args;
 }
 
 @end

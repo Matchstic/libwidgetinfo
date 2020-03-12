@@ -94,11 +94,17 @@ int libwidgetinfo_main_ipc(void) {
     
 	[self requestCurrentDeviceStateWithCallback:^(NSDictionary *result) {
 		[self broadcastMessage:@"deviceState" withData:result];
+        
+        // Pause server to avoid issues caused by deep sleep
+        [OBJCIPC pauseServer];
 	}];
 }
 
 - (void)noteDeviceDidExitSleep {
     [super noteDeviceDidExitSleep];
+    
+    // Restart server to avoid issues caused by deep sleep
+    [OBJCIPC restartServer];
     
 	[self requestCurrentDeviceStateWithCallback:^(NSDictionary *result) {
 		[self broadcastMessage:@"deviceState" withData:result];
