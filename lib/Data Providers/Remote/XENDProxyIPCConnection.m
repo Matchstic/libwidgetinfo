@@ -18,6 +18,10 @@
     
     [OBJCIPC sharedInstance].reconnectionHandler = ^{
         NSLog(@"Reconnection occurred, trying a test connection");
+        
+        /*
+         A reconnection essentially results in fetching state again from the remote side.
+         */
         [self _sendTestConnection];
     };
     
