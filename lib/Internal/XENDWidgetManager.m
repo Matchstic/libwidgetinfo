@@ -258,19 +258,19 @@ static NSString *preferencesId = @"com.matchstic.libwidgetinfo";
     XENDSystemDataProvider *system = [[XENDSystemDataProvider alloc] init];
     [system registerDelegate:self];
     [result setObject:system forKey:[XENDSystemDataProvider providerNamespace]];
-    if (currentCachedDynamicState)
+    if (currentCachedDynamicState && [system.cachedDynamicProperties isEqualToDictionary:@{}])
         system.cachedDynamicProperties = [currentCachedDynamicState objectForKey:[XENDSystemDataProvider providerNamespace]];
     
     XENDMediaDataProvider *media = [[XENDMediaDataProvider alloc] init];
     [media registerDelegate:self];
     [result setObject:media forKey:[XENDMediaDataProvider providerNamespace]];
-    if (currentCachedDynamicState)
+    if (currentCachedDynamicState && [media.cachedDynamicProperties isEqualToDictionary:@{}])
         media.cachedDynamicProperties = [currentCachedDynamicState objectForKey:[XENDMediaDataProvider providerNamespace]];
     
     XENDWeatherDataProvider *weather = [[XENDWeatherDataProvider alloc] init];
     [weather registerDelegate:self];
     [result setObject:weather forKey:[XENDWeatherDataProvider providerNamespace]];
-    if (currentCachedDynamicState)
+    if (currentCachedDynamicState && [weather.cachedDynamicProperties isEqualToDictionary:@{}])
         weather.cachedDynamicProperties = [currentCachedDynamicState objectForKey:[XENDWeatherDataProvider providerNamespace]];
     
     return result;
