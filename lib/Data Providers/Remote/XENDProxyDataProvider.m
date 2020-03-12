@@ -25,11 +25,19 @@
     // Fetch current properties from the daemon
     NSLog(@"Daemon connected, requesting current properties for: %@", [self _subclassNamespace]);
     [[[XENDProxyManager sharedInstance] connection] requestCurrentPropertiesInNamespace:[self _subclassNamespace] callback:^(NSDictionary *res) {
-        self.cachedStaticProperties = res ? [res objectForKey:@"static"] : @{};
-        self.cachedDynamicProperties = res ? [res objectForKey:@"dynamic"] : @{};
         
-        // Notify widget manager of new data
-        [self notifyWidgetManagerForNewProperties];
+        NSDictionary *staticProperties = res ? [res objectForKey:@"static"] : @{};
+        NSDictionary *dynamicProperties = res ? [res objectForKey:@"dynamic"] : @{};
+        
+        // Only apply properties if they are not empty
+        if (![staticProperties isEqualToDictionary:@{}])
+            self.cachedStaticProperties = staticProperties;
+        if (![dynamicProperties isEqualToDictionary:@{}])
+            self.cachedDynamicProperties = [dynamicProperties mutableCopy];
+        
+        // Notify widget manager of new data, if any was not empty
+        if (![staticProperties isEqualToDictionary:@{}] || ![dynamicProperties isEqualToDictionary:@{}])
+            [self notifyWidgetManagerForNewProperties];
     }];
 }
 
