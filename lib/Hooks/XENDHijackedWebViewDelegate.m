@@ -31,19 +31,23 @@
 ///////////////////////////////////////////////////////
 
 - (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation {
-    [self.originalDelegate webView:webView didStartProvisionalNavigation:navigation];
+    if ([self.originalDelegate respondsToSelector:@selector(webView:didStartProvisionalNavigation:)])
+        [self.originalDelegate webView:webView didStartProvisionalNavigation:navigation];
 }
 
 - (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error {
-    [self.originalDelegate webView:webView didFailProvisionalNavigation:navigation withError:error];
+    if ([self.originalDelegate respondsToSelector:@selector(webView:didFailProvisionalNavigation:withError:)])
+        [self.originalDelegate webView:webView didFailProvisionalNavigation:navigation withError:error];
 }
 
 - (void)webView:(WKWebView *)webView didCommitNavigation:(WKNavigation *)navigation {
-    [self.originalDelegate webView:webView didCommitNavigation:navigation];
+    if ([self.originalDelegate respondsToSelector:@selector(webView:didCommitNavigation:)])
+        [self.originalDelegate webView:webView didCommitNavigation:navigation];
 }
 
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
-    [self.originalDelegate webView:webView didFinishNavigation:navigation];
+    if ([self.originalDelegate respondsToSelector:@selector(webView:didFinishNavigation:)])
+        [self.originalDelegate webView:webView didFinishNavigation:navigation];
     
     // Register to widget manager if required
     NSString *url = [webView.URL absoluteString];
@@ -55,11 +59,13 @@
 }
 
 - (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error {
-    [self.originalDelegate webView:webView didFailNavigation:navigation withError:error];
+    if ([self.originalDelegate respondsToSelector:@selector(webView:didFailNavigation:withError:)])
+        [self.originalDelegate webView:webView didFailNavigation:navigation withError:error];
 }
 
 - (void)webViewWebContentProcessDidTerminate:(WKWebView *)webView {
-    [self.originalDelegate webViewWebContentProcessDidTerminate:webView];
+    if ([self.originalDelegate respondsToSelector:@selector(webViewWebContentProcessDidTerminate:)])
+        [self.originalDelegate webViewWebContentProcessDidTerminate:webView];
 }
 
 @end
