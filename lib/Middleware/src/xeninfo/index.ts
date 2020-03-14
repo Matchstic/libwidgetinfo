@@ -4,10 +4,15 @@ import NativeInterface from '../native-interface';
 import {
     XENDWeatherProperties
 } from '../data/weather';
+import XENDSystemProvider from '../data/system';
 
 export default class XenInfoMiddleware implements XenHTMLMiddleware {
+    private providers: Map<DataProviderUpdateNamespace, any>;
+
     public initialise(parent: NativeInterface, providers: Map<DataProviderUpdateNamespace, any>): void {
         if (!this.requiresXenInfoCompat()) return;
+
+        this.providers = providers;
 
         // Monitor weather data
         providers.get(DataProviderUpdateNamespace.Weather).observeData((newData: any) => {
@@ -41,7 +46,7 @@ export default class XenInfoMiddleware implements XenHTMLMiddleware {
                 neighbourhood: newData.metadata.address.neighbourhood,
                 city: newData.metadata.address.city,
                 postalCode: newData.metadata.address.postalCode,
-                county: newData.metadata.address.country,
+                county: newData.metadata.address.county,
                 state: newData.metadata.address.state,
                 country: newData.metadata.address.country,
                 countryISOCode: newData.metadata.address.countryISOCode
@@ -50,7 +55,7 @@ export default class XenInfoMiddleware implements XenHTMLMiddleware {
             low: newData.now.temperature.minimum,
             high: newData.now.temperature.maximum,
             feelsLike: newData.now.temperature.feelsLike,
-            chanceofrain: newData.now.precipitation.total,
+            chanceofrain: Math.round(newData.now.precipitation.total),
             condition: newData.now.condition.description,
             naturalCondition: newData.now.condition.description,
             latlong: newData.metadata.location.latitude + ',' + newData.metadata.location.longitude,
@@ -59,16 +64,16 @@ export default class XenInfoMiddleware implements XenHTMLMiddleware {
             conditionCode: newData.now.condition.code,
             updateTimeString: newData.metadata.updateTimestamp.toLocaleString(),
             humidity: newData.now.temperature.relativeHumidity,
-            dewPoint: newData.now.temperature.dewpoint,
+            dewPoint: this.forceMetricTemperature(newData.now.temperature.dewpoint, newData.units.isMetric),
             windChill: newData.now.temperature.feelsLike,
             windDirection: newData.now.wind.degrees,
-            windSpeed: newData.now.wind.speed,
-            visibility: newData.now.visibility,
+            windSpeed: this.forceMetricSpeed(newData.now.wind.speed, newData.units.speed === 'km/h'),
+            visibility: this.forceMetricDistance(newData.now.visibility, newData.units.distance === 'km'),
             sunsetTime: this.militaryIshTime(newData.now.sun.sunset),
             sunriseTime: this.militaryIshTime(newData.now.sun.sunrise),
             sunsetTimeFormatted: this.localeTimeString(newData.now.sun.sunset),
             sunriseTimeFormatted: this.localeTimeString(newData.now.sun.sunrise),
-            precipitationForecast: newData.hourly.length > 0 ? newData.hourly[0].precipitation.probability : 0,
+            precipitationForecast: Math.round(newData.hourly.length > 0 ? newData.hourly[0].precipitation.probability : 0),
             pressure: newData.now.pressure.current,
             precipitation24hr: -1, // TODO: Last 24hr precipitation
             heatIndex: newData.now.temperature.heatIndex,
@@ -85,7 +90,7 @@ export default class XenInfoMiddleware implements XenHTMLMiddleware {
                 time: this.localeTimeString(fcast.timestamp),
                 conditionCode: fcast.condition.code,
                 temperature: fcast.temperature.forecast,
-                percentPrecipitation: fcast.precipitation.probability,
+                percentPrecipitation: Math.round(fcast.precipitation.probability),
                 hourIndex: fcast.hourIndex
             });
         }
@@ -97,8 +102,8 @@ export default class XenInfoMiddleware implements XenHTMLMiddleware {
             dailyForecasts.push({
                 low: fcast.temperature.minimum,
                 high: fcast.temperature.maximum,
-                dayNumber: fcast.weekdayNumber,
-                dayOfWeek: fcast.timestamp.getDay() + 1, // 1 is Sunday due to US conventions
+                dayNumber: i,
+                dayOfWeek: fcast.weekdayNumber,
                 icon: fcast.condition.code
             });
         }
@@ -112,11 +117,36 @@ export default class XenInfoMiddleware implements XenHTMLMiddleware {
 
     private localeTimeString(date: Date): string {
         // Should return in format: 07:12PM or 07:12
-        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        const is24h = (this.providers.get(DataProviderUpdateNamespace.System) as XENDSystemProvider).data.isTwentyFourHourTimeEnabled;
+
+        const minutes = date.getMinutes() >= 10 ? date.getMinutes() : '0' + date.getMinutes();
+
+        let _hours = date.getHours();
+        if (!is24h && _hours > 12) _hours -= 12;
+
+        const hours = _hours >= 10 ? _hours : '0' + _hours;
+
+        return '' + hours + ':' + minutes + (is24h ? '' : (date.getHours() > 12 ? 'PM' : 'AM'));
     }
 
     private militaryIshTime(date: Date): string {
         const minutes = date.getMinutes() >= 10 ? date.getMinutes() : '0' + date.getMinutes();
         return '' + date.getHours() + minutes;
+    }
+
+    private forceMetricTemperature(unit: number, isMetric: boolean) {
+        if (isMetric) return unit;
+        else return (unit - 32) * (5 / 9);
+    }
+
+    private forceMetricDistance(unit: number, isMetric: boolean) {
+        if (isMetric) return unit;
+        else return unit * 1.609344;
+    }
+
+    private forceMetricSpeed(unit: number, isMetric: boolean) {
+        if (isMetric) return unit;
+        else return unit * 1.609344;
     }
 }
