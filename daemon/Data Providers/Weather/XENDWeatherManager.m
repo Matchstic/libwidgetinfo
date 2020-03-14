@@ -521,6 +521,14 @@
         observation = [[XTWCObservation alloc] initWithFakeData:[self _units]];
     }
     
+    // Figure out if its currently daytime
+    NSDate *nowDate = [NSDate date];
+    NSDate *sunriseDate = [self dateFromISO8601String:prediction.sunRiseISOTime];
+    NSDate *sunsetDate = [self dateFromISO8601String:prediction.sunSetISOTime];
+    
+    BOOL isDayTime = [nowDate compare:sunriseDate] == NSOrderedDescending &&
+                     [nowDate compare:sunsetDate] == NSOrderedAscending;
+    
     // See: https://www.worldcommunitygrid.org/lt/images/climate/The_Weather_Company_APIs.pdf
     // This includes full descriptions for every field for documentation
     NSDictionary *now = @{
@@ -566,9 +574,7 @@
         @"sun": @{
             @"sunset": prediction ? prediction.sunSetISOTime : [NSNull null],
             @"sunrise": prediction ? prediction.sunRiseISOTime : [NSNull null],
-            @"isDay": prediction ? ([prediction.dayIndicator isEqual:[NSNull null]] ?
-                        @NO :
-                        [NSNumber numberWithBool:[prediction.dayIndicator isEqualToString:@"D"]]) : [NSNull null]
+            @"isDay": [NSNumber numberWithBool:isDayTime]
         },
         
         @"temperature": @{
@@ -826,6 +832,19 @@
     }
     
     return result;
+}
+
+- (NSDate*)dateFromISO8601String:(NSString*)input {
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    
+    // 2020-03-05T03:48:34-0800
+    [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZ"];
+    
+    // Always use this locale when parsing fixed format date strings
+    NSLocale *posix = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+    [formatter setLocale:posix];
+    
+    return [formatter dateFromString:input];
 }
 
 @end
