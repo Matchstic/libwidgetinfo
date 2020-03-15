@@ -226,6 +226,7 @@
 		C9BFD61623C154BD001F46F2 /* XTWCDailyForecast.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XTWCDailyForecast.m; path = "daemon/Data Providers/Weather/Model/XTWCDailyForecast.m"; sourceTree = SOURCE_ROOT; };
 		C9BFD61823C159C4001F46F2 /* NSDictionary+XENSafeObjectForKey.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "NSDictionary+XENSafeObjectForKey.h"; path = "Daemon/Data Providers/Weather/Model/NSDictionary+XENSafeObjectForKey.h"; sourceTree = SOURCE_ROOT; };
 		C9BFD61923C159C4001F46F2 /* NSDictionary+XENSafeObjectForKey.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "NSDictionary+XENSafeObjectForKey.m"; path = "Daemon/Data Providers/Weather/Model/NSDictionary+XENSafeObjectForKey.m"; sourceTree = SOURCE_ROOT; };
+		C9D4BF50241DA7E500DBC002 /* kern_memorystatus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = kern_memorystatus.h; sourceTree = "<group>"; };
 		C9F2601E240581FF003A5A85 /* XENDWeatherHooks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XENDWeatherHooks.h; path = "daemon/Data Providers/Weather/XENDWeatherHooks.h"; sourceTree = SOURCE_ROOT; };
 		C9F2601F240581FF003A5A85 /* XENDWeatherHooks.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XENDWeatherHooks.m; path = "daemon/Data Providers/Weather/XENDWeatherHooks.m"; sourceTree = SOURCE_ROOT; };
 		C9F2F3592301BE4100E4863B /* IS2PreProcessor.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = IS2PreProcessor.mm; sourceTree = "<group>"; };
@@ -356,6 +357,7 @@
 				C912062D2416A8690081E307 /* header.h */,
 				C912062E2416A8690081E307 /* objcipc.h */,
 				C912063C2416A8690081E307 /* README.md */,
+				C9D4BF50241DA7E500DBC002 /* kern_memorystatus.h */,
 			);
 			path = libobjcipc;
 			sourceTree = "<group>";
