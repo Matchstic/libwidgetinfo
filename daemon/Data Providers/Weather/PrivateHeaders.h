@@ -15,11 +15,21 @@
 
 @end
 
+@interface WeatherCloudPersistence : NSObject
++ (id)cloudPersistenceWithDelegate:(id)arg1;
+@end
+
+@interface WeatherCloudPreferences : NSObject
+- (id)initWithLocalPreferences:(id)arg1 persistence:(id)arg2;
+- (id)citiesByEnforcingSizeLimitOnResults:(id)arg1;
+@end
+
 @interface WeatherPreferences : NSObject
 
 + (instancetype)sharedPreferences;
 - (id)localWeatherCity;
 - (id)loadSavedCities;
+- (WeatherCloudPreferences *)cloudPreferences;
 - (City*)cityFromPreferencesDictionary:(id)arg1;
 
 @end

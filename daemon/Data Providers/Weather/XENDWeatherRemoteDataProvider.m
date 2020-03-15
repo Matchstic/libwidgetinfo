@@ -53,6 +53,8 @@
         return;
     }
     
+    CFPreferencesAppSynchronize(CFSTR("com.apple.weather"));
+    
     NSURLRequest *request = nil;
     
     // iOS 13+
@@ -172,6 +174,16 @@
 }
 
 - (CLLocation*)fallbackWeatherLocation {
+    /*if (objc_getClass("WeatherCloudPreferences")) {
+        WeatherCloudPersistence *persistence = [objc_getClass("WeatherCloudPersistence") cloudPersistenceWithDelegate:nil];
+        WeatherCloudPreferences *cloudPrefs = [[objc_getClass("WeatherCloudPreferences") alloc]
+                                               initWithLocalPreferences:[objc_getClass("WeatherPreferences") sharedPreferences]
+                                               persistence:persistence];
+        
+        NSLog(@"*** Cloud prefs: %@, persistence: %@", cloudPrefs, persistence);
+        NSLog(@"Cities: %@", [cloudPrefs citiesByEnforcingSizeLimitOnResults:nil]);
+    }*/
+    
     // Fetch the first non-local city from the weather preferences
     NSArray *savedCities = [[objc_getClass("WeatherPreferences") sharedPreferences] loadSavedCities];
     City *result;
@@ -182,6 +194,8 @@
             break;
         }
     }
+    
+    NSLog(@"Falling back to %@, options: %@", result, savedCities);
     
     if (result) {
         return result.location;

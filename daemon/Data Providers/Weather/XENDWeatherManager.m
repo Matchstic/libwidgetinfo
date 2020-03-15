@@ -458,6 +458,7 @@
     // From cached data, fetch the daily prediction that is for today
     uint64_t now = [[NSDate date] timeIntervalSince1970];
     
+    // TODO: Factor in GMT offset
     for (XTWCDailyForecast *prediction in self.dailyPredictionCache) {
         if (prediction.validUNIXTime <= now &&
             prediction.validUNIXTime + (60 * 60 * 24) > now)
@@ -473,6 +474,7 @@
     
     NSMutableArray *result = [NSMutableArray array];
     
+    // TODO: Factor in GMT offset to validUNIXTime
     for (XTWCDailyForecast *prediction in self.dailyPredictionCache) {
         if (prediction.validUNIXTime + (60 * 60 * 24) > now)
             [result addObject:prediction];
@@ -487,6 +489,7 @@
     
     NSMutableArray *result = [NSMutableArray array];
     
+    // TODO: Factor in GMT offset to validUNIXTime
     for (XTWCDailyForecast *prediction in self.nightlyPredictionCache) {
         if (prediction.validUNIXTime + (60 * 60 * 24) > now)
             [result addObject:prediction];
@@ -501,6 +504,7 @@
     
     NSMutableArray *result = [NSMutableArray array];
     
+    // TODO: Factor in GMT offset to validUNIXTime
     for (XTWCHourlyForecast *prediction in self.hourlyPredictionCache) {
         if (prediction.validUNIXTime + (60 * 60) > now)
             [result addObject:prediction];
