@@ -137,16 +137,16 @@ export default class XenInfoMiddleware implements XenHTMLMiddleware {
 
     private forceMetricTemperature(unit: number, isMetric: boolean) {
         if (isMetric) return unit;
-        else return (unit - 32) * (5 / 9);
+        else return Math.round((unit - 32) * (5 / 9));
     }
 
     private forceMetricDistance(unit: number, isMetric: boolean) {
         if (isMetric) return unit;
-        else return unit * 1.609344;
+        else return Math.round(unit * 1.609344);
     }
 
     private forceMetricSpeed(unit: number, isMetric: boolean) {
         if (isMetric) return unit;
-        else return unit * 1.609344;
+        else return Math.round(unit * 1.609344);
     }
 }
