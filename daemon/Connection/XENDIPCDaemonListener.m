@@ -6,7 +6,10 @@
 //
 
 #import "XENDIPCDaemonListener.h"
-#import "../../deps/libobjcipc/IPC.h"
+#import "../../deps/libobjcipc/objcipc.h"
+
+#define WIDGET_INFO_MESSAGE_PROPERTIES_CHANGED @"com.matchstic.libwidgetinfo/propertiesChanged"
+#define WIDGET_INFO_MESSAGE_DEVICE_STATE_CHANGED @"com.matchstic.libwidgetinfo/deviceStateChanged"
 
 int libwidgetinfo_main_ipc(void) {
     NSLog(@"*** [libwidgetinfo] :: Loading up daemon.");
@@ -68,63 +71,56 @@ int libwidgetinfo_main_ipc(void) {
     }];
 }
 
-- (void)broadcastMessage:(NSString*)name withData:(NSDictionary*)data {
-    // Post to all app connections
-    [OBJCIPC broadcastMessageToAppsWithMessageName:name dictionary:data replyHandler:^(NSDictionary *result) {
-        // ignore result
-    }];
+- (void)broadcastMessage:(NSString*)name data:(NSDictionary*)data {
+    NSLog(@"*** DEBUG :: Broadcast message %@ with data %@", name, data);
+    
+    // Broadcast notification for new state change
+    NSDistributedNotificationCenter *center = [NSDistributedNotificationCenter defaultCenter];
+    [center postNotificationName:name object:nil userInfo:data deliverImmediately:YES];
 }
 
 #pragma mark Inherited overrides
 
 - (void)notifyUpdatedDynamicProperties:(NSDictionary*)dynamicProperties forNamespace:(NSString*)dataProviderNamespace {
     // Emit notification for changed properties
-	NSDictionary *result = @{
-		@"data": dynamicProperties,
-		@"namespace": dataProviderNamespace
-	};
-	
-	NSLog(@"*** Notifying clients of new properties on namespace %@", dataProviderNamespace);
-	
-    [self broadcastMessage:@"providerState" withData:result];
+    NSDictionary *data = @{
+        @"namespace": dataProviderNamespace
+    };
+    
+	NSLog(@"*** Notifying clients of new properties available to fetch");
+    [self broadcastMessage:WIDGET_INFO_MESSAGE_PROPERTIES_CHANGED data:data];
 }
 
 - (void)noteDeviceDidEnterSleep {
     [super noteDeviceDidEnterSleep];
     
-	[self requestCurrentDeviceStateWithCallback:^(NSDictionary *result) {
-		[self broadcastMessage:@"deviceState" withData:result];
-        
-        // Pause server to avoid issues caused by deep sleep
-        [OBJCIPC pauseServer];
-	}];
+    [self requestCurrentDeviceStateWithCallback:^(NSDictionary *result) {
+        [self broadcastMessage:WIDGET_INFO_MESSAGE_DEVICE_STATE_CHANGED data:result];
+    }];
 }
 
 - (void)noteDeviceDidExitSleep {
     [super noteDeviceDidExitSleep];
     
-    // Restart server to avoid issues caused by deep sleep
-    [OBJCIPC restartServer];
-    
-	[self requestCurrentDeviceStateWithCallback:^(NSDictionary *result) {
-		[self broadcastMessage:@"deviceState" withData:result];
-	}];
+    [self requestCurrentDeviceStateWithCallback:^(NSDictionary *result) {
+        [self broadcastMessage:WIDGET_INFO_MESSAGE_DEVICE_STATE_CHANGED data:result];
+    }];
 }
 
 - (void)networkWasConnected {
     [super networkWasConnected];
     
-	[self requestCurrentDeviceStateWithCallback:^(NSDictionary *result) {
-		[self broadcastMessage:@"deviceState" withData:result];
-	}];
+    [self requestCurrentDeviceStateWithCallback:^(NSDictionary *result) {
+        [self broadcastMessage:WIDGET_INFO_MESSAGE_DEVICE_STATE_CHANGED data:result];
+    }];
 }
 
 - (void)networkWasDisconnected {
     [super networkWasDisconnected];
     
-	[self requestCurrentDeviceStateWithCallback:^(NSDictionary *result) {
-		[self broadcastMessage:@"deviceState" withData:result];
-	}];
+    [self requestCurrentDeviceStateWithCallback:^(NSDictionary *result) {
+        [self broadcastMessage:WIDGET_INFO_MESSAGE_DEVICE_STATE_CHANGED data:result];
+    }];
 }
 
 @end

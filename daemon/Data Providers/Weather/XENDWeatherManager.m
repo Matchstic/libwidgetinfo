@@ -12,7 +12,7 @@
 #import "Model/XTWCAirQualityObservation.h"
 #import "Model/XTWCUnits.h"
 
-#define UPDATE_INTERVAL 15 // minutes
+#define UPDATE_INTERVAL 1 // minutes
 
 @interface XENDWeatherManager ()
 
@@ -109,6 +109,7 @@
     
     NSLog(@"Pausing weather update timer");
     [self.updateTimer invalidate];
+    self.updateTimer = nil;
 }
 
 - (void)restartUpdateTimer {
@@ -128,21 +129,24 @@
 }
 
 - (void)_restartUpdateTimerWithInterval:(NSTimeInterval)interval {
-    if (self.updateTimer)
-        [self.updateTimer invalidate];
-    
-    NSLog(@"Restarting weather update timer with interval: %f minutes", (float)interval / 60.0);
-    
     // Needs to be scheduled on the main thread
     dispatch_async(dispatch_get_main_queue(), ^{
+        if (self.updateTimer) {
+            [self.updateTimer invalidate];
+            self.updateTimer = nil;
+        }
+            
+        
+        NSLog(@"Restarting weather update timer with interval: %f minutes", (float)interval / 60.0);
+        
         self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:interval
                                                             target:self
                                                           selector:@selector(_updateTimerFired:)
                                                           userInfo:nil
                                                            repeats:NO];
+        
+        self.nextUpdateTime = [[NSDate date] dateByAddingTimeInterval:interval];
     });
-    
-    self.nextUpdateTime = [[NSDate date] dateByAddingTimeInterval:interval];
 }
 
 - (void)_updateTimerFired:(NSTimer*)timer {

@@ -6,42 +6,24 @@
 //
 
 #import "XENDProxyIPCConnection.h"
-#import "../../../deps/libobjcipc/IPC.h"
+#import "../../../deps/libobjcipc/objcipc.h"
+
+#define WIDGET_INFO_MESSAGE_PROPERTIES_CHANGED @"com.matchstic.libwidgetinfo/propertiesChanged"
+#define WIDGET_INFO_MESSAGE_DEVICE_STATE_CHANGED @"com.matchstic.libwidgetinfo/deviceStateChanged"
 
 @implementation XENDProxyIPCConnection
 
 - (void)initialise {
-    // Setup client side connection
-    [OBJCIPC activate];
-    
-    // Setup reconnection handler
-    
-    [OBJCIPC sharedInstance].reconnectionHandler = ^{
-        NSLog(@"Reconnection occurred, trying a test connection");
-        
-        /*
-         A reconnection essentially results in fetching state again from the remote side.
-         */
-        [self _sendTestConnection];
-    };
     
     // Monitor for incoming messages
+
+    NSDistributedNotificationCenter *center = [NSDistributedNotificationCenter defaultCenter];
     
-    [OBJCIPC registerIncomingMessageFromServerHandlerForMessageName:@"providerState" handler:^(NSDictionary *data, void (^callback)(NSDictionary* response)) {
-        [self _messagePropertiesRecieved:data];
-        
-        callback(@{
-            @"success": @YES
-        });
-    }];
+    [center addObserver:self selector:@selector(_fetchProperties:) name:WIDGET_INFO_MESSAGE_PROPERTIES_CHANGED object:nil suspensionBehavior:NSNotificationSuspensionBehaviorDeliverImmediately];
     
-    [OBJCIPC registerIncomingMessageFromServerHandlerForMessageName:@"deviceState" handler:^(NSDictionary *data, void (^callback)(NSDictionary* response)) {
-        [self _messageStateRecieved:data];
-        
-        callback(@{
-            @"success": @YES
-        });
-    }];
+    [center addObserver:self selector:@selector(_notifyDeviceState:) name:WIDGET_INFO_MESSAGE_DEVICE_STATE_CHANGED object:nil suspensionBehavior:NSNotificationSuspensionBehaviorDeliverImmediately];
+    
+    // Send a test connection to the IPC server
     
     [self _sendTestConnection];
 }
@@ -95,16 +77,21 @@
     }];
 }
 
-- (void)_messagePropertiesRecieved:(NSDictionary*)args {
-    NSDictionary *data = [args objectForKey:@"data"];
-    NSString *namespace = [args objectForKey:@"namespace"];
+- (void)_fetchProperties:(NSNotification*)notification {
+    NSLog(@"*** DEBUG :: Notified to fetch properties, userInfo: %@", notification.userInfo);
     
-    NSLog(@"Notified of new properties in namespace: %@", namespace);
+    NSString *namespace = [notification.userInfo objectForKey:@"namespace"];
     
-    [self notifyUpdatedDynamicProperties:data forNamespace:namespace];
+    if (namespace) {
+        [self requestCurrentPropertiesInNamespace:namespace callback:^(NSDictionary *data) {
+            NSLog(@"Notified of new properties in namespace: %@", namespace);
+            [self notifyUpdatedDynamicProperties:data forNamespace:namespace];
+        }];
+    }
 }
 
-- (void)_messageStateRecieved:(NSDictionary*)args {
+- (void)_notifyDeviceState:(NSNotification*)notification {
+    NSDictionary *args = notification.userInfo;
     
     NSNumber *sleep = [args objectForKey:@"sleep"];
     NSNumber *network = [args objectForKey:@"network"];
