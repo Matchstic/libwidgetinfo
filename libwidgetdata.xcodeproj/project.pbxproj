@@ -36,8 +36,6 @@
 		C93045B623D84DA800B0D561 /* XTWCAirQualityObservation.m in Sources */ = {isa = PBXBuildFile; fileRef = C93045B523D84DA800B0D561 /* XTWCAirQualityObservation.m */; };
 		C97CF9F323217A1200A3A014 /* XENDHijackedWebViewDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = C97CF9F123217A1200A3A014 /* XENDHijackedWebViewDelegate.h */; };
 		C97CF9F423217A1200A3A014 /* XENDHijackedWebViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C97CF9F223217A1200A3A014 /* XENDHijackedWebViewDelegate.m */; };
-		C97CF9FD2321834F00A3A014 /* XIPreProcessor.h in Headers */ = {isa = PBXBuildFile; fileRef = C97CF9FB2321834F00A3A014 /* XIPreProcessor.h */; };
-		C97CF9FE2321834F00A3A014 /* XIPreProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = C97CF9FC2321834F00A3A014 /* XIPreProcessor.m */; };
 		C993D33323DCE6D60084ED1E /* XENDStateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C993D33223DCE6D60084ED1E /* XENDStateManager.m */; };
 		C993D33623DCEFCE0084ED1E /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = C993D33523DCEFCE0084ED1E /* Reachability.m */; };
 		C993D33823DCF5CE0084ED1E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C993D33723DCF5CE0084ED1E /* SystemConfiguration.framework */; };
@@ -201,8 +199,6 @@
 		C97CF9ED23216ED600A3A014 /* XENDPreProcessor-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "XENDPreProcessor-Protocol.h"; sourceTree = "<group>"; };
 		C97CF9F123217A1200A3A014 /* XENDHijackedWebViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XENDHijackedWebViewDelegate.h; sourceTree = "<group>"; };
 		C97CF9F223217A1200A3A014 /* XENDHijackedWebViewDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XENDHijackedWebViewDelegate.m; sourceTree = "<group>"; };
-		C97CF9FB2321834F00A3A014 /* XIPreProcessor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XIPreProcessor.h; sourceTree = "<group>"; };
-		C97CF9FC2321834F00A3A014 /* XIPreProcessor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XIPreProcessor.m; sourceTree = "<group>"; };
 		C993D33123DCE6D60084ED1E /* XENDStateManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XENDStateManager.h; path = daemon/State/XENDStateManager.h; sourceTree = SOURCE_ROOT; };
 		C993D33223DCE6D60084ED1E /* XENDStateManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XENDStateManager.m; path = daemon/State/XENDStateManager.m; sourceTree = SOURCE_ROOT; };
 		C993D33423DCEFCE0084ED1E /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
@@ -439,15 +435,6 @@
 			path = Internal;
 			sourceTree = "<group>";
 		};
-		C97CF9FA2321831A00A3A014 /* XenInfo */ = {
-			isa = PBXGroup;
-			children = (
-				C97CF9FB2321834F00A3A014 /* XIPreProcessor.h */,
-				C97CF9FC2321834F00A3A014 /* XIPreProcessor.m */,
-			);
-			path = XenInfo;
-			sourceTree = "<group>";
-		};
 		C993D33023DCE6C80084ED1E /* State */ = {
 			isa = PBXGroup;
 			children = (
@@ -565,7 +552,6 @@
 		C9F2F3572301BE4100E4863B /* Preprocessors */ = {
 			isa = PBXGroup;
 			children = (
-				C97CF9FA2321831A00A3A014 /* XenInfo */,
 				C9F2F3582301BE4100E4863B /* InfoStats2 */,
 				C9F2F3812301BE4100E4863B /* XENDPreprocessorManager.h */,
 				C9F2F3802301BE4100E4863B /* XENDPreprocessorManager.m */,
@@ -779,7 +765,6 @@
 				C9F2F3EE2301BE4800E4863B /* gumbo.h in Headers */,
 				C92013E22411A711009CBBFB /* XENDBaseURLHandler.h in Headers */,
 				C9F2F3F32301BE4800E4863B /* OGElement.h in Headers */,
-				C97CF9FD2321834F00A3A014 /* XIPreProcessor.h in Headers */,
 				C9F2F3F12301BE4800E4863B /* OGText.h in Headers */,
 				C9F2F3EB2301BE4800E4863B /* utf8.h in Headers */,
 				C9F2F39C2301BE4100E4863B /* Options.hpp in Headers */,
@@ -992,7 +977,6 @@
 				C92013DF2411A704009CBBFB /* XENDWidgetWeatherURLHandler.m in Sources */,
 				C919CA68233022E8001391A5 /* XENDSystemDataProvider.m in Sources */,
 				C9204FEF2336447B00F9F535 /* XENDProxySimulatedConnection.m in Sources */,
-				C97CF9FE2321834F00A3A014 /* XIPreProcessor.m in Sources */,
 				C9F2F3ED2301BE4800E4863B /* string_piece.c in Sources */,
 				C9204FFA2336509900F9F535 /* XENDMediaDataProvider.m in Sources */,
 				C9F2F3922301BE4100E4863B /* Scanner.cpp in Sources */,

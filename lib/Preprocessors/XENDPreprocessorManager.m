@@ -9,7 +9,6 @@
 #import "XENDPreprocessorManager.h"
 #import "XENDPreProcessor-Protocol.h"
 #import "InfoStats2/IS2PreProcessor.h"
-#import "XenInfo/XIPreProcessor.h"
 #import <ObjectiveGumbo/ObjectiveGumbo.h>
 
 @interface XENDPreprocessorManager ()
@@ -44,9 +43,6 @@
     
     IS2PreProcessor *is2Preprocessor = [[IS2PreProcessor alloc] init];
     [array addObject:is2Preprocessor];
-    
-    XIPreProcessor *xiPreprocessor = [[XIPreProcessor alloc] init];
-    [array addObject:xiPreprocessor];
     
     return array;
 }
