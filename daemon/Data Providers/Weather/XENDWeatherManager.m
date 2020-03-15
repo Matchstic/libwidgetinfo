@@ -12,7 +12,7 @@
 #import "Model/XTWCAirQualityObservation.h"
 #import "Model/XTWCUnits.h"
 
-#define UPDATE_INTERVAL 1 // minutes
+#define UPDATE_INTERVAL 15 // minutes
 
 @interface XENDWeatherManager ()
 
@@ -150,6 +150,7 @@
 }
 
 - (void)_updateTimerFired:(NSTimer*)timer {
+    NSLog(@"*** DEBUG :: Update timer fired");
     [self refreshWeather];
 }
 

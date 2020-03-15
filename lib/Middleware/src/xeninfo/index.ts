@@ -75,7 +75,7 @@ export default class XenInfoMiddleware implements XenHTMLMiddleware {
             sunriseTimeFormatted: this.localeTimeString(newData.now.sun.sunrise),
             precipitationForecast: Math.round(newData.hourly.length > 0 ? newData.hourly[0].precipitation.probability : 0),
             pressure: newData.now.pressure.current,
-            precipitation24hr: -1, // TODO: Last 24hr precipitation
+            precipitation24hr: newData.now.precipitation.total,
             heatIndex: newData.now.temperature.heatIndex,
             moonPhase: newData.now.moon.phaseDay,
             cityState: newData.metadata.address.city
