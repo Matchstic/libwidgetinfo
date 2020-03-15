@@ -86,6 +86,9 @@
         if ([scriptNode.attributes.allKeys containsObject:@"src"])
             externalFileReference = [scriptNode.attributes objectForKey:@"src"];
         
+        if ([externalFileReference hasPrefix:@"http"])
+            continue;
+        
         // Load content
         NSString *content;
         
