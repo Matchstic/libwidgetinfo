@@ -23,7 +23,7 @@
 
 - (void)notifyDaemonConnected {
     // Fetch current properties from the daemon
-    NSLog(@"Daemon connected, requesting current properties for: %@", [self _subclassNamespace]);
+    NSLog(@"INFO :: Daemon connected, requesting current properties for: %@", [self _subclassNamespace]);
     [[[XENDProxyManager sharedInstance] connection] requestCurrentPropertiesInNamespace:[self _subclassNamespace] callback:^(NSDictionary *res) {
         
         NSDictionary *staticProperties = res ? [res objectForKey:@"static"] : @{};
