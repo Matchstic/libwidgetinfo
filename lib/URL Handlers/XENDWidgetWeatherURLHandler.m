@@ -36,7 +36,7 @@ static BOOL handlerEnabled = YES;
 			completionHandler(nil, data, @"application/xml");
 		}];
 	} else {
-		NSData* data = [[self generateXML:[weatherProvider cachedData]] dataUsingEncoding:NSUTF8StringEncoding];
+        NSData* data = [[self generateXML:[weatherProvider cachedData]] dataUsingEncoding:NSUTF8StringEncoding];
 		completionHandler(nil, data, @"application/xml");
 	}
 }
@@ -318,7 +318,7 @@ static BOOL handlerEnabled = YES;
     [section appendString:@"<wwversion>3.5-widgetinfo</wwversion>\n"];
     [section appendString:@"<darksky>1</darksky>\n"];
     [section appendString:@"<autogpsupdate>manual</autogpsupdate>\n"];
-    [section appendString:@"<wuinterval>9999</wuinterval>\n"];
+    [section appendString:@"<wuinterval>15</wuinterval>\n"];
     [section appendString:@"<yahoo>1</yahoo>\n"];
     [section appendString:@"<location4></location4>\n"];
     
