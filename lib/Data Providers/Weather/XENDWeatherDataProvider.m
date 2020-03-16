@@ -42,9 +42,7 @@
 }
 
 - (void)notifyWidgetManagerForNewProperties {
-    // Call with cachedData contents
-    NSString *providerNamespace = [[self class] providerNamespace];
-    [self.delegate updateWidgetsWithNewData:[self cachedData] forNamespace:providerNamespace];
+    [super notifyWidgetManagerForNewProperties];
 	
 	if (!self.seenInitialData) {
 		self.seenInitialData = YES;
