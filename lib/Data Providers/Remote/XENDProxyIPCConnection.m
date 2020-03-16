@@ -30,10 +30,10 @@
 
 - (void)_sendTestConnection {
     // Send test connection to server
-    NSLog(@"Sending test connection...");
+    NSLog(@"DEBUG :: Sending test connection...");
     
     [OBJCIPC sendMessageToServerWithMessageName:@"testConnection" dictionary:@{} replyHandler:^(NSDictionary *data) {
-        NSLog(@"Daemon connection established");
+        NSLog(@"INFO :: Daemon connection established");
         
         // Notify providers of connection
         for (XENDProxyDataProvider *dataProvider in self.registeredProxyProviders.allValues) {
@@ -78,14 +78,17 @@
 }
 
 - (void)_fetchProperties:(NSNotification*)notification {
-    NSLog(@"*** DEBUG :: Notified to fetch properties, userInfo: %@", notification.userInfo);
-    
     NSString *namespace = [notification.userInfo objectForKey:@"namespace"];
     
     if (namespace) {
         [self requestCurrentPropertiesInNamespace:namespace callback:^(NSDictionary *data) {
-            NSLog(@"Notified of new properties in namespace: %@", namespace);
-            [self notifyUpdatedDynamicProperties:data forNamespace:namespace];
+            if (data == nil) {
+                NSLog(@"ERROR :: Cannot fetch new properties");
+            } else {
+                NSLog(@"DEBUG :: Fetched updated properties in namespace: %@", namespace);
+                // Only pass through dynamic properties, statics were fetched previously
+                [self notifyUpdatedDynamicProperties:[data objectForKey:@"dynamic"] forNamespace:namespace];
+            }
         }];
     }
 }
@@ -96,7 +99,7 @@
     NSNumber *sleep = [args objectForKey:@"sleep"];
     NSNumber *network = [args objectForKey:@"network"];
     
-    NSLog(@"Notified of new device state: %@", args);
+    NSLog(@"DEBUG :: Notified of new device state: %@", args);
     
     BOOL currentSleepState = [self.currentDeviceState objectForKey:@"sleep"];
     BOOL currentNetworkState = [self.currentDeviceState objectForKey:@"network"];
