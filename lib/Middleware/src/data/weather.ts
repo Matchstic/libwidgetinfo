@@ -259,7 +259,17 @@ export default class XENDWeatherProvider extends XENDBaseProvider {
 
         let newPayload = Object.assign({}, payload);
 
-        const timezoneOffset = this.timezoneOffset(payload.now.sun.sunset as any);
+        // Convert this to offset from current timezone
+        const timezoneOffsetGMT = this.timezoneOffset(payload.now.sun.sunset as any);
+        const realOffsetMinutes = new Date().getTimezoneOffset();
+
+        const realOffset = {
+            hours: Math.floor(realOffsetMinutes / 60),
+            mintues: realOffsetMinutes - (Math.floor(realOffsetMinutes / 60) * 60)
+        };
+
+        timezoneOffsetGMT.hour = timezoneOffsetGMT.hour - realOffset.hours;
+        timezoneOffsetGMT.minute = timezoneOffsetGMT.minute - realOffset.mintues;
 
         // `now` properties
         newPayload.now.moon.moonrise = this.datestringToInstance(payload.now.moon.moonrise as any);
@@ -274,7 +284,7 @@ export default class XENDWeatherProvider extends XENDBaseProvider {
             let _date = new Date(payload.hourly[i].timestamp as any);
 
             // Apply timezone offset to get local apparent time
-            _date.setHours(_date.getHours() + timezoneOffset.hour, _date.getMinutes() + timezoneOffset.minute);
+            _date.setHours(_date.getHours() + timezoneOffsetGMT.hour, _date.getMinutes() + timezoneOffsetGMT.minute);
 
             newPayload.hourly[i].timestamp = _date;
         }
@@ -285,7 +295,7 @@ export default class XENDWeatherProvider extends XENDBaseProvider {
             let _date = new Date(payload.daily[i].timestamp as any);
 
             // Apply timezone offset to get local apparent time
-            _date.setHours(_date.getHours() + timezoneOffset.hour, _date.getMinutes() + timezoneOffset.minute);
+            _date.setHours(_date.getHours() + timezoneOffsetGMT.hour, _date.getMinutes() + timezoneOffsetGMT.minute);
 
             newPayload.daily[i].timestamp = _date;
 
