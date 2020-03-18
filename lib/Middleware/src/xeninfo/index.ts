@@ -62,7 +62,7 @@ export default class XenInfoMiddleware implements XenHTMLMiddleware {
             celsius: newData.units.isMetric ? 'C' : 'F',
             isDay: newData.now.sun.isDay,
             conditionCode: newData.now.condition.code,
-            updateTimeString: newData.metadata.updateTimestamp.toLocaleString(),
+            updateTimeString: this.weatherUpdateTimeString(newData.metadata.updateTimestamp),
             humidity: newData.now.temperature.relativeHumidity,
             dewPoint: this.forceMetricTemperature(newData.now.temperature.dewpoint, newData.units.isMetric),
             windChill: newData.now.temperature.feelsLike,
@@ -113,6 +113,11 @@ export default class XenInfoMiddleware implements XenHTMLMiddleware {
 
         // Assign to global namespace
         (window as any).weather = weather;
+    }
+
+    private weatherUpdateTimeString(date: Date): string {
+        // Format is locale specific for data, time is HH:mm
+        return date.toLocaleDateString() + ', ' + date.getHours() + ':' + date.getMinutes();
     }
 
     private localeTimeString(date: Date): string {
