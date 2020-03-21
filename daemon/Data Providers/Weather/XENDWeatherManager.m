@@ -12,6 +12,8 @@
 #import "Model/XTWCAirQualityObservation.h"
 #import "Model/XTWCUnits.h"
 
+FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak_import));
+
 #define UPDATE_INTERVAL 15 // minutes
 
 @interface XENDWeatherManager ()
@@ -74,7 +76,8 @@
         // Do initial refresh on startup
         [self refreshWeather];
         
-        // TODO: Monitor for locale changes
+        // Monitor for locale changes
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_localeChanged:) name:NSCurrentLocaleDidChangeNotification object:nil];
         
         // Notification from location manager about authorisation changes
         [self.locationManager addAuthorisationStatusListener:^(BOOL available) {
@@ -154,12 +157,45 @@
     [self refreshWeather];
 }
 
+- (void)_localeChanged:(NSNotification*)notification {
+    // Ask cached data to reload their units
+    NSLog(@"*** [INFO] :: Locale did change, reloading...");
+    
+    struct XTWCUnits units = [self _units];
+    
+    if (self.observationCache) {
+        [self.observationCache reloadForUnitsChanged:units];
+    }
+    
+    if (self.dailyPredictionCache) {
+        for (XTWCDailyForecast *forecast in self.dailyPredictionCache) {
+            [forecast reloadForUnitsChanged:units];
+        }
+    }
+    
+    if (self.nightlyPredictionCache) {
+        for (XTWCDailyForecast *forecast in self.nightlyPredictionCache) {
+            [forecast reloadForUnitsChanged:units];
+        }
+    }
+    
+    if (self.hourlyPredictionCache) {
+        for (XTWCHourlyForecast *forecast in self.hourlyPredictionCache) {
+            [forecast reloadForUnitsChanged:units];
+        }
+    }
+    
+    // Post update
+    NSDictionary *parsed = [self parseWeatherData:@{} airQualityData:@{} metadata:@{} updateCache:NO];
+    [self.delegate onUpdatedWeatherConditions:parsed];
+}
+
 #pragma mark Update implementation
 
 - (void)refreshWeather {
     // Queue if no network, and update from cached data for now
     if (self.networkIsDisconnected) {
-        NSLog(@"Weather update queue during network disconnection");
+        NSLog(@"Weather update queued during network disconnection");
         self.refreshQueuedDuringNetworkDisconnected = YES;
         
         // Notify delegate of updates from cached data
@@ -281,6 +317,14 @@
     return [[NSLocale preferredLanguages] objectAtIndex:0];
 }
 
+- (BOOL)_useMetricWeather {
+    if (@available(iOS 10, *)) {
+        return [[[NSLocale currentLocale] objectForKey:NSLocaleTemperatureUnit] isEqualToString:@"Celsius"];
+    } else {
+        return [self _useMetric];
+    }
+}
+
 - (BOOL)_useMetric {
     return [[[NSLocale currentLocale] objectForKey:NSLocaleUsesMetricSystem] boolValue];
 }
@@ -381,17 +425,17 @@
     
     BOOL isHybridBritish = [[self _deviceLanguage] isEqualToString:@"en-GB"] || [[self _deviceLanguage] isEqualToString:@"en_GB"];
     
-    NSLog(@"Checking locale: %@, isMetric: %d, isHybridBritish: %d", [self _deviceLanguage], [self _useMetric], isHybridBritish);
+    NSLog(@"Checking locale: %@, isMetric: %d, isMetricWeather: %d, isHybridBritish: %d", [self _deviceLanguage], [self _useMetric], [self _useMetricWeather], isHybridBritish);
     
     if (isHybridBritish) {
         units.speed = IMPERIAL;
-        units.temperature = METRIC;
+        units.temperature = [self _useMetricWeather] ? METRIC : IMPERIAL;
         units.distance = IMPERIAL;
         units.pressure = METRIC;
         units.amount = METRIC;
     } else {
         units.speed = [self _useMetric] ? METRIC : IMPERIAL;
-        units.temperature = [self _useMetric] ? METRIC : IMPERIAL;
+        units.temperature = [self _useMetricWeather] ? METRIC : IMPERIAL;
         units.distance = [self _useMetric] ? METRIC : IMPERIAL;
         units.pressure = [self _useMetric] ? METRIC : IMPERIAL;
         units.amount = [self _useMetric] ? METRIC : IMPERIAL;

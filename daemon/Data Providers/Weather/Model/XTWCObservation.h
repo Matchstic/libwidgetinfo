@@ -203,5 +203,10 @@ Initialises properties with empty data
 */
 - (instancetype)initWithFakeData:(struct XTWCUnits)units;
 
+/**
+ Reloads properties for units change
+ */
+- (void)reloadForUnitsChanged:(struct XTWCUnits)units;
+
 @end
 

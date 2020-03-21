@@ -166,4 +166,9 @@ Initialises properties with API response
 */
 - (instancetype)initWithData:(NSDictionary*)data units:(struct XTWCUnits)units;
 
+/**
+ Reloads properties for units change
+ */
+- (void)reloadForUnitsChanged:(struct XTWCUnits)units;
+
 @end

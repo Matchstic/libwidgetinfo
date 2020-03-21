@@ -39,6 +39,7 @@
 @property (nonatomic, strong) TWCDayNightPart *night;
 
 @property (nonatomic, readwrite) BOOL nightOverride;
+@property (nonatomic, strong) NSDictionary *rawData;
 @end
 
 @implementation XTWCDailyForecast
@@ -48,10 +49,15 @@
     
     if (self) {
         self.nightOverride = NO;
+        self.rawData = data;
         [self _parseData:data units:units];
     }
     
     return self;
+}
+
+- (void)reloadForUnitsChanged:(struct XTWCUnits)units {
+    [self _parseData:self.rawData units:units];
 }
 
 - (void)overrideToNight:(BOOL)isNight {

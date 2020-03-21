@@ -8,16 +8,25 @@
 #import "XTWCHourlyForecast.h"
 #import "NSDictionary+XENSafeObjectForKey.h"
 
+@interface XTWCHourlyForecast()
+@property (nonatomic, strong) NSDictionary *rawData;
+@end
+
 @implementation XTWCHourlyForecast
 
 - (instancetype)initWithData:(NSDictionary*)data units:(struct XTWCUnits)units {
     self = [super init];
     
     if (self) {
+        self.rawData = data;
         [self _parseData:data units:units];
     }
     
     return self;
+}
+
+- (void)reloadForUnitsChanged:(struct XTWCUnits)units {
+    [self _parseData:self.rawData units:units];
 }
 
 - (void)_parseData:(NSDictionary*)data units:(struct XTWCUnits)units {

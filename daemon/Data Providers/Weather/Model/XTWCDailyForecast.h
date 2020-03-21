@@ -63,4 +63,9 @@ Initialises properties with API response
  */
 - (void)overrideToNight:(BOOL)isNight;
 
+/**
+ Reloads properties for units change
+ */
+- (void)reloadForUnitsChanged:(struct XTWCUnits)units;
+
 @end
