@@ -48,13 +48,41 @@ static BOOL handlerEnabled = YES;
     [string appendString:@"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"];
     [string appendString:@"<xml>"];
     
-    [string appendString:[self dayForecastsSection:cachedWeatherData]];
-    [string appendString:[self currentForecastSection:cachedWeatherData]];
-	[string appendString:[self multicurrentForecastSection:cachedWeatherData]];
-    [string appendString:[self settingsSection:cachedWeatherData]];
-	[string appendString:[self hourForecastsSection:cachedWeatherData]];
-	[string appendString:[self googleLocationSection:cachedWeatherData]];
-	[string appendString:[self nightlyForecastsSection:cachedWeatherData]];
+    // FIXME: This sanitisation approach is not amazing, but, for now it'll do
+    
+    // Current forecast
+    @try {
+        [string appendString:[self currentForecastSection:cachedWeatherData]];
+    } @catch(NSException *e) {}
+    
+    // Hourly forecasts
+    @try {
+        [string appendString:[self hourForecastsSection:cachedWeatherData]];
+    } @catch(NSException *e) {}
+    
+    // Daily forecasts
+    @try {
+        [string appendString:[self dayForecastsSection:cachedWeatherData]];
+    } @catch(NSException *e) {}
+    
+    // Nightly forecasts
+    @try {
+        [string appendString:[self nightlyForecastsSection:cachedWeatherData]];
+    } @catch(NSException *e) {}
+    
+    // Extra stuff
+    
+    @try {
+        [string appendString:[self multicurrentForecastSection:cachedWeatherData]];
+    } @catch(NSException *e) {}
+    
+    @try {
+        [string appendString:[self googleLocationSection:cachedWeatherData]];
+    } @catch(NSException *e) {}
+    
+    @try {
+        [string appendString:[self settingsSection:cachedWeatherData]];
+    } @catch(NSException *e) {}
     
     [string appendString:@"</xml>"];
     
