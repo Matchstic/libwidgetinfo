@@ -17,6 +17,7 @@
 @property (nonatomic, readwrite) BOOL lastObservedNetworkState;
 
 @property (nonatomic, strong) Reachability *reachability;
+@property (nonatomic, strong) NSTimer *internalReliabilityTimer;
 
 @end
 
@@ -35,16 +36,29 @@
         
         XENDStateManager * __weak weakSelf = self;
         self.reachability.reachableBlock = ^(Reachability *reachability) {
-            [weakSelf.delegate networkWasConnected];
             weakSelf.lastObservedNetworkState = YES;
+            [weakSelf.delegate networkWasConnected];
             
             NSLog(@"Network connected");
         };
         self.reachability.unreachableBlock = ^(Reachability *reachability) {
-            [weakSelf.delegate networkWasDisconnected];
             weakSelf.lastObservedNetworkState = NO;
+            [weakSelf.delegate networkWasDisconnected];
             
             NSLog(@"Network disconnected");
+            
+            // Start reliability timer.
+            // This is in place due to an assumption that Reachability sometimes
+            // fails to call us here.
+            // Ensure this is on the main thread for runloop purposes
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (!weakSelf.internalReliabilityTimer)
+                    weakSelf.internalReliabilityTimer = [NSTimer scheduledTimerWithTimeInterval:120
+                                                                                 target:weakSelf
+                                                                               selector:@selector(_reliabilityTimerFired:)
+                                                                               userInfo:nil
+                                                                                repeats:YES];
+            });
         };
         
         // Start the notifier, which will cause the reachability object to retain itself!
@@ -62,6 +76,21 @@
     }
     
     return self;
+}
+
+- (void)_reliabilityTimerFired:(NSTimer*)sender {
+    BOOL isReachable = [self.reachability isReachable];
+    
+    if (isReachable != self.lastObservedNetworkState) {
+        // Cancel the reliability timer
+        [self.internalReliabilityTimer invalidate];
+        self.internalReliabilityTimer = nil;
+        
+        // Update status
+        self.lastObservedNetworkState = isReachable;
+        if (isReachable) [self.delegate networkWasConnected];
+        else             [self.delegate networkWasDisconnected];
+    }
 }
 
 - (void)_backlightChanged:(int)state {
