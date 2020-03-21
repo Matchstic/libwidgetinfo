@@ -261,15 +261,15 @@ export default class XENDWeatherProvider extends XENDBaseProvider {
 
         // Convert this to offset from current timezone
         const timezoneOffsetGMT = this.timezoneOffset(payload.now.sun.sunset as any);
-        const realOffsetMinutes = new Date().getTimezoneOffset();
+        const realOffsetMinutes = new Date().getTimezoneOffset() * -1; // positive is returned when before GMT
 
         const realOffset = {
             hours: Math.floor(realOffsetMinutes / 60),
-            mintues: realOffsetMinutes - (Math.floor(realOffsetMinutes / 60) * 60)
+            minutes: realOffsetMinutes - (Math.floor(realOffsetMinutes / 60) * 60)
         };
 
         timezoneOffsetGMT.hour = timezoneOffsetGMT.hour - realOffset.hours;
-        timezoneOffsetGMT.minute = timezoneOffsetGMT.minute - realOffset.mintues;
+        timezoneOffsetGMT.minute = timezoneOffsetGMT.minute - realOffset.minutes;
 
         // `now` properties
         newPayload.now.moon.moonrise = this.datestringToInstance(payload.now.moon.moonrise as any);
