@@ -114,7 +114,7 @@ export default class XenInfoWeather {
 
         const hours = _hours >= 10 ? _hours : '0' + _hours;
 
-        return '' + hours + ':' + minutes + (is24h ? '' : (date.getHours() > 12 ? 'PM' : 'AM'));
+        return '' + hours + ':' + minutes + (is24h ? '' : (date.getHours() >= 12 ? 'PM' : 'AM'));
     }
 
     private militaryIshTime(date: Date): string {
