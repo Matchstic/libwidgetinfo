@@ -12,6 +12,8 @@
 #import "Model/XTWCAirQualityObservation.h"
 #import "Model/XTWCUnits.h"
 
+#import "XENDLogger.h"
+
 FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak_import));
 
 #define UPDATE_INTERVAL 15 // minutes
@@ -49,7 +51,7 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
     
     if (self) {
         if (!key || [key isEqualToString:@""]) {
-            NSLog(@"ERROR :: Weather manager does not have a valid API key");
+            XENDLog(@"ERROR :: Weather manager does not have a valid API key");
         }
         
         // Internal dependencies
@@ -81,7 +83,7 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
         
         // Notification from location manager about authorisation changes
         [self.locationManager addAuthorisationStatusListener:^(BOOL available) {
-            NSLog(@"Refreshing weather due to location authorisation changes");
+            XENDLog(@"Refreshing weather due to location authorisation changes");
             [self refreshWeather];
         }];
     }
@@ -92,12 +94,12 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
 #pragma mark Update state management
 
 - (void)networkWasDisconnected {
-    NSLog(@"networkWasDisconnected");
+    XENDLog(@"networkWasDisconnected");
     self.networkIsDisconnected = YES;
 }
 
 - (void)networkWasConnected {
-    NSLog(@"networkWasConnected");
+    XENDLog(@"networkWasConnected");
     self.networkIsDisconnected = NO;
     
     // Undertake a refresh if one was queued
@@ -110,7 +112,7 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
 - (void)pauseUpdateTimer {
     self.timerIsPaused = YES;
     
-    NSLog(@"Pausing weather update timer");
+    XENDLog(@"Pausing weather update timer");
     [self.updateTimer invalidate];
     self.updateTimer = nil;
 }
@@ -122,11 +124,11 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
     NSTimeInterval nextFireInterval = [self.nextUpdateTime timeIntervalSinceDate:[NSDate date]];
     
     if (nextFireInterval <= 5) { // seconds
-        NSLog(@"Timer would have (or is about to) expire, so requesting update");
+        XENDLog(@"Timer would have (or is about to) expire, so requesting update");
         [self refreshWeather];
     } else {
         // Restart the timer for this remaining interval
-        NSLog(@"Restarting weather update timer, with interval: %f minutes", (float)nextFireInterval / 60.0);
+        XENDLog(@"Restarting weather update timer, with interval: %f minutes", (float)nextFireInterval / 60.0);
         [self _restartUpdateTimerWithInterval:nextFireInterval];
     }
 }
@@ -140,7 +142,7 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
         }
             
         
-        NSLog(@"Restarting weather update timer with interval: %f minutes", (float)interval / 60.0);
+        XENDLog(@"Restarting weather update timer with interval: %f minutes", (float)interval / 60.0);
         
         self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:interval
                                                             target:self
@@ -153,13 +155,13 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
 }
 
 - (void)_updateTimerFired:(NSTimer*)timer {
-    NSLog(@"*** DEBUG :: Update timer fired");
+    XENDLog(@"*** DEBUG :: Update timer fired");
     [self refreshWeather];
 }
 
 - (void)_localeChanged:(NSNotification*)notification {
     // Ask cached data to reload their units
-    NSLog(@"*** [INFO] :: Locale did change, reloading...");
+    XENDLog(@"*** [INFO] :: Locale did change, reloading...");
     
     struct XTWCUnits units = [self _units];
     
@@ -195,7 +197,7 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
 - (void)refreshWeather {
     // Queue if no network, and update from cached data for now
     if (self.networkIsDisconnected) {
-        NSLog(@"Weather update queued during network disconnection");
+        XENDLog(@"Weather update queued during network disconnection");
         self.refreshQueuedDuringNetworkDisconnected = YES;
         
         // Notify delegate of updates from cached data
@@ -205,7 +207,7 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
         return;
     }
     
-    NSLog(@"Refreshing weather...");
+    XENDLog(@"Refreshing weather...");
     
     [self _doRefreshWeatherWithCompletion:^{
         // Restart the update timer with the full interval
@@ -218,7 +220,7 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
     // 1. Get current location from the location manager
     [self.locationManager fetchCurrentLocationWithCompletionHandler:^(NSError *error, CLLocation *location) {
         if (error && error.code == kXENLocationErrorNotInitialised) {
-            NSLog(@"WARN :: Waiting for location manager to gain an authorisation stataus");
+            XENDLog(@"WARN :: Waiting for location manager to gain an authorisation stataus");
             completionHandler();
             return;
         }
@@ -228,7 +230,7 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
         }
         
         if (error && error.code == kXENLocationErrorCachedOnly) {
-            NSLog(@"WARN :: Using old location fix, might be inaccurate");
+            XENDLog(@"WARN :: Using old location fix, might be inaccurate");
         }
         
         // 2. Create necessary requests for forecast and air quality
@@ -425,7 +427,7 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
     
     BOOL isHybridBritish = [[self _deviceLanguage] isEqualToString:@"en-GB"] || [[self _deviceLanguage] isEqualToString:@"en_GB"];
     
-    NSLog(@"Checking locale: %@, isMetric: %d, isMetricWeather: %d, isHybridBritish: %d", [self _deviceLanguage], [self _useMetric], [self _useMetricWeather], isHybridBritish);
+    XENDLog(@"Checking locale: %@, isMetric: %d, isMetricWeather: %d, isHybridBritish: %d", [self _deviceLanguage], [self _useMetric], [self _useMetricWeather], isHybridBritish);
     
     if (isHybridBritish) {
         units.speed = IMPERIAL;

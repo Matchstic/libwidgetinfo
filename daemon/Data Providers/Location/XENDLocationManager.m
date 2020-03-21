@@ -6,6 +6,7 @@
 //
 
 #import "XENDLocationManager.h"
+#import "XENDLogger.h"
 
 @interface XENDLocationManager ()
 
@@ -51,7 +52,7 @@
             self.geocoder = [CLGeocoder new];
             self.cachedGeocodeResponses = [NSMutableDictionary dictionary];
             
-            NSLog(@"Starting location manager with authorisation: %d", self.authorisationStatus);
+            XENDLog(@"Starting location manager with authorisation: %d", self.authorisationStatus);
             
 #if TARGET_OS_SIMULATOR
             [self _requestSimulatorAuthorisation];
@@ -226,7 +227,7 @@
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
-    NSLog(@"Did update locations: %@", locations);
+    XENDLog(@"Did update locations: %@", locations);
     
     CLLocation *mostRecentLocation = [[locations lastObject] copy];
     

@@ -6,6 +6,7 @@
 //
 
 #import "XENDWidgetWeatherURLHandler.h"
+#import "XENDLogger.h"
 #import "../Internal/XENDWidgetManager-Internal.h"
 #import "../Data Providers/Weather/XENDWeatherDataProvider.h"
 
@@ -24,7 +25,7 @@ static BOOL handlerEnabled = YES;
 }
 
 - (void)handleURL:(NSURL*)url withCompletionHandler:(void (^)(NSError *, NSData*, NSString*))completionHandler {
-    NSLog(@"*** WW3 Compatibility: handling URL: %@", url);
+    XENDLog(@"*** WW3 Compatibility: handling URL: %@", url);
               
 	XENDWeatherDataProvider *weatherProvider = (XENDWeatherDataProvider*)[[XENDWidgetManager sharedInstance] providerForNamespace:@"weather"];
 	
@@ -53,38 +54,54 @@ static BOOL handlerEnabled = YES;
     // Current forecast
     @try {
         [string appendString:[self currentForecastSection:cachedWeatherData]];
-    } @catch(NSException *e) {}
+    } @catch(NSException *e) {
+        XENDLog(@"ERROR (ww parser, current) :: %@", e);
+    }
     
     // Hourly forecasts
     @try {
         [string appendString:[self hourForecastsSection:cachedWeatherData]];
-    } @catch(NSException *e) {}
+    } @catch(NSException *e) {
+        XENDLog(@"ERROR (ww parser, hourly) :: %@", e);
+    }
     
     // Daily forecasts
     @try {
         [string appendString:[self dayForecastsSection:cachedWeatherData]];
-    } @catch(NSException *e) {}
+    } @catch(NSException *e) {
+        XENDLog(@"ERROR (ww parser, daily) :: %@", e);
+    }
     
     // Nightly forecasts
     @try {
         [string appendString:[self nightlyForecastsSection:cachedWeatherData]];
-    } @catch(NSException *e) {}
+    } @catch(NSException *e) {
+        XENDLog(@"ERROR (ww parser, nightly) :: %@", e);
+    }
     
     // Extra stuff
     
     @try {
         [string appendString:[self multicurrentForecastSection:cachedWeatherData]];
-    } @catch(NSException *e) {}
+    } @catch(NSException *e) {
+        XENDLog(@"ERROR (ww parser, multicurrent) :: %@", e);
+    }
     
     @try {
         [string appendString:[self googleLocationSection:cachedWeatherData]];
-    } @catch(NSException *e) {}
+    } @catch(NSException *e) {
+        XENDLog(@"ERROR (ww parser, gLocation) :: %@", e);
+    }
     
     @try {
         [string appendString:[self settingsSection:cachedWeatherData]];
-    } @catch(NSException *e) {}
+    } @catch(NSException *e) {
+        XENDLog(@"ERROR (ww parser, settings) :: %@", e);
+    }
     
     [string appendString:@"</xml>"];
+    
+    XENDLog(@"Generated XML:\n%@", string);
     
     return string;
 }
@@ -197,13 +214,13 @@ static BOOL handlerEnabled = YES;
     NSString *pressureUnits = [units objectForKey:@"pressure"];
     if ([pressureUnits isEqualToString:@"inHg"]) pressureUnits = @"InHg";
     if ([pressureUnits isEqualToString:@"hPa"]) pressureUnits = @"mb";
+    [section appendFormat:@"<unitspressure>%@</unitspressure>\n", pressureUnits];
     
     // And also ensure that we always report in millibars
     CGFloat pressure = [[[item objectForKey:@"pressure"] objectForKey:@"current"] doubleValue];
     if ([pressureUnits isEqualToString:@"inHg"]) pressure = pressure / 0.02953;
     [section appendFormat:@"<pressure>%.2f</pressure>\n", pressure];
     
-    [section appendFormat:@"<unitspressure>%@</unitspressure>\n", pressureUnits];
     [section appendString:@"<moonphase></moonphase>\n"];
     [section appendFormat:@"<updatetimestring>%@</updatetimestring>\n", [self updateTimeString:[[metadata objectForKey:@"updateTimestamp"] longLongValue]]];
      

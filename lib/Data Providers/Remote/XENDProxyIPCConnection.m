@@ -6,6 +6,7 @@
 //
 
 #import "XENDProxyIPCConnection.h"
+#import "XENDLogger.h"
 #import "../../../deps/libobjcipc/objcipc.h"
 
 #define WIDGET_INFO_MESSAGE_PROPERTIES_CHANGED @"com.matchstic.libwidgetinfo/propertiesChanged"
@@ -30,10 +31,10 @@
 
 - (void)_sendTestConnection {
     // Send test connection to server
-    NSLog(@"DEBUG :: Sending test connection...");
+    XENDLog(@"DEBUG :: Sending test connection...");
     
     [OBJCIPC sendMessageToServerWithMessageName:@"testConnection" dictionary:@{} replyHandler:^(NSDictionary *data) {
-        NSLog(@"INFO :: Daemon connection established");
+        XENDLog(@"INFO :: Daemon connection established");
         
         // Notify providers of connection
         for (XENDProxyDataProvider *dataProvider in self.registeredProxyProviders.allValues) {
@@ -83,9 +84,9 @@
     if (namespace) {
         [self requestCurrentPropertiesInNamespace:namespace callback:^(NSDictionary *data) {
             if (data == nil) {
-                NSLog(@"ERROR :: Cannot fetch new properties");
+                XENDLog(@"ERROR :: Cannot fetch new properties");
             } else {
-                NSLog(@"DEBUG :: Fetched updated properties in namespace: %@", namespace);
+                XENDLog(@"DEBUG :: Fetched updated properties in namespace: %@", namespace);
                 // Only pass through dynamic properties, statics were fetched previously
                 [self notifyUpdatedDynamicProperties:[data objectForKey:@"dynamic"] forNamespace:namespace];
             }
@@ -99,7 +100,7 @@
     NSNumber *sleep = [args objectForKey:@"sleep"];
     NSNumber *network = [args objectForKey:@"network"];
     
-    NSLog(@"DEBUG :: Notified of new device state: %@", args);
+    XENDLog(@"DEBUG :: Notified of new device state: %@", args);
     
     BOOL currentSleepState = [self.currentDeviceState objectForKey:@"sleep"];
     BOOL currentNetworkState = [self.currentDeviceState objectForKey:@"network"];

@@ -6,13 +6,14 @@
 //
 
 #import "XENDIPCDaemonListener.h"
+#import "XENDLogger.h"
 #import "../../deps/libobjcipc/objcipc.h"
 
 #define WIDGET_INFO_MESSAGE_PROPERTIES_CHANGED @"com.matchstic.libwidgetinfo/propertiesChanged"
 #define WIDGET_INFO_MESSAGE_DEVICE_STATE_CHANGED @"com.matchstic.libwidgetinfo/deviceStateChanged"
 
 int libwidgetinfo_main_ipc(void) {
-    NSLog(@"*** [libwidgetinfo] :: Loading up daemon.");
+    XENDLog(@"*** [libwidgetinfo] :: Loading up daemon.");
     
     // Initialize our daemon
 	XENDIPCDaemonListener *listener;
@@ -72,7 +73,7 @@ int libwidgetinfo_main_ipc(void) {
 }
 
 - (void)broadcastMessage:(NSString*)name data:(NSDictionary*)data {
-    NSLog(@"*** DEBUG :: Broadcast message %@ with data %@", name, data);
+    XENDLog(@"*** DEBUG :: Broadcast message %@ with data %@", name, data);
     
     // Broadcast notification for new state change
     NSDistributedNotificationCenter *center = [NSDistributedNotificationCenter defaultCenter];
@@ -87,7 +88,7 @@ int libwidgetinfo_main_ipc(void) {
         @"namespace": dataProviderNamespace
     };
     
-	NSLog(@"*** Notifying clients of new properties available to fetch");
+	XENDLog(@"*** Notifying clients of new properties available to fetch");
     [self broadcastMessage:WIDGET_INFO_MESSAGE_PROPERTIES_CHANGED data:data];
 }
 

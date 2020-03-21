@@ -8,6 +8,7 @@
 #import "XENDWeatherRemoteDataProvider.h"
 #import "../Location/XENDLocationManager.h"
 #import "PrivateHeaders.h"
+#import "XENDLogger.h"
 #import <objc/runtime.h>
 
 #include <dlfcn.h>
@@ -49,7 +50,7 @@
 - (void)intialiseProvider {
     // Make sure that our private API usage is going to be safe
     if (![self _privateFrameworkUsageIsValid]) {
-        NSLog(@"libwidgetinfo :: Weather provider is using invalid private framework API");
+        XENDLog(@"libwidgetinfo :: Weather provider is using invalid private framework API");
         return;
     }
     
@@ -180,8 +181,8 @@
                                                initWithLocalPreferences:[objc_getClass("WeatherPreferences") sharedPreferences]
                                                persistence:persistence];
         
-        NSLog(@"*** Cloud prefs: %@, persistence: %@", cloudPrefs, persistence);
-        NSLog(@"Cities: %@", [cloudPrefs citiesByEnforcingSizeLimitOnResults:nil]);
+        XENDLog(@"*** Cloud prefs: %@, persistence: %@", cloudPrefs, persistence);
+        XENDLog(@"Cities: %@", [cloudPrefs citiesByEnforcingSizeLimitOnResults:nil]);
     }*/
     
     // Fetch the first non-local city from the weather preferences
@@ -195,7 +196,7 @@
         }
     }
     
-    NSLog(@"Falling back to %@, options: %@", result, savedCities);
+    XENDLog(@"Falling back to %@, options: %@", result, savedCities);
     
     if (result) {
         return result.location;

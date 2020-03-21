@@ -7,6 +7,7 @@
 
 #import "XENDProxyDataProvider.h"
 #import "XENDProxyManager.h"
+#import "XENDLogger.h"
 
 @implementation XENDProxyDataProvider
 
@@ -23,7 +24,7 @@
 
 - (void)notifyDaemonConnected {
     // Fetch current properties from the daemon
-    NSLog(@"INFO :: Daemon connected, requesting current properties for: %@", [self _subclassNamespace]);
+    XENDLog(@"INFO :: Daemon connected, requesting current properties for: %@", [self _subclassNamespace]);
     [[[XENDProxyManager sharedInstance] connection] requestCurrentPropertiesInNamespace:[self _subclassNamespace] callback:^(NSDictionary *res) {
         
         NSDictionary *staticProperties = res ? [res objectForKey:@"static"] : @{};
