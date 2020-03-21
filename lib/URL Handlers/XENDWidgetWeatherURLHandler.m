@@ -173,7 +173,7 @@ static BOOL handlerEnabled = YES;
     // And also ensure that we always report in millibars
     CGFloat pressure = [[[item objectForKey:@"pressure"] objectForKey:@"current"] doubleValue];
     if ([pressureUnits isEqualToString:@"inHg"]) pressure = pressure / 0.02953;
-    [section appendFormat:@"<pressure>%f</pressure>\n", pressure];
+    [section appendFormat:@"<pressure>%.2f</pressure>\n", pressure];
     
     [section appendFormat:@"<unitspressure>%@</unitspressure>\n", pressureUnits];
     [section appendString:@"<moonphase></moonphase>\n"];
@@ -202,7 +202,7 @@ static BOOL handlerEnabled = YES;
     [section appendFormat:@"<uvindex>%d</uvindex>\n", [[[item objectForKey:@"ultraviolet"] objectForKey:@"index"] intValue]];
     [section appendFormat:@"<city>%@</city>\n", [[metadata objectForKey:@"address"] objectForKey:@"city"]];
     [section appendFormat:@"<state>%@</state>\n", [[metadata objectForKey:@"address"] objectForKey:@"state"]];
-    [section appendFormat:@"<visibility>%f</visibility>\n", [[item objectForKey:@"visibility"] doubleValue]];
+    [section appendFormat:@"<visibility>%.2f</visibility>\n", [[item objectForKey:@"visibility"] doubleValue]];
     [section appendFormat:@"<observationtime>%@</observationtime>\n", [self timestampTo24Hr:[[metadata objectForKey:@"updateTimestamp"] longLongValue]]];
     
     long long now = [[NSDate date] timeIntervalSince1970];
