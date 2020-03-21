@@ -258,8 +258,10 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
                 forecastData = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&parseError];
                 
                 if (parseError) {
-                    // no-op
+                    XENDLog(@"ERROR (forecast download) :: %@", parseError);
                 }
+            } else {
+                XENDLog(@"ERROR (forecast download) :: %@", error);
             }
             
             // Exit dispatch group
@@ -275,8 +277,10 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
                 airQualityData = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&parseError];
                 
                 if (parseError) {
-                    // no-op
+                    XENDLog(@"ERROR (air download) :: %@", parseError);
                 }
+            } else {
+                XENDLog(@"ERROR (air download) :: %@", error);
             }
             
             // Exit dispatch group
@@ -303,13 +307,18 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
             };
             
             // 4. Now that downloads are done, parse the downloaded data
-            NSDictionary *parsed = [self parseWeatherData:forecastData
-                                           airQualityData:airQualityData
-                                              metadata:metadata
-                                              updateCache:YES];
-            
-            // 5. Notify delegate of new parsed data
-            [self.delegate onUpdatedWeatherConditions:parsed];
+            @try {
+                NSDictionary *parsed = [self parseWeatherData:forecastData
+                                               airQualityData:airQualityData
+                                                  metadata:metadata
+                                                  updateCache:YES];
+                
+                // 5. Notify delegate of new parsed data
+                [self.delegate onUpdatedWeatherConditions:parsed];
+            } @catch (NSException *e) {
+                XENDLog(@"ERROR (weather parsing) :: %@", e);
+            }
+
             
             // 6. Finish off
             completionHandler();
@@ -319,7 +328,18 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
 }
 
 - (NSString*)_deviceLanguage {
-    return [[NSLocale preferredLanguages] objectAtIndex:0];
+    NSString *firstLanguage = [[NSLocale preferredLanguages] objectAtIndex:0];
+    
+    if ([[self supportedLongCodes] containsObject:firstLanguage]) {
+        return firstLanguage;
+    } else if ([[self supportedShortCodes] containsObject:firstLanguage]) {
+        return firstLanguage;
+    } else if ([[self supportedShortCodes] containsObject:[firstLanguage substringToIndex:2]]) {
+        return firstLanguage;
+    }
+    
+    // Fallback to English
+    return @"en";
 }
 
 - (BOOL)_useMetricWeather {
@@ -454,6 +474,8 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
                            :(NSDictionary*)metadata {
     struct XTWCUnits units = [self _units];
     
+    XENDLog(@"Generating forecast cache from: \n%@", forecastData);
+    
     // Observation
     if (forecastData) {
         NSDictionary *observationData = [[forecastData objectForKey:@"conditionsshort"] objectForKey:@"observation"];
@@ -577,6 +599,10 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
     XTWCObservation *observation = self.observationCache;
     XTWCAirQualityObservation *airQuality = self.airQualityCache;
     XTWCDailyForecast *prediction = [self _cachedDailyPredictionForNow];
+    
+    XENDLog(@"Now field!");
+    XENDLog(@"Prediction: %@", prediction);
+    XENDLog(@"Lunar stuff :: day: %@, code: %@, desc: %@", prediction.lunarPhaseDay, prediction.lunarPhaseCode, prediction.lunarPhaseDescription);
     
     // Validate the observation
     BOOL isObservationValid = [self _validateObservation:observation];
@@ -905,6 +931,35 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
     [formatter setLocale:posix];
     
     return [formatter dateFromString:input];
+}
+
+#pragma mark Supported language codes
+
+- (NSArray*)supportedLongCodes {
+    return @[
+        @"ar-AE", @"bn-BD", @"bn-IN", @"ca-ES", @"cs-CZ",
+        @"da-DK", @"de-DE", @"de-CH", @"el-GR", @"en-GB",
+        @"en-AU", @"en-IN", @"en-US", @"es-AR", @"es-ES",
+        @"es-US", @"es-LA", @"es-MX", @"es-UN", @"fa-IR",
+        @"fi-FI", @"fr-CA", @"fr-FR", @"fr-CH", @"he-IL",
+        @"hi-IN", @"hr-HR", @"hu-HU", @"in-ID", @"it-IT",
+        @"it-CH", @"iw-IL", @"ja-JP", @"kk-KZ", @"ko-KR",
+        @"ms-MY", @"nl-NL", @"no-NO", @"nn-NO", @"pl-PL",
+        @"pt-BR", @"pt-PT", @"ro-RO", @"ru-RU", @"sk-SK",
+        @"sv-SE", @"th-TH"
+    ];
+}
+
+- (NSArray*)supportedShortCodes {
+    return @[
+        @"ar", @"bn", @"ca", @"cs", @"da",
+        @"de", @"el", @"en", @"es", @"fa",
+        @"fi", @"fr", @"he", @"hi", @"hr",
+        @"hu", @"in", @"it", @"iw", @"ja",
+        @"kk", @"ko", @"ms", @"nl", @"no",
+        @"nn", @"pl", @"pt", @"ro", @"ru",
+        @"sk", @"sv", @"th"
+    ];
 }
 
 @end
