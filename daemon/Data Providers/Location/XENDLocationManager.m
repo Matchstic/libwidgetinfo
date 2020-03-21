@@ -99,9 +99,12 @@
         [self.locationManager startUpdatingLocation];
         
         // Add timeout in the event no new location is found
-        self.locationSettledTimer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(_locationSettled:) userInfo:@{
-            @"location": self.lastKnownLocation ? self.lastKnownLocation : [NSNull null]
-        } repeats:NO];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.locationSettledTimer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(_locationSettled:) userInfo:@{
+                @"location": self.lastKnownLocation ? self.lastKnownLocation : [NSNull null]
+            } repeats:NO];
+        });
     }
 }
 
@@ -111,6 +114,7 @@
 }
 
 - (void)_locationSettled:(NSTimer*)sender {
+    XENDLog(@"DEBUG :: Location settled");
     [self.locationManager stopUpdatingLocation];
     
     // Notify callbacks, and clear pending completions
@@ -234,14 +238,16 @@
     // Only use this location if a new one doesn't appear in a few seconds
     // Effectively allows the location subsystem to "settle" on a fix before passing it back
     
-    if (self.locationSettledTimer) {
-        [self.locationSettledTimer invalidate];
-        self.locationSettledTimer = nil;
-    }
-    
-    self.locationSettledTimer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(_locationSettled:) userInfo:@{
-        @"location": mostRecentLocation
-    } repeats:NO];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (self.locationSettledTimer) {
+            [self.locationSettledTimer invalidate];
+            self.locationSettledTimer = nil;
+        }
+        
+        self.locationSettledTimer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(_locationSettled:) userInfo:@{
+            @"location": mostRecentLocation
+        } repeats:NO];
+    });
 }
 
 @end
