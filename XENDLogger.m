@@ -75,19 +75,17 @@ void XENDLog(NSString *format, ...) {
     
     NSString *qualifiedFilename = [NSString stringWithFormat:@"%@/%@.log", [self logDirectory], filename];
     NSString *qualifiedMessage = [NSString stringWithFormat:@"(%@) %@", [NSDate date], message];
-     
+    
+    NSLog(@"DEBUG :: Doing write operation to disk");
+    
     NSFileHandle *fileHandle = [NSFileHandle fileHandleForWritingAtPath:qualifiedFilename];
     if (fileHandle) {
         [fileHandle seekToEndOfFile];
-        
-        // Trim data if necessary i.e., only keep 1MB of log
-        
-        
         [fileHandle writeData:[qualifiedMessage dataUsingEncoding:NSUTF8StringEncoding]];
         [fileHandle closeFile];
     } else {
         [qualifiedMessage writeToFile:qualifiedFilename
-                atomically:NO
+                atomically:YES
                   encoding:NSUTF8StringEncoding
                      error:nil];
     }
