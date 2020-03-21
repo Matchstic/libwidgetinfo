@@ -56,7 +56,7 @@ export default class XenInfoWeather {
             sunsetTimeFormatted: this.localeTimeString(newData.now.sun.sunset),
             sunriseTimeFormatted: this.localeTimeString(newData.now.sun.sunrise),
             precipitationForecast: Math.round(newData.hourly.length > 0 ? newData.hourly[0].precipitation.probability : 0),
-            pressure: newData.now.pressure.current,
+            pressure: this.forceMetricPressure(newData.now.pressure.current, newData.units.pressure === 'hPa'),
             precipitation24hr: newData.now.precipitation.total,
             heatIndex: newData.now.temperature.heatIndex,
             moonPhase: newData.now.moon.phaseDay,
@@ -135,5 +135,10 @@ export default class XenInfoWeather {
     private forceMetricSpeed(unit: number, isMetric: boolean) {
         if (isMetric) return unit;
         else return Math.round(unit * 1.609344);
+    }
+
+    private forceMetricPressure(unit: number, isMetric: boolean) {
+        if (isMetric) return unit;
+        else return Math.round(unit / 0.02953);
     }
 }
