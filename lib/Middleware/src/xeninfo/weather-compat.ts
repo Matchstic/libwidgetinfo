@@ -99,7 +99,10 @@ export default class XenInfoWeather {
 
     private weatherUpdateTimeString(date: Date): string {
         // Format is locale specific for data, time is HH:mm
-        return date.toLocaleDateString() + ', ' + date.getHours() + ':' + date.getMinutes();
+        const minutes = date.getMinutes() >= 10 ? date.getMinutes() : '0' + date.getMinutes();
+        const hours = date.getHours() >= 10 ? date.getHours() : '0' + date.getHours();
+
+        return date.toLocaleDateString() + ', ' + hours + ':' + minutes;
     }
 
     private localeTimeString(date: Date): string {
