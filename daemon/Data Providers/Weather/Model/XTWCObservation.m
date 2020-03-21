@@ -25,7 +25,7 @@
     
     if (self) {
         self.cloudCoverDescription  = @"SKC";
-        self.conditionIcon          = (id)[NSNull null];
+        self.conditionIcon          = @0;
         self.conditionDescription   = @"";
         self.dayIndicator           = @"X";
         self.validFromUNIXTime      = 0;
@@ -62,7 +62,7 @@
     self.conditionIcon          = [data objectForKey:@"wx_icon" defaultValue:[NSNull null]];
     self.conditionDescription   = [data objectForKey:@"wx_phrase" defaultValue:[NSNull null]];
     self.dayIndicator           = [data objectForKey:@"day_ind" defaultValue:[NSNull null]];
-    self.validFromUNIXTime      = [[data objectForKey:@"valid_time_gmt"] intValue];
+    self.validFromUNIXTime      = [[NSDate date] timeIntervalSince1970]; // [[data objectForKey:@"valid_time_gmt"] intValue];
     self.pressureDescription    = [data objectForKey:@"pressure_desc" defaultValue:[NSNull null]];
     self.pressureTendency       = [data objectForKey:@"pressure_tend" defaultValue:[NSNull null]];
     self.relativeHumidity       = [data objectForKey:@"rh" defaultValue:[NSNull null]];
