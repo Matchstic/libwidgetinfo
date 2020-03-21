@@ -174,17 +174,7 @@
     return [[CLLocation alloc] initWithLatitude:37.323 longitude:-122.0322];
 }
 
-- (CLLocation*)fallbackWeatherLocation {
-    /*if (objc_getClass("WeatherCloudPreferences")) {
-        WeatherCloudPersistence *persistence = [objc_getClass("WeatherCloudPersistence") cloudPersistenceWithDelegate:nil];
-        WeatherCloudPreferences *cloudPrefs = [[objc_getClass("WeatherCloudPreferences") alloc]
-                                               initWithLocalPreferences:[objc_getClass("WeatherPreferences") sharedPreferences]
-                                               persistence:persistence];
-        
-        XENDLog(@"*** Cloud prefs: %@, persistence: %@", cloudPrefs, persistence);
-        XENDLog(@"Cities: %@", [cloudPrefs citiesByEnforcingSizeLimitOnResults:nil]);
-    }*/
-    
+- (CLLocation*)fallbackWeatherLocation {    
     // Fetch the first non-local city from the weather preferences
     NSArray *savedCities = [[objc_getClass("WeatherPreferences") sharedPreferences] loadSavedCities];
     City *result;
