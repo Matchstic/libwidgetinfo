@@ -76,8 +76,6 @@ void XENDLog(NSString *format, ...) {
     NSString *qualifiedFilename = [NSString stringWithFormat:@"%@/%@.log", [self logDirectory], filename];
     NSString *qualifiedMessage = [NSString stringWithFormat:@"(%@) %@", [NSDate date], message];
     
-    NSLog(@"DEBUG :: Doing write operation to disk");
-    
     NSFileHandle *fileHandle = [NSFileHandle fileHandleForWritingAtPath:qualifiedFilename];
     if (fileHandle) {
         [fileHandle seekToEndOfFile];

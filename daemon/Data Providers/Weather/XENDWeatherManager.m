@@ -477,8 +477,6 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
                            :(NSDictionary*)metadata {
     struct XTWCUnits units = [self _units];
     
-    XENDLog(@"Generating forecast cache from: \n%@", forecastData);
-    
     // Observation
     if (forecastData) {
         NSDictionary *observationData = [[forecastData objectForKey:@"conditionsshort"] objectForKey:@"observation"];
@@ -602,10 +600,6 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
     XTWCObservation *observation = self.observationCache;
     XTWCAirQualityObservation *airQuality = self.airQualityCache;
     XTWCDailyForecast *prediction = [self _cachedDailyPredictionForNow];
-    
-    XENDLog(@"Now field!");
-    XENDLog(@"Prediction: %@", prediction);
-    XENDLog(@"Lunar stuff :: day: %@, code: %@, desc: %@", prediction.lunarPhaseDay, prediction.lunarPhaseCode, prediction.lunarPhaseDescription);
     
     // Validate the observation
     BOOL isObservationValid = [self _validateObservation:observation];
