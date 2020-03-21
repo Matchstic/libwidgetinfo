@@ -101,8 +101,6 @@ static BOOL handlerEnabled = YES;
     
     [string appendString:@"</xml>"];
     
-    XENDLog(@"Generated XML:\n%@", string);
-    
     return string;
 }
 
