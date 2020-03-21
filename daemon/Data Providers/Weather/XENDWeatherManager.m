@@ -217,7 +217,7 @@
                 forecastData = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&parseError];
                 
                 if (parseError) {
-                    forecastData = @{};
+                    // no-op
                 }
             }
             
@@ -234,7 +234,7 @@
                 airQualityData = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&parseError];
                 
                 if (parseError) {
-                    airQualityData = @{};
+                    // no-op
                 }
             }
             
@@ -406,51 +406,56 @@
     struct XTWCUnits units = [self _units];
     
     // Observation
-    NSDictionary *observationData = [[forecastData objectForKey:@"conditionsshort"] objectForKey:@"observation"];
-    XTWCObservation *observation = [[XTWCObservation alloc] initWithData:observationData units:units];
-    
-    self.observationCache = observation;
-    
-    // Daily forecasts
-    NSMutableArray *dailyCache = [@[] mutableCopy];
-    NSArray *predictions = [[forecastData objectForKey:@"fcstdaily10short"] objectForKey:@"forecasts"];
-    for (NSDictionary *data in predictions) {
-        XTWCDailyForecast *prediction = [[XTWCDailyForecast alloc] initWithData:data units:units];
-        [dailyCache addObject:prediction];
+    if (forecastData) {
+        NSDictionary *observationData = [[forecastData objectForKey:@"conditionsshort"] objectForKey:@"observation"];
+        XTWCObservation *observation = [[XTWCObservation alloc] initWithData:observationData units:units];
+        
+        self.observationCache = observation;
+
+        // Daily forecasts
+        
+        NSMutableArray *dailyCache = [@[] mutableCopy];
+        NSArray *predictions = [[forecastData objectForKey:@"fcstdaily10short"] objectForKey:@"forecasts"];
+        for (NSDictionary *data in predictions) {
+            XTWCDailyForecast *prediction = [[XTWCDailyForecast alloc] initWithData:data units:units];
+            [dailyCache addObject:prediction];
+        }
+        
+        self.dailyPredictionCache = dailyCache;
+        
+        // Nightly forecasts
+        NSMutableArray *nightlyCache = [@[] mutableCopy];
+        for (NSDictionary *data in predictions) {
+            XTWCDailyForecast *prediction = [[XTWCDailyForecast alloc] initWithData:data units:units];
+            [prediction overrideToNight:YES];
+            [nightlyCache addObject:prediction];
+        }
+        
+        self.nightlyPredictionCache = nightlyCache;
+        
+        // Hourly forecasts
+        NSMutableArray *hourlyCache = [@[] mutableCopy];
+        NSArray *hourlyPredictions = [[forecastData objectForKey:@"fcsthourly24short"] objectForKey:@"forecasts"];
+        for (NSDictionary *data in hourlyPredictions) {
+            XTWCHourlyForecast *prediction = [[XTWCHourlyForecast alloc] initWithData:data units:units];
+            [hourlyCache addObject:prediction];
+        }
+        
+        self.hourlyPredictionCache = hourlyCache;
     }
-    
-    self.dailyPredictionCache = dailyCache;
-    
-    // Nightly forecasts
-    NSMutableArray *nightlyCache = [@[] mutableCopy];
-    for (NSDictionary *data in predictions) {
-        XTWCDailyForecast *prediction = [[XTWCDailyForecast alloc] initWithData:data units:units];
-        [prediction overrideToNight:YES];
-        [nightlyCache addObject:prediction];
-    }
-    
-    self.nightlyPredictionCache = nightlyCache;
-    
-    // Hourly forecasts
-    NSMutableArray *hourlyCache = [@[] mutableCopy];
-    NSArray *hourlyPredictions = [[forecastData objectForKey:@"fcsthourly24short"] objectForKey:@"forecasts"];
-    for (NSDictionary *data in hourlyPredictions) {
-        XTWCHourlyForecast *prediction = [[XTWCHourlyForecast alloc] initWithData:data units:units];
-        [hourlyCache addObject:prediction];
-    }
-    
-    self.hourlyPredictionCache = hourlyCache;
     
     // Air quality
-    NSArray *airqualitySingleItemArray = [airQualityData objectForKey:@"globalairquality"];
-    NSDictionary *airqualityDataItem = @{};
-    if (airqualitySingleItemArray.count > 0)
-        airqualityDataItem = airqualitySingleItemArray[0];
-    
-    XTWCAirQualityObservation *airQualityObservation = [[XTWCAirQualityObservation alloc]
-                                                            initWithData:airqualityDataItem];
-    self.airQualityCache = airQualityObservation;
-    
+    if (airQualityData) {
+        NSArray *airqualitySingleItemArray = [airQualityData objectForKey:@"globalairquality"];
+        NSDictionary *airqualityDataItem = @{};
+        if (airqualitySingleItemArray.count > 0)
+            airqualityDataItem = airqualitySingleItemArray[0];
+        
+        XTWCAirQualityObservation *airQualityObservation = [[XTWCAirQualityObservation alloc]
+                                                                initWithData:airqualityDataItem];
+        self.airQualityCache = airQualityObservation;
+    }
+
     self.metadataCache = metadata;
 }
 
@@ -494,7 +499,7 @@
     
     NSMutableArray *result = [NSMutableArray array];
     
-    // TODO: Factor in GMT offset to validUNIXTime
+    // TODO: Factor in GMT offset to validUNIXTime?
     for (XTWCDailyForecast *prediction in self.nightlyPredictionCache) {
         if (prediction.validUNIXTime + (60 * 60 * 24) > now)
             [result addObject:prediction];
@@ -526,9 +531,6 @@
     
     // Validate the observation
     BOOL isObservationValid = [self _validateObservation:observation];
-    if (!isObservationValid) {
-        observation = [[XTWCObservation alloc] initWithFakeData:[self _units]];
-    }
     
     // Figure out if its currently daytime
     NSDate *nowDate = [NSDate date];
