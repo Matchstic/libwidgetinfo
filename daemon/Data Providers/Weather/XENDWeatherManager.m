@@ -448,7 +448,10 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
 - (struct XTWCUnits)_units {
     struct XTWCUnits units;
     
-    BOOL isHybridBritish = [[self _deviceLanguage] isEqualToString:@"en-GB"] || [[self _deviceLanguage] isEqualToString:@"en_GB"];
+    BOOL isHybridBritish = [[self _deviceLanguage] isEqualToString:@"en-GB"] ||
+                           [[self _deviceLanguage] isEqualToString:@"en_GB"] ||
+                           [[self _deviceLanguage] isEqualToString:@"en-AU"] ||
+                           [[self _deviceLanguage] isEqualToString:@"en_AU"];
     
     XENDLog(@"Checking locale: %@, isMetric: %d, isMetricWeather: %d, isHybridBritish: %d", [self _deviceLanguage], [self _useMetric], [self _useMetricWeather], isHybridBritish);
     
