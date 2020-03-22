@@ -233,7 +233,7 @@ static BOOL handlerEnabled = YES;
     [section appendString:@"<locationid>TBD</locationid>\n"];
     [section appendString:@"<name>TBD</name>\n"];
     [section appendString:@"<gust></gust>\n"];
-    [section appendString:@"<woeid></woeid>\n"];
+    [section appendString:@"<woeid>TBD</woeid>\n"];
     
     [section appendFormat:@"<cardinal>%@</cardinal>\n", [[item objectForKey:@"wind"] objectForKey:@"cardinal"]];
     [section appendFormat:@"<temp>%d</temp>\n", [[[item objectForKey:@"temperature"] objectForKey:@"current"] intValue]];
