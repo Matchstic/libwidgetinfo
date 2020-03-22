@@ -155,6 +155,9 @@
       @"iPhone11,4":   @"iPhone XS Max",
       @"iPhone11,6":   @"iPhone XS Max",
       @"iPhone11,8":   @"iPhone XR",
+      @"iPhone12,1":   @"iPhone 11",
+      @"iPhone12,3":   @"iPhone 11 Pro",
+      @"iPhone12,5":   @"iPhone 11 Pro Max",
       
       @"iPad1,1":  @"iPad",
       @"iPad2,1":  @"iPad 2",
@@ -172,6 +175,16 @@
       @"iPad4,3":  @"iPad Air",
       @"iPad5,3":  @"iPad Air 2",
       @"iPad5,4":  @"iPad Air 2",
+      @"iPad6,3":  @"iPad Pro 9.7\"",
+      @"iPad6,4":  @"iPad Pro 9.7\"",
+      @"iPad6,7":  @"iPad Pro 12.9\"",
+      @"iPad6,8":  @"iPad Pro 12.9\"",
+      @"iPad6,11": @"iPad 5",
+      @"iPad6,12": @"iPad 5",
+      @"iPad7,1":  @"iPad Pro 12.9\" (2nd Gen)",
+      @"iPad7,2":  @"iPad Pro 12.9\" (2nd Gen)",
+      @"iPad7,3":  @"iPad Pro 10.5\"",
+      @"iPad7,4":  @"iPad Pro 10.5\"",
       
       @"iPad2,5":  @"iPad mini",
       @"iPad2,6":  @"iPad mini",
@@ -191,7 +204,7 @@
       @"iPod4,1":  @"iPod 4th Gen",
       @"iPod5,1":  @"iPod 5th Gen",
       @"iPod7,1":  @"iPod 6th Gen",
-      };
+    };
     
     NSString *deviceName = commonNamesDictionary[machineName];
     
