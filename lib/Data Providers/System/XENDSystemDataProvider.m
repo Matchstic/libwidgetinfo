@@ -25,6 +25,16 @@
     
 }
 
+- (void)networkWasDisconnected {
+    [self.cachedDynamicProperties setObject:@NO forKey:@"isNetworkConnected"];
+    [self notifyWidgetManagerForNewProperties];
+}
+
+- (void)networkWasConnected {
+    [self.cachedDynamicProperties setObject:@YES forKey:@"isNetworkConnected"];
+    [self notifyWidgetManagerForNewProperties];
+}
+
 #pragma mark Message handlers
 
 - (NSDictionary*)handleLogMessage:(NSDictionary*)data {
@@ -42,7 +52,15 @@
 
 - (void)intialiseProvider {
     [self _setupStaticProperties];
-    // TODO: Do initial load for dynamics, and setup watchers
+    [self _setupDynamicProperties];
+    
+    // Start monitoring for dynamics
+    
+    // Locale changed
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_localeChanged:) name:NSCurrentLocaleDidChangeNotification object:nil];
+    
+    // Low power mode
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_powerInfoChanged:) name:NSProcessInfoPowerStateDidChangeNotification object:nil];
 }
 
 - (void)_setupStaticProperties {
@@ -58,6 +76,36 @@
     [statics setObject:[NSNumber numberWithFloat:[self _screenMinLength]] forKey:@"deviceDisplayWidth"];
     
     self.cachedStaticProperties = statics;
+}
+
+- (void)_setupDynamicProperties {
+    NSMutableDictionary *dynamics = [NSMutableDictionary dictionary];
+    
+    [dynamics setObject:@([self _using24h]) forKey:@"isTwentyFourHourTimeEnabled"];
+    [dynamics setObject:@([self _isLowPowerModeEnabled]) forKey:@"isLowPowerModeEnabled"];
+    [dynamics setObject:@YES forKey:@"isNetworkConnected"];
+    
+    self.cachedDynamicProperties = dynamics;
+}
+
+- (void)_localeChanged:(NSNotification*)notification {
+    BOOL current24hr = [self.cachedDynamicProperties objectForKey:@"isTwentyFourHourTimeEnabled"];
+    BOOL new24hr = [self _using24h];
+    
+    if (current24hr != new24hr) {
+        [self.cachedDynamicProperties setObject:@(new24hr) forKey:@"isNetworkConnected"];
+        [self notifyWidgetManagerForNewProperties];
+    }
+}
+
+- (void)_powerInfoChanged:(NSNotification*)notification {
+    BOOL currentLowPowerMode = [self.cachedDynamicProperties objectForKey:@"isLowPowerModeEnabled"];
+    BOOL newLowPowerMode = [self _using24h];
+    
+    if (currentLowPowerMode != newLowPowerMode) {
+        [self.cachedDynamicProperties setObject:@(newLowPowerMode) forKey:@"isLowPowerModeEnabled"];
+        [self notifyWidgetManagerForNewProperties];
+    }
 }
 
 - (NSString*)_machineName {
@@ -184,6 +232,10 @@
     NSRange containsA = [formatStringForHours rangeOfString:@"a"];
     
     return containsA.location == NSNotFound;
+}
+
+- (BOOL)_isLowPowerModeEnabled {
+    return [[NSProcessInfo processInfo] isLowPowerModeEnabled];
 }
 
 - (CGFloat)_screenMaxLength {
