@@ -57,7 +57,7 @@
     // Start monitoring for dynamics
     
     // Locale changed
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_localeChanged:) name:NSCurrentLocaleDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_localeChanged:) name:NSSystemClockDidChangeNotification object:nil];
     
     // Low power mode
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_powerInfoChanged:) name:NSProcessInfoPowerStateDidChangeNotification object:nil];
