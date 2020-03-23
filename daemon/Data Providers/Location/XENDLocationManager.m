@@ -14,6 +14,7 @@
 @property (nonatomic, strong) NSMutableArray *pendingLocationCompletions;
 @property (nonatomic, strong) NSMutableArray *authorisationListeners;
 @property (nonatomic, strong) NSTimer *locationSettledTimer;
+@property (nonatomic, strong) NSDate *expectedSettledTime;
 @property (nonatomic, strong) CLLocation *lastKnownLocation;
 
 @property (nonatomic, readwrite) CLAuthorizationStatus authorisationStatus;
@@ -47,6 +48,7 @@
             [self.locationManager setDesiredAccuracy:kCLLocationAccuracyHundredMeters];
             
             self.lastKnownLocation = nil;
+            self.expectedSettledTime = nil;
             self.authorisationStatus = [CLLocationManager authorizationStatus];
             
             self.geocoder = [CLGeocoder new];
@@ -114,11 +116,21 @@
 }
 
 - (void)_locationSettled:(NSTimer*)sender {
+    
+    CLLocation *location = [sender.userInfo objectForKey:@"location"];
+    [self _locationSettledWithLocation:location];
+}
+
+- (void)_locationSettledWithLocation:(CLLocation*)location {
+    // Notify callbacks, and clear pending completions
+    
     XENDLog(@"DEBUG :: Location settled");
     [self.locationManager stopUpdatingLocation];
     
-    // Notify callbacks, and clear pending completions
-    CLLocation *location = [sender.userInfo objectForKey:@"location"];
+    [self.locationSettledTimer invalidate];
+    self.locationSettledTimer = nil;
+    self.expectedSettledTime = nil;
+    
     if (!location || [location isEqual:[NSNull null]]) {
         NSError *error = [[NSError alloc] initWithDomain:NSCocoaErrorDomain code:kXENLocationErrorNotAvailable userInfo:nil];
     
@@ -128,7 +140,6 @@
     
         [self _notifyPendingCallbacksError:nil location:location];
     }
-
 }
 
 - (void)_notifyPendingCallbacksError:(NSError*)error location:(CLLocation*)location {
@@ -214,6 +225,7 @@
         [self.locationManager stopUpdatingLocation];
         [self.locationSettledTimer invalidate];
         self.locationSettledTimer = nil;
+        self.expectedSettledTime = nil;
         
         NSError *error = [[NSError alloc] initWithDomain:NSCocoaErrorDomain code:kXENLocationErrorCachedOnly userInfo:nil];
         [self _notifyPendingCallbacksError:error location:self.lastKnownLocation];
@@ -224,6 +236,7 @@
         [self.locationManager stopUpdatingLocation];
         [self.locationSettledTimer invalidate];
         self.locationSettledTimer = nil;
+        self.expectedSettledTime = nil;
         
         NSError *error = [[NSError alloc] initWithDomain:NSCocoaErrorDomain code:kXENLocationErrorNotAvailable userInfo:nil];
         [self _notifyPendingCallbacksError:error location:nil];
@@ -237,6 +250,17 @@
     
     // Only use this location if a new one doesn't appear in a few seconds
     // Effectively allows the location subsystem to "settle" on a fix before passing it back
+    
+    // Handle case of lots of locations coming through
+    if (!self.expectedSettledTime) {
+        self.expectedSettledTime = [NSDate dateWithTimeIntervalSinceNow:3];
+    } else if ([[NSDate date] compare:self.expectedSettledTime] == NSOrderedDescending) {
+        // Timeout expired, use the current location - getting a lot through so
+        // must be fresh
+        
+        [self _locationSettledWithLocation:mostRecentLocation];
+        return;
+    }
     
     dispatch_async(dispatch_get_main_queue(), ^{
         if (self.locationSettledTimer) {
