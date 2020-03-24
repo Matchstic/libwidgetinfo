@@ -81,6 +81,8 @@
     
     if ([self.originalDelegate respondsToSelector:@selector(webView:decidePolicyForNavigationAction:decisionHandler:)])
         [self.originalDelegate webView:webView decidePolicyForNavigationAction:navigationAction decisionHandler:decisionHandler];
+    else
+        decisionHandler(WKNavigationActionPolicyAllow);
 }
 
 - (void)webView:(WKWebView *)webView
@@ -89,6 +91,8 @@
     
     if ([self.originalDelegate respondsToSelector:@selector(webView:decidePolicyForNavigationResponse:decisionHandler:)])
         [self.originalDelegate webView:webView decidePolicyForNavigationResponse:navigationResponse decisionHandler:decisionHandler];
+    else
+        decisionHandler(WKNavigationActionPolicyAllow);
 }
 
 - (void)webViewWebContentProcessDidTerminate:(WKWebView *)webView {
