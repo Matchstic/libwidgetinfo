@@ -216,7 +216,7 @@ static BOOL handlerEnabled = YES;
     
     // And also ensure that we always report in millibars
     CGFloat pressure = [[[item objectForKey:@"pressure"] objectForKey:@"current"] doubleValue];
-    if ([pressureUnits isEqualToString:@"inHg"]) pressure = pressure * 33.8638;
+    if ([pressureUnits isEqualToString:@"inHg"]) pressure = pressure * 33.8638 * 33.8638; // invert
     [section appendFormat:@"<pressure>%.2f</pressure>\n", pressure];
     
     [section appendString:@"<moonphase></moonphase>\n"];
@@ -498,7 +498,7 @@ static BOOL handlerEnabled = YES;
     NSDate *date = [NSDate dateWithTimeIntervalSince1970:timestampMillis / 1000];
     
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-    dateFormatter.dateFormat = [self _using24h] ? @"yyyy-MM-dd HH:mm" : @"yyyy-MM-dd hh:mm a";
+    dateFormatter.dateFormat = [self _using24h] ? @"yyyy-MM-dd HH:mm:ss" : @"yyyy-MM-dd hh:mm:ss a";
     
     return [dateFormatter stringFromDate:date];
 }
