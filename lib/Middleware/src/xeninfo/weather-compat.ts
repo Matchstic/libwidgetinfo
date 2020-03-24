@@ -98,16 +98,7 @@ export default class XenInfoWeather {
     }
 
     private weatherUpdateTimeString(date: Date): string {
-        // Format is locale specific for data, time is HH:mm
-        const minutes = date.getMinutes() >= 10 ? date.getMinutes() : '0' + date.getMinutes();
-        const hours = date.getHours() >= 10 ? date.getHours() : '0' + date.getHours();
-
-        return date.toLocaleDateString() + ', ' + hours + ':' + minutes;
-    }
-
-    private localeTimeString(date: Date): string {
-        // Should return in format: 07:12PM or 07:12
-
+        // Format is locale specific for data, time is HH:mm or hh:mm a
         const is24h = (this.providers.get(DataProviderUpdateNamespace.System) as XENDSystemProvider).data.isTwentyFourHourTimeEnabled;
 
         const minutes = date.getMinutes() >= 10 ? date.getMinutes() : '0' + date.getMinutes();
@@ -115,9 +106,21 @@ export default class XenInfoWeather {
         let _hours = date.getHours();
         if (!is24h && _hours > 12) _hours -= 12;
 
+        // 12-hour variant doesn't bother about a leading 0
+        const hours = is24h ? (_hours >= 10 ? _hours : '0' + _hours) : _hours;
+
+        return date.toLocaleDateString() + ', ' + hours + ':' + minutes + (is24h ? '' : (date.getHours() >= 12 ? ' PM' : ' AM'));
+    }
+
+    private localeTimeString(date: Date): string {
+        // Should always return as 24hr
+
+        const minutes = date.getMinutes() >= 10 ? date.getMinutes() : '0' + date.getMinutes();
+
+        let _hours = date.getHours();
         const hours = _hours >= 10 ? _hours : '0' + _hours;
 
-        return '' + hours + ':' + minutes + (is24h ? '' : (date.getHours() >= 12 ? 'PM' : 'AM'));
+        return '' + hours + ':' + minutes ;
     }
 
     private militaryIshTime(date: Date): string {
