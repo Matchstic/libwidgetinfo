@@ -155,7 +155,7 @@ export default class XENDSystemProvider extends XENDBaseProvider {
             this.connection.sendNativeMessage({
                 namespace: DataProviderUpdateNamespace.System,
                 functionDefinition: 'log',
-                data: { message: message }
+                data: { message: message, path: window.location.pathname }
             }, () => {
                 resolve();
             });

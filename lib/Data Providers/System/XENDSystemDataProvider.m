@@ -6,6 +6,7 @@
 //
 
 #import "XENDSystemDataProvider.h"
+#import "XENDLogger.h"
 #import <UIKit/UIKit.h>
 
 #import <sys/utsname.h> //device models
@@ -43,7 +44,27 @@
         return @{};
     }
     
-    NSLog(@"%@", [data objectForKey:@"message"]);
+    NSString *widgetName = nil;
+    NSString *path = [data objectForKey:@"path"];
+    NSArray *pathComponents = [path pathComponents];
+    
+    for (NSString *item in [pathComponents reverseObjectEnumerator]) {
+        if ([item isEqualToString:@"/"]) continue;
+        if ([item hasSuffix:@".html"]) continue;
+        
+        widgetName = item;
+        break;
+    }
+    
+    // Remove URL encoding
+    widgetName = [widgetName stringByRemovingPercentEncoding];
+    
+    NSLog(@"%@: %@", widgetName, [data objectForKey:@"message"]);
+    
+    // Write to filesystem
+    // TODO: Hook up to a debug logging toggle
+    
+    [[XENDLogger sharedInstance] appendToFile:widgetName logMessage:[data objectForKey:@"message"]];
     
     return @{};
 }
