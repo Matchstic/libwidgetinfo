@@ -72,31 +72,27 @@ int libwidgetinfo_main_ipc(void) {
     }];
 }
 
-- (void)broadcastMessage:(NSString*)name data:(NSDictionary*)data {
-    XENDLog(@"*** DEBUG :: Broadcast message %@ with data %@", name, data);
+- (void)broadcastMessage:(NSString*)name {
+    XENDLog(@"*** DEBUG :: Broadcast message %@", name);
     
     // Broadcast notification for new state change
-    NSDistributedNotificationCenter *center = [NSDistributedNotificationCenter defaultCenter];
-    [center postNotificationName:name object:nil userInfo:data deliverImmediately:YES];
+    CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), (__bridge CFStringRef)name, NULL, NULL, YES);
 }
 
 #pragma mark Inherited overrides
 
 - (void)notifyUpdatedDynamicProperties:(NSDictionary*)dynamicProperties forNamespace:(NSString*)dataProviderNamespace {
     // Emit notification for changed properties
-    NSDictionary *data = @{
-        @"namespace": dataProviderNamespace
-    };
     
 	XENDLog(@"*** Notifying clients of new properties available to fetch");
-    [self broadcastMessage:WIDGET_INFO_MESSAGE_PROPERTIES_CHANGED data:data];
+    [self broadcastMessage:WIDGET_INFO_MESSAGE_PROPERTIES_CHANGED];
 }
 
 - (void)noteDeviceDidEnterSleep {
     [super noteDeviceDidEnterSleep];
     
     [self requestCurrentDeviceStateWithCallback:^(NSDictionary *result) {
-        [self broadcastMessage:WIDGET_INFO_MESSAGE_DEVICE_STATE_CHANGED data:result];
+        [self broadcastMessage:WIDGET_INFO_MESSAGE_DEVICE_STATE_CHANGED];
     }];
 }
 
@@ -104,7 +100,7 @@ int libwidgetinfo_main_ipc(void) {
     [super noteDeviceDidExitSleep];
     
     [self requestCurrentDeviceStateWithCallback:^(NSDictionary *result) {
-        [self broadcastMessage:WIDGET_INFO_MESSAGE_DEVICE_STATE_CHANGED data:result];
+        [self broadcastMessage:WIDGET_INFO_MESSAGE_DEVICE_STATE_CHANGED];
     }];
 }
 
@@ -112,7 +108,7 @@ int libwidgetinfo_main_ipc(void) {
     [super networkWasConnected];
     
     [self requestCurrentDeviceStateWithCallback:^(NSDictionary *result) {
-        [self broadcastMessage:WIDGET_INFO_MESSAGE_DEVICE_STATE_CHANGED data:result];
+        [self broadcastMessage:WIDGET_INFO_MESSAGE_DEVICE_STATE_CHANGED];
     }];
 }
 
@@ -120,7 +116,7 @@ int libwidgetinfo_main_ipc(void) {
     [super networkWasDisconnected];
     
     [self requestCurrentDeviceStateWithCallback:^(NSDictionary *result) {
-        [self broadcastMessage:WIDGET_INFO_MESSAGE_DEVICE_STATE_CHANGED data:result];
+        [self broadcastMessage:WIDGET_INFO_MESSAGE_DEVICE_STATE_CHANGED];
     }];
 }
 

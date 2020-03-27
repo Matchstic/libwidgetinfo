@@ -9,20 +9,39 @@
 #import "XENDLogger.h"
 #import "../../../deps/libobjcipc/objcipc.h"
 
+@interface XENDProxyIPCConnection ()
+- (void)_updateProperties;
+- (void)_updateDeviceState;
+@end
+
 #define WIDGET_INFO_MESSAGE_PROPERTIES_CHANGED @"com.matchstic.libwidgetinfo/propertiesChanged"
 #define WIDGET_INFO_MESSAGE_DEVICE_STATE_CHANGED @"com.matchstic.libwidgetinfo/deviceStateChanged"
+
+// Only cleared when current process is killed
+static XENDProxyIPCConnection *internalConnection;
+
+static inline void deviceStateChangedCallback(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
+    
+    // Fetch updated device state
+    [internalConnection _updateDeviceState];
+}
+
+static inline void propertiesChangedCallback(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
+    
+    // Fetch updated properties for proxy providers
+    [internalConnection _updateProperties];
+}
 
 @implementation XENDProxyIPCConnection
 
 - (void)initialise {
+    internalConnection = self;
     
     // Monitor for incoming messages
-
-    NSDistributedNotificationCenter *center = [NSDistributedNotificationCenter defaultCenter];
     
-    [center addObserver:self selector:@selector(_fetchProperties:) name:WIDGET_INFO_MESSAGE_PROPERTIES_CHANGED object:nil suspensionBehavior:NSNotificationSuspensionBehaviorDeliverImmediately];
-    
-    [center addObserver:self selector:@selector(_notifyDeviceState:) name:WIDGET_INFO_MESSAGE_DEVICE_STATE_CHANGED object:nil suspensionBehavior:NSNotificationSuspensionBehaviorDeliverImmediately];
+    CFNotificationCenterRef r = CFNotificationCenterGetDarwinNotifyCenter();
+    CFNotificationCenterAddObserver(r, NULL, propertiesChangedCallback, (__bridge CFStringRef)WIDGET_INFO_MESSAGE_PROPERTIES_CHANGED, NULL, 0);
+    CFNotificationCenterAddObserver(r, NULL, deviceStateChangedCallback, (__bridge CFStringRef)WIDGET_INFO_MESSAGE_DEVICE_STATE_CHANGED, NULL, 0);
     
     // Send a test connection to the IPC server
     
@@ -78,10 +97,8 @@
     }];
 }
 
-- (void)_fetchProperties:(NSNotification*)notification {
-    NSString *namespace = [notification.userInfo objectForKey:@"namespace"];
-    
-    if (namespace) {
+- (void)_updateProperties {
+    for (NSString *namespace in self.registeredProxyProviders.allKeys) {
         [self requestCurrentPropertiesInNamespace:namespace callback:^(NSDictionary *data) {
             if (data == nil) {
                 XENDLog(@"ERROR :: Cannot fetch new properties");
@@ -94,34 +111,34 @@
     }
 }
 
-- (void)_notifyDeviceState:(NSNotification*)notification {
-    NSDictionary *args = notification.userInfo;
-    
-    NSNumber *sleep = [args objectForKey:@"sleep"];
-    NSNumber *network = [args objectForKey:@"network"];
-    
-    XENDLog(@"DEBUG :: Notified of new device state: %@", args);
-    
-    BOOL currentSleepState = [self.currentDeviceState objectForKey:@"sleep"];
-    BOOL currentNetworkState = [self.currentDeviceState objectForKey:@"network"];
-    
-    if (currentSleepState != [sleep boolValue]) {
-        if ([sleep boolValue]) {
-            [self noteDeviceDidEnterSleep];
-        } else {
-            [self noteDeviceDidExitSleep];
+- (void)_updateDeviceState {
+    [self requestCurrentDeviceStateWithCallback:^(NSDictionary *args) {
+        NSNumber *sleep = [args objectForKey:@"sleep"];
+        NSNumber *network = [args objectForKey:@"network"];
+        
+        XENDLog(@"DEBUG :: Notified of new device state: %@", args);
+        
+        BOOL currentSleepState = [self.currentDeviceState objectForKey:@"sleep"];
+        BOOL currentNetworkState = [self.currentDeviceState objectForKey:@"network"];
+        
+        if (currentSleepState != [sleep boolValue]) {
+            if ([sleep boolValue]) {
+                [self noteDeviceDidEnterSleep];
+            } else {
+                [self noteDeviceDidExitSleep];
+            }
         }
-    }
-    
-    if (currentNetworkState != [network boolValue]) {
-        if ([network boolValue]) {
-            [self networkWasConnected];
-        } else {
-            [self networkWasDisconnected];
+        
+        if (currentNetworkState != [network boolValue]) {
+            if ([network boolValue]) {
+                [self networkWasConnected];
+            } else {
+                [self networkWasDisconnected];
+            }
         }
-    }
-    
-    self.currentDeviceState = args;
+        
+        self.currentDeviceState = args;
+    }];
 }
 
 @end
