@@ -47,7 +47,7 @@ export default class XENDSystemProvider extends XENDBaseProvider {
 
         (window as any).console = newConsole(window.console);
         (window as any).onerror = (message, source, lineno, colno, error) => {
-            console.error(message + '\n' + JSON.stringify(error) + '\n' + source + '\n' + lineno + '\n' + colno);
+            console.error(message + '\n' + JSON.stringify(error));
         }
     }
 
