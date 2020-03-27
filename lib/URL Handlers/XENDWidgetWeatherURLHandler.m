@@ -216,7 +216,7 @@ static BOOL handlerEnabled = YES;
     
     // And also ensure that we always report in millibars
     CGFloat pressure = [[[item objectForKey:@"pressure"] objectForKey:@"current"] doubleValue];
-    if ([pressureUnits isEqualToString:@"inHg"]) pressure = pressure * 33.8638 * 33.8638; // invert
+    if ([[units objectForKey:@"pressure"] isEqualToString:@"inHg"]) pressure = pressure * 33.8638864; // invert back to metric
     [section appendFormat:@"<pressure>%.2f</pressure>\n", pressure];
     
     [section appendString:@"<moonphase></moonphase>\n"];
