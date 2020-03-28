@@ -17,11 +17,10 @@
 #include "util.h"
 
 #include <assert.h>
-#include <stdlib.h>
-#include <string.h>
-#include <strings.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "gumbo.h"
 #include "parser.h"
@@ -29,30 +28,19 @@
 // TODO(jdtang): This should be elsewhere, but there's no .c file for
 // SourcePositions and yet the constant needs some linkage, so this is as good
 // as any.
-const GumboSourcePosition kGumboEmptySourcePosition = { 0, 0, 0 };
+const GumboSourcePosition kGumboEmptySourcePosition = {0, 0, 0};
 
-void* gumbo_parser_allocate(GumboParser* parser, size_t num_bytes) {
-  return parser->_options->allocator(parser->_options->userdata, num_bytes);
+/*
+ * Default memory management helpers;
+ * set to system's realloc and free by default
+ */
+void *(*gumbo_user_allocator)(void *, size_t) = realloc;
+void (*gumbo_user_free)(void *) = free;
+
+void gumbo_memory_set_allocator(void *(*allocator_p)(void *, size_t)) {
+  gumbo_user_allocator = allocator_p ? allocator_p : realloc;
 }
 
-void gumbo_parser_deallocate(GumboParser* parser, void* ptr) {
-  return parser->_options->deallocator(parser->_options->userdata, ptr);
-}
-
-char* gumbo_copy_stringz(GumboParser* parser, const char* str) {
-  char* buffer = gumbo_parser_allocate(parser, strlen(str) + 1);
-  strcpy(buffer, str);
-  return buffer;
-}
-
-// Debug function to trace operation of the parser.  Pass --copts=-DGUMBO_DEBUG
-// to use.
-void gumbo_debug(const char* format, ...) {
-#ifdef GUMBO_DEBUG
-  va_list args;
-  va_start(args, format);
-  vprintf(format, args);
-  va_end(args);
-  fflush(stdout);
-#endif
+void gumbo_memory_set_free(void (*free_p)(void *)) {
+  gumbo_user_free = free_p ? free_p : free;
 }

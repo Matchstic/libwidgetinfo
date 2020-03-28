@@ -15,164 +15,21 @@
 // Author: jdtang@google.com (Jonathan Tang)
 
 #include "gumbo.h"
+#include "util.h"
 
 #include <assert.h>
-#include <ctype.h>
-#include <strings.h>    // For strcasecmp.
+#include <string.h>
 
-// NOTE(jdtang): Keep this in sync with the GumboTag enum in the header.
-// TODO(jdtang): Investigate whether there're efficiency benefits to putting the
-// most common tag names first, or to putting them in alphabetical order and
-// using a binary search.
 const char* kGumboTagNames[] = {
-  "html",
-  "head",
-  "title",
-  "base",
-  "link",
-  "meta",
-  "style",
-  "script",
-  "noscript",
-  "body",
-  "section",
-  "nav",
-  "article",
-  "aside",
-  "h1",
-  "h2",
-  "h3",
-  "h4",
-  "h5",
-  "h6",
-  "hgroup",
-  "header",
-  "footer",
-  "address",
-  "p",
-  "hr",
-  "pre",
-  "blockquote",
-  "ol",
-  "ul",
-  "li",
-  "dl",
-  "dt",
-  "dd",
-  "figure",
-  "figcaption",
-  "div",
-  "a",
-  "em",
-  "strong",
-  "small",
-  "s",
-  "cite",
-  "q",
-  "dfn",
-  "abbr",
-  "time",
-  "code",
-  "var",
-  "samp",
-  "kbd",
-  "sub",
-  "sup",
-  "i",
-  "b",
-  "mark",
-  "ruby",
-  "rt",
-  "rp",
-  "bdi",
-  "bdo",
-  "span",
-  "br",
-  "wbr",
-  "ins",
-  "del",
-  "image",
-  "img",
-  "iframe",
-  "embed",
-  "object",
-  "param",
-  "video",
-  "audio",
-  "source",
-  "track",
-  "canvas",
-  "map",
-  "area",
-  "math",
-  "mi",
-  "mo",
-  "mn",
-  "ms",
-  "mtext",
-  "mglyph",
-  "malignmark",
-  "annotation-xml",
-  "svg",
-  "foreignobject",
-  "desc",
-  "table",
-  "caption",
-  "colgroup",
-  "col",
-  "tbody",
-  "thead",
-  "tfoot",
-  "tr",
-  "td",
-  "th",
-  "form",
-  "fieldset",
-  "legend",
-  "label",
-  "input",
-  "button",
-  "select",
-  "datalist",
-  "optgroup",
-  "option",
-  "textarea",
-  "keygen",
-  "output",
-  "progress",
-  "meter",
-  "details",
-  "summary",
-  "command",
-  "menu",
-  "applet",
-  "acronym",
-  "bgsound",
-  "dir",
-  "frame",
-  "frameset",
-  "noframes",
-  "isindex",
-  "listing",
-  "xmp",
-  "nextid",
-  "noembed",
-  "plaintext",
-  "rb",
-  "strike",
-  "basefont",
-  "big",
-  "blink",
-  "center",
-  "font",
-  "marquee",
-  "multicol",
-  "nobr",
-  "spacer",
-  "tt",
-  "u",
-  "",                   // TAG_UNKNOWN
-  "",                   // TAG_LAST
+#include "tag_strings.h"
+    "",  // TAG_UNKNOWN
+    "",  // TAG_LAST
+};
+
+static const uint8_t kGumboTagSizes[] = {
+#include "tag_sizes.h"
+    0,  // TAG_UNKNOWN
+    0,  // TAG_LAST
 };
 
 const char* gumbo_normalized_tagname(GumboTag tag) {
@@ -180,7 +37,12 @@ const char* gumbo_normalized_tagname(GumboTag tag) {
   return kGumboTagNames[tag];
 }
 
-// TODO(jdtang): Add test for this.
+const char* gumbo_normalized_tagname_and_size(GumboTag tag, uint8_t* sz) {
+  assert(tag <= GUMBO_TAG_LAST);
+  *sz = kGumboTagSizes[tag];
+  return kGumboTagNames[tag];
+}
+
 void gumbo_tag_from_original_text(GumboStringPiece* text) {
   if (text->data == NULL) {
     return;
@@ -192,16 +54,19 @@ void gumbo_tag_from_original_text(GumboStringPiece* text) {
   if (text->data[1] == '/') {
     // End tag.
     assert(text->length >= 3);
-    text->data += 2;    // Move past </
+    text->data += 2;  // Move past </
     text->length -= 3;
   } else {
     // Start tag.
-    text->data += 1;    // Move past <
+    text->data += 1;  // Move past <
     text->length -= 2;
     // strnchr is apparently not a standard C library function, so I loop
-    // explicitly looking for whitespace or other illegal tag characters.
+    // explicitly looking for whitespace or other illegal tag characters - as
+    // accepted by the Tag Name State
     for (const char* c = text->data; c != text->data + text->length; ++c) {
-      if (isspace(*c) || *c == '/') {
+      if (*c == '\t' || *c == '\n' || *c == '\f' || *c == ' ' || *c == '/') {
+        // was: if (isspace(*c) || *c == '/') {
+        // see https://github.com/google/gumbo-parser/pull/375/
         text->length = c - text->data;
         break;
       }
@@ -209,14 +74,31 @@ void gumbo_tag_from_original_text(GumboStringPiece* text) {
   }
 }
 
-GumboTag gumbo_tag_enum(const char* tagname) {
-  for (int i = 0; i < GUMBO_TAG_LAST; ++i) {
-    // TODO(jdtang): strcasecmp is non-portable, so if we want to support
-    // non-GCC compilers, we'll need some #ifdef magic.  This source already has
-    // pretty significant issues with MSVC6 anyway.
-    if (strcasecmp(tagname, kGumboTagNames[i]) == 0) {
-      return i;
+#include "tag_perf.h"
+#define TAG_MAP_SIZE (sizeof(kGumboTagMap) / sizeof(kGumboTagMap[0]))
+
+static int case_memcmp(const char* s1, const char* s2, unsigned int n) {
+  while (n--) {
+    unsigned char c1 = gumbo_tolower(*s1++);
+    unsigned char c2 = gumbo_tolower(*s2++);
+    if (c1 != c2) return (int) c1 - (int) c2;
+  }
+  return 0;
+}
+
+GumboTag gumbo_tagn_enum(const char* tagname, unsigned int length) {
+  if (length) {
+    unsigned int key = tag_hash(tagname, length);
+    if (key < TAG_MAP_SIZE) {
+      GumboTag tag = kGumboTagMap[key];
+      if (length == kGumboTagSizes[(int) tag] &&
+          !case_memcmp(tagname, kGumboTagNames[(int) tag], length))
+        return tag;
     }
   }
   return GUMBO_TAG_UNKNOWN;
+}
+
+GumboTag gumbo_tag_enum(const char* tagname) {
+  return gumbo_tagn_enum(tagname, strlen(tagname));
 }

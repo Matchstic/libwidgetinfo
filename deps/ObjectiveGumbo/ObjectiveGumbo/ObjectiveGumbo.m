@@ -33,7 +33,7 @@
 {
     GumboOutput * output = [ObjectiveGumbo outputFromString:string];
     OGNode * node = [ObjectiveGumbo objectiveGumboNodeFromGumboNode:output->root];
-    gumbo_destroy_output(&kGumboDefaultOptions, output);
+    gumbo_destroy_output(output);
     return node;
 }
 
@@ -61,7 +61,7 @@
 {
     GumboOutput * output = [ObjectiveGumbo outputFromString:string];
     OGDocument * node = (OGDocument*)[ObjectiveGumbo objectiveGumboNodeFromGumboNode:output->document];
-    gumbo_destroy_output(&kGumboDefaultOptions, output);
+    gumbo_destroy_output(output);
     return node;
 }
 

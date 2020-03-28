@@ -60,6 +60,7 @@ typedef struct GumboInternalToken {
   GumboTokenType type;
   GumboSourcePosition position;
   GumboStringPiece original_text;
+  bool is_injected;
   union {
     GumboTokenDocType doc_type;
     GumboTokenStartTag start_tag;
@@ -114,7 +115,7 @@ bool gumbo_lex(struct GumboInternalParser* parser, GumboToken* output);
 // Note that if you are handing over ownership of the internal strings to some
 // other data structure - for example, a parse tree - these do not need to be
 // freed.
-void gumbo_token_destroy(struct GumboInternalParser* parser, GumboToken* token);
+void gumbo_token_destroy(GumboToken* token);
 
 #ifdef __cplusplus
 }

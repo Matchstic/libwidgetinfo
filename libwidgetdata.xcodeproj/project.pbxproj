@@ -17,6 +17,54 @@
 		C919CA68233022E8001391A5 /* XENDSystemDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = C919CA66233022E8001391A5 /* XENDSystemDataProvider.m */; };
 		C919CA6B233026A4001391A5 /* XENDBaseDataProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = C919CA69233026A4001391A5 /* XENDBaseDataProvider.h */; };
 		C919CA6C233026A4001391A5 /* XENDBaseDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = C919CA6A233026A4001391A5 /* XENDBaseDataProvider.m */; };
+		C91F3F9E242FA9B100E30466 /* OGNode.h in Headers */ = {isa = PBXBuildFile; fileRef = C91F3F76242FA9B100E30466 /* OGNode.h */; };
+		C91F3F9F242FA9B100E30466 /* OGUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = C91F3F77242FA9B100E30466 /* OGUtility.h */; };
+		C91F3FA0242FA9B100E30466 /* OGText.h in Headers */ = {isa = PBXBuildFile; fileRef = C91F3F79242FA9B100E30466 /* OGText.h */; };
+		C91F3FA1242FA9B100E30466 /* ObjectiveGumbo.h in Headers */ = {isa = PBXBuildFile; fileRef = C91F3F7A242FA9B100E30466 /* ObjectiveGumbo.h */; };
+		C91F3FA2242FA9B100E30466 /* OGElement.h in Headers */ = {isa = PBXBuildFile; fileRef = C91F3F7B242FA9B100E30466 /* OGElement.h */; };
+		C91F3FA3242FA9B100E30466 /* NSString+OGString.h in Headers */ = {isa = PBXBuildFile; fileRef = C91F3F7C242FA9B100E30466 /* NSString+OGString.h */; };
+		C91F3FA4242FA9B100E30466 /* OGDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = C91F3F7D242FA9B100E30466 /* OGDocument.m */; };
+		C91F3FA5242FA9B100E30466 /* OGUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C91F3F7E242FA9B100E30466 /* OGUtility.m */; };
+		C91F3FA6242FA9B100E30466 /* OGNode.m in Sources */ = {isa = PBXBuildFile; fileRef = C91F3F7F242FA9B100E30466 /* OGNode.m */; };
+		C91F3FA7242FA9B100E30466 /* NSString+OGString.m in Sources */ = {isa = PBXBuildFile; fileRef = C91F3F80242FA9B100E30466 /* NSString+OGString.m */; };
+		C91F3FA8242FA9B100E30466 /* OGElement.m in Sources */ = {isa = PBXBuildFile; fileRef = C91F3F81242FA9B100E30466 /* OGElement.m */; };
+		C91F3FA9242FA9B100E30466 /* ObjectiveGumbo.m in Sources */ = {isa = PBXBuildFile; fileRef = C91F3F82242FA9B100E30466 /* ObjectiveGumbo.m */; };
+		C91F3FAA242FA9B100E30466 /* OGText.m in Sources */ = {isa = PBXBuildFile; fileRef = C91F3F83242FA9B100E30466 /* OGText.m */; };
+		C91F3FAB242FA9B100E30466 /* OGDocument.h in Headers */ = {isa = PBXBuildFile; fileRef = C91F3F84242FA9B100E30466 /* OGDocument.h */; };
+		C91F401B242FB1DA00E30466 /* string_buffer.c in Sources */ = {isa = PBXBuildFile; fileRef = C91F3FF5242FB1D900E30466 /* string_buffer.c */; };
+		C91F401C242FB1DA00E30466 /* error.h in Headers */ = {isa = PBXBuildFile; fileRef = C91F3FF6242FB1D900E30466 /* error.h */; };
+		C91F401D242FB1DA00E30466 /* svg_attrs.c in Sources */ = {isa = PBXBuildFile; fileRef = C91F3FF7242FB1D900E30466 /* svg_attrs.c */; };
+		C91F401E242FB1DA00E30466 /* tag_enum.h in Headers */ = {isa = PBXBuildFile; fileRef = C91F3FF8242FB1D900E30466 /* tag_enum.h */; };
+		C91F401F242FB1DA00E30466 /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = C91F3FFA242FB1D900E30466 /* util.c */; };
+		C91F4020242FB1DA00E30466 /* insertion_mode.h in Headers */ = {isa = PBXBuildFile; fileRef = C91F3FFC242FB1D900E30466 /* insertion_mode.h */; };
+		C91F4021242FB1DA00E30466 /* svg_tags.c in Sources */ = {isa = PBXBuildFile; fileRef = C91F3FFD242FB1D900E30466 /* svg_tags.c */; };
+		C91F4022242FB1DA00E30466 /* parser.h in Headers */ = {isa = PBXBuildFile; fileRef = C91F3FFE242FB1D900E30466 /* parser.h */; };
+		C91F4023242FB1DA00E30466 /* vector.c in Sources */ = {isa = PBXBuildFile; fileRef = C91F3FFF242FB1D900E30466 /* vector.c */; };
+		C91F4024242FB1DA00E30466 /* attribute.c in Sources */ = {isa = PBXBuildFile; fileRef = C91F4000242FB1D900E30466 /* attribute.c */; };
+		C91F4025242FB1DA00E30466 /* char_ref.c in Sources */ = {isa = PBXBuildFile; fileRef = C91F4001242FB1D900E30466 /* char_ref.c */; };
+		C91F4026242FB1DA00E30466 /* gumbo_edit.h in Headers */ = {isa = PBXBuildFile; fileRef = C91F4002242FB1D900E30466 /* gumbo_edit.h */; };
+		C91F4027242FB1DA00E30466 /* tokenizer.h in Headers */ = {isa = PBXBuildFile; fileRef = C91F4003242FB1D900E30466 /* tokenizer.h */; };
+		C91F4028242FB1DA00E30466 /* utf8.c in Sources */ = {isa = PBXBuildFile; fileRef = C91F4004242FB1DA00E30466 /* utf8.c */; };
+		C91F4029242FB1DA00E30466 /* string_piece.h in Headers */ = {isa = PBXBuildFile; fileRef = C91F4005242FB1DA00E30466 /* string_piece.h */; };
+		C91F402A242FB1DA00E30466 /* tokenizer_states.h in Headers */ = {isa = PBXBuildFile; fileRef = C91F4006242FB1DA00E30466 /* tokenizer_states.h */; };
+		C91F402B242FB1DA00E30466 /* token_type.h in Headers */ = {isa = PBXBuildFile; fileRef = C91F4007242FB1DA00E30466 /* token_type.h */; };
+		C91F402C242FB1DA00E30466 /* string_buffer.h in Headers */ = {isa = PBXBuildFile; fileRef = C91F4009242FB1DA00E30466 /* string_buffer.h */; };
+		C91F402D242FB1DA00E30466 /* error.c in Sources */ = {isa = PBXBuildFile; fileRef = C91F400A242FB1DA00E30466 /* error.c */; };
+		C91F402E242FB1DA00E30466 /* util.h in Headers */ = {isa = PBXBuildFile; fileRef = C91F400C242FB1DA00E30466 /* util.h */; };
+		C91F402F242FB1DA00E30466 /* tag.c in Sources */ = {isa = PBXBuildFile; fileRef = C91F400D242FB1DA00E30466 /* tag.c */; };
+		C91F4030242FB1DA00E30466 /* tag_perf.h in Headers */ = {isa = PBXBuildFile; fileRef = C91F400E242FB1DA00E30466 /* tag_perf.h */; };
+		C91F4031242FB1DA00E30466 /* char_ref.h in Headers */ = {isa = PBXBuildFile; fileRef = C91F400F242FB1DA00E30466 /* char_ref.h */; };
+		C91F4032242FB1DA00E30466 /* replacement.h in Headers */ = {isa = PBXBuildFile; fileRef = C91F4010242FB1DA00E30466 /* replacement.h */; };
+		C91F4033242FB1DA00E30466 /* vector.h in Headers */ = {isa = PBXBuildFile; fileRef = C91F4011242FB1DA00E30466 /* vector.h */; };
+		C91F4034242FB1DA00E30466 /* attribute.h in Headers */ = {isa = PBXBuildFile; fileRef = C91F4012242FB1DA00E30466 /* attribute.h */; };
+		C91F4035242FB1DA00E30466 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = C91F4013242FB1DA00E30466 /* parser.c */; };
+		C91F4036242FB1DA00E30466 /* tag_sizes.h in Headers */ = {isa = PBXBuildFile; fileRef = C91F4014242FB1DA00E30466 /* tag_sizes.h */; };
+		C91F4037242FB1DA00E30466 /* tag_strings.h in Headers */ = {isa = PBXBuildFile; fileRef = C91F4015242FB1DA00E30466 /* tag_strings.h */; };
+		C91F4038242FB1DA00E30466 /* utf8.h in Headers */ = {isa = PBXBuildFile; fileRef = C91F4016242FB1DA00E30466 /* utf8.h */; };
+		C91F4039242FB1DA00E30466 /* tokenizer.c in Sources */ = {isa = PBXBuildFile; fileRef = C91F4017242FB1DA00E30466 /* tokenizer.c */; };
+		C91F403A242FB1DA00E30466 /* string_piece.c in Sources */ = {isa = PBXBuildFile; fileRef = C91F4018242FB1DA00E30466 /* string_piece.c */; };
+		C91F403B242FB1DA00E30466 /* gumbo_edit.c in Sources */ = {isa = PBXBuildFile; fileRef = C91F4019242FB1DA00E30466 /* gumbo_edit.c */; };
+		C91F403C242FB1DA00E30466 /* gumbo.h in Headers */ = {isa = PBXBuildFile; fileRef = C91F401A242FB1DA00E30466 /* gumbo.h */; };
 		C92013DE2411A704009CBBFB /* XENDWidgetWeatherURLHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = C92013DC2411A704009CBBFB /* XENDWidgetWeatherURLHandler.h */; };
 		C92013DF2411A704009CBBFB /* XENDWidgetWeatherURLHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = C92013DD2411A704009CBBFB /* XENDWidgetWeatherURLHandler.m */; };
 		C92013E22411A711009CBBFB /* XENDBaseURLHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = C92013E02411A711009CBBFB /* XENDBaseURLHandler.h */; };
@@ -89,45 +137,6 @@
 		C9F2F3A52301BE4100E4863B /* Exception.hpp in Headers */ = {isa = PBXBuildFile; fileRef = C9F2F37F2301BE4100E4863B /* Exception.hpp */; };
 		C9F2F3A62301BE4100E4863B /* XENDPreprocessorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C9F2F3802301BE4100E4863B /* XENDPreprocessorManager.m */; };
 		C9F2F3A72301BE4100E4863B /* XENDPreprocessorManager.h in Headers */ = {isa = PBXBuildFile; fileRef = C9F2F3812301BE4100E4863B /* XENDPreprocessorManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		C9F2F3D62301BE4800E4863B /* string_buffer.c in Sources */ = {isa = PBXBuildFile; fileRef = C9F2F3AE2301BE4700E4863B /* string_buffer.c */; };
-		C9F2F3D72301BE4800E4863B /* error.h in Headers */ = {isa = PBXBuildFile; fileRef = C9F2F3AF2301BE4700E4863B /* error.h */; };
-		C9F2F3D82301BE4800E4863B /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = C9F2F3B02301BE4700E4863B /* util.c */; };
-		C9F2F3D92301BE4800E4863B /* insertion_mode.h in Headers */ = {isa = PBXBuildFile; fileRef = C9F2F3B12301BE4700E4863B /* insertion_mode.h */; };
-		C9F2F3DA2301BE4800E4863B /* parser.h in Headers */ = {isa = PBXBuildFile; fileRef = C9F2F3B22301BE4700E4863B /* parser.h */; };
-		C9F2F3DB2301BE4800E4863B /* vector.c in Sources */ = {isa = PBXBuildFile; fileRef = C9F2F3B32301BE4700E4863B /* vector.c */; };
-		C9F2F3DC2301BE4800E4863B /* attribute.c in Sources */ = {isa = PBXBuildFile; fileRef = C9F2F3B42301BE4700E4863B /* attribute.c */; };
-		C9F2F3DD2301BE4800E4863B /* char_ref.c in Sources */ = {isa = PBXBuildFile; fileRef = C9F2F3B52301BE4700E4863B /* char_ref.c */; };
-		C9F2F3DE2301BE4800E4863B /* tokenizer.h in Headers */ = {isa = PBXBuildFile; fileRef = C9F2F3B62301BE4700E4863B /* tokenizer.h */; };
-		C9F2F3DF2301BE4800E4863B /* utf8.c in Sources */ = {isa = PBXBuildFile; fileRef = C9F2F3B72301BE4700E4863B /* utf8.c */; };
-		C9F2F3E02301BE4800E4863B /* string_piece.h in Headers */ = {isa = PBXBuildFile; fileRef = C9F2F3B82301BE4700E4863B /* string_piece.h */; };
-		C9F2F3E12301BE4800E4863B /* tokenizer_states.h in Headers */ = {isa = PBXBuildFile; fileRef = C9F2F3B92301BE4700E4863B /* tokenizer_states.h */; };
-		C9F2F3E22301BE4800E4863B /* token_type.h in Headers */ = {isa = PBXBuildFile; fileRef = C9F2F3BA2301BE4700E4863B /* token_type.h */; };
-		C9F2F3E32301BE4800E4863B /* string_buffer.h in Headers */ = {isa = PBXBuildFile; fileRef = C9F2F3BB2301BE4700E4863B /* string_buffer.h */; };
-		C9F2F3E42301BE4800E4863B /* error.c in Sources */ = {isa = PBXBuildFile; fileRef = C9F2F3BC2301BE4700E4863B /* error.c */; };
-		C9F2F3E52301BE4800E4863B /* util.h in Headers */ = {isa = PBXBuildFile; fileRef = C9F2F3BD2301BE4700E4863B /* util.h */; };
-		C9F2F3E62301BE4800E4863B /* tag.c in Sources */ = {isa = PBXBuildFile; fileRef = C9F2F3BE2301BE4700E4863B /* tag.c */; };
-		C9F2F3E72301BE4800E4863B /* char_ref.h in Headers */ = {isa = PBXBuildFile; fileRef = C9F2F3BF2301BE4700E4863B /* char_ref.h */; };
-		C9F2F3E82301BE4800E4863B /* vector.h in Headers */ = {isa = PBXBuildFile; fileRef = C9F2F3C02301BE4700E4863B /* vector.h */; };
-		C9F2F3E92301BE4800E4863B /* attribute.h in Headers */ = {isa = PBXBuildFile; fileRef = C9F2F3C12301BE4700E4863B /* attribute.h */; };
-		C9F2F3EA2301BE4800E4863B /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = C9F2F3C22301BE4700E4863B /* parser.c */; };
-		C9F2F3EB2301BE4800E4863B /* utf8.h in Headers */ = {isa = PBXBuildFile; fileRef = C9F2F3C32301BE4700E4863B /* utf8.h */; };
-		C9F2F3EC2301BE4800E4863B /* tokenizer.c in Sources */ = {isa = PBXBuildFile; fileRef = C9F2F3C42301BE4700E4863B /* tokenizer.c */; };
-		C9F2F3ED2301BE4800E4863B /* string_piece.c in Sources */ = {isa = PBXBuildFile; fileRef = C9F2F3C52301BE4700E4863B /* string_piece.c */; };
-		C9F2F3EE2301BE4800E4863B /* gumbo.h in Headers */ = {isa = PBXBuildFile; fileRef = C9F2F3C62301BE4700E4863B /* gumbo.h */; };
-		C9F2F3EF2301BE4800E4863B /* OGNode.h in Headers */ = {isa = PBXBuildFile; fileRef = C9F2F3C72301BE4700E4863B /* OGNode.h */; };
-		C9F2F3F02301BE4800E4863B /* OGUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = C9F2F3C82301BE4700E4863B /* OGUtility.h */; };
-		C9F2F3F12301BE4800E4863B /* OGText.h in Headers */ = {isa = PBXBuildFile; fileRef = C9F2F3CA2301BE4700E4863B /* OGText.h */; };
-		C9F2F3F22301BE4800E4863B /* ObjectiveGumbo.h in Headers */ = {isa = PBXBuildFile; fileRef = C9F2F3CB2301BE4700E4863B /* ObjectiveGumbo.h */; };
-		C9F2F3F32301BE4800E4863B /* OGElement.h in Headers */ = {isa = PBXBuildFile; fileRef = C9F2F3CC2301BE4700E4863B /* OGElement.h */; };
-		C9F2F3F42301BE4800E4863B /* NSString+OGString.h in Headers */ = {isa = PBXBuildFile; fileRef = C9F2F3CD2301BE4700E4863B /* NSString+OGString.h */; };
-		C9F2F3F52301BE4800E4863B /* OGDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = C9F2F3CE2301BE4800E4863B /* OGDocument.m */; };
-		C9F2F3F62301BE4800E4863B /* OGUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C9F2F3CF2301BE4800E4863B /* OGUtility.m */; };
-		C9F2F3F72301BE4800E4863B /* OGNode.m in Sources */ = {isa = PBXBuildFile; fileRef = C9F2F3D02301BE4800E4863B /* OGNode.m */; };
-		C9F2F3F82301BE4800E4863B /* NSString+OGString.m in Sources */ = {isa = PBXBuildFile; fileRef = C9F2F3D12301BE4800E4863B /* NSString+OGString.m */; };
-		C9F2F3F92301BE4800E4863B /* OGElement.m in Sources */ = {isa = PBXBuildFile; fileRef = C9F2F3D22301BE4800E4863B /* OGElement.m */; };
-		C9F2F3FA2301BE4800E4863B /* ObjectiveGumbo.m in Sources */ = {isa = PBXBuildFile; fileRef = C9F2F3D32301BE4800E4863B /* ObjectiveGumbo.m */; };
-		C9F2F3FB2301BE4800E4863B /* OGText.m in Sources */ = {isa = PBXBuildFile; fileRef = C9F2F3D42301BE4800E4863B /* OGText.m */; };
-		C9F2F3FC2301BE4800E4863B /* OGDocument.h in Headers */ = {isa = PBXBuildFile; fileRef = C9F2F3D52301BE4800E4863B /* OGDocument.h */; };
 		C9F2F40C2301C3A200E4863B /* WKWebView_WidgetData.h in Headers */ = {isa = PBXBuildFile; fileRef = C9F2F40A2301C3A200E4863B /* WKWebView_WidgetData.h */; };
 		C9F2F40D2301C3A200E4863B /* WKWebView_WidgetData.m in Sources */ = {isa = PBXBuildFile; fileRef = C9F2F40B2301C3A200E4863B /* WKWebView_WidgetData.m */; };
 		C9F2F4102301C3E100E4863B /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9F2F40F2301C3E100E4863B /* WebKit.framework */; };
@@ -182,6 +191,61 @@
 		C919CA66233022E8001391A5 /* XENDSystemDataProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XENDSystemDataProvider.m; sourceTree = "<group>"; };
 		C919CA69233026A4001391A5 /* XENDBaseDataProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XENDBaseDataProvider.h; sourceTree = "<group>"; };
 		C919CA6A233026A4001391A5 /* XENDBaseDataProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XENDBaseDataProvider.m; sourceTree = "<group>"; };
+		C91F3F59242FA9B100E30466 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		C91F3F5A242FA9B100E30466 /* ObjectiveGumbo.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ObjectiveGumbo.podspec; sourceTree = "<group>"; };
+		C91F3F76242FA9B100E30466 /* OGNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OGNode.h; sourceTree = "<group>"; };
+		C91F3F77242FA9B100E30466 /* OGUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OGUtility.h; sourceTree = "<group>"; };
+		C91F3F78242FA9B100E30466 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		C91F3F79242FA9B100E30466 /* OGText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OGText.h; sourceTree = "<group>"; };
+		C91F3F7A242FA9B100E30466 /* ObjectiveGumbo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectiveGumbo.h; sourceTree = "<group>"; };
+		C91F3F7B242FA9B100E30466 /* OGElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OGElement.h; sourceTree = "<group>"; };
+		C91F3F7C242FA9B100E30466 /* NSString+OGString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+OGString.h"; sourceTree = "<group>"; };
+		C91F3F7D242FA9B100E30466 /* OGDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OGDocument.m; sourceTree = "<group>"; };
+		C91F3F7E242FA9B100E30466 /* OGUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OGUtility.m; sourceTree = "<group>"; };
+		C91F3F7F242FA9B100E30466 /* OGNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OGNode.m; sourceTree = "<group>"; };
+		C91F3F80242FA9B100E30466 /* NSString+OGString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+OGString.m"; sourceTree = "<group>"; };
+		C91F3F81242FA9B100E30466 /* OGElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OGElement.m; sourceTree = "<group>"; };
+		C91F3F82242FA9B100E30466 /* ObjectiveGumbo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjectiveGumbo.m; sourceTree = "<group>"; };
+		C91F3F83242FA9B100E30466 /* OGText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OGText.m; sourceTree = "<group>"; };
+		C91F3F84242FA9B100E30466 /* OGDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OGDocument.h; sourceTree = "<group>"; };
+		C91F3FF5242FB1D900E30466 /* string_buffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = string_buffer.c; sourceTree = "<group>"; };
+		C91F3FF6242FB1D900E30466 /* error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = error.h; sourceTree = "<group>"; };
+		C91F3FF7242FB1D900E30466 /* svg_attrs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = svg_attrs.c; sourceTree = "<group>"; };
+		C91F3FF8242FB1D900E30466 /* tag_enum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tag_enum.h; sourceTree = "<group>"; };
+		C91F3FF9242FB1D900E30466 /* svg_attrs.gperf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = svg_attrs.gperf; sourceTree = "<group>"; };
+		C91F3FFA242FB1D900E30466 /* util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = util.c; sourceTree = "<group>"; };
+		C91F3FFB242FB1D900E30466 /* char_ref.rl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = char_ref.rl; sourceTree = "<group>"; };
+		C91F3FFC242FB1D900E30466 /* insertion_mode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = insertion_mode.h; sourceTree = "<group>"; };
+		C91F3FFD242FB1D900E30466 /* svg_tags.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = svg_tags.c; sourceTree = "<group>"; };
+		C91F3FFE242FB1D900E30466 /* parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
+		C91F3FFF242FB1D900E30466 /* vector.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = vector.c; sourceTree = "<group>"; };
+		C91F4000242FB1D900E30466 /* attribute.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = attribute.c; sourceTree = "<group>"; };
+		C91F4001242FB1D900E30466 /* char_ref.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = char_ref.c; sourceTree = "<group>"; };
+		C91F4002242FB1D900E30466 /* gumbo_edit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gumbo_edit.h; sourceTree = "<group>"; };
+		C91F4003242FB1D900E30466 /* tokenizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tokenizer.h; sourceTree = "<group>"; };
+		C91F4004242FB1DA00E30466 /* utf8.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = utf8.c; sourceTree = "<group>"; };
+		C91F4005242FB1DA00E30466 /* string_piece.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = string_piece.h; sourceTree = "<group>"; };
+		C91F4006242FB1DA00E30466 /* tokenizer_states.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tokenizer_states.h; sourceTree = "<group>"; };
+		C91F4007242FB1DA00E30466 /* token_type.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = token_type.h; sourceTree = "<group>"; };
+		C91F4008242FB1DA00E30466 /* svg_tags.gperf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = svg_tags.gperf; sourceTree = "<group>"; };
+		C91F4009242FB1DA00E30466 /* string_buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = string_buffer.h; sourceTree = "<group>"; };
+		C91F400A242FB1DA00E30466 /* error.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = error.c; sourceTree = "<group>"; };
+		C91F400B242FB1DA00E30466 /* tag.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tag.in; sourceTree = "<group>"; };
+		C91F400C242FB1DA00E30466 /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
+		C91F400D242FB1DA00E30466 /* tag.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tag.c; sourceTree = "<group>"; };
+		C91F400E242FB1DA00E30466 /* tag_perf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tag_perf.h; sourceTree = "<group>"; };
+		C91F400F242FB1DA00E30466 /* char_ref.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = char_ref.h; sourceTree = "<group>"; };
+		C91F4010242FB1DA00E30466 /* replacement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = replacement.h; sourceTree = "<group>"; };
+		C91F4011242FB1DA00E30466 /* vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vector.h; sourceTree = "<group>"; };
+		C91F4012242FB1DA00E30466 /* attribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = attribute.h; sourceTree = "<group>"; };
+		C91F4013242FB1DA00E30466 /* parser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
+		C91F4014242FB1DA00E30466 /* tag_sizes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tag_sizes.h; sourceTree = "<group>"; };
+		C91F4015242FB1DA00E30466 /* tag_strings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tag_strings.h; sourceTree = "<group>"; };
+		C91F4016242FB1DA00E30466 /* utf8.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utf8.h; sourceTree = "<group>"; };
+		C91F4017242FB1DA00E30466 /* tokenizer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tokenizer.c; sourceTree = "<group>"; };
+		C91F4018242FB1DA00E30466 /* string_piece.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = string_piece.c; sourceTree = "<group>"; };
+		C91F4019242FB1DA00E30466 /* gumbo_edit.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gumbo_edit.c; sourceTree = "<group>"; };
+		C91F401A242FB1DA00E30466 /* gumbo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gumbo.h; sourceTree = "<group>"; };
 		C92013DC2411A704009CBBFB /* XENDWidgetWeatherURLHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XENDWidgetWeatherURLHandler.h; sourceTree = "<group>"; };
 		C92013DD2411A704009CBBFB /* XENDWidgetWeatherURLHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XENDWidgetWeatherURLHandler.m; sourceTree = "<group>"; };
 		C92013E02411A711009CBBFB /* XENDBaseURLHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XENDBaseURLHandler.h; sourceTree = "<group>"; };
@@ -277,46 +341,6 @@
 		C9F2F37F2301BE4100E4863B /* Exception.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Exception.hpp; sourceTree = "<group>"; };
 		C9F2F3802301BE4100E4863B /* XENDPreprocessorManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XENDPreprocessorManager.m; sourceTree = "<group>"; };
 		C9F2F3812301BE4100E4863B /* XENDPreprocessorManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XENDPreprocessorManager.h; sourceTree = "<group>"; };
-		C9F2F3AE2301BE4700E4863B /* string_buffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = string_buffer.c; sourceTree = "<group>"; };
-		C9F2F3AF2301BE4700E4863B /* error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = error.h; sourceTree = "<group>"; };
-		C9F2F3B02301BE4700E4863B /* util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = util.c; sourceTree = "<group>"; };
-		C9F2F3B12301BE4700E4863B /* insertion_mode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = insertion_mode.h; sourceTree = "<group>"; };
-		C9F2F3B22301BE4700E4863B /* parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
-		C9F2F3B32301BE4700E4863B /* vector.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = vector.c; sourceTree = "<group>"; };
-		C9F2F3B42301BE4700E4863B /* attribute.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = attribute.c; sourceTree = "<group>"; };
-		C9F2F3B52301BE4700E4863B /* char_ref.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = char_ref.c; sourceTree = "<group>"; };
-		C9F2F3B62301BE4700E4863B /* tokenizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tokenizer.h; sourceTree = "<group>"; };
-		C9F2F3B72301BE4700E4863B /* utf8.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = utf8.c; sourceTree = "<group>"; };
-		C9F2F3B82301BE4700E4863B /* string_piece.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = string_piece.h; sourceTree = "<group>"; };
-		C9F2F3B92301BE4700E4863B /* tokenizer_states.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tokenizer_states.h; sourceTree = "<group>"; };
-		C9F2F3BA2301BE4700E4863B /* token_type.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = token_type.h; sourceTree = "<group>"; };
-		C9F2F3BB2301BE4700E4863B /* string_buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = string_buffer.h; sourceTree = "<group>"; };
-		C9F2F3BC2301BE4700E4863B /* error.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = error.c; sourceTree = "<group>"; };
-		C9F2F3BD2301BE4700E4863B /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
-		C9F2F3BE2301BE4700E4863B /* tag.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tag.c; sourceTree = "<group>"; };
-		C9F2F3BF2301BE4700E4863B /* char_ref.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = char_ref.h; sourceTree = "<group>"; };
-		C9F2F3C02301BE4700E4863B /* vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vector.h; sourceTree = "<group>"; };
-		C9F2F3C12301BE4700E4863B /* attribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = attribute.h; sourceTree = "<group>"; };
-		C9F2F3C22301BE4700E4863B /* parser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
-		C9F2F3C32301BE4700E4863B /* utf8.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utf8.h; sourceTree = "<group>"; };
-		C9F2F3C42301BE4700E4863B /* tokenizer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tokenizer.c; sourceTree = "<group>"; };
-		C9F2F3C52301BE4700E4863B /* string_piece.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = string_piece.c; sourceTree = "<group>"; };
-		C9F2F3C62301BE4700E4863B /* gumbo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gumbo.h; sourceTree = "<group>"; };
-		C9F2F3C72301BE4700E4863B /* OGNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OGNode.h; sourceTree = "<group>"; };
-		C9F2F3C82301BE4700E4863B /* OGUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OGUtility.h; sourceTree = "<group>"; };
-		C9F2F3C92301BE4700E4863B /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		C9F2F3CA2301BE4700E4863B /* OGText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OGText.h; sourceTree = "<group>"; };
-		C9F2F3CB2301BE4700E4863B /* ObjectiveGumbo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectiveGumbo.h; sourceTree = "<group>"; };
-		C9F2F3CC2301BE4700E4863B /* OGElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OGElement.h; sourceTree = "<group>"; };
-		C9F2F3CD2301BE4700E4863B /* NSString+OGString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+OGString.h"; sourceTree = "<group>"; };
-		C9F2F3CE2301BE4800E4863B /* OGDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OGDocument.m; sourceTree = "<group>"; };
-		C9F2F3CF2301BE4800E4863B /* OGUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OGUtility.m; sourceTree = "<group>"; };
-		C9F2F3D02301BE4800E4863B /* OGNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OGNode.m; sourceTree = "<group>"; };
-		C9F2F3D12301BE4800E4863B /* NSString+OGString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+OGString.m"; sourceTree = "<group>"; };
-		C9F2F3D22301BE4800E4863B /* OGElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OGElement.m; sourceTree = "<group>"; };
-		C9F2F3D32301BE4800E4863B /* ObjectiveGumbo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjectiveGumbo.m; sourceTree = "<group>"; };
-		C9F2F3D42301BE4800E4863B /* OGText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OGText.m; sourceTree = "<group>"; };
-		C9F2F3D52301BE4800E4863B /* OGDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OGDocument.h; sourceTree = "<group>"; };
 		C9F2F3FD2301BF4F00E4863B /* libwidgetinfo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libwidgetinfo.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9F2F40A2301C3A200E4863B /* WKWebView_WidgetData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WKWebView_WidgetData.h; sourceTree = "<group>"; };
 		C9F2F40B2301C3A200E4863B /* WKWebView_WidgetData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WKWebView_WidgetData.m; sourceTree = "<group>"; };
@@ -377,6 +401,84 @@
 				C9D4BF50241DA7E500DBC002 /* kern_memorystatus.h */,
 			);
 			path = libobjcipc;
+			sourceTree = "<group>";
+		};
+		C91F3F58242FA9B100E30466 /* ObjectiveGumbo */ = {
+			isa = PBXGroup;
+			children = (
+				C91F3F5B242FA9B100E30466 /* ObjectiveGumbo */,
+				C91F3F59242FA9B100E30466 /* README.md */,
+				C91F3F5A242FA9B100E30466 /* ObjectiveGumbo.podspec */,
+			);
+			path = ObjectiveGumbo;
+			sourceTree = "<group>";
+		};
+		C91F3F5B242FA9B100E30466 /* ObjectiveGumbo */ = {
+			isa = PBXGroup;
+			children = (
+				C91F3FF4242FB1D900E30466 /* Gumbo */,
+				C91F3F76242FA9B100E30466 /* OGNode.h */,
+				C91F3F7F242FA9B100E30466 /* OGNode.m */,
+				C91F3F77242FA9B100E30466 /* OGUtility.h */,
+				C91F3F7E242FA9B100E30466 /* OGUtility.m */,
+				C91F3F78242FA9B100E30466 /* LICENSE */,
+				C91F3F79242FA9B100E30466 /* OGText.h */,
+				C91F3F83242FA9B100E30466 /* OGText.m */,
+				C91F3F7A242FA9B100E30466 /* ObjectiveGumbo.h */,
+				C91F3F82242FA9B100E30466 /* ObjectiveGumbo.m */,
+				C91F3F7B242FA9B100E30466 /* OGElement.h */,
+				C91F3F81242FA9B100E30466 /* OGElement.m */,
+				C91F3F7C242FA9B100E30466 /* NSString+OGString.h */,
+				C91F3F80242FA9B100E30466 /* NSString+OGString.m */,
+				C91F3F84242FA9B100E30466 /* OGDocument.h */,
+				C91F3F7D242FA9B100E30466 /* OGDocument.m */,
+			);
+			path = ObjectiveGumbo;
+			sourceTree = "<group>";
+		};
+		C91F3FF4242FB1D900E30466 /* Gumbo */ = {
+			isa = PBXGroup;
+			children = (
+				C91F3FF5242FB1D900E30466 /* string_buffer.c */,
+				C91F3FF6242FB1D900E30466 /* error.h */,
+				C91F3FF7242FB1D900E30466 /* svg_attrs.c */,
+				C91F3FF8242FB1D900E30466 /* tag_enum.h */,
+				C91F3FF9242FB1D900E30466 /* svg_attrs.gperf */,
+				C91F3FFA242FB1D900E30466 /* util.c */,
+				C91F3FFB242FB1D900E30466 /* char_ref.rl */,
+				C91F3FFC242FB1D900E30466 /* insertion_mode.h */,
+				C91F3FFD242FB1D900E30466 /* svg_tags.c */,
+				C91F3FFE242FB1D900E30466 /* parser.h */,
+				C91F3FFF242FB1D900E30466 /* vector.c */,
+				C91F4000242FB1D900E30466 /* attribute.c */,
+				C91F4001242FB1D900E30466 /* char_ref.c */,
+				C91F4002242FB1D900E30466 /* gumbo_edit.h */,
+				C91F4003242FB1D900E30466 /* tokenizer.h */,
+				C91F4004242FB1DA00E30466 /* utf8.c */,
+				C91F4005242FB1DA00E30466 /* string_piece.h */,
+				C91F4006242FB1DA00E30466 /* tokenizer_states.h */,
+				C91F4007242FB1DA00E30466 /* token_type.h */,
+				C91F4008242FB1DA00E30466 /* svg_tags.gperf */,
+				C91F4009242FB1DA00E30466 /* string_buffer.h */,
+				C91F400A242FB1DA00E30466 /* error.c */,
+				C91F400B242FB1DA00E30466 /* tag.in */,
+				C91F400C242FB1DA00E30466 /* util.h */,
+				C91F400D242FB1DA00E30466 /* tag.c */,
+				C91F400E242FB1DA00E30466 /* tag_perf.h */,
+				C91F400F242FB1DA00E30466 /* char_ref.h */,
+				C91F4010242FB1DA00E30466 /* replacement.h */,
+				C91F4011242FB1DA00E30466 /* vector.h */,
+				C91F4012242FB1DA00E30466 /* attribute.h */,
+				C91F4013242FB1DA00E30466 /* parser.c */,
+				C91F4014242FB1DA00E30466 /* tag_sizes.h */,
+				C91F4015242FB1DA00E30466 /* tag_strings.h */,
+				C91F4016242FB1DA00E30466 /* utf8.h */,
+				C91F4017242FB1DA00E30466 /* tokenizer.c */,
+				C91F4018242FB1DA00E30466 /* string_piece.c */,
+				C91F4019242FB1DA00E30466 /* gumbo_edit.c */,
+				C91F401A242FB1DA00E30466 /* gumbo.h */,
+			);
+			path = Gumbo;
 			sourceTree = "<group>";
 		};
 		C92013DB2411A6E6009CBBFB /* URL Handlers */ = {
@@ -662,73 +764,10 @@
 		C9F2F3A82301BE4700E4863B /* deps */ = {
 			isa = PBXGroup;
 			children = (
+				C91F3F58242FA9B100E30466 /* ObjectiveGumbo */,
 				C912062B2416A8690081E307 /* libobjcipc */,
-				C9F2F3A92301BE4700E4863B /* ObjectiveGumbo */,
 			);
 			path = deps;
-			sourceTree = "<group>";
-		};
-		C9F2F3A92301BE4700E4863B /* ObjectiveGumbo */ = {
-			isa = PBXGroup;
-			children = (
-				C9F2F3AC2301BE4700E4863B /* ObjectiveGumbo */,
-			);
-			path = ObjectiveGumbo;
-			sourceTree = "<group>";
-		};
-		C9F2F3AC2301BE4700E4863B /* ObjectiveGumbo */ = {
-			isa = PBXGroup;
-			children = (
-				C9F2F3AD2301BE4700E4863B /* Gumbo */,
-				C9F2F3C92301BE4700E4863B /* LICENSE */,
-				C9F2F3C82301BE4700E4863B /* OGUtility.h */,
-				C9F2F3CF2301BE4800E4863B /* OGUtility.m */,
-				C9F2F3C72301BE4700E4863B /* OGNode.h */,
-				C9F2F3D02301BE4800E4863B /* OGNode.m */,
-				C9F2F3CD2301BE4700E4863B /* NSString+OGString.h */,
-				C9F2F3D12301BE4800E4863B /* NSString+OGString.m */,
-				C9F2F3CC2301BE4700E4863B /* OGElement.h */,
-				C9F2F3D22301BE4800E4863B /* OGElement.m */,
-				C9F2F3CA2301BE4700E4863B /* OGText.h */,
-				C9F2F3D42301BE4800E4863B /* OGText.m */,
-				C9F2F3D52301BE4800E4863B /* OGDocument.h */,
-				C9F2F3CE2301BE4800E4863B /* OGDocument.m */,
-				C9F2F3CB2301BE4700E4863B /* ObjectiveGumbo.h */,
-				C9F2F3D32301BE4800E4863B /* ObjectiveGumbo.m */,
-			);
-			path = ObjectiveGumbo;
-			sourceTree = "<group>";
-		};
-		C9F2F3AD2301BE4700E4863B /* Gumbo */ = {
-			isa = PBXGroup;
-			children = (
-				C9F2F3AE2301BE4700E4863B /* string_buffer.c */,
-				C9F2F3AF2301BE4700E4863B /* error.h */,
-				C9F2F3B02301BE4700E4863B /* util.c */,
-				C9F2F3B12301BE4700E4863B /* insertion_mode.h */,
-				C9F2F3B22301BE4700E4863B /* parser.h */,
-				C9F2F3B32301BE4700E4863B /* vector.c */,
-				C9F2F3B42301BE4700E4863B /* attribute.c */,
-				C9F2F3B52301BE4700E4863B /* char_ref.c */,
-				C9F2F3B62301BE4700E4863B /* tokenizer.h */,
-				C9F2F3B72301BE4700E4863B /* utf8.c */,
-				C9F2F3B82301BE4700E4863B /* string_piece.h */,
-				C9F2F3B92301BE4700E4863B /* tokenizer_states.h */,
-				C9F2F3BA2301BE4700E4863B /* token_type.h */,
-				C9F2F3BB2301BE4700E4863B /* string_buffer.h */,
-				C9F2F3BC2301BE4700E4863B /* error.c */,
-				C9F2F3BD2301BE4700E4863B /* util.h */,
-				C9F2F3BE2301BE4700E4863B /* tag.c */,
-				C9F2F3BF2301BE4700E4863B /* char_ref.h */,
-				C9F2F3C02301BE4700E4863B /* vector.h */,
-				C9F2F3C12301BE4700E4863B /* attribute.h */,
-				C9F2F3C22301BE4700E4863B /* parser.c */,
-				C9F2F3C32301BE4700E4863B /* utf8.h */,
-				C9F2F3C42301BE4700E4863B /* tokenizer.c */,
-				C9F2F3C52301BE4700E4863B /* string_piece.c */,
-				C9F2F3C62301BE4700E4863B /* gumbo.h */,
-			);
-			path = Gumbo;
 			sourceTree = "<group>";
 		};
 		C9F2F4062301C34A00E4863B /* Data Providers */ = {
@@ -780,63 +819,69 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C91F3FA2242FA9B100E30466 /* OGElement.h in Headers */,
 				C9F2F3A72301BE4100E4863B /* XENDPreprocessorManager.h in Headers */,
+				C91F4036242FB1DA00E30466 /* tag_sizes.h in Headers */,
 				C9204FF92336509900F9F535 /* XENDMediaDataProvider.h in Headers */,
+				C91F4032242FB1DA00E30466 /* replacement.h in Headers */,
 				C9F2F3882301BE4100E4863B /* Syntax.hpp in Headers */,
 				C9F2F3932301BE4100E4863B /* Error.hpp in Headers */,
+				C91F4020242FB1DA00E30466 /* insertion_mode.h in Headers */,
 				C919CA6223302171001391A5 /* XENDProxyDataProvider.h in Headers */,
+				C91F401E242FB1DA00E30466 /* tag_enum.h in Headers */,
+				C91F3FA3242FA9B100E30466 /* NSString+OGString.h in Headers */,
+				C91F401C242FB1DA00E30466 /* error.h in Headers */,
 				C9F2F3A02301BE4100E4863B /* IdentifierContinue.h in Headers */,
 				C97CF9F323217A1200A3A014 /* XENDHijackedWebViewDelegate.h in Headers */,
 				C92013DE2411A704009CBBFB /* XENDWidgetWeatherURLHandler.h in Headers */,
+				C91F3FA1242FA9B100E30466 /* ObjectiveGumbo.h in Headers */,
 				C9F2F39D2301BE4100E4863B /* Parser.tab.hpp in Headers */,
 				C9F2F3A22301BE4100E4863B /* Syntax.hpp in Headers */,
+				C91F4031242FB1DA00E30466 /* char_ref.h in Headers */,
+				C91F402B242FB1DA00E30466 /* token_type.h in Headers */,
 				C9204FE62336445000F9F535 /* XENDProxyManager.h in Headers */,
-				C9F2F3F42301BE4800E4863B /* NSString+OGString.h in Headers */,
-				C9F2F3EF2301BE4800E4863B /* OGNode.h in Headers */,
-				C9F2F3DE2301BE4800E4863B /* tokenizer.h in Headers */,
-				C9F2F3EE2301BE4800E4863B /* gumbo.h in Headers */,
+				C91F4034242FB1DA00E30466 /* attribute.h in Headers */,
+				C91F3FA0242FA9B100E30466 /* OGText.h in Headers */,
 				C92013E22411A711009CBBFB /* XENDBaseURLHandler.h in Headers */,
-				C9F2F3F32301BE4800E4863B /* OGElement.h in Headers */,
-				C9F2F3F12301BE4800E4863B /* OGText.h in Headers */,
-				C9F2F3EB2301BE4800E4863B /* utf8.h in Headers */,
+				C91F3F9F242FA9B100E30466 /* OGUtility.h in Headers */,
+				C91F4029242FB1DA00E30466 /* string_piece.h in Headers */,
+				C91F403C242FB1DA00E30466 /* gumbo.h in Headers */,
 				C9F2F39C2301BE4100E4863B /* Options.hpp in Headers */,
-				C9F2F3E92301BE4800E4863B /* attribute.h in Headers */,
-				C9F2F3D92301BE4800E4863B /* insertion_mode.h in Headers */,
+				C91F4027242FB1DA00E30466 /* tokenizer.h in Headers */,
 				C9F2F3A52301BE4100E4863B /* Exception.hpp in Headers */,
 				C9F2F3972301BE4100E4863B /* Local.hpp in Headers */,
-				C9F2F3E32301BE4800E4863B /* string_buffer.h in Headers */,
+				C91F402E242FB1DA00E30466 /* util.h in Headers */,
+				C91F3FAB242FA9B100E30466 /* OGDocument.h in Headers */,
 				C9F2F3982301BE4100E4863B /* String.hpp in Headers */,
+				C91F4037242FB1DA00E30466 /* tag_strings.h in Headers */,
+				C91F3F9E242FA9B100E30466 /* OGNode.h in Headers */,
+				C91F4038242FB1DA00E30466 /* utf8.h in Headers */,
 				C919CA6B233026A4001391A5 /* XENDBaseDataProvider.h in Headers */,
-				C9F2F3E82301BE4800E4863B /* vector.h in Headers */,
-				C9F2F3E02301BE4800E4863B /* string_piece.h in Headers */,
-				C9F2F3DA2301BE4800E4863B /* parser.h in Headers */,
+				C91F4033242FB1DA00E30466 /* vector.h in Headers */,
 				C9AFC0572389617C007FD971 /* XENDWeatherDataProvider.h in Headers */,
 				C9F2F3872301BE4100E4863B /* stack.hh in Headers */,
+				C91F4026242FB1DA00E30466 /* gumbo_edit.h in Headers */,
 				C9F2F39A2301BE4100E4863B /* IdentifierStart.h in Headers */,
 				C9F2F38E2301BE4100E4863B /* List.hpp in Headers */,
 				C9F2F3842301BE4100E4863B /* Compile.hpp in Headers */,
-				C9F2F3FC2301BE4800E4863B /* OGDocument.h in Headers */,
 				C9F2F40C2301C3A200E4863B /* WKWebView_WidgetData.h in Headers */,
-				C9F2F3F02301BE4800E4863B /* OGUtility.h in Headers */,
 				C919CA67233022E8001391A5 /* XENDSystemDataProvider.h in Headers */,
 				C9F886FC232ED8DA00E87EF3 /* XENDWidgetManager.h in Headers */,
 				C9F2F3992301BE4100E4863B /* Location.hpp in Headers */,
 				C9204FF22336487200F9F535 /* XENDProxyBaseConnection.h in Headers */,
 				C91206472416B05E0081E307 /* XENDProxyIPCConnection.h in Headers */,
-				C9F2F3D72301BE4800E4863B /* error.h in Headers */,
 				C9F2F39B2301BE4100E4863B /* Pooling.hpp in Headers */,
 				C9F2F3942301BE4100E4863B /* Replace.hpp in Headers */,
-				C9F2F3E22301BE4800E4863B /* token_type.h in Headers */,
 				C9F88700232ED8E800E87EF3 /* XENDWidgetMessageHandler.h in Headers */,
 				C9F2F38D2301BE4100E4863B /* Driver.hpp in Headers */,
-				C9F2F3E12301BE4800E4863B /* tokenizer_states.h in Headers */,
-				C9F2F3E52301BE4800E4863B /* util.h in Headers */,
+				C91F4030242FB1DA00E30466 /* tag_perf.h in Headers */,
+				C91F402A242FB1DA00E30466 /* tokenizer_states.h in Headers */,
 				C9F2F39E2301BE4100E4863B /* Stack.hpp in Headers */,
-				C9F2F3F22301BE4800E4863B /* ObjectiveGumbo.h in Headers */,
 				C979628D24267DCA007849D8 /* XENDLogger.h in Headers */,
-				C9F2F3E72301BE4800E4863B /* char_ref.h in Headers */,
 				C9F2F3902301BE4100E4863B /* Highlight.hpp in Headers */,
+				C91F402C242FB1DA00E30466 /* string_buffer.h in Headers */,
 				C9204FEE2336447B00F9F535 /* XENDProxySimulatedConnection.h in Headers */,
+				C91F4022242FB1DA00E30466 /* parser.h in Headers */,
 				C9F2F3862301BE4100E4863B /* Code.hpp in Headers */,
 				C9F2F3892301BE4100E4863B /* Standard.hpp in Headers */,
 			);
@@ -1001,51 +1046,54 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C9F2F3FA2301BE4800E4863B /* ObjectiveGumbo.m in Sources */,
-				C9F2F3F62301BE4800E4863B /* OGUtility.m in Sources */,
-				C9F2F3D62301BE4800E4863B /* string_buffer.c in Sources */,
+				C91F3FAA242FA9B100E30466 /* OGText.m in Sources */,
+				C91F4028242FB1DA00E30466 /* utf8.c in Sources */,
+				C91F4039242FB1DA00E30466 /* tokenizer.c in Sources */,
 				C919CA6C233026A4001391A5 /* XENDBaseDataProvider.m in Sources */,
+				C91F401D242FB1DA00E30466 /* svg_attrs.c in Sources */,
 				C9204FF32336487200F9F535 /* XENDProxyBaseConnection.m in Sources */,
-				C9F2F3F72301BE4800E4863B /* OGNode.m in Sources */,
-				C9F2F3D82301BE4800E4863B /* util.c in Sources */,
 				C9F2F39F2301BE4100E4863B /* Highlight.cpp in Sources */,
-				C9F2F3DC2301BE4800E4863B /* attribute.c in Sources */,
-				C9F2F3DD2301BE4800E4863B /* char_ref.c in Sources */,
+				C91F402D242FB1DA00E30466 /* error.c in Sources */,
 				C9204FE72336445000F9F535 /* XENDProxyManager.m in Sources */,
+				C91F4035242FB1DA00E30466 /* parser.c in Sources */,
 				C9F2F40D2301C3A200E4863B /* WKWebView_WidgetData.m in Sources */,
-				C9F2F3E42301BE4800E4863B /* error.c in Sources */,
+				C91F3FA9242FA9B100E30466 /* ObjectiveGumbo.m in Sources */,
 				C9F2F38B2301BE4100E4863B /* Replace.cpp in Sources */,
+				C91F4025242FB1DA00E30466 /* char_ref.c in Sources */,
+				C91F3FA8242FA9B100E30466 /* OGElement.m in Sources */,
 				C9F2F3A32301BE4100E4863B /* Replace.cpp in Sources */,
-				C9F2F3FB2301BE4800E4863B /* OGText.m in Sources */,
+				C91F3FA4242FA9B100E30466 /* OGDocument.m in Sources */,
+				C91F402F242FB1DA00E30466 /* tag.c in Sources */,
 				C9F2F38F2301BE4100E4863B /* Parser.tab.cpp in Sources */,
 				C9F2F38A2301BE4100E4863B /* Error.cpp in Sources */,
 				C9F88701232ED8E800E87EF3 /* XENDWidgetMessageHandler.m in Sources */,
 				C919CA6323302171001391A5 /* XENDProxyDataProvider.m in Sources */,
-				C9F2F3DB2301BE4800E4863B /* vector.c in Sources */,
 				C97CF9F423217A1200A3A014 /* XENDHijackedWebViewDelegate.m in Sources */,
-				C9F2F3F82301BE4800E4863B /* NSString+OGString.m in Sources */,
 				C92013E32411A711009CBBFB /* XENDBaseURLHandler.m in Sources */,
-				C9F2F3EC2301BE4800E4863B /* tokenizer.c in Sources */,
 				C9F2F3A42301BE4100E4863B /* Output.cpp in Sources */,
-				C9F2F3DF2301BE4800E4863B /* utf8.c in Sources */,
 				C9F2F3822301BE4100E4863B /* IS2PreProcessor.mm in Sources */,
+				C91F4024242FB1DA00E30466 /* attribute.c in Sources */,
+				C91F403A242FB1DA00E30466 /* string_piece.c in Sources */,
 				C9F886FD232ED8DA00E87EF3 /* XENDWidgetManager.m in Sources */,
+				C91F401F242FB1DA00E30466 /* util.c in Sources */,
+				C91F401B242FB1DA00E30466 /* string_buffer.c in Sources */,
 				C9F2F3A12301BE4100E4863B /* Syntax.cpp in Sources */,
-				C9F2F3F52301BE4800E4863B /* OGDocument.m in Sources */,
-				C9F2F3E62301BE4800E4863B /* tag.c in Sources */,
 				C91206482416B05E0081E307 /* XENDProxyIPCConnection.m in Sources */,
 				C9F2F3A62301BE4100E4863B /* XENDPreprocessorManager.m in Sources */,
 				C9F2F3852301BE4100E4863B /* Compile.cpp in Sources */,
 				C92013DF2411A704009CBBFB /* XENDWidgetWeatherURLHandler.m in Sources */,
+				C91F4023242FB1DA00E30466 /* vector.c in Sources */,
 				C919CA68233022E8001391A5 /* XENDSystemDataProvider.m in Sources */,
+				C91F3FA5242FA9B100E30466 /* OGUtility.m in Sources */,
+				C91F403B242FB1DA00E30466 /* gumbo_edit.c in Sources */,
 				C9204FEF2336447B00F9F535 /* XENDProxySimulatedConnection.m in Sources */,
-				C9F2F3ED2301BE4800E4863B /* string_piece.c in Sources */,
+				C91F4021242FB1DA00E30466 /* svg_tags.c in Sources */,
 				C9204FFA2336509900F9F535 /* XENDMediaDataProvider.m in Sources */,
+				C91F3FA6242FA9B100E30466 /* OGNode.m in Sources */,
 				C9F2F3922301BE4100E4863B /* Scanner.cpp in Sources */,
 				C9F2F3912301BE4100E4863B /* Output.cpp in Sources */,
-				C9F2F3F92301BE4800E4863B /* OGElement.m in Sources */,
 				C9AFC0582389617C007FD971 /* XENDWeatherDataProvider.m in Sources */,
-				C9F2F3EA2301BE4800E4863B /* parser.c in Sources */,
+				C91F3FA7242FA9B100E30466 /* NSString+OGString.m in Sources */,
 				C9F2F3962301BE4100E4863B /* Driver.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -20,7 +20,7 @@
 // 1. Decoding errors are parse errors.
 // 2. Certain other codepoints (eg. control characters) are parse errors.
 // 3. Carriage returns and CR/LF groups are converted to line feeds.
-// http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#decoded-as-utf-8,-with-error-handling
+// https://encoding.spec.whatwg.org/#utf-8-decode
 //
 // Also, we want to keep track of source positions for error handling.  As a
 // result, we fold all that functionality into this decoder, and can't use an
@@ -97,6 +97,12 @@ void utf8iterator_get_position(
 
 // Retrieves a character pointer to the start of the current character.
 const char* utf8iterator_get_char_pointer(const Utf8Iterator* iter);
+
+// Retrieves a character pointer to 1 past the end of the buffer.  This is
+// necessary for certain state machines and string comparisons that would like
+// to look directly for ASCII text in the buffer without going through the
+// decoder.
+const char* utf8iterator_get_end_pointer(const Utf8Iterator* iter);
 
 // If the upcoming text in the buffer matches the specified prefix (which has
 // length 'length'), consume it and return true.  Otherwise, return false with
