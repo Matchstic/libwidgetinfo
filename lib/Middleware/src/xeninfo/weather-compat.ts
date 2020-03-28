@@ -106,11 +106,9 @@ export default class XenInfoWeather {
 
         const minutes = date.getMinutes() >= 10 ? date.getMinutes() : '0' + date.getMinutes();
 
-        let _hours = date.getHours();
-        if (!is24h && _hours > 12) _hours -= 12;
-
-        // 12-hour variant doesn't bother about a leading 0
-        const hours = is24h ? (_hours >= 10 ? _hours : '0' + _hours) : _hours;
+        // No leading 0 to worry about
+        let hours = date.getHours();
+        if (!is24h && hours > 12) hours -= 12;
 
         return date.toLocaleDateString() + ', ' + hours + ':' + minutes + (is24h ? '' : (date.getHours() >= 12 ? ' PM' : ' AM'));
     }
