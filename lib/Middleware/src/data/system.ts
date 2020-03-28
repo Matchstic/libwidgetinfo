@@ -19,6 +19,8 @@ export interface XENDSystemProperties {
 
 export default class XENDSystemProvider extends XENDBaseProvider {
 
+    private documentSplitByNewline: string[] = null;
+
     constructor(protected connection: NativeInterface) {
         super(connection);
 
@@ -46,11 +48,90 @@ export default class XENDSystemProvider extends XENDBaseProvider {
         };
 
         (window as any).console = newConsole(window.console);
-        (window as any).onerror = (message, source, lineno, colno, error) => {
-            console.error(message + '\n' + JSON.stringify(error));
+        (window as any).onerror = (message, source, lineno, colno, error: Error) => {
+            message += '\nCall Stack: \n';
+
+            const sourceMapRegex = /\/\/# source=([\w/.]+)/g;
+
+            error.stack.split('\n').forEach((line: string) => {
+                line = line.trim();
+
+                if (line === '') {
+                    message += '<unknown>@[native code]\n';
+                    return;
+                }
+
+                // Handle case of not yet loaded
+                if (this.documentSplitByNewline === null) {
+                    const functionPart = line.split('@')[0];
+
+                    message += functionPart + '@[unknown]' + '\n';
+
+                    return;
+                }
+
+                // Find source mapping for this line
+                const globalLineParts = line.split('/:');
+                if (globalLineParts.length > 1) {
+                    const functionPart = globalLineParts[0].split('@')[0];
+                    const globalLine = globalLineParts[1].split(':');
+                    if (globalLine.length > 0) {
+                        const parsedLineNumber = parseInt(globalLine[0]);
+
+                        const sourceMap = {
+                            line: -1,
+                            script: ''
+                        };
+
+                        // Backwards lookup this line to its source entry
+                        let preceedingSourceMapInserts = 0;
+                        for (let i = parsedLineNumber; i >= 0; i--) {
+
+                            const test = this.documentSplitByNewline[i];
+
+                            if (test && test.trim().startsWith('//# source=')) {
+                                // Update the sourcemap line if necessary, and make sure to account
+                                // for the injected source map lines
+
+                                if (sourceMap.line === -1) {
+                                    sourceMap.line = i;
+
+                                    let sourceName = sourceMapRegex.exec(test.trim())[1];
+                                    if (sourceName === '.html') {
+                                        sourceName = 'document';
+                                    }
+                                    sourceMap.script = sourceName;
+                                } else {
+                                    preceedingSourceMapInserts++;
+                                }
+                            }
+                        }
+
+                        // Update the line with the inserts
+                        sourceMap.line += preceedingSourceMapInserts;
+
+                        // Add default state if the search failed
+                        if (sourceMap.line === -1) {
+                            sourceMap.line = 0;
+                            sourceMap.script = '[unknown]';
+                        }
+
+                        // Re-generate the line based off the source map
+                        line = functionPart + '@' + sourceMap.script + ':' + (parsedLineNumber - sourceMap.line + 1) + ':' + globalLine[1];
+                    }
+                }
+
+                message += line + '\n';
+            });
+
+            console.error(message);
         }
     }
 
+    _documentLoaded() {
+        // Setup document
+        this.documentSplitByNewline = document.documentElement.innerHTML.split(/\r?\n/);
+    }
 
     public get data(): XENDSystemProperties {
         return this._data;
@@ -146,10 +227,9 @@ export default class XENDSystemProvider extends XENDBaseProvider {
         });
     }
 
-    /**
-     * TODO docs
-     */
-    public async log(message: string): Promise<void> {
+    // This is not exposed publicly
+    // To do logging, console.* is sufficient
+    private async log(message: string): Promise<void> {
         return new Promise<void>((resolve, reject) => {
 
             this.connection.sendNativeMessage({

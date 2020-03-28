@@ -51,6 +51,9 @@ export class XENDBaseProvider {
         });
     }
 
+    // Can be overriden by subclasses
+    _documentLoaded() {}
+
     /**
      * Add a function that gets called whenever the data of this
      * provider changes.

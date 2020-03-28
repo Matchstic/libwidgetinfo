@@ -50,6 +50,11 @@ class XENDMiddleware extends NativeInterface {
     protected onLoad() {
         console.log('Middleware onLoad');
 
+        // Notify providers of load
+        this.dataProviders.forEach((value, key) => {
+            value._documentLoaded();
+        });
+
         // Setup backwards compatibility middlewares
         // This is post-load
         this.groovyAPI.initialise(this, this.dataProviders);

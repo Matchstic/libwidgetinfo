@@ -82,11 +82,13 @@
         if ([scriptNode.attributes.allKeys containsObject:@"src"])
             externalFileReference = [scriptNode.attributes objectForKey:@"src"];
         
+        // Skip http(s) sources
         if ([externalFileReference hasPrefix:@"http"])
             continue;
         
         // Load content
         NSString *content;
+        NSString *header;
         
         if (externalFileReference != nil) {
             // Handle reading from correct file
@@ -95,6 +97,9 @@
             NSLog(@"DEBUG :: Loading script src from %@", externalFilepath);
             
             content = [NSString stringWithContentsOfFile:externalFilepath encoding:NSUTF8StringEncoding error:nil];
+            
+            // Insert script name as source mapping
+            header = [NSString stringWithFormat:@"//# source=%@", externalFileReference];
         } else {
             // Read element contents
             for (OGText *textNode in scriptNode.children) {
@@ -104,7 +109,11 @@
                 content = textNode.text;
                 break;
             }
+            
+            header = @"//# source=.html";
         }
+        
+        content = [NSString stringWithFormat:@"%@\n%@", header, content];
         
         // For each preprocessor, do transformations on the script text content
         for (id preprocesor in self.preprocessors) {
