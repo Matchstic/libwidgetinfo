@@ -49,6 +49,11 @@ export default class XENDSystemProvider extends XENDBaseProvider {
 
         (window as any).console = newConsole(window.console);
         (window as any).onerror = (message, source, lineno, colno, error: Error) => {
+            if (!error || !error.stack) {
+                console.error(message);
+                return;
+            }
+
             message += '\nCall Stack: \n';
 
             const sourceMapRegex = /\/\/# source=([\w/.]+)/g;
