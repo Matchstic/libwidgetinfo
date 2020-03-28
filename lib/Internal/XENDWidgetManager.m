@@ -31,7 +31,8 @@
 @property (nonatomic, strong) NSTimer *dynamicFlushTimer;
 @end
 
-static NSString *preferencesId = @"com.matchstic.libwidgetinfo";
+static NSString *preferencesId = @"com.matchstic.xenhtml.libwidgetinfo";
+#define CACHE_BASE_PATH @"/var/mobile/Library/Caches"
 
 @implementation XENDWidgetManager
 
@@ -206,28 +207,23 @@ static NSString *preferencesId = @"com.matchstic.libwidgetinfo";
     // Archive to handle unexpected types
     NSData *archived = [NSKeyedArchiver archivedDataWithRootObject:currentState];
     
-    // Write to CFPreferences
-    CFPreferencesSetValue ((__bridge CFStringRef)@"cachedState", (__bridge CFPropertyListRef)archived, (__bridge CFStringRef)preferencesId, kCFPreferencesCurrentUser, kCFPreferencesCurrentHost);
+    NSString *cachePath = [NSString stringWithFormat:@"%@/%@.plist", CACHE_BASE_PATH, preferencesId];
     
-    CFPreferencesAppSynchronize((__bridge CFStringRef)preferencesId);
+    // Write to cache
+    NSMutableDictionary *cache = [NSMutableDictionary dictionaryWithContentsOfFile:cachePath];
+    if (!cache) cache = [NSMutableDictionary dictionary];
+    
+    [cache setObject:archived forKey:@"cachedState"];
+    [cache writeToFile:cachePath atomically:YES];
 }
 
 - (NSDictionary*)_loadCurrentDynamicStateFromDisk {
-    CFPreferencesAppSynchronize((__bridge CFStringRef)preferencesId);
+    NSString *cachePath = [NSString stringWithFormat:@"%@/%@.plist", CACHE_BASE_PATH, preferencesId];
     
-    NSDictionary *settings;
-    CFArrayRef keyList = CFPreferencesCopyKeyList((__bridge CFStringRef)preferencesId, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
-    if (!keyList) {
-        settings = [NSMutableDictionary dictionary];
-    } else {
-        CFDictionaryRef dictionary = CFPreferencesCopyMultiple(keyList, (__bridge CFStringRef)preferencesId, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
-        
-        settings = [(__bridge NSDictionary *)dictionary copy];
-        CFRelease(dictionary);
-        CFRelease(keyList);
-    }
+    NSMutableDictionary *cache = [NSMutableDictionary dictionaryWithContentsOfFile:cachePath];
+    if (!cache) cache = [NSMutableDictionary dictionary];
     
-    NSData *state = [settings objectForKey:@"cachedState"];
+    NSData *state = [cache objectForKey:@"cachedState"];
     
     return state ? [NSKeyedUnarchiver unarchiveObjectWithData:state] : nil;
 }
