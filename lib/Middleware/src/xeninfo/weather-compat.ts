@@ -110,7 +110,11 @@ export default class XenInfoWeather {
         let hours = date.getHours();
         if (!is24h && hours > 12) hours -= 12;
 
-        return date.toLocaleDateString() + ', ' + hours + ':' + minutes + (is24h ? '' : (date.getHours() >= 12 ? ' PM' : ' AM'));
+        // Make sure to setup the date string correctly
+        // Whilst I don't like it, the US format is used by XI
+
+        const day = date.getMonth() + '/' + date.getDay() + '/' + date.getFullYear().toString().substr(-2);
+        return day + ', ' + hours + ':' + minutes + (is24h ? '' : (date.getHours() >= 12 ? ' PM' : ' AM'));
     }
 
     private localeTimeString(date: Date): string {
