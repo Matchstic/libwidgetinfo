@@ -56,8 +56,6 @@ export default class XENDSystemProvider extends XENDBaseProvider {
 
             message += '\nCall Stack: \n';
 
-            const sourceMapRegex = /\/\/# source=([\w/.]+)/g;
-
             error.stack.split('\n').forEach((line: string) => {
                 line = line.trim();
 
@@ -101,11 +99,16 @@ export default class XENDSystemProvider extends XENDBaseProvider {
                                 if (sourceMap.line === -1) {
                                     sourceMap.line = i;
 
-                                    let sourceName = sourceMapRegex.exec(test.trim())[1];
-                                    if (sourceName === '.html') {
-                                        sourceName = 'document';
+                                    let match = /\/\/# source=([\w/.]+)/g.exec(test.trim());
+                                    if (match !== null) {
+                                        let sourceName = match[1];
+                                        if (sourceName === '.html') {
+                                            sourceName = '[document]';
+                                        }
+                                        sourceMap.script = sourceName;
+                                    } else {
+                                        sourceMap.script = '[unknown]';
                                     }
-                                    sourceMap.script = sourceName;
                                 } else {
                                     preceedingSourceMapInserts++;
                                 }
