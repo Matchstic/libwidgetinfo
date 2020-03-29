@@ -22,8 +22,9 @@
     
     if ([definition isEqualToString:@"log"]) {
         callback([self handleLogMessage:data]);
+    } else {
+        callback(@{});
     }
-    
 }
 
 - (void)networkWasDisconnected {
