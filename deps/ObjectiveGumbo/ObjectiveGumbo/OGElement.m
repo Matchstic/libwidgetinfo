@@ -22,13 +22,19 @@
 -(NSString*)htmlWithIndentation:(int)indentationLevel
 {
     NSString *tagName = [OGUtility tagForGumboTag:self.tag];
+    BOOL isVoid = [OGUtility tagNameIsVoid:tagName];
     
     NSMutableString *html = [NSMutableString stringWithFormat:@"<%@", tagName];
     for (NSString * attribute in self.attributes)
     {
         [html appendFormat:@" %@=\"%@\"", attribute, [self.attributes[attribute]  escapedString]];
     }
-    if (self.children.count == 0)
+    
+    if (isVoid)
+    {
+        [html appendFormat:@" />"];
+    }
+    else if (self.children.count == 0)
     {
         [html appendString:[NSString stringWithFormat:@"></%@>", tagName]];
     }

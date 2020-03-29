@@ -32,4 +32,20 @@
     return array;
 }
 
++(NSArray*)voidTagNames
+{
+    // https://www.w3.org/TR/2011/WD-html-markup-20110405/syntax.html#void-element
+    return @[
+        @"area", @"base", @"br", @"col", @"command",
+        @"embed", @"hr", @"img", @"input", @"keygen",
+        @"link", @"meta", @"param", @"source", @"track",
+        @"wbr"
+    ];
+}
+
++(BOOL)tagNameIsVoid:(NSString*)tagname
+{
+    return [self.voidTagNames containsObject:tagname];
+}
+
 @end

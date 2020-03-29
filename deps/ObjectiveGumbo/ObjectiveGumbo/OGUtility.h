@@ -14,5 +14,6 @@
 +(NSString*)tagForGumboTag:(GumboTag)tag;
 +(GumboTag)gumboTagForTag:(NSString*)tag;
 +(NSArray*)tagStrings;
++ (BOOL)tagNameIsVoid:(NSString*)tagname;
 
 @end
