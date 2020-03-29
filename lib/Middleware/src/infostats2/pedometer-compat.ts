@@ -20,4 +20,8 @@ export default class IS2Pedometer {
         this._lookupMap['floorsAscended'] = () => { return 0; };
         this._lookupMap['floorsDescended '] = () => { return 0; };
     }
+
+    public initialise() {
+        // no-op
+    }
 }

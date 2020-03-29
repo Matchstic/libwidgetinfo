@@ -21,4 +21,8 @@ export default class IS2Notifications {
         this._lookupMap['notificationsForApplication:'] = (args: any[]) => { return '[]'; };
         this._lookupMap['notificationsJSONForApplication:'] = (args: any[]) => { return '[]'; };
     }
+
+    public initialise() {
+        // no-op
+    }
 }

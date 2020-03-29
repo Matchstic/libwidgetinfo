@@ -14,4 +14,8 @@ export default class IS2Telephony {
         this._lookupMap['dataConnectionAvailableViaWiFi']   = () => { /* not implemented */ return true; };
         this._lookupMap['dataConnectionAvailable ']         = () => { /* not implemented */ return true; };
     }
+
+    public initialise() {
+        // no-op
+    }
 }
