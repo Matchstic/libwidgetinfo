@@ -67,16 +67,16 @@
 - (void)_parseData:(NSDictionary*)data units:(struct XTWCUnits)units {
     
     // Handle all non-metricy stuff first
-    self.cloudCoverDescription  = [data objectForKey:@"clds" defaultValue:[NSNull null]];
+    self.cloudCoverDescription  = [data objectForKey:@"clds" defaultValue:@""];
     self.conditionIcon          = [data objectForKey:@"wx_icon" defaultValue:[NSNull null]];
-    self.conditionDescription   = [data objectForKey:@"wx_phrase" defaultValue:[NSNull null]];
+    self.conditionDescription   = [data objectForKey:@"wx_phrase" defaultValue:@""];
     self.dayIndicator           = [data objectForKey:@"day_ind" defaultValue:[NSNull null]];
     self.validFromUNIXTime      = [[NSDate date] timeIntervalSince1970]; // [[data objectForKey:@"valid_time_gmt"] intValue];
-    self.pressureDescription    = [data objectForKey:@"pressure_desc" defaultValue:[NSNull null]];
-    self.pressureTendency       = [data objectForKey:@"pressure_tend" defaultValue:[NSNull null]];
-    self.relativeHumidity       = [data objectForKey:@"rh" defaultValue:[NSNull null]];
-    self.uvDescription          = [data objectForKey:@"uv_desc" defaultValue:[NSNull null]];
-    self.uvIndex                = [data objectForKey:@"uv_index" defaultValue:[NSNull null]];
+    self.pressureDescription    = [data objectForKey:@"pressure_desc" defaultValue:@""];
+    self.pressureTendency       = [data objectForKey:@"pressure_tend" defaultValue:@0];
+    self.relativeHumidity       = [data objectForKey:@"rh" defaultValue:@0];
+    self.uvDescription          = [data objectForKey:@"uv_desc" defaultValue:@""];
+    self.uvIndex                = [data objectForKey:@"uv_index" defaultValue:@0];
     self.windDirection          = [data objectForKey:@"wdir" defaultValue:[NSNull null]];
     self.windDirectionCardinal  = [data objectForKey:@"wdir_cardinal" defaultValue:[NSNull null]];
     
@@ -111,8 +111,8 @@
         self.heatIndex          = [temperatureValues objectForKey:@"heat_index" defaultValue:[NSNull null]];
         self.maxTemp            = [temperatureValues objectForKey:@"max_temp" defaultValue:[NSNull null]];
         self.minTemp            = [temperatureValues objectForKey:@"min_temp" defaultValue:[NSNull null]];
-        self.precipHourly       = [amountValues objectForKey:@"precip_hrly" defaultValue:[NSNull null]];
-        self.precipTotal        = [amountValues objectForKey:@"precip_total" defaultValue:[NSNull null]];
+        self.precipHourly       = [amountValues objectForKey:@"precip_hrly" defaultValue:@0];
+        self.precipTotal        = [amountValues objectForKey:@"precip_total" defaultValue:@0];
         self.pressure           = [pressureValues objectForKey:@"pressure" defaultValue:[NSNull null]];
         self.temperature        = [temperatureValues objectForKey:@"temp" defaultValue:[NSNull null]];
         self.windChill          = [temperatureValues objectForKey:@"wc" defaultValue:[NSNull null]];

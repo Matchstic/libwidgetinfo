@@ -82,7 +82,7 @@
     self.moonSetISOTime         = [data objectForKey:@"moonset" defaultValue:[NSNull null]];
     self.narrative              = [data objectForKey:@"narrative" defaultValue:[NSNull null]];
     self.snowForecast           = [data objectForKey:@"snow_qpf" defaultValue:[NSNull null]];
-    self.snowPhrase             = [data objectForKey:@"snow_phrase" defaultValue:[NSNull null]];
+    self.snowPhrase             = [data objectForKey:@"snow_phrase" defaultValue:@""];
     self.snowRange              = [data objectForKey:@"snow_range" defaultValue:[NSNull null]];
     self.stormLikelihood        = [data objectForKey:@"stormcon" defaultValue:[NSNull null]];
     self.sunRiseISOTime         = [data objectForKey:@"sunrise" defaultValue:[NSNull null]];
@@ -117,12 +117,12 @@
     part.conditionIcon                  = [data objectForKey:@"icon_cd" defaultValue:[NSNull null]];
     part.conditionDescription           = [data objectForKey:@"phrase_32char" defaultValue:[NSNull null]];
     part.dayIndicator                   = [data objectForKey:@"day_ind" defaultValue:[NSNull null]];
-    part.precipProbability              = [data objectForKey:@"pop" defaultValue:[NSNull null]];
+    part.precipProbability              = [data objectForKey:@"pop" defaultValue:@0];
     part.precipType                     = [data objectForKey:@"precip_type" defaultValue:@"rain"];
     part.timeframeDescription           = [data objectForKey:@"qualifier" defaultValue:[NSNull null]];
-    part.relativeHumidity               = [data objectForKey:@"rh" defaultValue:[NSNull null]];
-    part.uvDescription                  = [data objectForKey:@"uv_desc" defaultValue:[NSNull null]];
-    part.uvIndex                        = [data objectForKey:@"uv_index" defaultValue:[NSNull null]];
+    part.relativeHumidity               = [data objectForKey:@"rh" defaultValue:@0];
+    part.uvDescription                  = [data objectForKey:@"uv_desc" defaultValue:@""];
+    part.uvIndex                        = [data objectForKey:@"uv_index" defaultValue:@0];
     part.windDirection                  = [data objectForKey:@"wdir" defaultValue:[NSNull null]];
     part.windDirectionCardinal          = [data objectForKey:@"wdir_cardinal" defaultValue:[NSNull null]];
     part.validUNIXTime                  = [[data objectForKey:@"fcst_valid"] intValue];

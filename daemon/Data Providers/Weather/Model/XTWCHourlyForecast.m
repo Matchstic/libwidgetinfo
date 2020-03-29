@@ -32,15 +32,15 @@
 - (void)_parseData:(NSDictionary*)data units:(struct XTWCUnits)units {
     self.cloudCoverPercentage  = [data objectForKey:@"clds" defaultValue:[NSNull null]];
     self.conditionIcon          = [data objectForKey:@"icon_cd" defaultValue:[NSNull null]];
-    self.conditionDescription   = [data objectForKey:@"phrase_32char" defaultValue:[NSNull null]];
+    self.conditionDescription   = [data objectForKey:@"phrase_32char" defaultValue:@""];
     self.dayIndicator           = [data objectForKey:@"day_ind" defaultValue:[NSNull null]];
     self.dayOfWeek              = [data objectForKey:@"dow" defaultValue:[NSNull null]];
     self.forecastHourIndex      = [data objectForKey:@"num" defaultValue:[NSNull null]];
-    self.precipProbability      = [data objectForKey:@"pop" defaultValue:@"rain"];
+    self.precipProbability      = [data objectForKey:@"pop" defaultValue:@0];
     self.precipType             = [data objectForKey:@"precip_type" defaultValue:@"rain"];
     self.relativeHumidity       = [data objectForKey:@"rh" defaultValue:[NSNull null]];
-    self.uvDescription          = [data objectForKey:@"uv_desc" defaultValue:[NSNull null]];
-    self.uvIndex                = [data objectForKey:@"uv_index" defaultValue:[NSNull null]];
+    self.uvDescription          = [data objectForKey:@"uv_desc" defaultValue:@""];
+    self.uvIndex                = [data objectForKey:@"uv_index" defaultValue:@0];
     self.validUNIXTime          = [[data objectForKey:@"fcst_valid"] intValue];
     self.windDirection          = [data objectForKey:@"wdir" defaultValue:[NSNull null]];
     self.windDirectionCardinal  = [data objectForKey:@"wdir_cardinal" defaultValue:[NSNull null]];
