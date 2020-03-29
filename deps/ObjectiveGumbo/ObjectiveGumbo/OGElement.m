@@ -22,27 +22,24 @@
 -(NSString*)htmlWithIndentation:(int)indentationLevel
 {
     NSString *tagName = [OGUtility tagForGumboTag:self.tag];
-    if ([tagName isEqualToString:@"unknown"]) {
-        
-    }
     
-    NSMutableString * html = [NSMutableString stringWithFormat:@"<%@", tagName];
+    NSMutableString *html = [NSMutableString stringWithFormat:@"<%@", tagName];
     for (NSString * attribute in self.attributes)
     {
         [html appendFormat:@" %@=\"%@\"", attribute, [self.attributes[attribute]  escapedString]];
     }
     if (self.children.count == 0)
     {
-        [html appendString:[NSString stringWithFormat:@"></%@>\n", tagName]];
+        [html appendString:[NSString stringWithFormat:@"></%@>", tagName]];
     }
     else
     {
-        [html appendString:@">\n"];
+        [html appendString:@">"];
         for (OGNode * child in self.children)
         {
             [html appendString:[child htmlWithIndentation:indentationLevel + 1]];
         }
-        [html appendFormat:@"</%@>\n", tagName];
+        [html appendFormat:@"</%@>", tagName];
     }
     return html;
 }

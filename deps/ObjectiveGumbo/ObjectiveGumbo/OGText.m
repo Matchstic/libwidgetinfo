@@ -40,8 +40,7 @@
     _text = [_text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     if (self.isText)
     {
-        if ([_text hasSuffix:@"\n"]) return _text;
-        return [NSString stringWithFormat:@"%@\n", _text];
+        return _text;
     }
     else if (self.isComment)
     {
