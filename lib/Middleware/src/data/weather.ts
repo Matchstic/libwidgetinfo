@@ -223,6 +223,7 @@ export interface XENDWeatherPropertiesUnits {
 
 export interface XENDWeatherPropertiesMetadata {
     address: {
+        house: string;
         street: string;
         neighbourhood: string;
         city: string;
@@ -487,6 +488,7 @@ export default class XENDWeatherProvider extends XENDBaseProvider {
             },
             metadata: {
                 address: {
+                    house: '',
                     street: '',
                     neighbourhood: '',
                     city: '',

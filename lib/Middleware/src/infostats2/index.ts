@@ -1,6 +1,13 @@
 import { XenHTMLMiddleware, DataProviderUpdateNamespace } from '../types';
 import NativeInterface from '../native-interface';
 import IS2Weather from './weather-compat';
+import IS2Location from './location-compat';
+import IS2Calendar from './calendar-compat';
+import IS2Media from './media-compat';
+import IS2Notifications from './notifications-compat';
+import IS2Pedometer from './pedometer-compat';
+import IS2System from './system-compat';
+import IS2Telephony from './telephony-compat';
 
 export class Type {
     constructor(private parameterType: string) {}
@@ -17,7 +24,14 @@ export default class IS2Middleware implements XenHTMLMiddleware {
 
     constructor() {
         // Setup compat providers - they observe providers themselves
-        this.compatProviders['IS2Weather'] = new IS2Weather();
+        this.compatProviders['IS2Weather']          = new IS2Weather();
+        this.compatProviders['IS2Location']         = new IS2Location();
+        this.compatProviders['IS2Calendar']         = new IS2Calendar();
+        this.compatProviders['IS2Media']            = new IS2Media();
+        this.compatProviders['IS2Notifications']    = new IS2Notifications();
+        this.compatProviders['IS2Pedometer']        = new IS2Pedometer();
+        this.compatProviders['IS2System']           = new IS2System();
+        this.compatProviders['IS2Telephony']        = new IS2Telephony();
 
         // Add Type class to global namespace so that IS2 blocks work
         (window as any).Type = Type;
@@ -25,6 +39,15 @@ export default class IS2Middleware implements XenHTMLMiddleware {
 
     public initialise(parent: NativeInterface, providers: Map<DataProviderUpdateNamespace, any>): void {
         this.compatProviders['IS2Weather'].initialise(providers.get(DataProviderUpdateNamespace.Weather));
+        this.compatProviders['IS2Calendar'].initialise(providers.get(DataProviderUpdateNamespace.Calendar));
+        this.compatProviders['IS2Media'].initialise(providers.get(DataProviderUpdateNamespace.Media));
+        this.compatProviders['IS2Notifications'].initialise();
+        this.compatProviders['IS2Pedometer'].initialise();
+        this.compatProviders['IS2System'].initialise(providers.get(DataProviderUpdateNamespace.System));
+        this.compatProviders['IS2Telephony'].initialise();
+
+        // Location utilises the weather provider for data
+        this.compatProviders['IS2Location'].initialise(providers.get(DataProviderUpdateNamespace.Weather));
     }
 
     public objc_msgSend(object: string, selector: string, ...args: any[]): any {
@@ -39,6 +62,9 @@ export default class IS2Middleware implements XenHTMLMiddleware {
          * destructuring the args array where necessary.
          */
         const compatProvider = this.compatProviders[object];
-        return compatProvider.callFn(selector, args);
+        if (compatProvider)
+            return compatProvider.callFn(selector, args);
+        else
+            return null;
     }
 }
