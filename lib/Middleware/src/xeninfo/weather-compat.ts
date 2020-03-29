@@ -14,9 +14,6 @@ export default class XenInfoWeather {
             this.onWeatherDataChanged(newData);
             this.notifyXenInfoDataChanged('weather');
         });
-
-        // Inject initial weather data
-        this.onWeatherDataChanged(providers.get(DataProviderUpdateNamespace.Weather).data);
     }
 
     onWeatherDataChanged(newData: XENDWeatherProperties): void {
