@@ -37,7 +37,6 @@
 
 -(NSString*)htmlWithIndentation:(int)indentationLevel
 {
-    _text = [_text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     if (self.isText)
     {
         return _text;
