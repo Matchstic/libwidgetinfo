@@ -1,9 +1,15 @@
 import NativeInterface from './native-interface';
 
+/**
+ * @ignore
+ */
 export interface XenHTMLMiddleware {
     initialise(parent: NativeInterface, providers: Map<DataProviderUpdateNamespace, any>): void;
 }
 
+/**
+ * @ignore
+ */
 export enum DataProviderUpdateNamespace {
     Weather = 'weather',
     Media = 'media',
@@ -14,11 +20,17 @@ export enum DataProviderUpdateNamespace {
     System = 'system'
 }
 
+/**
+ * @ignore
+ */
 export interface DataProviderUpdate {
     namespace: DataProviderUpdateNamespace;
     payload: any;
 }
 
+/**
+ * @ignore
+ */
 export interface NativeError {
     code: number;
     message: string;

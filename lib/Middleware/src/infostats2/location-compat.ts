@@ -2,6 +2,9 @@ import XENDWeatherProvider, {
     XENDWeatherProperties
 } from '../data/weather';
 
+/**
+ * @ignore
+ */
 export default class IS2Location {
     private _observers: any = {};
     private _lookupMap: any = {};

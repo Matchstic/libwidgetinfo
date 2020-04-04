@@ -3,6 +3,9 @@ import NativeInterface from '../native-interface';
 
 import XenInfoWeather from './weather-compat';
 
+/**
+ * @ignore
+ */
 export default class XenInfoMiddleware implements XenHTMLMiddleware {
     private providers: Map<DataProviderUpdateNamespace, any>;
 

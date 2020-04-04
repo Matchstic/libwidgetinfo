@@ -73,15 +73,12 @@ export default class XENDMediaProvider extends XENDBaseProvider implements XENDM
     /**
      * Toggles play/pause of the current media item.
      *
-     * Usage:
-     * ```
+     * @example
      * WidgetInfo.media.togglePlayState();
      *
+     * @example
      * // Alternatively:
-     * WidgetInfo.media.togglePlayState().then(function(newState) {
-     *
-     * });
-     * ```
+     * WidgetInfo.media.togglePlayState().then(function(newState) { });
      *
      * @return A promise that resolves with the new play/pause state
      */

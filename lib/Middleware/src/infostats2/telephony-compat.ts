@@ -1,3 +1,6 @@
+/**
+ * @ignore
+ */
 export default class IS2Telephony {
     private _lookupMap: any = {};
 

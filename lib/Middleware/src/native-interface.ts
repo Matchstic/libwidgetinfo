@@ -1,22 +1,34 @@
 import { DataProviderUpdateNamespace } from './types';
 
+/**
+ * @ignore
+ */
 enum NativeMessageType {
     DataUpdate = 'dataupdate',
     Callback = 'callback',
 }
 
+/**
+ * @ignore
+ */
 interface NativeInterfaceInternalMessage {
     type: NativeMessageType;
     data: any;
     callbackId?: number;
 }
 
+/**
+ * @ignore
+ */
 export interface NativeInterfaceMessage {
     namespace: DataProviderUpdateNamespace;
     functionDefinition: string;
     data: any;
 }
 
+/**
+ * @ignore
+ */
 export default class NativeInterface {
 
     private pendingCallbacks: Map<number, (payload: any) => void> = new Map<number, (payload: any) => void>();

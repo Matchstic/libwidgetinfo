@@ -2,6 +2,9 @@ import XENDCalendarProvider, {
     XENDCalendarProperties
 } from '../data/calendar';
 
+/**
+ * @ignore
+ */
 export default class IS2Calendar {
     private _observers: any = {};
     private _lookupMap: any = {};

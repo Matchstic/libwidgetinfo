@@ -9,6 +9,9 @@ import IS2Pedometer from './pedometer-compat';
 import IS2System from './system-compat';
 import IS2Telephony from './telephony-compat';
 
+/**
+ * @ignore
+ */
 export class Type {
     constructor(private parameterType: string) {}
 
@@ -19,6 +22,9 @@ export class Type {
     }
 }
 
+/**
+ * @ignore
+ */
 export default class IS2Middleware implements XenHTMLMiddleware {
     private compatProviders: any = {};
 

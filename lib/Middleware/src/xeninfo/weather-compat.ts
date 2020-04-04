@@ -5,6 +5,9 @@ import XENDSystemProvider from '../data/system';
 
 import { DataProviderUpdateNamespace } from '../types';
 
+/**
+ * @ignore
+ */
 export default class XenInfoWeather {
 
     constructor(private providers: Map<DataProviderUpdateNamespace, any>,

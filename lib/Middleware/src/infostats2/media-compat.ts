@@ -2,6 +2,9 @@ import XENDMediaProvider, {
     XENDMediaProperties
 } from '../data/media';
 
+/**
+ * @ignore
+ */
 export default class IS2Calendar {
     private _observers: any = {};
     private _lookupMap: any = {};

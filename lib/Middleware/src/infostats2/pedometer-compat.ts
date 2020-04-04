@@ -1,3 +1,6 @@
+/**
+ * @ignore
+ */
 export default class IS2Pedometer {
     private _observers: any = {};
     private _lookupMap: any = {};

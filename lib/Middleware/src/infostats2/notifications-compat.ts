@@ -1,3 +1,6 @@
+/**
+ * @ignore
+ */
 export default class IS2Notifications {
     private _observers: any = {};
     private _lookupMap: any = {};

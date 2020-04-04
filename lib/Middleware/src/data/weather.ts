@@ -1,11 +1,3 @@
-/**
- * The Weather provider allows you easy access to current conditions, along with forecasts for the next few hours and days.
- *
- * User preferences for units are automatically handled for you.
- * Weather data will update every 15 minutes, with battery saving measures also taken into account.
- * @packageDocumentation
- */
-
 import { XENDBaseProvider } from '../types';
 
 export interface XENDWeatherPropertiesAirQualityPollutant {
@@ -262,7 +254,31 @@ export interface XENDWeatherProperties {
     metadata:   XENDWeatherPropertiesMetadata;
 }
 
-export default class XENDWeatherProvider extends XENDBaseProvider implements XENDWeatherProperties {
+/**
+ * The Weather provider allows you easy access to current conditions, along with forecasts for the next few hours and days.
+ *
+ * User preferences for units are automatically handled for you.
+ * Weather data will update every 15 minutes, with battery saving measures also taken into account.
+ *
+ * @example
+ * Pure Javascript:
+ * <script>
+ * WidgetInfo.weather.observeData(function (newData) {
+ *              console.log('Weather data has updated');
+ *
+ *              // Set some data to document elements
+ *              document.getElementById('#temperature').innerHTML = newData.now.temperature.current + newData.units.temperature;
+ *              document.getElementById('#city').innerHTML = newData.metadata.address.city;
+ * });
+ * </script>
+ *
+ * Inline:
+ * <div id="weatherDisplay">
+ *               <p id="temperature">{ weather.now.temperature.current + weather.units.temperature }</p>
+ *               <p id="city">{ weather.metadata.address.city }</p>
+ * </div>
+ */
+export default class Weather extends XENDBaseProvider implements XENDWeatherProperties {
 
     // XENDWeatherProperties stub implementation
     // Superclass handles destructuring incoming data to these properties

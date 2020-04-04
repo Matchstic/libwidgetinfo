@@ -1,5 +1,8 @@
 import XENDSystemProvider from '../data/system';
 
+/**
+ * @ignore
+ */
 export default class IS2System {
     private _lookupMap: any = {};
     private provider: XENDSystemProvider;

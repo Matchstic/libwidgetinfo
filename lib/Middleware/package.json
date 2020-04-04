@@ -48,6 +48,7 @@
   },
   "devDependencies": {
     "@bitjson/npm-scripts-info": "^1.0.0",
+    "@compodoc/compodoc": "^1.1.11",
     "ava": "2.2.0",
     "codecov": "^3.6.5",
     "cz-conventional-changelog": "^2.1.0",

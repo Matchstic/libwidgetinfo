@@ -1,0 +1,13 @@
+{
+    "tsconfig": "./tsconfig.json",
+    "output": "build/docs",
+    "templates": "templates",
+    "minimal": true,
+    "name": "Xen HTML Widget API",
+    "hideGenerator": true,
+    "disableSourceCode": true,
+    "disablePrivate": true,
+    "disableProtected": true,
+    "disableInternal": true,
+    "disableDependencies": true
+}

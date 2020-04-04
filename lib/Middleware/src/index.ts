@@ -68,6 +68,10 @@ class XENDMiddleware extends NativeInterface {
 
 // This is made available to widgets as a global 'var WidgetInfo = { ... }'
 // The magic of webpack eh
+
+/**
+ * @ignore
+ */
 export default class WidgetInfo {
     // Called onto by native via 'WidgetInfo._middleware'
     private _middleware = new XENDMiddleware();
