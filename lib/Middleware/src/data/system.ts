@@ -17,7 +17,29 @@ export interface XENDSystemProperties {
     isNetworkConnected: boolean;
 }
 
-export default class XENDSystemProvider extends XENDBaseProvider {
+export default class XENDSystemProvider extends XENDBaseProvider implements XENDSystemProperties {
+
+    /////////////////////////////////////////////////////////
+    // XENDSystemProperties stub implementation
+    /////////////////////////////////////////////////////////
+
+    deviceName: string = '';
+    deviceType: string = '';
+    deviceModel: string = '';
+    deviceModelPromotional: string = '';
+    systemVersion: string = '';
+
+    deviceDisplayHeight: number = 0;
+    deviceDisplayWidth: number = 0;
+    deviceDisplayBrightness: number = 0;
+
+    isTwentyFourHourTimeEnabled: boolean = false;
+    isLowPowerModeEnabled: boolean = false;
+    isNetworkConnected: boolean = false;
+
+    /////////////////////////////////////////////////////////
+    // Provider implementation
+    /////////////////////////////////////////////////////////
 
     private documentSplitByNewline: string[] = null;
 
@@ -139,10 +161,6 @@ export default class XENDSystemProvider extends XENDBaseProvider {
     _documentLoaded() {
         // Setup document
         this.documentSplitByNewline = document.documentElement.innerHTML.split(/\r?\n/);
-    }
-
-    public get data(): XENDSystemProperties {
-        return this._data;
     }
 
     /**

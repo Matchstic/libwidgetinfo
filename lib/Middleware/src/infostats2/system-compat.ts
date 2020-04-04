@@ -20,13 +20,13 @@ export default class IS2System {
         this._lookupMap['networkSpeedDown']             = () => { /* not implemented */ return 0; };
         this._lookupMap['networkSpeedUpAutoConverted']  = () => { /* not implemented */ return 0; };
         this._lookupMap['networkSpeedDownAutoConverted'] = () => { /* not implemented */ return 0; };
-        this._lookupMap['deviceName']                   = () => { return this.provider.data.deviceName; };
-        this._lookupMap['deviceType']                   = () => { return this.provider.data.deviceType; };
-        this._lookupMap['deviceModel']                  = () => { return this.provider.data.deviceModel; };
-        this._lookupMap['deviceModelHumanReadable']     = () => { return this.provider.data.deviceModelPromotional; };
-        this._lookupMap['deviceDisplayHeight']          = () => { return this.provider.data.deviceDisplayHeight; };
-        this._lookupMap['deviceDisplayWidth']           = () => { return this.provider.data.deviceDisplayWidth; };
-        this._lookupMap['isDeviceIn24Time']             = () => { return this.provider.data.isTwentyFourHourTimeEnabled; };
+        this._lookupMap['deviceName']                   = () => { return this.provider.deviceName; };
+        this._lookupMap['deviceType']                   = () => { return this.provider.deviceType; };
+        this._lookupMap['deviceModel']                  = () => { return this.provider.deviceModel; };
+        this._lookupMap['deviceModelHumanReadable']     = () => { return this.provider.deviceModelPromotional; };
+        this._lookupMap['deviceDisplayHeight']          = () => { return this.provider.deviceDisplayHeight; };
+        this._lookupMap['deviceDisplayWidth']           = () => { return this.provider.deviceDisplayWidth; };
+        this._lookupMap['isDeviceIn24Time']             = () => { return this.provider.isTwentyFourHourTimeEnabled; };
         this._lookupMap['isLockscreenPasscodeVisible']  = () => { /* not implemented */ return false; };
 
         this._lookupMap['takeScreenshot']               = () => { this.provider.invokeScreenshot(); };

@@ -43,15 +43,32 @@ export interface XENDMediaProperties {
     playingApplication: XENDApplication;
 }
 
-export default class XENDMediaProvider extends XENDBaseProvider {
+export default class XENDMediaProvider extends XENDBaseProvider implements XENDMediaProperties {
 
     // NOTE: Don't rely on native layer to push through elapsed time
     // It'll come through on pause/play etc, but should really handle that here
     // to avoid massive communication overhead
 
-    public get data(): XENDMediaProperties {
-        return this._data;
-    }
+    /////////////////////////////////////////////////////////
+    // XENDMediaProperties stub implementation
+    /////////////////////////////////////////////////////////
+
+    currentTrack: XENDMediaCurrentItem = null;
+    upcomingTracks: XENDMediaTrack[] = [];
+
+    userArtists: XENDMediaArtist[] = [];
+    userAlbums: XENDMediaAlbum[] = [];
+
+    isPlaying: boolean = false;
+    isStopped: boolean = true;
+    isShuffleEnabled: boolean = false;
+
+    volume: number = 0;
+    playingApplication: XENDApplication = null;
+
+    /////////////////////////////////////////////////////////
+    // Implementation
+    /////////////////////////////////////////////////////////
 
     /**
      * Toggles play/pause of the current media item.

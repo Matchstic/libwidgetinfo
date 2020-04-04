@@ -28,17 +28,17 @@ export default class IS2Location {
 
         // Data points
 
-        this._lookupMap['currentLatitude']                  = () => { return this.provider.data.metadata.location.latitude; };
-        this._lookupMap['currentLongitude']                 = () => { return this.provider.data.metadata.location.longitude; };
-        this._lookupMap['cityForCurrentLocation']           = () => { return this.provider.data.metadata.address.city; };
-        this._lookupMap['neighbourhoodForCurrentLocation']  = () => { return this.provider.data.metadata.address.neighbourhood; };
-        this._lookupMap['stateForCurrentLocation']          = () => { return this.provider.data.metadata.address.state; };
-        this._lookupMap['countyForCurrentLocation']         = () => { return this.provider.data.metadata.address.county; };
-        this._lookupMap['countryForCurrentLocation']        = () => { return this.provider.data.metadata.address.country; };
-        this._lookupMap['ISOCountryCodeForCurrentLocation'] = () => { return this.provider.data.metadata.address.countryISOCode; };
-        this._lookupMap['postCodeForCurrentLocation']       = () => { return this.provider.data.metadata.address.postalCode; };
-        this._lookupMap['streetForCurrentLocation']         = () => { return this.provider.data.metadata.address.street; };
-        this._lookupMap['houseNumberForCurrentLocation ']   = () => { return this.provider.data.metadata.address.house; };
+        this._lookupMap['currentLatitude']                  = () => { return this.provider.metadata.location.latitude; };
+        this._lookupMap['currentLongitude']                 = () => { return this.provider.metadata.location.longitude; };
+        this._lookupMap['cityForCurrentLocation']           = () => { return this.provider.metadata.address.city; };
+        this._lookupMap['neighbourhoodForCurrentLocation']  = () => { return this.provider.metadata.address.neighbourhood; };
+        this._lookupMap['stateForCurrentLocation']          = () => { return this.provider.metadata.address.state; };
+        this._lookupMap['countyForCurrentLocation']         = () => { return this.provider.metadata.address.county; };
+        this._lookupMap['countryForCurrentLocation']        = () => { return this.provider.metadata.address.country; };
+        this._lookupMap['ISOCountryCodeForCurrentLocation'] = () => { return this.provider.metadata.address.countryISOCode; };
+        this._lookupMap['postCodeForCurrentLocation']       = () => { return this.provider.metadata.address.postalCode; };
+        this._lookupMap['streetForCurrentLocation']         = () => { return this.provider.metadata.address.street; };
+        this._lookupMap['houseNumberForCurrentLocation ']   = () => { return this.provider.metadata.address.house; };
     }
 
     public initialise(provider: XENDWeatherProvider) {

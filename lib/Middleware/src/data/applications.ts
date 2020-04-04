@@ -14,17 +14,23 @@ export interface XENDApplication {
     isSystemApplication: boolean;
 }
 
-export default class XENDApplicationsProvider extends XENDBaseProvider {
+export default class XENDApplicationsProvider extends XENDBaseProvider implements XENDApplicationsProperties {
 
-    public get data(): XENDApplicationsProperties {
-        return this._data;
-    }
+    /////////////////////////////////////////////////////////
+    // XENDApplicationsProperties stub implementation
+    /////////////////////////////////////////////////////////
+
+    allApplications: XENDApplication[] = [];
+
+    /////////////////////////////////////////////////////////
+    // Implementation
+    /////////////////////////////////////////////////////////
 
     /**
      * Provides a filtered list of applications to only those that are user-installed
      */
     public get userApplications(): XENDApplication[] {
-        return (this.data as XENDApplicationsProperties).allApplications.filter((app: XENDApplication) => {
+        return this.allApplications.filter((app: XENDApplication) => {
             return !app.isSystemApplication;
         });
     }
@@ -33,7 +39,7 @@ export default class XENDApplicationsProvider extends XENDBaseProvider {
      * Provides a filtered list of applications to only those that are system applications
      */
     public get systemApplications(): XENDApplication[] {
-        return (this.data as XENDApplicationsProperties).allApplications.filter((app: XENDApplication) => {
+        return this.allApplications.filter((app: XENDApplication) => {
             return app.isSystemApplication;
         });
     }

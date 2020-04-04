@@ -20,11 +20,18 @@ export interface XENDCalendarProperties {
     upcomingWeekEvents: XENDCalendarEntry[];
 }
 
-export default class XENDCalendarProvider extends XENDBaseProvider {
+export default class XENDCalendarProvider extends XENDBaseProvider implements XENDCalendarProperties {
 
-    public get data(): XENDCalendarProperties {
-        return this._data;
-    }
+    /////////////////////////////////////////////////////////
+    // XENDCalendarProperties stub implementation
+    /////////////////////////////////////////////////////////
+
+    userCalendars: XENDCalendar[] = [];
+    upcomingWeekEvents: XENDCalendarEntry[] = [];
+
+    /////////////////////////////////////////////////////////
+    // Implementation
+    /////////////////////////////////////////////////////////
 
     /**
      *

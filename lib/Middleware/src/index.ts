@@ -12,7 +12,7 @@ import XENDRemindersProvider from './data/reminders';
 import XENDSystemProvider from './data/system';
 import XENDWeatherProvider from './data/weather';
 import XENDApplicationsProvider from './data/applications';
-import XENDResourceStatisticsProvider from './data/resource-statistics';
+import XENDResourcesProvider from './data/resources';
 
 import NativeInterface from './native-interface';
 
@@ -36,7 +36,7 @@ class XENDMiddleware extends NativeInterface {
         this.dataProviders.set(DataProviderUpdateNamespace.System, new XENDSystemProvider(this));
         this.dataProviders.set(DataProviderUpdateNamespace.Weather, new XENDWeatherProvider(this));
         this.dataProviders.set(DataProviderUpdateNamespace.Applications, new XENDApplicationsProvider(this));
-        this.dataProviders.set(DataProviderUpdateNamespace.Resources, new XENDResourceStatisticsProvider(this));
+        this.dataProviders.set(DataProviderUpdateNamespace.Resources, new XENDResourcesProvider(this));
 
         // Initialise some compat stuff that doesn't rely on code that could be loaded a little later
         this.infostats2.initialise(this, this.dataProviders);
@@ -79,5 +79,5 @@ export default class WidgetInfo {
     public system: XENDSystemProvider                 = this._middleware.dataProviderInNamespace(DataProviderUpdateNamespace.System);
     public weather: XENDWeatherProvider               = this._middleware.dataProviderInNamespace(DataProviderUpdateNamespace.Weather);
     public apps: XENDApplicationsProvider             = this._middleware.dataProviderInNamespace(DataProviderUpdateNamespace.Applications);
-    public resources: XENDResourceStatisticsProvider  = this._middleware.dataProviderInNamespace(DataProviderUpdateNamespace.Resources);
+    public resources: XENDResourcesProvider           = this._middleware.dataProviderInNamespace(DataProviderUpdateNamespace.Resources);
 }

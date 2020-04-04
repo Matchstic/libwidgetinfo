@@ -28,27 +28,27 @@ export class XENDBaseProvider {
 
     constructor(protected connection: NativeInterface) {
         // Configure with default data, so that everything has sane defaults
-        this._data = this.defaultData();
+        this._destructureData(this.defaultData());
     }
 
     private observers: Array<(newData: any) => void> = [];
-
-    protected _data: any = {};
-    get data() {
-        return this._data;
-    }
 
     protected defaultData(): any {
         return {};
     }
 
     _setData(payload: any) {
-        this._data = payload;
+        // Destructure incoming data
+        this._destructureData(payload);
 
         // Notify observers of change
         this.observers.forEach((fn: (newdata: any) => void) => {
-            fn(this.data);
+            fn(this);
         });
+    }
+
+    private _destructureData(payload: any) {
+        Object.assign(this, payload);
     }
 
     // Can be overriden by subclasses

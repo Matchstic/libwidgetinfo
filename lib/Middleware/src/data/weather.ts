@@ -243,15 +243,48 @@ export interface XENDWeatherPropertiesMetadata {
 }
 
 export interface XENDWeatherProperties {
+    /**
+     * Contains all properties relating to current weather conditions
+     */
     now:        XENDWeatherPropertiesNow;
+
+    /**
+     * An array of hourly forecasts
+     */
     hourly:     XENDWeatherPropertiesHourly[];
+
+    /**
+     * An array of daily forecasts
+     */
     daily:      XENDWeatherPropertiesDaily[];
+
+    /**
+     * An array of nightly forecasts
+     */
     nightly:    XENDWeatherPropertiesNightly[];
+
+    /**
+     * Specifies the units data is returned in. You do not need to do any conversions yourself
+     */
     units:      XENDWeatherPropertiesUnits;
+
+    /**
+     * Metadata about the current weather forecast, such as the location it corresponds to
+     */
     metadata:   XENDWeatherPropertiesMetadata;
 }
 
-export default class XENDWeatherProvider extends XENDBaseProvider {
+export default class XENDWeatherProvider extends XENDBaseProvider implements XENDWeatherProperties {
+
+    // XENDWeatherProperties stub implementation
+    // Superclass handles destructuring incoming data to these properties
+
+    now:        XENDWeatherPropertiesNow = null;
+    hourly:     XENDWeatherPropertiesHourly[] = [];
+    daily:      XENDWeatherPropertiesDaily[] = [];
+    nightly:    XENDWeatherPropertiesNightly[] = [];
+    units:      XENDWeatherPropertiesUnits = null;
+    metadata:   XENDWeatherPropertiesMetadata = null;
 
     // Overridden to inject Date objects
     _setData(payload: XENDWeatherProperties) {
@@ -408,10 +441,6 @@ export default class XENDWeatherProvider extends XENDBaseProvider {
             console.error(e);
             return new Date(0);
         }
-    }
-
-    public get data(): XENDWeatherProperties {
-        return this._data;
     }
 
     protected defaultData(): XENDWeatherProperties {

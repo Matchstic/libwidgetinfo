@@ -21,33 +21,33 @@ export default class IS2Weather {
         this._lookupMap['setWeatherUpdateTimeInterval:forRequester:'] = () => {}; // unused
         this._lookupMap['removeRequesterForWeatherTimeInterval:'] = () => {}; // unused
         this._lookupMap['updateWeather'] = () => {}; // unused
-        this._lookupMap['lastUpdateTime'] = () => { return this.localeTimeString(this.provider.data.metadata.updateTimestamp); };
+        this._lookupMap['lastUpdateTime'] = () => { return this.localeTimeString(this.provider.metadata.updateTimestamp); };
 
         // Locale specific stuff
-        this._lookupMap['isCelsius'] = () => { return this.provider.data.units.isMetric };
-        this._lookupMap['isWindSpeedMph '] = () => { return this.provider.data.units.speed === 'mph' };
+        this._lookupMap['isCelsius'] = () => { return this.provider.units.isMetric };
+        this._lookupMap['isWindSpeedMph '] = () => { return this.provider.units.speed === 'mph' };
 
         // Current data
-        this._lookupMap['currentLocation'] = () => { return this.provider.data.metadata.address.city; };
-        this._lookupMap['currentTemperature'] = () => { return this.provider.data.now.temperature.current; };
-        this._lookupMap['currentCondition'] = () => { return this.provider.data.now.condition.code; };
-        this._lookupMap['currentConditionAsString'] = () => { return this.provider.data.now.condition.description; };
-        this._lookupMap['naturalLanguageDescription'] = () => { return this.provider.data.now.condition.description; };
-        this._lookupMap['highForCurrentDay'] = () => { return this.provider.data.now.temperature.maximum; };
-        this._lookupMap['lowForCurrentDay'] = () => { return this.provider.data.now.temperature.minimum; };
-        this._lookupMap['currentWindSpeed'] = () => { return this.provider.data.now.wind.speed; };
-        this._lookupMap['currentWindDirection'] = () => { return this.provider.data.now.wind.degrees; };
-        this._lookupMap['currentWindChill'] = () => { return this.provider.data.now.temperature.current; };
-        this._lookupMap['currentDewPoint'] = () => { return this.provider.data.now.temperature.dewpoint; };
-        this._lookupMap['currentHumidity'] = () => { return this.provider.data.now.temperature.relativeHumidity; };
-        this._lookupMap['currentVisibilityPercent'] = () => { return this.provider.data.now.visibility; };
-        this._lookupMap['currentChanceOfRain'] = () => { return this.provider.data.now.precipitation.hourly; };
-        this._lookupMap['currentlyFeelsLike'] = () => { return this.provider.data.now.temperature.feelsLike; };
-        this._lookupMap['currentPressure'] = () => { return this.provider.data.now.pressure.current; };
-        this._lookupMap['sunsetTime'] = () => { return this.localeTimeString(this.provider.data.now.sun.sunset); };
-        this._lookupMap['sunriseTime'] = () => { return this.localeTimeString(this.provider.data.now.sun.sunrise); };
-        this._lookupMap['currentLatitude'] = () => { return this.provider.data.metadata.location.latitude; };
-        this._lookupMap['currentLongitude'] = () => { return this.provider.data.metadata.location.longitude; };
+        this._lookupMap['currentLocation'] = () => { return this.provider.metadata.address.city; };
+        this._lookupMap['currentTemperature'] = () => { return this.provider.now.temperature.current; };
+        this._lookupMap['currentCondition'] = () => { return this.provider.now.condition.code; };
+        this._lookupMap['currentConditionAsString'] = () => { return this.provider.now.condition.description; };
+        this._lookupMap['naturalLanguageDescription'] = () => { return this.provider.now.condition.description; };
+        this._lookupMap['highForCurrentDay'] = () => { return this.provider.now.temperature.maximum; };
+        this._lookupMap['lowForCurrentDay'] = () => { return this.provider.now.temperature.minimum; };
+        this._lookupMap['currentWindSpeed'] = () => { return this.provider.now.wind.speed; };
+        this._lookupMap['currentWindDirection'] = () => { return this.provider.now.wind.degrees; };
+        this._lookupMap['currentWindChill'] = () => { return this.provider.now.temperature.current; };
+        this._lookupMap['currentDewPoint'] = () => { return this.provider.now.temperature.dewpoint; };
+        this._lookupMap['currentHumidity'] = () => { return this.provider.now.temperature.relativeHumidity; };
+        this._lookupMap['currentVisibilityPercent'] = () => { return this.provider.now.visibility; };
+        this._lookupMap['currentChanceOfRain'] = () => { return this.provider.now.precipitation.hourly; };
+        this._lookupMap['currentlyFeelsLike'] = () => { return this.provider.now.temperature.feelsLike; };
+        this._lookupMap['currentPressure'] = () => { return this.provider.now.pressure.current; };
+        this._lookupMap['sunsetTime'] = () => { return this.localeTimeString(this.provider.now.sun.sunset); };
+        this._lookupMap['sunriseTime'] = () => { return this.localeTimeString(this.provider.now.sun.sunrise); };
+        this._lookupMap['currentLatitude'] = () => { return this.provider.metadata.location.latitude; };
+        this._lookupMap['currentLongitude'] = () => { return this.provider.metadata.location.longitude; };
 
         // Forecasts
         this._lookupMap['hourlyForecastsForCurrentLocation'] = () => { return JSON.stringify(this.hourlyForecasts()) };
@@ -88,8 +88,8 @@ export default class IS2Weather {
 
     private hourlyForecasts() {
         let hourlyForecasts = [];
-        for (let i = 0; i < this.provider.data.hourly.length; i++) {
-            const fcast = this.provider.data.hourly[i];
+        for (let i = 0; i < this.provider.hourly.length; i++) {
+            const fcast = this.provider.hourly[i];
 
             hourlyForecasts.push({
                 time: this.localeTimeString(fcast.timestamp),
@@ -104,8 +104,8 @@ export default class IS2Weather {
 
     private dailyForecasts() {
         let dailyForecasts = [];
-        for (let i = 0; i < this.provider.data.daily.length; i++) {
-            const fcast = this.provider.data.daily[i];
+        for (let i = 0; i < this.provider.daily.length; i++) {
+            const fcast = this.provider.daily[i];
 
             dailyForecasts.push({
                 low: fcast.temperature.minimum,

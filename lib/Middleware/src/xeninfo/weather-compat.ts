@@ -10,7 +10,7 @@ export default class XenInfoWeather {
     constructor(private providers: Map<DataProviderUpdateNamespace, any>,
                 private notifyXenInfoDataChanged: (namespace: string) => void) {
         // Monitor weather data
-        providers.get(DataProviderUpdateNamespace.Weather).observeData((newData: any) => {
+        providers.get(DataProviderUpdateNamespace.Weather).observeData((newData: XENDWeatherProperties) => {
             this.onWeatherDataChanged(newData);
             this.notifyXenInfoDataChanged('weather');
         });
@@ -99,7 +99,7 @@ export default class XenInfoWeather {
 
     private weatherUpdateTimeString(date: Date): string {
         // Format is locale specific for data, time is HH:mm or hh:mm a
-        const is24h = (this.providers.get(DataProviderUpdateNamespace.System) as XENDSystemProvider).data.isTwentyFourHourTimeEnabled;
+        const is24h = (this.providers.get(DataProviderUpdateNamespace.System) as XENDSystemProvider).isTwentyFourHourTimeEnabled;
 
         const minutes = date.getMinutes() >= 10 ? date.getMinutes() : '0' + date.getMinutes();
 

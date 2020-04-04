@@ -6,7 +6,7 @@ export enum XENDBatteryStatus {
     FullyCharged
 }
 
-export interface XENDResourceStatisticsProperties {
+export interface XENDResourcesProperties {
     batteryPercentRemaining: number;
     batteryStatus: XENDBatteryStatus;
 
@@ -21,11 +21,28 @@ export interface XENDResourceStatisticsProperties {
     diskSpaceTotalBytes: number;
 }
 
-export default class XENDResourceStatisticsProvider extends XENDBaseProvider {
+export default class XENDResourceStatisticsProvider extends XENDBaseProvider implements XENDResourcesProperties {
 
-    public get data(): XENDResourceStatisticsProperties {
-        return this._data;
-    }
+    /////////////////////////////////////////////////////////
+    // XENDRemindersProperties stub implementation
+    /////////////////////////////////////////////////////////
+
+    batteryPercentRemaining: number = 0;
+    batteryStatus: XENDBatteryStatus = XENDBatteryStatus.Discharging;
+
+    memoryFree: number = 0;
+    memoryUsed: number = 0;
+    memoryTotal: number = 0;
+
+    processorUsage: number = 0;
+
+    diskSpaceFreeBytes: number = 0;
+    diskSpaceUsedBytes: number = 0;
+    diskSpaceTotalBytes: number = 0;
+
+    /////////////////////////////////////////////////////////
+    // Implementation
+    /////////////////////////////////////////////////////////
 
     /**
      * Converts a battery status into a translated string

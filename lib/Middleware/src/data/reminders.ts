@@ -4,10 +4,15 @@ export interface XENDRemindersProperties {
 
 }
 
-export default class XENDRemindersProvider extends XENDBaseProvider {
+export default class XENDRemindersProvider extends XENDBaseProvider implements XENDRemindersProperties {
 
-    public get data(): XENDRemindersProperties {
-        return this._data;
-    }
+    /////////////////////////////////////////////////////////
+    // XENDRemindersProperties stub implementation
+    /////////////////////////////////////////////////////////
+
+
+    /////////////////////////////////////////////////////////
+    // Implementation
+    /////////////////////////////////////////////////////////
 
 }
