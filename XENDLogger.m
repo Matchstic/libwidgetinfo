@@ -73,6 +73,8 @@ void XENDLog(NSString *format, ...) {
 - (void)appendToFile:(NSString*)filename logMessage:(NSString*)message {
     [self ensureLogDirectory];
     
+    if (![message hasSuffix:@"\n"]) message = [message stringByAppendingString:@"\n"];
+    
     NSString *qualifiedFilename = [NSString stringWithFormat:@"%@/%@.log", [self logDirectory], filename];
     NSString *qualifiedMessage = [NSString stringWithFormat:@"(%@) %@", [NSDate date], message];
     
