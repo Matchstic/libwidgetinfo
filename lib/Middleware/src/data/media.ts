@@ -53,18 +53,18 @@ export default class XENDMediaProvider extends XENDBaseProvider implements XENDM
     // XENDMediaProperties stub implementation
     /////////////////////////////////////////////////////////
 
-    currentTrack: XENDMediaCurrentItem = null;
-    upcomingTracks: XENDMediaTrack[] = [];
+    currentTrack: XENDMediaCurrentItem;
+    upcomingTracks: XENDMediaTrack[];
 
-    userArtists: XENDMediaArtist[] = [];
-    userAlbums: XENDMediaAlbum[] = [];
+    userArtists: XENDMediaArtist[];
+    userAlbums: XENDMediaAlbum[];
 
-    isPlaying: boolean = false;
-    isStopped: boolean = true;
-    isShuffleEnabled: boolean = false;
+    isPlaying: boolean;
+    isStopped: boolean;
+    isShuffleEnabled: boolean;
 
-    volume: number = 0;
-    playingApplication: XENDApplication = null;
+    volume: number;
+    playingApplication: XENDApplication;
 
     /////////////////////////////////////////////////////////
     // Implementation
@@ -82,6 +82,7 @@ export default class XENDMediaProvider extends XENDBaseProvider implements XENDM
      *
      * });
      * ```
+     *
      * @return A promise that resolves with the new play/pause state
      */
     public async togglePlayState(): Promise<boolean> {

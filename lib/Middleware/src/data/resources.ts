@@ -27,18 +27,18 @@ export default class XENDResourceStatisticsProvider extends XENDBaseProvider imp
     // XENDRemindersProperties stub implementation
     /////////////////////////////////////////////////////////
 
-    batteryPercentRemaining: number = 0;
-    batteryStatus: XENDBatteryStatus = XENDBatteryStatus.Discharging;
+    batteryPercentRemaining: number;
+    batteryStatus: XENDBatteryStatus;
 
-    memoryFree: number = 0;
-    memoryUsed: number = 0;
-    memoryTotal: number = 0;
+    memoryFree: number;
+    memoryUsed: number;
+    memoryTotal: number;
 
-    processorUsage: number = 0;
+    processorUsage: number;
 
-    diskSpaceFreeBytes: number = 0;
-    diskSpaceUsedBytes: number = 0;
-    diskSpaceTotalBytes: number = 0;
+    diskSpaceFreeBytes: number;
+    diskSpaceUsedBytes: number;
+    diskSpaceTotalBytes: number;
 
     /////////////////////////////////////////////////////////
     // Implementation

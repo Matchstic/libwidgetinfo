@@ -1,8 +1,22 @@
 {
     "out": "build/docs",
-    "include": "**/data/*",
-    "exclude": [ "groovyapi", "infostats2", "xeninfo"],
+    "name": "Xen HTML Widget API",
+    "theme": "./node_modules/typedoc-neo-theme/bin/default",
+    "exclude": [ "groovyapi/**", "infostats2/**", "xeninfo/**"],
     "excludeNotExported": true,
     "excludePrivate": true,
-    "excludeProtected": true
+    "excludeProtected": true,
+    "excludeExternals": true,
+    "hideGenerator": true,
+    "plugin": "typedoc-neo-theme",
+    "outline": [{
+        "Weather": {
+          "Overview": "_weather_",
+          "Reference": "_weather_.xendweatherprovider"
+        },
+        "Media": {
+          "Overview": "_media_",
+          "Reference": "_media_.xendmediaprovider"
+        }
+    }]
 }

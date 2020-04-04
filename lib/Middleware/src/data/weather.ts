@@ -1,3 +1,11 @@
+/**
+ * The Weather provider allows you easy access to current conditions, along with forecasts for the next few hours and days.
+ *
+ * User preferences for units are automatically handled for you.
+ * Weather data will update every 15 minutes, with battery saving measures also taken into account.
+ * @packageDocumentation
+ */
+
 import { XENDBaseProvider } from '../types';
 
 export interface XENDWeatherPropertiesAirQualityPollutant {
@@ -242,7 +250,23 @@ export interface XENDWeatherPropertiesMetadata {
     };
 }
 
+/**
+ * @hidden
+ */
 export interface XENDWeatherProperties {
+    now:        XENDWeatherPropertiesNow;
+    hourly:     XENDWeatherPropertiesHourly[];
+    daily:      XENDWeatherPropertiesDaily[];
+    nightly:    XENDWeatherPropertiesNightly[];
+    units:      XENDWeatherPropertiesUnits;
+    metadata:   XENDWeatherPropertiesMetadata;
+}
+
+export default class XENDWeatherProvider extends XENDBaseProvider implements XENDWeatherProperties {
+
+    // XENDWeatherProperties stub implementation
+    // Superclass handles destructuring incoming data to these properties
+
     /**
      * Contains all properties relating to current weather conditions
      */
@@ -272,21 +296,11 @@ export interface XENDWeatherProperties {
      * Metadata about the current weather forecast, such as the location it corresponds to
      */
     metadata:   XENDWeatherPropertiesMetadata;
-}
-
-export default class XENDWeatherProvider extends XENDBaseProvider implements XENDWeatherProperties {
-
-    // XENDWeatherProperties stub implementation
-    // Superclass handles destructuring incoming data to these properties
-
-    now:        XENDWeatherPropertiesNow = null;
-    hourly:     XENDWeatherPropertiesHourly[] = [];
-    daily:      XENDWeatherPropertiesDaily[] = [];
-    nightly:    XENDWeatherPropertiesNightly[] = [];
-    units:      XENDWeatherPropertiesUnits = null;
-    metadata:   XENDWeatherPropertiesMetadata = null;
 
     // Overridden to inject Date objects
+    /**
+     * @ignore
+     */
     _setData(payload: XENDWeatherProperties) {
         // Don't try to parse an empty object
         if (payload.now === undefined) return;

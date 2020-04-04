@@ -23,19 +23,19 @@ export default class XENDSystemProvider extends XENDBaseProvider implements XEND
     // XENDSystemProperties stub implementation
     /////////////////////////////////////////////////////////
 
-    deviceName: string = '';
-    deviceType: string = '';
-    deviceModel: string = '';
-    deviceModelPromotional: string = '';
-    systemVersion: string = '';
+    deviceName: string;
+    deviceType: string;
+    deviceModel: string;
+    deviceModelPromotional: string;
+    systemVersion: string;
 
-    deviceDisplayHeight: number = 0;
-    deviceDisplayWidth: number = 0;
-    deviceDisplayBrightness: number = 0;
+    deviceDisplayHeight: number;
+    deviceDisplayWidth: number;
+    deviceDisplayBrightness: number;
 
-    isTwentyFourHourTimeEnabled: boolean = false;
-    isLowPowerModeEnabled: boolean = false;
-    isNetworkConnected: boolean = false;
+    isTwentyFourHourTimeEnabled: boolean;
+    isLowPowerModeEnabled: boolean;
+    isNetworkConnected: boolean;
 
     /////////////////////////////////////////////////////////
     // Provider implementation
@@ -43,6 +43,9 @@ export default class XENDSystemProvider extends XENDBaseProvider implements XEND
 
     private documentSplitByNewline: string[] = null;
 
+    /**
+     * @ignore
+     */
     constructor(protected connection: NativeInterface) {
         super(connection);
 
@@ -158,6 +161,9 @@ export default class XENDSystemProvider extends XENDBaseProvider implements XEND
         }
     }
 
+    /**
+     * @ignore
+     */
     _documentLoaded() {
         // Setup document
         this.documentSplitByNewline = document.documentElement.innerHTML.split(/\r?\n/);

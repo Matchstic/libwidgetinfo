@@ -20,7 +20,7 @@ export default class XENDApplicationsProvider extends XENDBaseProvider implement
     // XENDApplicationsProperties stub implementation
     /////////////////////////////////////////////////////////
 
-    allApplications: XENDApplication[] = [];
+    allApplications: XENDApplication[];
 
     /////////////////////////////////////////////////////////
     // Implementation

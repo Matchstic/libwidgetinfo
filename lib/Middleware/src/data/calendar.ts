@@ -26,8 +26,8 @@ export default class XENDCalendarProvider extends XENDBaseProvider implements XE
     // XENDCalendarProperties stub implementation
     /////////////////////////////////////////////////////////
 
-    userCalendars: XENDCalendar[] = [];
-    upcomingWeekEvents: XENDCalendarEntry[] = [];
+    userCalendars: XENDCalendar[];
+    upcomingWeekEvents: XENDCalendarEntry[];
 
     /////////////////////////////////////////////////////////
     // Implementation
