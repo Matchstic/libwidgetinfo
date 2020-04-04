@@ -87,17 +87,11 @@
               object:nil];
         
         // Ping off a dummy request to fetch the API key
+        // Using geocoder for this, because it also uses the same host internally
         
-        NSMutableDictionary *newCity = [NSMutableDictionary dictionary];
-        
-        [newCity setObject:[NSNumber numberWithFloat:37.323] forKey:@"Lat"];
-        [newCity setObject:[NSNumber numberWithFloat:-122.0322] forKey:@"Lon"];
-        [newCity setObject:@"Cupertino" forKey:@"Name"];
-        
-        City *defaultCity = [[objc_getClass("WeatherPreferences") sharedPreferences] cityFromPreferencesDictionary:newCity];
-        [[objc_getClass("TWCLocationUpdater") sharedLocationUpdater]
-            updateWeatherForLocation:defaultCity.location
-                                city:defaultCity];
+        [[XENDLocationManager sharedInstance] reverseGeocodeLocation:[self defaultLocation] completionHandler:^(NSDictionary *data, NSError *error) {
+            // no-op
+        }];
     }
     
     // Read off the API key
@@ -153,13 +147,23 @@
         // Ensure we don't get notified for subsequent requests
         [[NSNotificationCenter defaultCenter] removeObserver:self];
         
-        [self configureWeatherManager:[[notification userInfo] objectForKey:@"apiKey"]];
+        XENDLog(@"INFO :: On API key notification. Data: \n%@", [notification userInfo]);
+        
+        NSString *key = [[notification userInfo] objectForKey:@"apiKey"];
+        if ([key isEqualToString:@"(null)"]) key = nil;
+        
+        [self configureWeatherManager:key];
     }
 }
 
 #pragma mark Weather manager handling
 
 - (void)configureWeatherManager:(NSString*)apiKey {
+    if (!apiKey || [apiKey isEqualToString:@""]) {
+        XENDLog(@"ERROR :: API key is nil, or zero length");
+        return;
+    }
+    
     self.weatherManager = [[XENDWeatherManager alloc] initWithAPIKey:apiKey
                                                      locationManager:[XENDLocationManager sharedInstance]
                                                          andDelegate:self];
