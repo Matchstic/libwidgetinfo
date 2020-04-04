@@ -1,4 +1,4 @@
-import { XENDBaseProvider, DataProviderUpdateNamespace } from '../types';
+import { Base, DataProviderUpdateNamespace } from '../types';
 import { XENDApplication } from './applications';
 
 export interface XENDMediaAlbum {
@@ -43,7 +43,7 @@ export interface XENDMediaProperties {
     playingApplication: XENDApplication;
 }
 
-export default class XENDMediaProvider extends XENDBaseProvider implements XENDMediaProperties {
+export default class Media extends Base implements XENDMediaProperties {
 
     // NOTE: Don't rely on native layer to push through elapsed time
     // It'll come through on pause/play etc, but should really handle that here

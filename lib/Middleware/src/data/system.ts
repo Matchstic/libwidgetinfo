@@ -1,4 +1,4 @@
-import { XENDBaseProvider, DataProviderUpdateNamespace } from '../types';
+import { Base, DataProviderUpdateNamespace } from '../types';
 import NativeInterface, { NativeInterfaceMessage } from '../native-interface';
 
 export interface XENDSystemProperties {
@@ -17,7 +17,7 @@ export interface XENDSystemProperties {
     isNetworkConnected: boolean;
 }
 
-export default class XENDSystemProvider extends XENDBaseProvider implements XENDSystemProperties {
+export default class System extends Base implements XENDSystemProperties {
 
     /////////////////////////////////////////////////////////
     // XENDSystemProperties stub implementation

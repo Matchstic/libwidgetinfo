@@ -1,4 +1,4 @@
-import { XENDBaseProvider, NativeError, DataProviderUpdateNamespace } from '../types';
+import { Base, NativeError, DataProviderUpdateNamespace } from '../types';
 
 export interface XENDApplicationsProperties {
     allApplications: XENDApplication[];
@@ -14,7 +14,7 @@ export interface XENDApplication {
     isSystemApplication: boolean;
 }
 
-export default class XENDApplicationsProvider extends XENDBaseProvider implements XENDApplicationsProperties {
+export default class Applications extends Base implements XENDApplicationsProperties {
 
     /////////////////////////////////////////////////////////
     // XENDApplicationsProperties stub implementation

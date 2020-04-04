@@ -1,10 +1,10 @@
-import { XENDBaseProvider } from '../types';
+import { Base } from '../types';
 
 export interface XENDRemindersProperties {
 
 }
 
-export default class XENDRemindersProvider extends XENDBaseProvider implements XENDRemindersProperties {
+export default class Reminders extends Base implements XENDRemindersProperties {
 
     /////////////////////////////////////////////////////////
     // XENDRemindersProperties stub implementation

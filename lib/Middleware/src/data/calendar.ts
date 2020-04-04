@@ -1,4 +1,4 @@
-import { XENDBaseProvider } from '../types';
+import { Base } from '../types';
 
 export interface XENDCalendarEntry {
     title: string;
@@ -20,7 +20,7 @@ export interface XENDCalendarProperties {
     upcomingWeekEvents: XENDCalendarEntry[];
 }
 
-export default class XENDCalendarProvider extends XENDBaseProvider implements XENDCalendarProperties {
+export default class Calendar extends Base implements XENDCalendarProperties {
 
     /////////////////////////////////////////////////////////
     // XENDCalendarProperties stub implementation

@@ -39,8 +39,7 @@ export interface NativeError {
 /**
  * @ignore
  */
-export class XENDBaseProvider {
-
+export class Base {
 
     constructor(protected connection: NativeInterface) {
         // Configure with default data, so that everything has sane defaults

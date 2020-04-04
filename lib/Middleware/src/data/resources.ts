@@ -1,4 +1,4 @@
-import { XENDBaseProvider } from '../types';
+import { Base } from '../types';
 
 export enum XENDBatteryStatus {
     Discharging,
@@ -21,7 +21,7 @@ export interface XENDResourcesProperties {
     diskSpaceTotalBytes: number;
 }
 
-export default class XENDResourcesProvider extends XENDBaseProvider implements XENDResourcesProperties {
+export default class Resources extends Base implements XENDResourcesProperties {
 
     /////////////////////////////////////////////////////////
     // XENDRemindersProperties stub implementation

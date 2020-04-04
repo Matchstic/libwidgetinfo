@@ -1,4 +1,4 @@
-import { XENDBaseProvider } from '../types';
+import { Base } from '../types';
 
 export interface XENDWeatherPropertiesAirQualityPollutant {
     amount: number;
@@ -278,7 +278,7 @@ export interface XENDWeatherProperties {
  *               <p id="city">{ weather.metadata.address.city }</p>
  * </div>
  */
-export default class Weather extends XENDBaseProvider implements XENDWeatherProperties {
+export default class Weather extends Base implements XENDWeatherProperties {
 
     // XENDWeatherProperties stub implementation
     // Superclass handles destructuring incoming data to these properties

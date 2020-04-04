@@ -16,6 +16,9 @@ import XENDResourcesProvider from './data/resources';
 
 import NativeInterface from './native-interface';
 
+/**
+ * @ignore
+ */
 class XENDMiddleware extends NativeInterface {
     private infostats2: IS2Middleware = new IS2Middleware();
     private groovyAPI: GroovyAPIMiddlware = new GroovyAPIMiddlware();
