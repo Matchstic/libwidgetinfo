@@ -2,6 +2,7 @@
     "tsconfig": "./tsconfig.json",
     "output": "build/docs",
     "templates": "templates",
+    "includes": "markdown",
     "minimal": true,
     "name": "Xen HTML Widget API",
     "hideGenerator": true,
