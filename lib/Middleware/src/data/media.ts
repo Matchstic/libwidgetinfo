@@ -28,6 +28,9 @@ export interface XENDMediaCurrentItem {
     elapsedDuration: number;
 }
 
+/**
+ * @ignore
+ */
 export interface XENDMediaProperties {
     currentTrack: XENDMediaCurrentItem;
     upcomingTracks: XENDMediaTrack[];

@@ -1,6 +1,9 @@
 import { Base, DataProviderUpdateNamespace } from '../types';
 import NativeInterface, { NativeInterfaceMessage } from '../native-interface';
 
+/**
+ * @ignore
+ */
 export interface XENDSystemProperties {
     deviceName: string;
     deviceType: string;

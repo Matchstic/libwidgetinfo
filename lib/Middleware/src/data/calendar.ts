@@ -15,6 +15,9 @@ export interface XENDCalendar {
     hexColor: string;
 }
 
+/**
+ * @ignore
+ */
 export interface XENDCalendarProperties {
     userCalendars: XENDCalendar[];
     upcomingWeekEvents: XENDCalendarEntry[];

@@ -243,7 +243,7 @@ export interface XENDWeatherPropertiesMetadata {
 }
 
 /**
- * @hidden
+ * @ignore
  */
 export interface XENDWeatherProperties {
     now:        XENDWeatherPropertiesNow;

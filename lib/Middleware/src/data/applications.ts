@@ -1,9 +1,5 @@
 import { Base, NativeError, DataProviderUpdateNamespace } from '../types';
 
-export interface XENDApplicationsProperties {
-    allApplications: XENDApplication[];
-}
-
 export interface XENDApplication {
     displayName: string;
     bundleIdentifier: string;
@@ -12,6 +8,13 @@ export interface XENDApplication {
     showsInstallationProgress: boolean;
     newlyInstalled: boolean;
     isSystemApplication: boolean;
+}
+
+/**
+ * @ignore
+ */
+export interface XENDApplicationsProperties {
+    allApplications: XENDApplication[];
 }
 
 export default class Applications extends Base implements XENDApplicationsProperties {

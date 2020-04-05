@@ -1,5 +1,8 @@
 import { Base } from '../types';
 
+/**
+ * @ignore
+ */
 export interface XENDRemindersProperties {
 
 }
