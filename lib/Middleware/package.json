@@ -12,7 +12,7 @@
     "describe": "npm-scripts-info",
     "build": "run-s clean && run-p build:main",
     "build:main": "tsc -p tsconfig.json",
-    "docs": "typedoc --options typedoc.json ./src/data",
+    "docs": "compodoc",
     "package": "run-p build:main && webpack",
     "fix": "run-s fix:*",
     "fix:prettier": "prettier \"src/**/*.ts\" --write",
@@ -23,7 +23,7 @@
     "watch": "run-s clean build:main && run-p \"build:main -- -w\" \"test:unit -- --watch\"",
     "reset": "git clean -dfx && git reset --hard && npm i",
     "clean": "trash build test",
-    "preinstall": "node -e \"if(process.env.npm_execpath.indexOf('yarn') === -1) throw new Error('middleware must be installed with Yarn: https://yarnpkg.com/')\""
+    "preinstall": "node -e \"if(process.env.npm_execpath.indexOf('yarn') === -1) throw new Error('Yarn is required: https://yarnpkg.com/')\""
   },
   "scripts-info": {
     "info": "Display information about the package scripts",
@@ -39,10 +39,7 @@
     "node": ">=8.9"
   },
   "dependencies": {
-    "@types/core-js": "^2.5.3",
-    "core-js": "^3.6.4",
     "ts-loader": "^6.1.0",
-    "typedoc": "^0.15.0",
     "webpack": "^4.40.2",
     "webpack-shell-plugin": "^0.5.0"
   },
