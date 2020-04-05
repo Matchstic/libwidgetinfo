@@ -29,7 +29,7 @@
     NSString *output = [NSString stringWithUTF8String:result.c_str()];
     
     // Sort out objc_msgSend
-    output = [output stringByReplacingOccurrencesOfString:@"objc_msgSend" withString:@"WidgetInfo._middleware.infostats2.objc_msgSend"];
+    output = [output stringByReplacingOccurrencesOfString:@"objc_msgSend" withString:@"api._middleware.infostats2.objc_msgSend"];
     // output = [self replacingString:output withPattern:@"new Type\\(\"[a-z]+\"\\).blockWith\\(\\)\\(([\\S\\s]+)\\)\\)" withTemplate:@"$1)" error:nil];
     
     // Make the IS2* classes nicer to work with in the TypeScript layer

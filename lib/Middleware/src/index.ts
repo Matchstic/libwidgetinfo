@@ -1,5 +1,4 @@
-// Polyfill support
-import 'core-js/stable';
+import tinybind from 'tinybind';
 
 import IS2Middleware from './infostats2';
 import GroovyAPIMiddlware from './groovyapi';
@@ -25,6 +24,7 @@ class XENDMiddleware extends NativeInterface {
     private xeninfo: XenInfoMiddleware = new XenInfoMiddleware();
 
     private dataProviders: Map<DataProviderUpdateNamespace, any> = new Map<DataProviderUpdateNamespace, any>();
+    private bindView: any;
 
     constructor() {
         super();
@@ -43,11 +43,38 @@ class XENDMiddleware extends NativeInterface {
 
         // Initialise some compat stuff that doesn't rely on code that could be loaded a little later
         this.infostats2.initialise(this, this.dataProviders);
+
+        // Setup tinybind
+        tinybind.configure({
+            prefix: 'xui',
+            preloadData: true,
+            templateDelimiters: ['{', '}'],
+        });
+
+        const model = {
+            calendar:   this.dataProviderInNamespace(DataProviderUpdateNamespace.Calendar),
+            media:      this.dataProviderInNamespace(DataProviderUpdateNamespace.Media),
+            reminders:  this.dataProviderInNamespace(DataProviderUpdateNamespace.Reminders),
+            system:     this.dataProviderInNamespace(DataProviderUpdateNamespace.System),
+            weather:    this.dataProviderInNamespace(DataProviderUpdateNamespace.Weather),
+            apps:       this.dataProviderInNamespace(DataProviderUpdateNamespace.Applications),
+            resources:  this.dataProviderInNamespace(DataProviderUpdateNamespace.Resources)
+        };
+
+        window.addEventListener('DOMContentLoaded', (event) => {
+            // Setup tinybind now that the document has loaded and been parsed
+            console.log('Setting up tinybind with model');
+            this.bindView = tinybind.bind(document.body, model);
+        });
     }
 
     protected onDataProviderUpdate(update: DataProviderUpdate) {
         // Forward new data to correct provider
         this.dataProviders.get(update.namespace)._setData(update.payload);
+
+        // Notify the tinybind view of new changes
+        console.log('Notifying tinybind of new data');
+        this.bindView.sync();
     }
 
     protected onLoad() {
@@ -69,14 +96,11 @@ class XENDMiddleware extends NativeInterface {
     }
 }
 
-// This is made available to widgets as a global 'var WidgetInfo = { ... }'
-// The magic of webpack eh
-
 /**
  * @ignore
  */
-export default class WidgetInfo {
-    // Called onto by native via 'WidgetInfo._middleware'
+export default class XENDApi {
+    // Called onto by native via 'api._middleware'
     private _middleware = new XENDMiddleware();
 
     // Aliases to providers

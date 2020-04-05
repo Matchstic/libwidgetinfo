@@ -60,7 +60,7 @@ export default class IS2Middleware implements XenHTMLMiddleware {
         // Call object[<selector>](arguments)
 
         // Example with args:
-        // WidgetInfo._middleware.infostats2.objc_msgSend("IS2Weather","setWeatherUpdateTimeInterval:forRequester:",30,"test")
+        // api._middleware.infostats2.objc_msgSend("IS2Weather","setWeatherUpdateTimeInterval:forRequester:",30,"test")
 
         /*
          * IMPORTANT: Due to how ...args works, an array of arguments will be passed down the chain.

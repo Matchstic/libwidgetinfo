@@ -7309,6 +7309,11 @@ tiny-inflate@^1.0.0, tiny-inflate@^1.0.2:
   resolved "https://registry.yarnpkg.com/tiny-inflate/-/tiny-inflate-1.0.3.tgz#122715494913a1805166aaf7c93467933eea26c4"
   integrity sha512-pkY1fj1cKHb2seWDy0B16HeWyczlJA9/WW3u3c4z/NiWDsO3DOU5D7nhTLE9CF0yXv/QZFY7sEJmj24dK+Rrqw==
 
+tinybind@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/tinybind/-/tinybind-1.0.0.tgz#db1d80c2b1fd1283f997af46dbd78caa6eb5ebf8"
+  integrity sha512-rrsyFnQLZESNfdOv+xX4Bm1jLcCNktii9VT2M9Qbj/+S0DPJmOU/HcKEIEIVipTUAWsHp1JuxJoCmMP1OKD7Fw==
+
 to-arraybuffer@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/to-arraybuffer/-/to-arraybuffer-1.0.1.tgz#7d229b1fcc637e466ca081180836a7aabff83f43"

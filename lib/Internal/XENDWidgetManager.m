@@ -91,7 +91,7 @@ static NSString *preferencesId = @"com.matchstic.xenhtml.libwidgetinfo";
     NSString *updateString = @"";
     
     // Add loaded method call
-    updateString = [updateString stringByAppendingString:@"WidgetInfo._middleware.onLoad();\n"];
+    updateString = [updateString stringByAppendingString:@"api._middleware.onLoad();\n"];
     
     for (NSString *providerNamespace in self.dataProviders.allKeys) {
         XENDBaseDataProvider *provider = [self.dataProviders objectForKey:providerNamespace];
@@ -100,7 +100,7 @@ static NSString *preferencesId = @"com.matchstic.xenhtml.libwidgetinfo";
         NSDictionary *payload = @{ @"namespace": providerNamespace, @"payload": data };
         NSDictionary *retval = @{ @"type": @"dataupdate", @"data": payload };
         
-        NSString *innerUpdateString = [NSString stringWithFormat:@"WidgetInfo._middleware.onInternalNativeMessage(%@);\n",
+        NSString *innerUpdateString = [NSString stringWithFormat:@"api._middleware.onInternalNativeMessage(%@);\n",
                                   [self _parseToJSON:retval]];
         updateString = [updateString stringByAppendingString:innerUpdateString];
     }
@@ -166,7 +166,7 @@ static NSString *preferencesId = @"com.matchstic.xenhtml.libwidgetinfo";
             
             NSDictionary *retval = @{ @"type": @"callback", @"data": result, @"callbackId": callbackId };
             
-            NSString *updateString = [NSString stringWithFormat:@"WidgetInfo._middleware.onInternalNativeMessage(%@)",
+            NSString *updateString = [NSString stringWithFormat:@"api._middleware.onInternalNativeMessage(%@)",
                                       [self _parseToJSON:retval]];
             
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -234,7 +234,7 @@ static NSString *preferencesId = @"com.matchstic.xenhtml.libwidgetinfo";
     NSDictionary *payload = @{ @"namespace": providerNamespace, @"payload": data };
     NSDictionary *retval = @{ @"type": @"dataupdate", @"data": payload };
     
-    NSString *updateString = [NSString stringWithFormat:@"WidgetInfo._middleware.onInternalNativeMessage(%@)",
+    NSString *updateString = [NSString stringWithFormat:@"api._middleware.onInternalNativeMessage(%@)",
                               [self _parseToJSON:retval]];
     
     // Loop over widget array, and call update as required.

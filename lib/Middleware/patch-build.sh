@@ -1,4 +1,4 @@
 #!/bin/bash
 
 # Ensure the module is properly require()'d statically
-printf '\nWidgetInfo.default();' >> build/libwidgetinfo.js
+printf '\nwindow.api = new XENDApi.default;' >> build/libwidgetinfo.js

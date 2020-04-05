@@ -263,7 +263,7 @@ export interface XENDWeatherProperties {
  * @example
  * Pure Javascript:
  * <script>
- * WidgetInfo.weather.observeData(function (newData) {
+ * api.weather.observeData(function (newData) {
  *              console.log('Weather data has updated');
  *
  *              // Set some data to document elements

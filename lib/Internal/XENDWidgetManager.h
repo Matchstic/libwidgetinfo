@@ -33,7 +33,7 @@
 - (void)deregisterWebView:(WKWebView*)webView;
 
 /**
- Injects WidgetInfo runtime into the provided content controller of a webview
+ Injects api runtime into the provided content controller of a webview
  */
 - (void)injectRuntime:(WKUserContentController*)contentController;
 

@@ -39,6 +39,7 @@
     "node": ">=8.9"
   },
   "dependencies": {
+    "tinybind": "^1.0.0",
     "ts-loader": "^6.1.0",
     "webpack": "^4.40.2",
     "webpack-shell-plugin": "^0.5.0"

@@ -77,11 +77,11 @@ export default class Media extends Base implements XENDMediaProperties {
      * Toggles play/pause of the current media item.
      *
      * @example
-     * WidgetInfo.media.togglePlayState();
+     * api.media.togglePlayState();
      *
      * @example
      * // Alternatively:
-     * WidgetInfo.media.togglePlayState().then(function(newState) { });
+     * api.media.togglePlayState().then(function(newState) { });
      *
      * @return A promise that resolves with the new play/pause state
      */
