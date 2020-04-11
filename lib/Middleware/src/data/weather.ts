@@ -1,6 +1,6 @@
 import { Base } from '../types';
 
-export interface XENDWeatherPropertiesAirQualityPollutant {
+export interface WeatherPropertiesAirQualityPollutant {
     amount: number;
     categoryLevel: string;
     categoryIndex: number;
@@ -10,14 +10,61 @@ export interface XENDWeatherPropertiesAirQualityPollutant {
     index: number;
 }
 
-export interface XENDWeatherPropertiesNow {
+export interface WeatherPropertiesNow {
+    /**
+     * Specifies whether the current forecast can still be treated as valid
+     *
+     * This may be `false` if a forecast update has not been successful for over 24 hours.
+     */
     _isValid: boolean;
 
+    /**
+     * An object containing the following properties:
+     *
+     * - `description`
+     *     - Short description of the condition forecasted
+     * - `code`
+     *     - Icon code corresponding to the condition forecasted.
+     *     - See page 2, column "icon_code" here: https://docs.google.com/document/d/1MZwWYqki8Ee-V7c7InBuA5CDVkjb3XJgpc39hI9FsI0/edit?pli=1
+     */
     condition: {
         description: string;
         code: number;
     };
 
+    /**
+     * An object containing the following properties:
+     *
+     * - `current`
+     *     - The current temperature of the air.
+     *     - Units are automatically converted between metric and imperial depending on the user's preferences.
+     *     - See weather.units.temperature at runtime for the units in use.
+     * - `dewpoint`
+     *     - The temperature which air must be cooled at constant pressure to reach saturation. When the dewpoint and temperature are equal, clouds or fog will typically form. The closer the values of temperature and dewpoint, the higher the relative humidity.
+     *     - Units are automatically converted between metric and imperial depending on the user's preferences.
+     *     - See weather.units.temperature at runtime for the units in use.
+     *     - Values range from: -80 to 100 (°F) or -62 to 37 (°C)
+     * - `feelsLike`
+     *     - An apparent temperature. It represents what the air temperature “feels like” on exposed human skin due to the combined effect of the wind chill or heat index.
+     *     - Units are automatically converted between metric and imperial depending on the user's preferences.
+     *     - See weather.units.temperature at runtime for the units in use.
+     * - `heatIndex`
+     *     - An apparent temperature. It represents what the air temperature “feels like” on exposed human skin due to the combined effect of warm temperatures and high humidity.
+     *     - Units are automatically converted between metric and imperial depending on the user's preferences.
+     *     - See weather.units.temperature at runtime for the units in use.
+     * - `relativeHumidity`
+     *     - The relative humidity of the air, which is defined as the ratio of the amount of water vapor in the air to the amount of vapor required to bring the air to saturation at a constant temperature.
+     *     - Expressed as a percentage.
+     *     - Values range from: 1 to 100
+     * - `minimum`
+     *     - The minimum temperature of the air at the time of observation
+     *     - Units are automatically converted between metric and imperial depending on the user's preferences.
+     *     - See weather.units.temperature at runtime for the units in use.
+     * - `maximum`
+     *     - The maximum temperature of the air at the time of observation
+     *     - Units are automatically converted between metric and imperial depending on the user's preferences.
+     *     - See weather.units.temperature at runtime for the units in use.
+     */
     temperature: {
         minimum: number;
         maximum: number;
@@ -28,19 +75,69 @@ export interface XENDWeatherPropertiesNow {
         dewpoint: number;
     };
 
+    /**
+     * An object containing the following properties:
+     *
+     * - `description`
+     *     - A localised description of the UV index, in relation to the risk of skin damage due to exposure.
+     *     - Values: Not Available, No Report, Low, Moderate, High, Very High, Extreme
+     * - `index`
+     *     - The forecasted UV index.
+     *     - Values range from: 0 to 16
+     *     - Note: a value of -2 equals "Not Available", and -1 equals "No Report"
+     */
     ultraviolet: {
         index: number;
         description: string;
     };
 
+    /**
+     * Average cloud cover expressed as a code.
+     *
+     * Values: SKC, CLR, SCT, FEW, BKN, OVC
+     */
     cloudCover: string;
 
+    /**
+     * An object containing the following properties:
+     *
+     */
     sun: {
         sunrise: Date;
         sunset: Date;
         isDay: boolean;
     };
 
+    /**
+     * Data is only available in the following nations: China, France, India, Germany, Mexico, Spain, UK, US
+     * An object containing the following properties:
+     *
+     * - `comment`
+     *     - Source-provided comment on the data
+     * - `categoryIndex`
+     *     - Index of the level of pollutants, in the range 1-5. This maps onto the human-readable `categoryLevel` property
+     * - `categoryLevel`
+     *     - Description of the level of pollutants
+     *     - Values: Low, Moderate, High, Very High, Serious
+     * - `index`
+     *     - Air quality index, as per the scale used for measurement.
+     *     - It is based on the concentrations of five pollutants: Ozone, PM2.5, PM10, Nitrogen Dioxide and Sulfur Dioxide
+     *     - e.g., a scale of DAQI is from 1-10
+     * - `scale`
+     *     - Scale the data corresponds to. e.g., DAQI
+     * - `source`
+     *     - The source of the data. e.g., DEFRA
+     * - `pollutants`
+     *     - An array of data about each of the five pollutants. Note that not all may be present due to API limitations.
+     *     - Available pollutants:
+     *         - Ozone
+     *         - PM2.5
+     *         - PM10
+     *         - Carbon Monoxide
+     *         - Nitrogen Dioxide
+     *         - Sulfur Dioxide
+     *     - See: {@link WeatherPropertiesAirQualityPollutant}
+     */
     airquality: {
         scale: string;
         categoryLevel: string;
@@ -48,15 +145,50 @@ export interface XENDWeatherPropertiesNow {
         comment: string;
         source: string;
         categoryIndex: number;
-        pollutants: XENDWeatherPropertiesAirQualityPollutant[];
+        pollutants: WeatherPropertiesAirQualityPollutant[];
     };
 
+    /**
+     * An object containing the following properties:
+     *
+     * - `hourly`
+     *     - Precipitation in the last hour
+     *     - Units are automatically converted between metric and imperial depending on the user's preferences.
+     *     - See weather.units.amount at runtime for the units in use.
+     * - `total`
+     *     - Precipitation in the last rolling 24 hour period.
+     *     - Units are automatically converted between metric and imperial depending on the user's preferences.
+     *     - See weather.data.units.amount at runtime for the units in use.
+     * - `type`
+     *     - Type of precipitation associated with the probability.
+     *     - Values: `precip` (unknown), `rain`, `snow`
+     */
     precipitation: {
         total: number;
         hourly: number;
         type: string;
     };
 
+    /**
+     * An object containing the following properties:
+     *
+     * - `cardinal`
+     *     - The direction from which the wind blows expressed in an abbreviated form.
+     *     - e.g. N, E, S, W, NW, NNW etc
+     *     - Values: N , NNE , NE, ENE, E, ESE, SE,SSE, S, SSW, SW, WSW, W,WNW, NW, NNW, CALM (no wind speed), VAR (variable)
+     * - `degrees`
+     *     - The direction from which the wind blows expressed in degrees.
+     *     - e.g., 360 is North, 90 is East, 180 is South and 270 is West.
+     *     - Values range from: 1 to 360
+     * - `gust`
+     *     - The maximum expected wind gust speed.
+     *     - Units are automatically converted between metric and imperial depending on the user's preferences.
+     *     - See weather.units.speed at runtime for the units in use.
+     * - `speed`
+     *     - The speed at which the wind is blowing.
+     *     - Units are automatically converted between metric and imperial depending on the user's preferences.
+     *     - See weather.units.speed at runtime for the units in use.
+     */
     wind: {
         degrees: number;
         cardinal: string;
@@ -64,8 +196,18 @@ export interface XENDWeatherPropertiesNow {
         speed: number;
     };
 
+    /**
+     * The distance that is visible. A distance of 0 can be reported, due to the effects of snow or fog.
+     *
+     * Units are automatically converted between metric and imperial depending on the user's preferences.
+     * See weather.units.distance at runtime for the units in use.
+     */
     visibility: number;
 
+    /**
+     * An object containing the following properties:
+     *
+     */
     moon: {
         phase: string;
         phaseDay: number;
@@ -74,6 +216,20 @@ export interface XENDWeatherPropertiesNow {
         moonset: Date;
     };
 
+    /**
+     * An object containing the following properties:
+     *
+     * - `current`
+     *     - Barometric pressure exerted by the atmosphere at the earth's surface.
+     *     - Units are automatically converted between metric and imperial depending on the user's preferences.
+     *     - See weather.units.pressure at runtime for the units in use.
+     * - `description`
+     *     - A phrase describing the change in the barometric pressure reading over the last hour.
+     *     - Values: Steady, Rising, Rapidly Rising, Falling, Rapidly Falling
+     * - `tendency`
+     *     - An integer describing the change in the barometric pressure reading over the last hour.
+     *     - Values: 0 (Steady), 1 (Rising, Rapidly Rising), 2 (Falling, Rapidly Falling)
+     */
     pressure: {
         current: number;
         tendency: number;
@@ -81,7 +237,27 @@ export interface XENDWeatherPropertiesNow {
     };
 }
 
-export interface XENDWeatherPropertiesHourly {
+export interface WeatherPropertiesHourly {
+    /**
+     * An object containing the following properties:
+     *
+     * - `cardinal`
+     *     - The direction from which the wind blows expressed in an abbreviated form.
+     *     - e.g. N, E, S, W, NW, NNW etc
+     *     - Values: N , NNE , NE, ENE, E, ESE, SE,SSE, S, SSW, SW, WSW, W,WNW, NW, NNW, CALM (no wind speed), VAR (variable)
+     * - `degrees`
+     *     - The direction from which the wind blows expressed in degrees.
+     *     - e.g., 360 is North, 90 is East, 180 is South and 270 is West.
+     *     - Values range from: 1 to 360
+     * - `gust`
+     *     - The maximum expected wind gust speed.
+     *     - Units are automatically converted between metric and imperial depending on the user's preferences.
+     *     - See weather.units.speed at runtime for the units in use.
+     * - `speed`
+     *     - The speed at which the wind is blowing.
+     *     - Units are automatically converted between metric and imperial depending on the user's preferences.
+     *     - See weather.units.speed at runtime for the units in use.
+     */
     wind: {
         degrees: number;
         cardinal: string;
@@ -89,22 +265,78 @@ export interface XENDWeatherPropertiesHourly {
         speed: number;
     };
 
+    /**
+     * An object containing the following properties:
+     *
+     * - `description`
+     *     - Short description of the condition forecasted
+     * - `code`
+     *     - Icon code corresponding to the condition forecasted.
+     *     - See page 2, column "icon_code" here: https://docs.google.com/document/d/1MZwWYqki8Ee-V7c7InBuA5CDVkjb3XJgpc39hI9FsI0/edit?pli=1
+     */
     condition: {
         description: string;
         code: number;
     };
 
+    /**
+    * Average cloud cover expressed as a percentage.
+    *
+    * Values range from: 1 to 100
+    */
     cloudCoverPercentage: number;
 
+    /**
+     * The time that this forecast represents.
+     */
     timestamp: Date;
 
+    /**
+     * The index of the forecast in the array of forecasts
+     */
     hourIndex: number;
 
+    /**
+     * An object containing the following properties:
+     *
+     * - `description`
+     *     - A localised description of the UV index, in relation to the risk of skin damage due to exposure.
+     *     - Values: Not Available, No Report, Low, Moderate, High, Very High, Extreme
+     * - `index`
+     *     - The forecasted UV index.
+     *     - Values range from: 0 to 16
+     *     - Note: a value of -2 equals "Not Available", and -1 equals "No Report"
+     */
     ultraviolet: {
         index: number;
         description: string;
     };
 
+    /**
+     * An object containing the following properties:
+     *
+     * - `dewpoint`
+     *     - The temperature which air must be cooled at constant pressure to reach saturation. When the dewpoint and temperature are equal, clouds or fog will typically form. The closer the values of temperature and dewpoint, the higher the relative humidity.
+     *     - Units are automatically converted between metric and imperial depending on the user's preferences.
+     *     - See weather.units.temperature at runtime for the units in use.
+     *     - Values range from: -80 to 100 (°F) or -62 to 37 (°C)
+     * - `feelsLike`
+     *     - An apparent temperature. It represents what the air temperature “feels like” on exposed human skin due to the combined effect of the wind chill or heat index.
+     *     - Units are automatically converted between metric and imperial depending on the user's preferences.
+     *     - See weather.units.temperature at runtime for the units in use.
+     * - `forecast`
+     *     - The forecasted temperature of the air.
+     *     - Units are automatically converted between metric and imperial depending on the user's preferences.
+     *     - See weather.units.temperature at runtime for the units in use.
+     * - `heatIndex`
+     *     - An apparent temperature. It represents what the air temperature “feels like” on exposed human skin due to the combined effect of warm temperatures and high humidity.
+     *     - Units are automatically converted between metric and imperial depending on the user's preferences.
+     *     - See weather.units.temperature at runtime for the units in use.
+     * - `relativeHumidity`
+     *     - The relative humidity of the air, which is defined as the ratio of the amount of water vapor in the air to the amount of vapor required to bring the air to saturation at a constant temperature.
+     *     - Expressed as a percentage.
+     *     - Values range from: 1 to 100
+     */
     temperature: {
         forecast: number;
         relativeHumidity: number;
@@ -113,39 +345,128 @@ export interface XENDWeatherPropertiesHourly {
         dewpoint: number;
     };
 
+    /**
+     * The localised day of the week this forecast corresponds to.
+     */
     dayOfWeek: string;
 
+    /**
+     * An object containing the following properties:
+     *
+     * - `probability`
+     *     - Maximum probability of precipitation, expressed as a percentage.
+     *     - Values range from: 1 to 100
+     * - `type`
+     *     - Type of precipitation associated with the probability.
+     *     - Values: `precip` (unknown), `rain`, `snow`
+     */
     precipitation: {
         type: string;
         probability: number;
     }
 
+    /**
+     * The distance that is visible. A distance of 0 can be reported, due to the effects of snow or fog.
+     *
+     * Units are automatically converted between metric and imperial depending on the user's preferences.
+     * See weather.units.distance at runtime for the units in use.
+     */
     visibility: number;
 }
 
-export interface XENDWeatherPropertiesDaily {
+export interface WeatherPropertiesDaily {
+    /**
+     * An object containing the following properties:
+     *
+     * - `cardinal`
+     *     - The direction from which the wind blows expressed in an abbreviated form.
+     *     - e.g. N, E, S, W, NW, NNW etc
+     *     - Values: N , NNE , NE, ENE, E, ESE, SE,SSE, S, SSW, SW, WSW, W,WNW, NW, NNW, CALM (no wind speed), VAR (variable)
+     * - `degrees`
+     *     - The direction from which the wind blows expressed in degrees.
+     *     - e.g., 360 is North, 90 is East, 180 is South and 270 is West.
+     *     - Values range from: 1 to 360
+     * - `speed`
+     *     - The speed at which the wind is blowing.
+     *     - Units are automatically converted between metric and imperial depending on the user's preferences.
+     *     - See weather.units.speed at runtime for the units in use.
+     */
     wind: {
         degrees: number;
         cardinal: string;
         speed: number;
     };
 
+    /**
+     * An object containing the following properties:
+     *
+     * - `description`
+     *     - Short description of the condition forecasted
+     * - `code`
+     *     - Icon code corresponding to the condition forecasted.
+     *     - See page 2, column "icon_code" here: https://docs.google.com/document/d/1MZwWYqki8Ee-V7c7InBuA5CDVkjb3XJgpc39hI9FsI0/edit?pli=1
+     */
     condition: {
         description: string;
         code: number;
     };
 
+    /**
+     * Average cloud cover expressed as a percentage.
+     *
+     * Values range from: 1 to 100
+     */
     cloudCoverPercentage: number;
 
+    /**
+     * The time that this forecast represents.
+     */
     timestamp: Date;
+
     weekdayNumber: number;
+
+    /**
+     * The localised day of the week this forecast corresponds to.
+     */
     dayOfWeek: string;
 
+    /**
+     * An object containing the following properties:
+     *
+     * - `description`
+     *     - A localised description of the UV index, in relation to the risk of skin damage due to exposure.
+     *     - Values: Not Available, No Report, Low, Moderate, High, Very High, Extreme
+     * - `index`
+     *     - The forecasted UV index.
+     *     - Values range from: 0 to 16
+     *     - Note: a value of -2 equals "Not Available", and -1 equals "No Report"
+     */
     ultraviolet: {
         index: number;
         description: string;
     };
 
+    /**
+     * An object containing the following properties:
+     *
+     * - `dewpoint`
+     *     - The temperature which air must be cooled at constant pressure to reach saturation. When the dewpoint and temperature are equal, clouds or fog will typically form. The closer the values of temperature and dewpoint, the higher the relative humidity.
+     *     - Units are automatically converted between metric and imperial depending on the user's preferences.
+     *     - See weather.units.temperature at runtime for the units in use.
+     *     - Values range from: -80 to 100 (°F) or -62 to 37 (°C)
+     * - `relativeHumidity`
+     *     - The relative humidity of the air, which is defined as the ratio of the amount of water vapor in the air to the amount of vapor required to bring the air to saturation at a constant temperature.
+     *     - Expressed as a percentage.
+     *     - Values range from: 1 to 100
+     * - `minimum`
+     *     - The minimum temperature of the air at the time of observation
+     *     - Units are automatically converted between metric and imperial depending on the user's preferences.
+     *     - See weather.units.temperature at runtime for the units in use.
+     * - `maximum`
+     *     - The maximum temperature of the air at the time of observation
+     *     - Units are automatically converted between metric and imperial depending on the user's preferences.
+     *     - See weather.units.temperature at runtime for the units in use.
+     */
     temperature: {
         relativeHumidity: number;
         minimum: number;
@@ -153,11 +474,19 @@ export interface XENDWeatherPropertiesDaily {
         maximum: number;
     };
 
+    /**
+     * An object containing the following properties:
+     *
+     */
     sun: {
         sunrise: Date;
         sunset: Date;
     };
 
+    /**
+     * An object containing the following properties:
+     *
+     */
     moon: {
         phase: string;
         phaseDay: number;
@@ -166,6 +495,20 @@ export interface XENDWeatherPropertiesDaily {
         moonset: Date;
     };
 
+    /**
+     * An object containing the following properties:
+     *
+     * - `probability`
+     *     - Maximum probability of precipitation, expressed as a percentage.
+     *     - Values range from: 1 to 100
+     * - `stormLikelihood`
+     *     - TODO
+     * - `type`
+     *     - Type of precipitation associated with the probability.
+     *     - Values: `precip` (unknown), `rain`, `snow`
+     * - `tornadoLikelihood`
+     *     - TODO
+     */
     precipitation: {
         type: string;
         probability: number;
@@ -174,14 +517,27 @@ export interface XENDWeatherPropertiesDaily {
     };
 }
 
-export interface XENDWeatherPropertiesNightly {
+export interface WeatherPropertiesNightly {
     cloudCoverPercentage: number;
 
+    /**
+     * An object containing the following properties:
+     *
+     * - `description`
+     *     - Short description of the condition forecasted
+     * - `code`
+     *     - Icon code corresponding to the condition forecasted.
+     *     - See page 2, column "icon_code" here: https://docs.google.com/document/d/1MZwWYqki8Ee-V7c7InBuA5CDVkjb3XJgpc39hI9FsI0/edit?pli=1
+     */
     condition: {
         code: number;
         description: string;
     };
 
+    /**
+     * An object containing the following properties:
+     *
+     */
     moon: {
         phaseCode: string;
         phaseDay: number;
@@ -190,21 +546,56 @@ export interface XENDWeatherPropertiesNightly {
         moonset: Date;
     };
 
+    /**
+     * An object containing the following properties:
+     *
+     */
     precipitation: {
         probability: number;
         type: string;
     };
 
+    /**
+     * An object containing the following properties:
+     *
+     */
     temperature: {
         relativeHumidity: number;
         heatIndex: number;
     };
 
+    /**
+     * An object containing the following properties:
+     *
+     * - `description`
+     *     - A localised description of the UV index, in relation to the risk of skin damage due to exposure.
+     *     - Values: Not Available, No Report, Low, Moderate, High, Very High, Extreme
+     * - `index`
+     *     - The forecasted UV index.
+     *     - Values range from: 0 to 16
+     *     - Note: a value of -2 equals "Not Available", and -1 equals "No Report"
+     */
     ultraviolet: {
         index: number;
         description: string;
     };
 
+    /**
+     * An object containing the following properties:
+     *
+     * - `cardinal`
+     *     - The direction from which the wind blows expressed in an abbreviated form.
+     *     - e.g. N, E, S, W, NW, NNW etc
+     *     - Values: N , NNE , NE, ENE, E, ESE, SE,SSE, S, SSW, SW, WSW, W,WNW, NW, NNW, CALM (no wind speed), VAR (variable)
+     * - `degrees`
+     *     - The direction from which the wind blows expressed in degrees.
+     *     - e.g., 360 is North, 90 is East, 180 is South and 270 is West.
+     *     - Values range from: 1 to 360
+     * - `speed`
+     *     - The speed at which the wind is blowing.
+     *     - Units are automatically converted between metric and imperial depending on the user's preferences.
+     *     - See weather.units.speed at runtime for the units in use.
+     */
     wind: {
         degrees: number;
         cardinal: string;
@@ -212,7 +603,7 @@ export interface XENDWeatherPropertiesNightly {
     };
 }
 
-export interface XENDWeatherPropertiesUnits {
+export interface WeatherPropertiesUnits {
     temperature: string;
     amount: string;
     speed: string;
@@ -221,7 +612,11 @@ export interface XENDWeatherPropertiesUnits {
     distance: string;
 }
 
-export interface XENDWeatherPropertiesMetadata {
+export interface WeatherPropertiesMetadata {
+    /**
+     * An object containing the following properties:
+     *
+     */
     address: {
         house: string;
         street: string;
@@ -236,6 +631,10 @@ export interface XENDWeatherPropertiesMetadata {
 
     updateTimestamp: Date;
 
+    /**
+     * An object containing the following properties:
+     *
+     */
     location: {
         latitude: number;
         longitude: number;
@@ -245,13 +644,13 @@ export interface XENDWeatherPropertiesMetadata {
 /**
  * @ignore
  */
-export interface XENDWeatherProperties {
-    now:        XENDWeatherPropertiesNow;
-    hourly:     XENDWeatherPropertiesHourly[];
-    daily:      XENDWeatherPropertiesDaily[];
-    nightly:    XENDWeatherPropertiesNightly[];
-    units:      XENDWeatherPropertiesUnits;
-    metadata:   XENDWeatherPropertiesMetadata;
+export interface WeatherProperties {
+    now:        WeatherPropertiesNow;
+    hourly:     WeatherPropertiesHourly[];
+    daily:      WeatherPropertiesDaily[];
+    nightly:    WeatherPropertiesNightly[];
+    units:      WeatherPropertiesUnits;
+    metadata:   WeatherPropertiesMetadata;
 }
 
 /**
@@ -278,46 +677,46 @@ export interface XENDWeatherProperties {
  *               <p id="city">{ weather.metadata.address.city }</p>
  * </div>
  */
-export default class Weather extends Base implements XENDWeatherProperties {
+export default class Weather extends Base implements WeatherProperties {
 
-    // XENDWeatherProperties stub implementation
+    // WeatherProperties stub implementation
     // Superclass handles destructuring incoming data to these properties
 
     /**
      * Contains all properties relating to current weather conditions
      */
-    now:        XENDWeatherPropertiesNow;
+    now:        WeatherPropertiesNow;
 
     /**
      * An array of hourly forecasts
      */
-    hourly:     XENDWeatherPropertiesHourly[];
+    hourly:     WeatherPropertiesHourly[];
 
     /**
      * An array of daily forecasts
      */
-    daily:      XENDWeatherPropertiesDaily[];
+    daily:      WeatherPropertiesDaily[];
 
     /**
      * An array of nightly forecasts
      */
-    nightly:    XENDWeatherPropertiesNightly[];
+    nightly:    WeatherPropertiesNightly[];
 
     /**
      * Specifies the units data is returned in. You do not need to do any conversions yourself
      */
-    units:      XENDWeatherPropertiesUnits;
+    units:      WeatherPropertiesUnits;
 
     /**
      * Metadata about the current weather forecast, such as the location it corresponds to
      */
-    metadata:   XENDWeatherPropertiesMetadata;
+    metadata:   WeatherPropertiesMetadata;
 
     // Overridden to inject Date objects
     /**
      * @ignore
      */
-    _setData(payload: XENDWeatherProperties) {
+    _setData(payload: WeatherProperties) {
         // Don't try to parse an empty object
         if (payload.now === undefined) return;
 
@@ -473,7 +872,7 @@ export default class Weather extends Base implements XENDWeatherProperties {
         }
     }
 
-    protected defaultData(): XENDWeatherProperties {
+    protected defaultData(): WeatherProperties {
         return {
             now: {
                 _isValid: false,

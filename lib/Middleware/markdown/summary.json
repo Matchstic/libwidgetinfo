@@ -1,14 +1,14 @@
 [
     {
-        "title": "Introduction",
-        "file": "introduction.md"
-    },
-    {
-        "title": "Syntax: Inline",
+        "title": "Syntax: Inline Data",
         "file": "syntax-inline.md"
     },
     {
-        "title": "Image Packs",
-        "file": "image-packs.md"
+        "title": "Syntax: Callback-based",
+        "file": "syntax-callback-based.md"
+    },
+    {
+        "title": "Resource Packs",
+        "file": "resource-packs.md"
     }
 ]

@@ -9,9 +9,9 @@
 #import "XENDLogger.h"
 
 #if TARGET_IPHONE_SIMULATOR==0
-static NSString *libraryImagesBasePath = @"/Library/Application Support/Widgets/Image Packs";
+static NSString *libraryResourceBasePath = @"/Library/Application Support/Widgets/Resource Packs";
 #else
-static NSString *libraryImagesBasePath = @"/opt/simject/Library/Application Support/Widgets/Image Packs";
+static NSString *libraryResourceBasePath = @"/opt/simject/Library/Application Support/Widgets/Resource Packs";
 #endif
 
 @implementation XENDLibraryURLHandler
@@ -23,14 +23,14 @@ static NSString *libraryImagesBasePath = @"/opt/simject/Library/Application Supp
 - (void)handleURL:(NSURL*)url withCompletionHandler:(void (^)(NSError *, NSData*, NSString*))completionHandler {
     
     // We handle the following here:
-    // - Image packs
+    // - Resource packs
     // - Forwarding internal images, such as media artwork and app icons
     
-    NSString *host = [url host];;
+    NSString *host = [url host];
               
     NSData *data = nil;
     NSString *mimetype = nil;
-    if ([host isEqualToString:@"images"]) {
+    if ([host isEqualToString:@"resource"]) {
         data = [self loadLibraryFileAtPath:[url path] mimetype:&mimetype];
     }
     
@@ -39,7 +39,7 @@ static NSString *libraryImagesBasePath = @"/opt/simject/Library/Application Supp
 
 - (NSData*)loadLibraryFileAtPath:(NSString*)path mimetype:(NSString**)mimetype {
     
-    NSString *filepath = [NSString stringWithFormat:@"%@%@", libraryImagesBasePath, path];
+    NSString *filepath = [NSString stringWithFormat:@"%@%@", libraryResourceBasePath, path];
     
     *mimetype = [self assumedMIMEForFilepath:path];
     
@@ -50,7 +50,7 @@ static NSString *libraryImagesBasePath = @"/opt/simject/Library/Application Supp
         NSArray *pathComponents = [path pathComponents];
         int startPosition = [path hasPrefix:@"/"] ? 2 : 1; // skip name
         
-        NSString *redirectedFilepath = [NSString stringWithFormat:@"%@/default/", libraryImagesBasePath];
+        NSString *redirectedFilepath = [NSString stringWithFormat:@"%@/default/", libraryResourceBasePath];
         for (int i = startPosition; i < pathComponents.count; i++) {
             NSString *suffix = i == pathComponents.count - 1 ? @"" : @"/";
             redirectedFilepath = [redirectedFilepath stringByAppendingFormat:@"%@%@", pathComponents[i], suffix];
