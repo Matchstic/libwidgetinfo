@@ -46,6 +46,9 @@ export interface MediaProperties {
     playingApplication: ApplicationMetadata;
 }
 
+/**
+ * **This API is not yet available**
+ */
 export default class Media extends Base implements MediaProperties {
 
     // NOTE: Don't rely on native layer to push through elapsed time

@@ -20,6 +20,9 @@ export interface SystemProperties {
     isNetworkConnected: boolean;
 }
 
+/**
+ * **This API is not yet available**
+ */
 export default class System extends Base implements SystemProperties {
 
     /////////////////////////////////////////////////////////

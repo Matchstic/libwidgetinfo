@@ -17,6 +17,9 @@ export interface ApplicationsProperties {
     allApplications: ApplicationMetadata[];
 }
 
+/**
+ * **This API is not yet available**
+ */
 export default class Applications extends Base implements ApplicationsProperties {
 
     /////////////////////////////////////////////////////////

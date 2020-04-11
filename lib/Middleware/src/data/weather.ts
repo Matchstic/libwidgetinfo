@@ -1,15 +1,56 @@
 import { Base } from '../types';
 
+/**
+ * This interface represents an air quality pollutant.
+ *
+ * Note: data is only available in the following countries: China, France, India, Germany, Mexico, Spain, UK, US
+ */
 export interface WeatherAirQualityPollutant {
+    /**
+     * The amount/concentration of the pollutant present
+     *
+     * See the `units` property for the units this amount corresponds to
+     */
     amount: number;
+
+    /**
+     * Description of the pollutant's level
+     */
     categoryLevel: string;
+
+    /**
+     * Specifies the quality level of air in terms of this pollutant alone
+     *
+     * Values: 1 to 5
+     */
     categoryIndex: number;
+
+    /**
+     * The unit that is used to describe amounts of this pollutant
+     */
     units: string;
+
+    /**
+     * A description of the pollutant's amount/concentration
+     */
     description: string;
+
+    /**
+     * The name of the pollutant
+     */
     name: string;
+
+    /**
+     * The scale position of the pollutant, on a scale from the source providing air quality data
+     *
+     * For example, this may be the DAQI scale
+     */
     index: number;
 }
 
+/**
+ * This interface represents a forecast for the current time.
+ */
 export interface WeatherNow {
     /**
      * Specifies whether the current forecast can still be treated as valid
@@ -84,7 +125,7 @@ export interface WeatherNow {
      * - `index`
      *     - The forecasted UV index.
      *     - Values range from: 0 to 16
-     *     - Note: a value of -2 equals "Not Available", and -1 equals "No Report"
+     *     - Note: a value of -2 equals `"Not Available"`, and -1 equals `"No Report"`
      */
     ultraviolet: {
         index: number;
@@ -94,13 +135,21 @@ export interface WeatherNow {
     /**
      * Average cloud cover expressed as a code.
      *
-     * Values: SKC, CLR, SCT, FEW, BKN, OVC
+     * Values: `"SKC"`, `"CLR"`, `"SCT"`, `"FEW"`, `"BKN"`, `"OVC"`
      */
     cloudCover: string;
 
     /**
      * An object containing the following properties:
      *
+     * - `isDay`
+     *     - Specifies whether it is currently day or night
+     * - `sunrise`
+     *     - The time a sunrise will occur for the current day
+     *     - This time may be in the past
+     * - `sunset`
+     *     - The time a sunset will occur for the current day
+     *     - This time may be in the past
      */
     sun: {
         sunrise: Date;
@@ -109,26 +158,26 @@ export interface WeatherNow {
     };
 
     /**
-     * Data is only available in the following nations: China, France, India, Germany, Mexico, Spain, UK, US
+     * Data is only available in the following countries: China, France, India, Germany, Mexico, Spain, UK, US
      * An object containing the following properties:
      *
      * - `comment`
      *     - Source-provided comment on the data
      * - `categoryIndex`
-     *     - Index of the level of pollutants, in the range 1-5. This maps onto the human-readable `categoryLevel` property
+     *     - Specifies the quality level of air, in the range 1-5. This maps onto the human-readable `categoryLevel` property
      * - `categoryLevel`
-     *     - Description of the level of pollutants
+     *     - Description of the quality level of pollutants
      *     - Values: Low, Moderate, High, Very High, Serious
      * - `index`
      *     - Air quality index, as per the scale used for measurement.
-     *     - It is based on the concentrations of five pollutants: Ozone, PM2.5, PM10, Nitrogen Dioxide and Sulfur Dioxide
+     *     - It is based on the concentrations of the following pollutants: Ozone, PM2.5, PM10, Nitrogen Dioxide and Sulfur Dioxide
      *     - e.g., a scale of DAQI is from 1-10
      * - `scale`
      *     - Scale the data corresponds to. e.g., DAQI
      * - `source`
      *     - The source of the data. e.g., DEFRA
      * - `pollutants`
-     *     - An array of data about each of the five pollutants. Note that not all may be present due to API limitations.
+     *     - An array of data about each pollutant. Note that not all may be present due to API limitations.
      *     - Available pollutants:
      *         - Ozone
      *         - PM2.5
@@ -158,7 +207,7 @@ export interface WeatherNow {
      * - `total`
      *     - Precipitation in the last rolling 24 hour period.
      *     - Units are automatically converted between metric and imperial depending on the user's preferences.
-     *     - See weather.data.units.amount at runtime for the units in use.
+     *     - See weather.units.amount at runtime for the units in use.
      * - `type`
      *     - Type of precipitation associated with the probability.
      *     - Values: `precip` (unknown), `rain`, `snow`
@@ -207,9 +256,22 @@ export interface WeatherNow {
     /**
      * An object containing the following properties:
      *
+     * - `moonrise`
+     *     - The time a moonrise will occur for the current day
+     *     - This time may be in the past
+     * - `moonset`
+     *     - The time a moonset will occur for the current day
+     *     - This time may be in the past
+     * - `phaseCode`
+     *     - A 3 character code that represents the current lunar phase
+     *     - Values: NEW (New Moon), WXC (Waxing Crescent), FQT (First Quarter), WXG (Waxing Gibbous), FUL (Full Moon), WNG (Waning Gibbous), LQT (Last Quarter), WNC (Waning Crescent)
+     * - `phaseDay`
+     *     - The current day number in the lunar cycle
+     * - `phaseDescription`
+     *     - A short description of the current lunar phase
      */
     moon: {
-        phase: string;
+        phaseCode: string;
         phaseDay: number;
         phaseDescription: string;
         moonrise: Date;
@@ -237,6 +299,9 @@ export interface WeatherNow {
     };
 }
 
+/**
+ * This interface represents an hourly weather forecast
+ */
 export interface WeatherHourly {
     /**
      * An object containing the following properties:
@@ -282,7 +347,7 @@ export interface WeatherHourly {
     /**
     * Average cloud cover expressed as a percentage.
     *
-    * Values range from: 1 to 100
+    * Values range from: 0 to 100
     */
     cloudCoverPercentage: number;
 
@@ -374,6 +439,9 @@ export interface WeatherHourly {
     visibility: number;
 }
 
+/**
+ * This interface represents a daily weather forecast
+ */
 export interface WeatherDaily {
     /**
      * An object containing the following properties:
@@ -414,7 +482,7 @@ export interface WeatherDaily {
     /**
      * Average cloud cover expressed as a percentage.
      *
-     * Values range from: 1 to 100
+     * Values range from: 0 to 100
      */
     cloudCoverPercentage: number;
 
@@ -423,6 +491,11 @@ export interface WeatherDaily {
      */
     timestamp: Date;
 
+    /**
+     * The current day in the week this forecast corresponds to
+     *
+     * Values: 0 (Sunday) to 6 (Saturday)
+     */
     weekdayNumber: number;
 
     /**
@@ -477,6 +550,14 @@ export interface WeatherDaily {
     /**
      * An object containing the following properties:
      *
+     * - `isDay`
+     *     - Specifies whether it is currently day or night
+     * - `sunrise`
+     *     - The time a sunrise will occur for the current day
+     *     - Therefore, this time may be in the past
+     * - `sunset`
+     *     - The time a sunset will occur for the current day
+     *     - Therefore, this time may be in the past
      */
     sun: {
         sunrise: Date;
@@ -486,9 +567,22 @@ export interface WeatherDaily {
     /**
      * An object containing the following properties:
      *
+     * - `moonrise`
+     *     - The time a moonrise will occur for the current day
+     *     - This time may be in the past
+     * - `moonset`
+     *     - The time a moonset will occur for the current day
+     *     - This time may be in the past
+     * - `phaseCode`
+     *     - A 3 character code that represents the current lunar phase
+     *     - Values: NEW (New Moon), WXC (Waxing Crescent), FQT (First Quarter), WXG (Waxing Gibbous), FUL (Full Moon), WNG (Waning Gibbous), LQT (Last Quarter), WNC (Waning Crescent)
+     * - `phaseDay`
+     *     - The current day number in the lunar cycle
+     * - `phaseDescription`
+     *     - A short description of the current lunar phase
      */
     moon: {
-        phase: string;
+        phaseCode: string;
         phaseDay: number;
         phaseDescription: string;
         moonrise: Date;
@@ -502,12 +596,14 @@ export interface WeatherDaily {
      *     - Maximum probability of precipitation, expressed as a percentage.
      *     - Values range from: 1 to 100
      * - `stormLikelihood`
-     *     - TODO
+     *     - The estimate of the likelihood of winter storm activity during the forecast period
+     *     - Values: 0 to 10
      * - `type`
      *     - Type of precipitation associated with the probability.
      *     - Values: `precip` (unknown), `rain`, `snow`
      * - `tornadoLikelihood`
-     *     - TODO
+     *     - The estimate of the likelihood of tornado activity during the forecast period
+     *     - Values: 0 to 10
      */
     precipitation: {
         type: string;
@@ -517,7 +613,18 @@ export interface WeatherDaily {
     };
 }
 
+/**
+ * This interface represents a nightly weather forecast.
+ *
+ *
+ * It should be used to augment the data available in a daily forecast, and to provide information about moon phases
+ */
 export interface WeatherNightly {
+    /**
+    * Average cloud cover expressed as a percentage.
+    *
+    * Values range from: 0 to 100
+    */
     cloudCoverPercentage: number;
 
     /**
@@ -537,6 +644,19 @@ export interface WeatherNightly {
     /**
      * An object containing the following properties:
      *
+     * - `moonrise`
+     *     - The time a moonrise will occur for the current day
+     *     - This time may be in the past
+     * - `moonset`
+     *     - The time a moonset will occur for the current day
+     *     - This time may be in the past
+     * - `phaseCode`
+     *     - A 3 character code that represents the current lunar phase
+     *     - Values: NEW (New Moon), WXC (Waxing Crescent), FQT (First Quarter), WXG (Waxing Gibbous), FUL (Full Moon), WNG (Waning Gibbous), LQT (Last Quarter), WNC (Waning Crescent)
+     * - `phaseDay`
+     *     - The current day number in the lunar cycle
+     * - `phaseDescription`
+     *     - A short description of the current lunar phase
      */
     moon: {
         phaseCode: string;
@@ -549,6 +669,12 @@ export interface WeatherNightly {
     /**
      * An object containing the following properties:
      *
+     * - `probability`
+     *     - Maximum probability of precipitation, expressed as a percentage.
+     *     - Values range from: 1 to 100
+     * - `type`
+     *     - Type of precipitation associated with the probability.
+     *     - Values: `precip` (unknown), `rain`, `snow`
      */
     precipitation: {
         probability: number;
@@ -558,6 +684,14 @@ export interface WeatherNightly {
     /**
      * An object containing the following properties:
      *
+     * - `heatIndex`
+     *     - An apparent temperature. It represents what the air temperature “feels like” on exposed human skin due to the combined effect of warm temperatures and high humidity.
+     *     - Units are automatically converted between metric and imperial depending on the user's preferences.
+     *     - See weather.units.temperature at runtime for the units in use.
+     * - `relativeHumidity`
+     *     - The relative humidity of the air, which is defined as the ratio of the amount of water vapor in the air to the amount of vapor required to bring the air to saturation at a constant temperature.
+     *     - Expressed as a percentage.
+     *     - Values range from: 1 to 100
      */
     temperature: {
         relativeHumidity: number;
@@ -603,19 +737,82 @@ export interface WeatherNightly {
     };
 }
 
+/**
+ * This interface represents the units that can be queried for the current forecast
+ */
 export interface WeatherUnits {
+    /**
+     * The unit in use for temperature readings
+     *
+     * Values: `"°C"` or `"°F"`
+     */
     temperature: string;
+
+    /**
+     * The unit in use for small measurements, such as precipitation in the past hour
+     *
+     * Values: `"cm"` or `"in"`
+     */
     amount: string;
+
+    /**
+     * The unit in use for speed
+     *
+     * Values: `"km/h"` or `"mph"`
+     */
     speed: string;
+
+    /**
+     * Specified whether the units provided are to be classed as metric or not
+     *
+     * Note: some countries use a hybrid system, so you should always double check the units in use
+     */
     isMetric: boolean;
+
+    /**
+     * The unit in use for pressure readings
+     *
+     * Values: `"hPa"` or `"inHg"`
+     */
     pressure: string;
+
+    /**
+     * The units in use for larger distances
+     *
+     * Values: `"km"` or `"mile"`
+     */
     distance: string;
 }
 
+/**
+ * This interface represents metadata about the current weather conditions, alongside forecasts
+ */
 export interface WeatherMetadata {
     /**
      * An object containing the following properties:
      *
+     * - `house`
+     *     - The house number at the current location
+     * - `street`
+     *     - The street name at the current location
+     * - `neighbourhood`
+     *     - The name of the local neighbourhood
+     * - `county`
+     *     - The county the current location is located within
+     * - `city`
+     *     - The name of city the current location is located within, otherwise the nearest city
+     * - `postalCode`
+     *     - Equivalent to the ZIP code in the United States
+     *     - The postal code for the current location
+     * - `state`
+     *     - The state the current location is located in
+     *     - This is treated differently per country. For example, in the United Kingdom, this may be "Wales" or "England"
+     * - `country`
+     *     - The country the current location is located within
+     *     - e.g., "Australia"
+     * - `countryISOCode`
+     *     - The ISO 3166 country code for the `country` property
+     *     - e.g., "DE"
      */
     address: {
         house: string;
@@ -629,11 +826,18 @@ export interface WeatherMetadata {
         countryISOCode: string;
     };
 
+    /**
+     * A timestamp for when weather data was last updated
+     */
     updateTimestamp: Date;
 
     /**
      * An object containing the following properties:
      *
+     * - `latitude`
+     *     - The latitude for the current location
+     * - `longitude`
+     *     - The longitude for the current location
      */
     location: {
         latitude: number;
@@ -658,6 +862,8 @@ export interface WeatherProperties {
  *
  * User preferences for units are automatically handled for you.
  * Weather data will update every 15 minutes, with battery saving measures also taken into account.
+ *
+ * Due to how the underlying weather API works, some data points might return as `null`. You should always double check that data is not `null` before usage.
  *
  * @example
  * Pure Javascript:
@@ -934,7 +1140,7 @@ export default class Weather extends Base implements WeatherProperties {
                 },
                 visibility: 0,
                 moon: {
-                    phase: '',
+                    phaseCode: '',
                     phaseDay: 0,
                     phaseDescription: '',
                     moonrise: new Date(0),

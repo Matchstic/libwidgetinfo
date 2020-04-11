@@ -24,6 +24,9 @@ export interface ResourcesProperties {
     diskSpaceTotalBytes: number;
 }
 
+/**
+ * **This API is not yet available**
+ */
 export default class Resources extends Base implements ResourcesProperties {
 
     /////////////////////////////////////////////////////////

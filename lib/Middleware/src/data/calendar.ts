@@ -23,6 +23,9 @@ export interface CalendarProperties {
     upcomingWeekEvents: CalendarEntry[];
 }
 
+/**
+ * **This API is not yet available**
+ */
 export default class Calendar extends Base implements CalendarProperties {
 
     /////////////////////////////////////////////////////////
