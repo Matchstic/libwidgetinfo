@@ -1,9 +1,10 @@
 {
     "tsconfig": "./tsconfig.json",
     "output": "build/docs",
-    "templates": "templates",
-    "includes": "markdown",
+    "templates": "docs/templates",
+    "includes": "docs/markdown",
     "includesName": "doc",
+    "extTheme": "docs/theme",
     "minimal": true,
     "name": "Widget API",
     "hideGenerator": true,

@@ -1,0 +1,17 @@
+@import "./reset.css";
+@import "./bootstrap.min.css";
+@import "./bootstrap-card.css";
+@import "./prism.css";
+@import "./ionicons.min.css";
+@import "./compodoc.css";
+@import "./tablesort.css";
+
+.content-data {
+    height: initial;
+}
+
+.content::after {
+    content: '';
+    display: block;
+    padding-bottom: 30px;
+}
