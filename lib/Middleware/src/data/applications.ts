@@ -1,6 +1,6 @@
 import { Base, NativeError, DataProviderUpdateNamespace } from '../types';
 
-export interface XENDApplication {
+export interface ApplicationMetadata {
     displayName: string;
     bundleIdentifier: string;
     applicationIcon: string;
@@ -13,17 +13,30 @@ export interface XENDApplication {
 /**
  * @ignore
  */
-export interface XENDApplicationsProperties {
-    allApplications: XENDApplication[];
+export interface ApplicationsProperties {
+    allApplications: ApplicationMetadata[];
 }
 
-export default class Applications extends Base implements XENDApplicationsProperties {
+export default class Applications extends Base implements ApplicationsProperties {
 
     /////////////////////////////////////////////////////////
-    // XENDApplicationsProperties stub implementation
+    // ApplicationsProperties stub implementation
     /////////////////////////////////////////////////////////
 
-    allApplications: XENDApplication[];
+    allApplications: ApplicationMetadata[];
+
+    // Replicate here for documentation purposes
+    /**
+     * Register a function that gets called whenever the data of this
+     * provider changes.
+     *
+     * The new data is provided as the parameter into your callback function.
+     *
+     * @param callback A callback that is notified whenever the provider's data change
+     */
+    public observeData(callback: (newData: ApplicationsProperties) => void) {
+        super.observeData(callback);
+    }
 
     /////////////////////////////////////////////////////////
     // Implementation
@@ -32,8 +45,8 @@ export default class Applications extends Base implements XENDApplicationsProper
     /**
      * Provides a filtered list of applications to only those that are user-installed
      */
-    public get userApplications(): XENDApplication[] {
-        return this.allApplications.filter((app: XENDApplication) => {
+    public get userApplications(): ApplicationMetadata[] {
+        return this.allApplications.filter((app: ApplicationMetadata) => {
             return !app.isSystemApplication;
         });
     }
@@ -41,8 +54,8 @@ export default class Applications extends Base implements XENDApplicationsProper
     /**
      * Provides a filtered list of applications to only those that are system applications
      */
-    public get systemApplications(): XENDApplication[] {
-        return this.allApplications.filter((app: XENDApplication) => {
+    public get systemApplications(): ApplicationMetadata[] {
+        return this.allApplications.filter((app: ApplicationMetadata) => {
             return app.isSystemApplication;
         });
     }

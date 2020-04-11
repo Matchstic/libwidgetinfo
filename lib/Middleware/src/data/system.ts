@@ -4,7 +4,7 @@ import NativeInterface, { NativeInterfaceMessage } from '../native-interface';
 /**
  * @ignore
  */
-export interface XENDSystemProperties {
+export interface SystemProperties {
     deviceName: string;
     deviceType: string;
     deviceModel: string;
@@ -20,10 +20,10 @@ export interface XENDSystemProperties {
     isNetworkConnected: boolean;
 }
 
-export default class System extends Base implements XENDSystemProperties {
+export default class System extends Base implements SystemProperties {
 
     /////////////////////////////////////////////////////////
-    // XENDSystemProperties stub implementation
+    // SystemProperties stub implementation
     /////////////////////////////////////////////////////////
 
     deviceName: string;
@@ -39,6 +39,19 @@ export default class System extends Base implements XENDSystemProperties {
     isTwentyFourHourTimeEnabled: boolean;
     isLowPowerModeEnabled: boolean;
     isNetworkConnected: boolean;
+
+    // Replicate here for documentation purposes
+    /**
+     * Register a function that gets called whenever the data of this
+     * provider changes.
+     *
+     * The new data is provided as the parameter into your callback function.
+     *
+     * @param callback A callback that is notified whenever the provider's data change
+     */
+    public observeData(callback: (newData: SystemProperties) => void) {
+        super.observeData(callback);
+    }
 
     /////////////////////////////////////////////////////////
     // Provider implementation

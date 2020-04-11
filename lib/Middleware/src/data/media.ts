@@ -1,73 +1,86 @@
 import { Base, DataProviderUpdateNamespace } from '../types';
-import { XENDApplication } from './applications';
+import { ApplicationMetadata } from './applications';
 
-export interface XENDMediaAlbum {
+export interface MediaAlbum {
     title: string;
-    tracks: XENDMediaTrack[];
+    tracks: MediaTrack[];
     trackCount: number;
 }
 
-export interface XENDMediaArtist {
+export interface MediaArtist {
     name: string;
-    albums: XENDMediaAlbum;
+    albums: MediaAlbum;
 }
 
-export interface XENDMediaTrack {
+export interface MediaTrack {
     title: string;
-    album: XENDMediaAlbum;
-    artist: XENDMediaArtist;
+    album: MediaAlbum;
+    artist: MediaArtist;
     artwork: string; // URL of the artwork, exposed by the native side
     length: number;
     number: number;
 }
 
-export interface XENDMediaCurrentItem {
-    track: XENDMediaTrack;
-    album: XENDMediaAlbum;
-    artist: XENDMediaArtist;
+export interface MediaCurrentItem {
+    track: MediaTrack;
+    album: MediaAlbum;
+    artist: MediaArtist;
     elapsedDuration: number;
 }
 
 /**
  * @ignore
  */
-export interface XENDMediaProperties {
-    currentTrack: XENDMediaCurrentItem;
-    upcomingTracks: XENDMediaTrack[];
+export interface MediaProperties {
+    currentTrack: MediaCurrentItem;
+    upcomingTracks: MediaTrack[];
 
-    userArtists: XENDMediaArtist[];
-    userAlbums: XENDMediaAlbum[];
+    userArtists: MediaArtist[];
+    userAlbums: MediaAlbum[];
 
     isPlaying: boolean;
     isStopped: boolean;
     isShuffleEnabled: boolean;
 
     volume: number;
-    playingApplication: XENDApplication;
+    playingApplication: ApplicationMetadata;
 }
 
-export default class Media extends Base implements XENDMediaProperties {
+export default class Media extends Base implements MediaProperties {
 
     // NOTE: Don't rely on native layer to push through elapsed time
     // It'll come through on pause/play etc, but should really handle that here
     // to avoid massive communication overhead
 
     /////////////////////////////////////////////////////////
-    // XENDMediaProperties stub implementation
+    // MediaProperties stub implementation
     /////////////////////////////////////////////////////////
 
-    currentTrack: XENDMediaCurrentItem;
-    upcomingTracks: XENDMediaTrack[];
+    currentTrack: MediaCurrentItem;
+    upcomingTracks: MediaTrack[];
 
-    userArtists: XENDMediaArtist[];
-    userAlbums: XENDMediaAlbum[];
+    userArtists: MediaArtist[];
+    userAlbums: MediaAlbum[];
 
     isPlaying: boolean;
     isStopped: boolean;
     isShuffleEnabled: boolean;
 
     volume: number;
-    playingApplication: XENDApplication;
+    playingApplication: ApplicationMetadata;
+
+    // Replicate here for documentation purposes
+    /**
+     * Register a function that gets called whenever the data of this
+     * provider changes.
+     *
+     * The new data is provided as the parameter into your callback function.
+     *
+     * @param callback A callback that is notified whenever the provider's data change
+     */
+    public observeData(callback: (newData: MediaProperties) => void) {
+        super.observeData(callback);
+    }
 
     /////////////////////////////////////////////////////////
     // Implementation

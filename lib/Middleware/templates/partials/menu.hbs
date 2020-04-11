@@ -37,7 +37,7 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                         }}</a>
                     <ul class="links">
                         <li class="link">
-                            <a href="index.html" data-type="entity-link" data-context-id="readme">
+                            <a href="index.html" data-type="chapter-link">
                                 <span class="icon ion-ios-keypad"></span>{{t "Introduction" }}
                             </a>
                         </li>
@@ -74,7 +74,7 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                     {{/compare}}
                                 {{else}}
                                     <li class="link {{#compare depth ">" 1 }}for-chapter{{depth}}{{/compare}}">
-                                        <a href="{{path}}/{{filename}}.html" data-type="entity-link" data-context-id="additional">
+                                        <a href="{{path}}/{{filename}}.html" data-type="chapter-link">
                                             <span class="icon ion-ios-paper"></span>{{ name }}
                                         </a>
                                     </li>
@@ -260,13 +260,11 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                 {{/if}}
                 {{#if classes}}
                     <li class="chapter">
-                        <div class="simple menu-toggler" data-toggle="collapse" ${ isNormalMode ? 'data-target="#classes-links"' :
-                            'data-target="#xs-classes-links"' }>
-                            <span class="icon ion-ios-paper"></span>
+                        <div class="simple">
+                            <span class="icon ion-md-analytics"></span>
                             <span>Data Providers</span>
-                            <span class="icon {{#isNotToggle 'classes'}}ion-ios-arrow-up{{else}}ion-ios-arrow-down{{/isNotToggle}}"></span>
                         </div>
-                        <ul class="links collapse {{#isNotToggle 'classes'}}in{{/isNotToggle}}" ${ isNormalMode ? 'id="classes-links"' : 'id="xs-classes-links"' }>
+                        <ul class="links" ${ isNormalMode ? 'id="classes-links"' : 'id="xs-classes-links"' }>
                             {{#each classes}}
                             <li class="link">
                                 <a href="classes/{{#if duplicateName}}{{duplicateName}}{{else}}{{name}}{{/if}}.html" data-type="entity-link">{{

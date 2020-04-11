@@ -9,7 +9,7 @@ export enum XENDBatteryStatus {
 /**
  * @ignore
  */
-export interface XENDResourcesProperties {
+export interface ResourcesProperties {
     batteryPercentRemaining: number;
     batteryStatus: XENDBatteryStatus;
 
@@ -24,7 +24,7 @@ export interface XENDResourcesProperties {
     diskSpaceTotalBytes: number;
 }
 
-export default class Resources extends Base implements XENDResourcesProperties {
+export default class Resources extends Base implements ResourcesProperties {
 
     /////////////////////////////////////////////////////////
     // XENDRemindersProperties stub implementation
@@ -42,6 +42,19 @@ export default class Resources extends Base implements XENDResourcesProperties {
     diskSpaceFreeBytes: number;
     diskSpaceUsedBytes: number;
     diskSpaceTotalBytes: number;
+
+    // Replicate here for documentation purposes
+    /**
+     * Register a function that gets called whenever the data of this
+     * provider changes.
+     *
+     * The new data is provided as the parameter into your callback function.
+     *
+     * @param callback A callback that is notified whenever the provider's data change
+     */
+    public observeData(callback: (newData: ResourcesProperties) => void) {
+        super.observeData(callback);
+    }
 
     /////////////////////////////////////////////////////////
     // Implementation

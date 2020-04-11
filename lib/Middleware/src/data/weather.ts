@@ -1,6 +1,6 @@
 import { Base } from '../types';
 
-export interface WeatherPropertiesAirQualityPollutant {
+export interface WeatherAirQualityPollutant {
     amount: number;
     categoryLevel: string;
     categoryIndex: number;
@@ -10,7 +10,7 @@ export interface WeatherPropertiesAirQualityPollutant {
     index: number;
 }
 
-export interface WeatherPropertiesNow {
+export interface WeatherNow {
     /**
      * Specifies whether the current forecast can still be treated as valid
      *
@@ -136,7 +136,7 @@ export interface WeatherPropertiesNow {
      *         - Carbon Monoxide
      *         - Nitrogen Dioxide
      *         - Sulfur Dioxide
-     *     - See: {@link WeatherPropertiesAirQualityPollutant}
+     *     - See: {@link WeatherAirQualityPollutant}
      */
     airquality: {
         scale: string;
@@ -145,7 +145,7 @@ export interface WeatherPropertiesNow {
         comment: string;
         source: string;
         categoryIndex: number;
-        pollutants: WeatherPropertiesAirQualityPollutant[];
+        pollutants: WeatherAirQualityPollutant[];
     };
 
     /**
@@ -237,7 +237,7 @@ export interface WeatherPropertiesNow {
     };
 }
 
-export interface WeatherPropertiesHourly {
+export interface WeatherHourly {
     /**
      * An object containing the following properties:
      *
@@ -374,7 +374,7 @@ export interface WeatherPropertiesHourly {
     visibility: number;
 }
 
-export interface WeatherPropertiesDaily {
+export interface WeatherDaily {
     /**
      * An object containing the following properties:
      *
@@ -517,7 +517,7 @@ export interface WeatherPropertiesDaily {
     };
 }
 
-export interface WeatherPropertiesNightly {
+export interface WeatherNightly {
     cloudCoverPercentage: number;
 
     /**
@@ -603,7 +603,7 @@ export interface WeatherPropertiesNightly {
     };
 }
 
-export interface WeatherPropertiesUnits {
+export interface WeatherUnits {
     temperature: string;
     amount: string;
     speed: string;
@@ -612,7 +612,7 @@ export interface WeatherPropertiesUnits {
     distance: string;
 }
 
-export interface WeatherPropertiesMetadata {
+export interface WeatherMetadata {
     /**
      * An object containing the following properties:
      *
@@ -645,12 +645,12 @@ export interface WeatherPropertiesMetadata {
  * @ignore
  */
 export interface WeatherProperties {
-    now:        WeatherPropertiesNow;
-    hourly:     WeatherPropertiesHourly[];
-    daily:      WeatherPropertiesDaily[];
-    nightly:    WeatherPropertiesNightly[];
-    units:      WeatherPropertiesUnits;
-    metadata:   WeatherPropertiesMetadata;
+    now:        WeatherNow;
+    hourly:     WeatherHourly[];
+    daily:      WeatherDaily[];
+    nightly:    WeatherNightly[];
+    units:      WeatherUnits;
+    metadata:   WeatherMetadata;
 }
 
 /**
@@ -679,44 +679,57 @@ export interface WeatherProperties {
  */
 export default class Weather extends Base implements WeatherProperties {
 
-    // WeatherProperties stub implementation
+    // Weather stub implementation
     // Superclass handles destructuring incoming data to these properties
 
     /**
      * Contains all properties relating to current weather conditions
      */
-    now:        WeatherPropertiesNow;
+    now:        WeatherNow;
 
     /**
      * An array of hourly forecasts
      */
-    hourly:     WeatherPropertiesHourly[];
+    hourly:     WeatherHourly[];
 
     /**
      * An array of daily forecasts
      */
-    daily:      WeatherPropertiesDaily[];
+    daily:      WeatherDaily[];
 
     /**
      * An array of nightly forecasts
      */
-    nightly:    WeatherPropertiesNightly[];
+    nightly:    WeatherNightly[];
 
     /**
      * Specifies the units data is returned in. You do not need to do any conversions yourself
      */
-    units:      WeatherPropertiesUnits;
+    units:      WeatherUnits;
 
     /**
      * Metadata about the current weather forecast, such as the location it corresponds to
      */
-    metadata:   WeatherPropertiesMetadata;
+    metadata:   WeatherMetadata;
+
+    // Replicate here for documentation purposes
+    /**
+     * Register a function that gets called whenever the data of this
+     * provider changes.
+     *
+     * The new data is provided as the parameter into your callback function.
+     *
+     * @param callback A callback that is notified whenever the provider's data change
+     */
+    public observeData(callback: (newData: Weather) => void) {
+        super.observeData(callback);
+    }
 
     // Overridden to inject Date objects
     /**
      * @ignore
      */
-    _setData(payload: WeatherProperties) {
+    _setData(payload: Weather) {
         // Don't try to parse an empty object
         if (payload.now === undefined) return;
 
