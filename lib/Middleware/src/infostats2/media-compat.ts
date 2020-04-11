@@ -1,5 +1,5 @@
-import XENDMediaProvider, {
-    XENDMediaProperties
+import Media, {
+    MediaProperties
 } from '../data/media';
 
 /**
@@ -8,7 +8,7 @@ import XENDMediaProvider, {
 export default class IS2Calendar {
     private _observers: any = {};
     private _lookupMap: any = {};
-    private provider: XENDMediaProvider;
+    private provider: Media;
 
     constructor() {
         // Map ObjC selectors to JS functions
@@ -47,10 +47,10 @@ export default class IS2Calendar {
         this._lookupMap['getVolume ']                   = () => { /* not implemented */ return 0; };
     }
 
-    public initialise(provider: XENDMediaProvider) {
+    public initialise(provider: Media) {
         this.provider = provider;
 
-        this.provider.observeData((newData: XENDMediaProperties) => {
+        this.provider.observeData((newData: MediaProperties) => {
             // Update observers so that they fetch new data
             Object.keys(this._observers).forEach((key: string) => {
                 const fn = this._observers[key];

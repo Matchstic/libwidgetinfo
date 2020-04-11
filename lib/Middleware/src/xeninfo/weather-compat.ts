@@ -1,7 +1,7 @@
 import {
-    XENDWeatherProperties
+    WeatherProperties
 } from '../data/weather';
-import XENDSystemProvider from '../data/system';
+import System from '../data/system';
 
 import { DataProviderUpdateNamespace } from '../types';
 
@@ -13,13 +13,13 @@ export default class XenInfoWeather {
     constructor(private providers: Map<DataProviderUpdateNamespace, any>,
                 private notifyXenInfoDataChanged: (namespace: string) => void) {
         // Monitor weather data
-        providers.get(DataProviderUpdateNamespace.Weather).observeData((newData: XENDWeatherProperties) => {
+        providers.get(DataProviderUpdateNamespace.Weather).observeData((newData: WeatherProperties) => {
             this.onWeatherDataChanged(newData);
             this.notifyXenInfoDataChanged('weather');
         });
     }
 
-    onWeatherDataChanged(newData: XENDWeatherProperties): void {
+    onWeatherDataChanged(newData: WeatherProperties): void {
         // Map weather data to XI format on global object
 
         let weather = {
@@ -102,7 +102,7 @@ export default class XenInfoWeather {
 
     private weatherUpdateTimeString(date: Date): string {
         // Format is locale specific for data, time is HH:mm or hh:mm a
-        const is24h = (this.providers.get(DataProviderUpdateNamespace.System) as XENDSystemProvider).isTwentyFourHourTimeEnabled;
+        const is24h = (this.providers.get(DataProviderUpdateNamespace.System) as System).isTwentyFourHourTimeEnabled;
 
         const minutes = date.getMinutes() >= 10 ? date.getMinutes() : '0' + date.getMinutes();
 

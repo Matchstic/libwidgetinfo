@@ -1,5 +1,5 @@
-import XENDCalendarProvider, {
-    XENDCalendarProperties
+import Calendar, {
+    CalendarProperties
 } from '../data/calendar';
 
 /**
@@ -8,7 +8,7 @@ import XENDCalendarProvider, {
 export default class IS2Calendar {
     private _observers: any = {};
     private _lookupMap: any = {};
-    private provider: XENDCalendarProvider;
+    private provider: Calendar;
 
     constructor() {
         // Map ObjC selectors to JS functions
@@ -28,10 +28,10 @@ export default class IS2Calendar {
         this._lookupMap['calendarEntriesBetweenStartTime:andEndTime:'] = (args: any[]) => { return '[]'; };
     }
 
-    public initialise(provider: XENDCalendarProvider) {
+    public initialise(provider: Calendar) {
         this.provider = provider;
 
-        this.provider.observeData((newData: XENDCalendarProperties) => {
+        this.provider.observeData((newData: CalendarProperties) => {
             // Update observers so that they fetch new data
             Object.keys(this._observers).forEach((key: string) => {
                 const fn = this._observers[key];

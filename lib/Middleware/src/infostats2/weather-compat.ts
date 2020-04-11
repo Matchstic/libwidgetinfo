@@ -1,5 +1,5 @@
-import XENDWeatherProvider, {
-    XENDWeatherProperties
+import Weather, {
+    WeatherProperties
 } from '../data/weather';
 
 /**
@@ -8,7 +8,7 @@ import XENDWeatherProvider, {
 export default class IS2Weather {
     private _observers: any = {};
     private _lookupMap: any = {};
-    private provider: XENDWeatherProvider;
+    private provider: Weather;
 
     constructor() {
         // Map ObjC selectors to JS functions
@@ -59,10 +59,10 @@ export default class IS2Weather {
         this._lookupMap['dayForecastsForCurrentLocationJSON'] = () => { return JSON.stringify(this.dailyForecasts()) };
     }
 
-    public initialise(provider: XENDWeatherProvider) {
+    public initialise(provider: Weather) {
         this.provider = provider;
 
-        this.provider.observeData((newData: XENDWeatherProperties) => {
+        this.provider.observeData((newData: WeatherProperties) => {
             // Update observers so that they fetch new data
             Object.keys(this._observers).forEach((key: string) => {
                 const fn = this._observers[key];

@@ -1,11 +1,11 @@
-import XENDSystemProvider from '../data/system';
+import System from '../data/system';
 
 /**
  * @ignore
  */
 export default class IS2System {
     private _lookupMap: any = {};
-    private provider: XENDSystemProvider;
+    private provider: System;
 
     constructor() {
         // Map ObjC selectors to JS functions
@@ -52,7 +52,7 @@ export default class IS2System {
         this._lookupMap['getApplicationIconForBundleIdentifierBase64:'] = (args: any[]) => { /* not implemented */ return emptyImage; };
     }
 
-    public initialise(provider: XENDSystemProvider) {
+    public initialise(provider: System) {
         this.provider = provider;
     }
 }
