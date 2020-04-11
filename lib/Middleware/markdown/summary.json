@@ -6,5 +6,9 @@
     {
         "title": "Syntax: Inline",
         "file": "syntax-inline.md"
+    },
+    {
+        "title": "Image Packs",
+        "file": "image-packs.md"
     }
 ]
