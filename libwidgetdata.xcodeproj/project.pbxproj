@@ -82,6 +82,8 @@
 		C9204FF92336509900F9F535 /* XENDMediaDataProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = C9204FF72336509900F9F535 /* XENDMediaDataProvider.h */; };
 		C9204FFA2336509900F9F535 /* XENDMediaDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = C9204FF82336509900F9F535 /* XENDMediaDataProvider.m */; };
 		C93045B623D84DA800B0D561 /* XTWCAirQualityObservation.m in Sources */ = {isa = PBXBuildFile; fileRef = C93045B523D84DA800B0D561 /* XTWCAirQualityObservation.m */; };
+		C9478BF12441D2DB00677E31 /* XENDLibraryURLHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = C9478BEF2441D2DB00677E31 /* XENDLibraryURLHandler.h */; };
+		C9478BF22441D2DB00677E31 /* XENDLibraryURLHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = C9478BF02441D2DB00677E31 /* XENDLibraryURLHandler.m */; };
 		C979628D24267DCA007849D8 /* XENDLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = C979628B24267DCA007849D8 /* XENDLogger.h */; };
 		C97962A424268D4F007849D8 /* XENDLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = C979628C24267DCA007849D8 /* XENDLogger.m */; };
 		C97CF9F323217A1200A3A014 /* XENDHijackedWebViewDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = C97CF9F123217A1200A3A014 /* XENDHijackedWebViewDelegate.h */; };
@@ -271,6 +273,8 @@
 		C9204FF82336509900F9F535 /* XENDMediaDataProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XENDMediaDataProvider.m; sourceTree = "<group>"; };
 		C93045B423D84DA800B0D561 /* XTWCAirQualityObservation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XTWCAirQualityObservation.h; path = "daemon/Data Providers/Weather/Model/XTWCAirQualityObservation.h"; sourceTree = SOURCE_ROOT; };
 		C93045B523D84DA800B0D561 /* XTWCAirQualityObservation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XTWCAirQualityObservation.m; path = "daemon/Data Providers/Weather/Model/XTWCAirQualityObservation.m"; sourceTree = SOURCE_ROOT; };
+		C9478BEF2441D2DB00677E31 /* XENDLibraryURLHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XENDLibraryURLHandler.h; sourceTree = "<group>"; };
+		C9478BF02441D2DB00677E31 /* XENDLibraryURLHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XENDLibraryURLHandler.m; sourceTree = "<group>"; };
 		C979628B24267DCA007849D8 /* XENDLogger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XENDLogger.h; sourceTree = "<group>"; };
 		C979628C24267DCA007849D8 /* XENDLogger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XENDLogger.m; sourceTree = "<group>"; };
 		C979629B24268D34007849D8 /* liblogger.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblogger.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -488,6 +492,8 @@
 				C92013DD2411A704009CBBFB /* XENDWidgetWeatherURLHandler.m */,
 				C92013E02411A711009CBBFB /* XENDBaseURLHandler.h */,
 				C92013E12411A711009CBBFB /* XENDBaseURLHandler.m */,
+				C9478BEF2441D2DB00677E31 /* XENDLibraryURLHandler.h */,
+				C9478BF02441D2DB00677E31 /* XENDLibraryURLHandler.m */,
 			);
 			path = "URL Handlers";
 			sourceTree = "<group>";
@@ -847,6 +853,7 @@
 				C91F4029242FB1DA00E30466 /* string_piece.h in Headers */,
 				C91F403C242FB1DA00E30466 /* gumbo.h in Headers */,
 				C9F2F39C2301BE4100E4863B /* Options.hpp in Headers */,
+				C9478BF12441D2DB00677E31 /* XENDLibraryURLHandler.h in Headers */,
 				C91F4027242FB1DA00E30466 /* tokenizer.h in Headers */,
 				C9F2F3A52301BE4100E4863B /* Exception.hpp in Headers */,
 				C9F2F3972301BE4100E4863B /* Local.hpp in Headers */,
@@ -1055,6 +1062,7 @@
 				C9F2F39F2301BE4100E4863B /* Highlight.cpp in Sources */,
 				C91F402D242FB1DA00E30466 /* error.c in Sources */,
 				C9204FE72336445000F9F535 /* XENDProxyManager.m in Sources */,
+				C9478BF22441D2DB00677E31 /* XENDLibraryURLHandler.m in Sources */,
 				C91F4035242FB1DA00E30466 /* parser.c in Sources */,
 				C9F2F40D2301C3A200E4863B /* WKWebView_WidgetData.m in Sources */,
 				C91F3FA9242FA9B100E30466 /* ObjectiveGumbo.m in Sources */,

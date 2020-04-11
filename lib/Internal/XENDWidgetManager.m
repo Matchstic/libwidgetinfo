@@ -16,6 +16,7 @@
 
 // URL handler imports
 #import "../URL Handlers/XENDWidgetWeatherURLHandler.h"
+#import "../URL Handlers/XENDLibraryURLHandler.h"
 
 // Horrible internal hacks for NSURLProtocol to work as intended
 #import <objc/runtime.h>
@@ -279,6 +280,7 @@ static NSString *preferencesId = @"com.matchstic.xenhtml.libwidgetinfo";
 
     // Now, register them with NSURLProtocol
     [NSURLProtocol registerClass:[XENDWidgetWeatherURLHandler class]];
+    [NSURLProtocol registerClass:[XENDLibraryURLHandler class]];
 }
 
 // Used internally by the URL handlers
