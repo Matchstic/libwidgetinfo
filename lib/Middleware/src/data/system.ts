@@ -21,7 +21,7 @@ export interface SystemProperties {
 }
 
 /**
- * **This API is not yet available**
+ * @ignore
  */
 export default class System extends Base implements SystemProperties {
 

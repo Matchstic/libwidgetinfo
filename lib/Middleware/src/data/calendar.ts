@@ -24,7 +24,7 @@ export interface CalendarProperties {
 }
 
 /**
- * **This API is not yet available**
+ * @ignore
  */
 export default class Calendar extends Base implements CalendarProperties {
 

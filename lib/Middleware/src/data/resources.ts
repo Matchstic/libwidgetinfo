@@ -25,7 +25,7 @@ export interface ResourcesProperties {
 }
 
 /**
- * **This API is not yet available**
+ * @ignore
  */
 export default class Resources extends Base implements ResourcesProperties {
 

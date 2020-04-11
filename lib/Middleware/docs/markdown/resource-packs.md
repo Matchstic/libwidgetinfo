@@ -21,7 +21,7 @@ As shown above, the `xui://` URI scheme is used to load content from an resource
 - `resource`
     - Specifies to load from a resource pack
 - `default`
-    - The name of the widget pack to load from
+    - The name of the resource pack to load from
     - This is where to specify the folder name of your resource pack. For example, specifying `my-great-pack` would load from the `my-great-pack` subfolder inside `/Library/Application Support/Widgets/Resource Packs`
 - `weather/1.svg`
     - This is the path to load from inside the specified pack

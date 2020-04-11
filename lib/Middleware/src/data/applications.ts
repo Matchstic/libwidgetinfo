@@ -18,7 +18,7 @@ export interface ApplicationsProperties {
 }
 
 /**
- * **This API is not yet available**
+ * @ignore
  */
 export default class Applications extends Base implements ApplicationsProperties {
 

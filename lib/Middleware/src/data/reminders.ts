@@ -8,7 +8,7 @@ export interface RemindersProperties {
 }
 
 /**
- * **This API is not yet available**
+ * @ignore
  */
 export default class Reminders extends Base implements RemindersProperties {
 

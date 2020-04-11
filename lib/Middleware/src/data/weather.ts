@@ -66,8 +66,7 @@ export interface WeatherNow {
      *     - Short description of the condition forecasted
      * - `code`
      *     - Icon code corresponding to the condition forecasted.
-     *     - See page 2, column "icon_code" here: https://docs.google.com/document/d/1MZwWYqki8Ee-V7c7InBuA5CDVkjb3XJgpc39hI9FsI0/edit?pli=1
-     */
+     *     - See: https://gist.github.com/bzerangue/805520*/
     condition: {
         description: string;
         code: number;
@@ -337,7 +336,7 @@ export interface WeatherHourly {
      *     - Short description of the condition forecasted
      * - `code`
      *     - Icon code corresponding to the condition forecasted.
-     *     - See page 2, column "icon_code" here: https://docs.google.com/document/d/1MZwWYqki8Ee-V7c7InBuA5CDVkjb3XJgpc39hI9FsI0/edit?pli=1
+     *     - See: https://gist.github.com/bzerangue/805520
      */
     condition: {
         description: string;
@@ -472,7 +471,7 @@ export interface WeatherDaily {
      *     - Short description of the condition forecasted
      * - `code`
      *     - Icon code corresponding to the condition forecasted.
-     *     - See page 2, column "icon_code" here: https://docs.google.com/document/d/1MZwWYqki8Ee-V7c7InBuA5CDVkjb3XJgpc39hI9FsI0/edit?pli=1
+     *     - See: https://gist.github.com/bzerangue/805520
      */
     condition: {
         description: string;
@@ -634,7 +633,7 @@ export interface WeatherNightly {
      *     - Short description of the condition forecasted
      * - `code`
      *     - Icon code corresponding to the condition forecasted.
-     *     - See page 2, column "icon_code" here: https://docs.google.com/document/d/1MZwWYqki8Ee-V7c7InBuA5CDVkjb3XJgpc39hI9FsI0/edit?pli=1
+     *     - See: https://gist.github.com/bzerangue/805520
      */
     condition: {
         code: number;

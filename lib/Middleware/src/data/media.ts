@@ -47,7 +47,7 @@ export interface MediaProperties {
 }
 
 /**
- * **This API is not yet available**
+ * @ignore
  */
 export default class Media extends Base implements MediaProperties {
 
