@@ -107,7 +107,11 @@ static NSString *preferencesId = @"com.matchstic.xenhtml.libwidgetinfo";
     }
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        [webView evaluateJavaScript:updateString completionHandler:^(id object, NSError *error) {}];
+        [webView evaluateJavaScript:updateString completionHandler:^(id object, NSError *error) {
+            if (error) {
+                NSLog(@"notifyWebViewLoaded :: ERROR during JS execution: %@", error);
+            }
+        }];
     });
 }
 
@@ -172,7 +176,11 @@ static NSString *preferencesId = @"com.matchstic.xenhtml.libwidgetinfo";
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 [webview evaluateJavaScript:updateString
-                          completionHandler:^(id res, NSError * _Nullable error) {}];
+                          completionHandler:^(id res, NSError * _Nullable error) {
+                    if (error) {
+                        NSLog(@"onMessageReceivedWithPayload :: ERROR during JS execution: %@", error);
+                    }
+                }];
             });
         }];
     } else {
@@ -241,7 +249,11 @@ static NSString *preferencesId = @"com.matchstic.xenhtml.libwidgetinfo";
     // Loop over widget array, and call update as required.
     for (WKWebView *widget in self.managedWebViews) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [widget evaluateJavaScript:updateString completionHandler:^(id object, NSError *error) {}];
+            [widget evaluateJavaScript:updateString completionHandler:^(id object, NSError *error) {
+                if (error) {
+                    NSLog(@"updateWidgetsWithNewData :: ERROR during JS execution: %@", error);
+                }
+            }];
         });
     }
 }
