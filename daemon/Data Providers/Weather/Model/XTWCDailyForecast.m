@@ -163,12 +163,10 @@
     // If this day has not yet begun, assume to use day info
     if ([[NSDate date] timeIntervalSince1970] < self.day.validUNIXTime) return YES;
     
-    // Check against the sunset and sunrise times
+    // Check against the sunset time
     NSDate *sunsetTime = [self dateFromISO8601String:self.sunSetISOTime];
-    NSDate *sunriseTime = [self dateFromISO8601String:self.sunRiseISOTime];
     
-    return [[NSDate date] compare:sunriseTime] == NSOrderedDescending &&
-            [[NSDate date] compare:sunsetTime] == NSOrderedAscending;
+    return [[NSDate date] compare:sunsetTime] == NSOrderedAscending;
 }
 
 - (NSDate*)dateFromISO8601String:(NSString*)input {
