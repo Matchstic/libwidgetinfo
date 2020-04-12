@@ -38,7 +38,7 @@ Validity lasts for 24 hours from this time.
 @property (nonatomic, readwrite) uint64_t validUNIXTime;
 
 // From day/part things
-@property (nonatomic, strong) NSString *cloudCoverPercentage;
+@property (nonatomic, strong) NSNumber *cloudCoverPercentage;
 @property (nonatomic, strong) NSNumber *conditionIcon;
 @property (nonatomic, strong) NSString *conditionDescription;
 @property (nonatomic, strong) NSString *dayIndicator;

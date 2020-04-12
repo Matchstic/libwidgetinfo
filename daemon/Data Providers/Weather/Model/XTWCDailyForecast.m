@@ -10,7 +10,7 @@
 
 @interface TWCDayNightPart : NSObject
 
-@property (nonatomic, strong) NSString *cloudCoverPercentage;
+@property (nonatomic, strong) NSNumber *cloudCoverPercentage;
 @property (nonatomic, strong) NSNumber *conditionIcon;
 @property (nonatomic, strong) NSString *conditionDescription;
 @property (nonatomic, strong) NSString *dayIndicator;
@@ -113,7 +113,7 @@
     TWCDayNightPart *part = [[TWCDayNightPart alloc] init];
     
     // Handle all non-metricy stuff first
-    part.cloudCoverPercentage          = [data objectForKey:@"clds" defaultValue:[NSNull null]];
+    part.cloudCoverPercentage           = [data objectForKey:@"clds" defaultValue:[NSNull null]];
     part.conditionIcon                  = [data objectForKey:@"icon_cd" defaultValue:[NSNull null]];
     part.conditionDescription           = [data objectForKey:@"phrase_32char" defaultValue:[NSNull null]];
     part.dayIndicator                   = [data objectForKey:@"day_ind" defaultValue:[NSNull null]];
@@ -170,21 +170,27 @@
 }
 
 - (NSDate*)dateFromISO8601String:(NSString*)input {
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    
-    // 2020-03-05T03:48:34-0800
-    [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZ"];
-    
-    // Always use this locale when parsing fixed format date strings
-    NSLocale *posix = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
-    [formatter setLocale:posix];
+    static NSDateFormatter *formatter;
+    if (!formatter) {
+        formatter = [[NSDateFormatter alloc] init];
+        
+        [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZ"];
+        
+        // Always use this locale when parsing fixed format date strings
+        NSLocale *posix = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+        [formatter setLocale:posix];
+    }
     
     return [formatter dateFromString:input];
 }
 
-- (NSString*)cloudCoverPercentage {
+- (NSNumber*)cloudCoverPercentage {
     id result = [self _useDayPart] ? self.day.cloudCoverPercentage : self.night.cloudCoverPercentage;
-    return result ? result : @"";
+    if (!result) {
+        // Use day forecast if not available for night
+        result = self.day.cloudCoverPercentage;
+    }
+    return result ? result : @0;
 }
 
 - (NSNumber*)conditionIcon {
