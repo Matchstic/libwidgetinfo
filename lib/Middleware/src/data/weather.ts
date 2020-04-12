@@ -57,7 +57,7 @@ export interface WeatherNow {
      *
      * This may be `false` if a forecast update has not been successful for over 24 hours.
      */
-    _isValid: boolean;
+    isValid: boolean;
 
     /**
      * An object containing the following properties:
@@ -143,11 +143,11 @@ export interface WeatherNow {
     };
 
     /**
-     * Average cloud cover expressed as a code.
+     * Average cloud cover expressed as a percentage.
      *
-     * Values: `"SKC"`, `"CLR"`, `"SCT"`, `"FEW"`, `"BKN"`, `"OVC"`
+     * Values range from: 0 to 100
      */
-    cloudCover: string;
+    cloudCoverPercentage: number;
 
     /**
      * An object containing the following properties:
@@ -1193,10 +1193,10 @@ export default class Weather extends Base implements WeatherProperties {
     protected defaultData(): WeatherProperties {
         return {
             now: {
-                _isValid: false,
+                isValid: false,
                 condition: {
-                    description: '',
-                    code: 0
+                    description: 'No data available',
+                    code: 44
                 },
                 temperature: {
                     minimum: 0,
@@ -1211,7 +1211,7 @@ export default class Weather extends Base implements WeatherProperties {
                     index: 0,
                     description: '',
                 },
-                cloudCover: '',
+                cloudCoverPercentage: 0,
                 sun: {
                     sunrise: new Date(0),
                     sunset: new Date(0),
@@ -1267,7 +1267,7 @@ export default class Weather extends Base implements WeatherProperties {
                     house: '',
                     street: '',
                     neighbourhood: '',
-                    city: '',
+                    city: 'Loading weather...',
                     postalCode: '',
                     county: '',
                     state: '',

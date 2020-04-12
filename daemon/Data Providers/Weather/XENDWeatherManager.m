@@ -317,6 +317,8 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
                 [self.delegate onUpdatedWeatherConditions:parsed];
             } @catch (NSException *e) {
                 XENDLog(@"ERROR (weather parsing) :: %@", e);
+                XENDLog(@"Weather data: %@", forecastData);
+                XENDLog(@"Air data: %@", airQualityData);
             }
 
             
@@ -615,7 +617,7 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
     // See: https://www.worldcommunitygrid.org/lt/images/climate/The_Weather_Company_APIs.pdf
     // This includes full descriptions for every field for documentation
     NSDictionary *now = @{
-        @"_isValid": [NSNumber numberWithBool:isObservationValid],
+        @"isValid": [NSNumber numberWithBool:isObservationValid],
         
         @"airQuality": @{
             @"categoryLevel": airQuality.categoryLevel,
@@ -627,7 +629,7 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
             @"pollutants": airQuality.pollutants
         },
         
-        @"cloudCover": observation.cloudCoverDescription,
+        @"cloudCoverPercentage": prediction ? prediction.cloudCoverPercentage : @0,
         
         @"condition": @{
             @"code": observation.conditionIcon,
@@ -650,6 +652,7 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
             @"phaseDay": prediction ? prediction.lunarPhaseDay : [NSNull null],
             @"phaseCode": prediction ? prediction.lunarPhaseCode : [NSNull null],
             @"phaseDescription": prediction ? prediction.lunarPhaseDescription : [NSNull null],
+            // TODO: This fails if the next moonrise is actually e.g. 1am the next day
             @"moonrise": prediction ? prediction.moonRiseISOTime : [NSNull null],
             @"moonset": prediction ? prediction.moonSetISOTime : [NSNull null],
         },
