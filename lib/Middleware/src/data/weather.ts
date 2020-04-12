@@ -63,8 +63,10 @@ export interface WeatherNow {
      * An object containing the following properties:
      *
      * - `description`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - Short description of the condition forecasted
      * - `code`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - Icon code corresponding to the condition forecasted.
      *     - See: https://gist.github.com/bzerangue/805520*/
     condition: {
@@ -76,31 +78,38 @@ export interface WeatherNow {
      * An object containing the following properties:
      *
      * - `current`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - The current temperature of the air.
      *     - Units are automatically converted between metric and imperial depending on the user's preferences.
      *     - See weather.units.temperature at runtime for the units in use.
      * - `dewpoint`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - The temperature which air must be cooled at constant pressure to reach saturation. When the dewpoint and temperature are equal, clouds or fog will typically form. The closer the values of temperature and dewpoint, the higher the relative humidity.
      *     - Units are automatically converted between metric and imperial depending on the user's preferences.
      *     - See weather.units.temperature at runtime for the units in use.
      *     - Values range from: -80 to 100 (°F) or -62 to 37 (°C)
      * - `feelsLike`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - An apparent temperature. It represents what the air temperature “feels like” on exposed human skin due to the combined effect of the wind chill or heat index.
      *     - Units are automatically converted between metric and imperial depending on the user's preferences.
      *     - See weather.units.temperature at runtime for the units in use.
      * - `heatIndex`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - An apparent temperature. It represents what the air temperature “feels like” on exposed human skin due to the combined effect of warm temperatures and high humidity.
      *     - Units are automatically converted between metric and imperial depending on the user's preferences.
      *     - See weather.units.temperature at runtime for the units in use.
      * - `relativeHumidity`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - The relative humidity of the air, which is defined as the ratio of the amount of water vapor in the air to the amount of vapor required to bring the air to saturation at a constant temperature.
      *     - Expressed as a percentage.
      *     - Values range from: 1 to 100
      * - `minimum`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - The minimum temperature of the air at the time of observation
      *     - Units are automatically converted between metric and imperial depending on the user's preferences.
      *     - See weather.units.temperature at runtime for the units in use.
      * - `maximum`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - The maximum temperature of the air at the time of observation
      *     - Units are automatically converted between metric and imperial depending on the user's preferences.
      *     - See weather.units.temperature at runtime for the units in use.
@@ -119,9 +128,11 @@ export interface WeatherNow {
      * An object containing the following properties:
      *
      * - `description`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - A localised description of the UV index, in relation to the risk of skin damage due to exposure.
      *     - Values: Not Available, No Report, Low, Moderate, High, Very High, Extreme
      * - `index`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - The forecasted UV index.
      *     - Values range from: 0 to 16
      *     - Note: a value of -2 equals `"Not Available"`, and -1 equals `"No Report"`
@@ -142,11 +153,14 @@ export interface WeatherNow {
      * An object containing the following properties:
      *
      * - `isDay`
+     *     - <i>Type :</i> [boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean)
      *     - Specifies whether it is currently day or night
      * - `sunrise`
+     *     - <i>Type :</i> [Date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date)
      *     - The time a sunrise will occur for the current day
      *     - This time may be in the past
      * - `sunset`
+     *     - <i>Type :</i> [Date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date)
      *     - The time a sunset will occur for the current day
      *     - This time may be in the past
      */
@@ -158,24 +172,32 @@ export interface WeatherNow {
 
     /**
      * Data is only available in the following countries: China, France, India, Germany, Mexico, Spain, UK, US
+     *
      * An object containing the following properties:
      *
      * - `comment`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - Source-provided comment on the data
      * - `categoryIndex`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - Specifies the quality level of air, in the range 1-5. This maps onto the human-readable `categoryLevel` property
      * - `categoryLevel`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - Description of the quality level of pollutants
      *     - Values: Low, Moderate, High, Very High, Serious
      * - `index`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - Air quality index, as per the scale used for measurement.
      *     - It is based on the concentrations of the following pollutants: Ozone, PM2.5, PM10, Nitrogen Dioxide and Sulfur Dioxide
      *     - e.g., a scale of DAQI is from 1-10
      * - `scale`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - Scale the data corresponds to. e.g., DAQI
      * - `source`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - The source of the data. e.g., DEFRA
      * - `pollutants`
+     *     - <i>Type :</i> Array<{@link WeatherAirQualityPollutant}>
      *     - An array of data about each pollutant. Note that not all may be present due to API limitations.
      *     - Available pollutants:
      *         - Ozone
@@ -184,7 +206,6 @@ export interface WeatherNow {
      *         - Carbon Monoxide
      *         - Nitrogen Dioxide
      *         - Sulfur Dioxide
-     *     - See: {@link WeatherAirQualityPollutant}
      */
     airquality: {
         scale: string;
@@ -200,14 +221,17 @@ export interface WeatherNow {
      * An object containing the following properties:
      *
      * - `hourly`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - Precipitation in the last hour
      *     - Units are automatically converted between metric and imperial depending on the user's preferences.
      *     - See weather.units.amount at runtime for the units in use.
      * - `total`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - Precipitation in the last rolling 24 hour period.
      *     - Units are automatically converted between metric and imperial depending on the user's preferences.
      *     - See weather.units.amount at runtime for the units in use.
      * - `type`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - Type of precipitation associated with the probability.
      *     - Values: `precip` (unknown), `rain`, `snow`
      */
@@ -221,18 +245,22 @@ export interface WeatherNow {
      * An object containing the following properties:
      *
      * - `cardinal`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - The direction from which the wind blows expressed in an abbreviated form.
      *     - e.g. N, E, S, W, NW, NNW etc
      *     - Values: N , NNE , NE, ENE, E, ESE, SE,SSE, S, SSW, SW, WSW, W,WNW, NW, NNW, CALM (no wind speed), VAR (variable)
      * - `degrees`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - The direction from which the wind blows expressed in degrees.
      *     - e.g., 360 is North, 90 is East, 180 is South and 270 is West.
      *     - Values range from: 1 to 360
      * - `gust`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - The maximum expected wind gust speed.
      *     - Units are automatically converted between metric and imperial depending on the user's preferences.
      *     - See weather.units.speed at runtime for the units in use.
      * - `speed`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - The speed at which the wind is blowing.
      *     - Units are automatically converted between metric and imperial depending on the user's preferences.
      *     - See weather.units.speed at runtime for the units in use.
@@ -256,17 +284,22 @@ export interface WeatherNow {
      * An object containing the following properties:
      *
      * - `moonrise`
+     *     - <i>Type :</i> [Date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date)
      *     - The time a moonrise will occur for the current day
      *     - This time may be in the past
      * - `moonset`
+     *     - <i>Type :</i> [Date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date)
      *     - The time a moonset will occur for the current day
      *     - This time may be in the past
      * - `phaseCode`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - A 3 character code that represents the current lunar phase
      *     - Values: NEW (New Moon), WXC (Waxing Crescent), FQT (First Quarter), WXG (Waxing Gibbous), FUL (Full Moon), WNG (Waning Gibbous), LQT (Last Quarter), WNC (Waning Crescent)
      * - `phaseDay`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - The current day number in the lunar cycle
      * - `phaseDescription`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - A short description of the current lunar phase
      */
     moon: {
@@ -281,13 +314,16 @@ export interface WeatherNow {
      * An object containing the following properties:
      *
      * - `current`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - Barometric pressure exerted by the atmosphere at the earth's surface.
      *     - Units are automatically converted between metric and imperial depending on the user's preferences.
      *     - See weather.units.pressure at runtime for the units in use.
      * - `description`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - A phrase describing the change in the barometric pressure reading over the last hour.
      *     - Values: Steady, Rising, Rapidly Rising, Falling, Rapidly Falling
      * - `tendency`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - An integer describing the change in the barometric pressure reading over the last hour.
      *     - Values: 0 (Steady), 1 (Rising, Rapidly Rising), 2 (Falling, Rapidly Falling)
      */
@@ -306,18 +342,22 @@ export interface WeatherHourly {
      * An object containing the following properties:
      *
      * - `cardinal`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - The direction from which the wind blows expressed in an abbreviated form.
      *     - e.g. N, E, S, W, NW, NNW etc
      *     - Values: N , NNE , NE, ENE, E, ESE, SE,SSE, S, SSW, SW, WSW, W,WNW, NW, NNW, CALM (no wind speed), VAR (variable)
      * - `degrees`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - The direction from which the wind blows expressed in degrees.
      *     - e.g., 360 is North, 90 is East, 180 is South and 270 is West.
      *     - Values range from: 1 to 360
      * - `gust`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - The maximum expected wind gust speed.
      *     - Units are automatically converted between metric and imperial depending on the user's preferences.
      *     - See weather.units.speed at runtime for the units in use.
      * - `speed`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - The speed at which the wind is blowing.
      *     - Units are automatically converted between metric and imperial depending on the user's preferences.
      *     - See weather.units.speed at runtime for the units in use.
@@ -333,8 +373,10 @@ export interface WeatherHourly {
      * An object containing the following properties:
      *
      * - `description`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - Short description of the condition forecasted
      * - `code`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - Icon code corresponding to the condition forecasted.
      *     - See: https://gist.github.com/bzerangue/805520
      */
@@ -364,9 +406,11 @@ export interface WeatherHourly {
      * An object containing the following properties:
      *
      * - `description`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - A localised description of the UV index, in relation to the risk of skin damage due to exposure.
      *     - Values: Not Available, No Report, Low, Moderate, High, Very High, Extreme
      * - `index`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - The forecasted UV index.
      *     - Values range from: 0 to 16
      *     - Note: a value of -2 equals "Not Available", and -1 equals "No Report"
@@ -380,23 +424,28 @@ export interface WeatherHourly {
      * An object containing the following properties:
      *
      * - `dewpoint`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - The temperature which air must be cooled at constant pressure to reach saturation. When the dewpoint and temperature are equal, clouds or fog will typically form. The closer the values of temperature and dewpoint, the higher the relative humidity.
      *     - Units are automatically converted between metric and imperial depending on the user's preferences.
      *     - See weather.units.temperature at runtime for the units in use.
      *     - Values range from: -80 to 100 (°F) or -62 to 37 (°C)
      * - `feelsLike`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - An apparent temperature. It represents what the air temperature “feels like” on exposed human skin due to the combined effect of the wind chill or heat index.
      *     - Units are automatically converted between metric and imperial depending on the user's preferences.
      *     - See weather.units.temperature at runtime for the units in use.
      * - `forecast`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - The forecasted temperature of the air.
      *     - Units are automatically converted between metric and imperial depending on the user's preferences.
      *     - See weather.units.temperature at runtime for the units in use.
      * - `heatIndex`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - An apparent temperature. It represents what the air temperature “feels like” on exposed human skin due to the combined effect of warm temperatures and high humidity.
      *     - Units are automatically converted between metric and imperial depending on the user's preferences.
      *     - See weather.units.temperature at runtime for the units in use.
      * - `relativeHumidity`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - The relative humidity of the air, which is defined as the ratio of the amount of water vapor in the air to the amount of vapor required to bring the air to saturation at a constant temperature.
      *     - Expressed as a percentage.
      *     - Values range from: 1 to 100
@@ -418,9 +467,11 @@ export interface WeatherHourly {
      * An object containing the following properties:
      *
      * - `probability`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - Maximum probability of precipitation, expressed as a percentage.
      *     - Values range from: 1 to 100
      * - `type`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - Type of precipitation associated with the probability.
      *     - Values: `precip` (unknown), `rain`, `snow`
      */
@@ -446,14 +497,17 @@ export interface WeatherDaily {
      * An object containing the following properties:
      *
      * - `cardinal`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - The direction from which the wind blows expressed in an abbreviated form.
      *     - e.g. N, E, S, W, NW, NNW etc
      *     - Values: N , NNE , NE, ENE, E, ESE, SE,SSE, S, SSW, SW, WSW, W,WNW, NW, NNW, CALM (no wind speed), VAR (variable)
      * - `degrees`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - The direction from which the wind blows expressed in degrees.
      *     - e.g., 360 is North, 90 is East, 180 is South and 270 is West.
      *     - Values range from: 1 to 360
      * - `speed`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - The speed at which the wind is blowing.
      *     - Units are automatically converted between metric and imperial depending on the user's preferences.
      *     - See weather.units.speed at runtime for the units in use.
@@ -468,8 +522,10 @@ export interface WeatherDaily {
      * An object containing the following properties:
      *
      * - `description`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - Short description of the condition forecasted
      * - `code`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - Icon code corresponding to the condition forecasted.
      *     - See: https://gist.github.com/bzerangue/805520
      */
@@ -506,9 +562,11 @@ export interface WeatherDaily {
      * An object containing the following properties:
      *
      * - `description`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - A localised description of the UV index, in relation to the risk of skin damage due to exposure.
      *     - Values: Not Available, No Report, Low, Moderate, High, Very High, Extreme
      * - `index`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - The forecasted UV index.
      *     - Values range from: 0 to 16
      *     - Note: a value of -2 equals "Not Available", and -1 equals "No Report"
@@ -522,19 +580,23 @@ export interface WeatherDaily {
      * An object containing the following properties:
      *
      * - `dewpoint`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - The temperature which air must be cooled at constant pressure to reach saturation. When the dewpoint and temperature are equal, clouds or fog will typically form. The closer the values of temperature and dewpoint, the higher the relative humidity.
      *     - Units are automatically converted between metric and imperial depending on the user's preferences.
      *     - See weather.units.temperature at runtime for the units in use.
      *     - Values range from: -80 to 100 (°F) or -62 to 37 (°C)
      * - `relativeHumidity`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - The relative humidity of the air, which is defined as the ratio of the amount of water vapor in the air to the amount of vapor required to bring the air to saturation at a constant temperature.
      *     - Expressed as a percentage.
      *     - Values range from: 1 to 100
      * - `minimum`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - The minimum temperature of the air at the time of observation
      *     - Units are automatically converted between metric and imperial depending on the user's preferences.
      *     - See weather.units.temperature at runtime for the units in use.
      * - `maximum`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - The maximum temperature of the air at the time of observation
      *     - Units are automatically converted between metric and imperial depending on the user's preferences.
      *     - See weather.units.temperature at runtime for the units in use.
@@ -549,14 +611,14 @@ export interface WeatherDaily {
     /**
      * An object containing the following properties:
      *
-     * - `isDay`
-     *     - Specifies whether it is currently day or night
      * - `sunrise`
+     *     - <i>Type :</i> [Date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date)
      *     - The time a sunrise will occur for the current day
-     *     - Therefore, this time may be in the past
+     *     - This time may be in the past
      * - `sunset`
+     *     - <i>Type :</i> [Date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date)
      *     - The time a sunset will occur for the current day
-     *     - Therefore, this time may be in the past
+     *     - This time may be in the past
      */
     sun: {
         sunrise: Date;
@@ -567,17 +629,22 @@ export interface WeatherDaily {
      * An object containing the following properties:
      *
      * - `moonrise`
+     *     - <i>Type :</i> [Date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date)
      *     - The time a moonrise will occur for the current day
      *     - This time may be in the past
      * - `moonset`
+     *     - <i>Type :</i> [Date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date)
      *     - The time a moonset will occur for the current day
      *     - This time may be in the past
      * - `phaseCode`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - A 3 character code that represents the current lunar phase
      *     - Values: NEW (New Moon), WXC (Waxing Crescent), FQT (First Quarter), WXG (Waxing Gibbous), FUL (Full Moon), WNG (Waning Gibbous), LQT (Last Quarter), WNC (Waning Crescent)
      * - `phaseDay`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - The current day number in the lunar cycle
      * - `phaseDescription`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - A short description of the current lunar phase
      */
     moon: {
@@ -592,17 +659,23 @@ export interface WeatherDaily {
      * An object containing the following properties:
      *
      * - `probability`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - Maximum probability of precipitation, expressed as a percentage.
      *     - Values range from: 1 to 100
      * - `stormLikelihood`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - The estimate of the likelihood of winter storm activity during the forecast period
      *     - Values: 0 to 10
+     *     - This may be `null`
      * - `type`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - Type of precipitation associated with the probability.
      *     - Values: `precip` (unknown), `rain`, `snow`
      * - `tornadoLikelihood`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - The estimate of the likelihood of tornado activity during the forecast period
      *     - Values: 0 to 10
+     *     - This may be `null`
      */
     precipitation: {
         type: string;
@@ -630,8 +703,10 @@ export interface WeatherNightly {
      * An object containing the following properties:
      *
      * - `description`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - Short description of the condition forecasted
      * - `code`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - Icon code corresponding to the condition forecasted.
      *     - See: https://gist.github.com/bzerangue/805520
      */
@@ -644,17 +719,22 @@ export interface WeatherNightly {
      * An object containing the following properties:
      *
      * - `moonrise`
+     *     - <i>Type :</i> [Date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date)
      *     - The time a moonrise will occur for the current day
      *     - This time may be in the past
      * - `moonset`
+     *     - <i>Type :</i> [Date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date)
      *     - The time a moonset will occur for the current day
      *     - This time may be in the past
      * - `phaseCode`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - A 3 character code that represents the current lunar phase
      *     - Values: NEW (New Moon), WXC (Waxing Crescent), FQT (First Quarter), WXG (Waxing Gibbous), FUL (Full Moon), WNG (Waning Gibbous), LQT (Last Quarter), WNC (Waning Crescent)
      * - `phaseDay`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - The current day number in the lunar cycle
      * - `phaseDescription`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - A short description of the current lunar phase
      */
     moon: {
@@ -669,9 +749,11 @@ export interface WeatherNightly {
      * An object containing the following properties:
      *
      * - `probability`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - Maximum probability of precipitation, expressed as a percentage.
      *     - Values range from: 1 to 100
      * - `type`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - Type of precipitation associated with the probability.
      *     - Values: `precip` (unknown), `rain`, `snow`
      */
@@ -684,10 +766,12 @@ export interface WeatherNightly {
      * An object containing the following properties:
      *
      * - `heatIndex`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - An apparent temperature. It represents what the air temperature “feels like” on exposed human skin due to the combined effect of warm temperatures and high humidity.
      *     - Units are automatically converted between metric and imperial depending on the user's preferences.
      *     - See weather.units.temperature at runtime for the units in use.
      * - `relativeHumidity`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - The relative humidity of the air, which is defined as the ratio of the amount of water vapor in the air to the amount of vapor required to bring the air to saturation at a constant temperature.
      *     - Expressed as a percentage.
      *     - Values range from: 1 to 100
@@ -701,9 +785,11 @@ export interface WeatherNightly {
      * An object containing the following properties:
      *
      * - `description`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - A localised description of the UV index, in relation to the risk of skin damage due to exposure.
      *     - Values: Not Available, No Report, Low, Moderate, High, Very High, Extreme
      * - `index`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - The forecasted UV index.
      *     - Values range from: 0 to 16
      *     - Note: a value of -2 equals "Not Available", and -1 equals "No Report"
@@ -717,14 +803,17 @@ export interface WeatherNightly {
      * An object containing the following properties:
      *
      * - `cardinal`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - The direction from which the wind blows expressed in an abbreviated form.
      *     - e.g. N, E, S, W, NW, NNW etc
      *     - Values: N , NNE , NE, ENE, E, ESE, SE,SSE, S, SSW, SW, WSW, W,WNW, NW, NNW, CALM (no wind speed), VAR (variable)
      * - `degrees`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - The direction from which the wind blows expressed in degrees.
      *     - e.g., 360 is North, 90 is East, 180 is South and 270 is West.
      *     - Values range from: 1 to 360
      * - `speed`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - The speed at which the wind is blowing.
      *     - Units are automatically converted between metric and imperial depending on the user's preferences.
      *     - See weather.units.speed at runtime for the units in use.
@@ -791,25 +880,34 @@ export interface WeatherMetadata {
      * An object containing the following properties:
      *
      * - `house`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - The house number at the current location
      * - `street`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - The street name at the current location
      * - `neighbourhood`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - The name of the local neighbourhood
      * - `county`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - The county the current location is located within
      * - `city`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - The name of city the current location is located within, otherwise the nearest city
      * - `postalCode`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - Equivalent to the ZIP code in the United States
      *     - The postal code for the current location
      * - `state`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - The state the current location is located in
      *     - This is treated differently per country. For example, in the United Kingdom, this may be "Wales" or "England"
      * - `country`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - The country the current location is located within
      *     - e.g., "Australia"
      * - `countryISOCode`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - The ISO 3166 country code for the `country` property
      *     - e.g., "DE"
      */
@@ -834,8 +932,10 @@ export interface WeatherMetadata {
      * An object containing the following properties:
      *
      * - `latitude`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - The latitude for the current location
      * - `longitude`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - The longitude for the current location
      */
     location: {
@@ -857,7 +957,7 @@ export interface WeatherProperties {
 }
 
 /**
- * The Weather provider allows you easy access to current conditions, along with forecasts for the next few hours and days.
+ * The Weather provider allows you access to current conditions, along with forecasts for the next few hours and days.
  *
  * User preferences for units are automatically handled for you.
  * Weather data will update every 15 minutes, with battery saving measures also taken into account.
