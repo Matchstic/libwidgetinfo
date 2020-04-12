@@ -453,7 +453,7 @@ static BOOL handlerEnabled = YES;
 		[section appendFormat:@"<moonphase>%@</moonphase>\n", [[item objectForKey:@"moon"] objectForKey:@"phaseDescription"]];
 		[section appendFormat:@"<description>%@</description>\n", [[item objectForKey:@"condition"] objectForKey:@"description"]];
 		[section appendFormat:@"<uvindex>%d</uvindex>\n", [[[item objectForKey:@"ultraviolet"] objectForKey:@"index"] intValue]];
-		[section appendFormat:@"<humidity>%d</humidity>\n", [[[item objectForKey:@"temperature"] objectForKey:@"humidity"] intValue]];
+		[section appendFormat:@"<humidity>%d</humidity>\n", [[[item objectForKey:@"temperature"] objectForKey:@"relativeHumidity"] intValue]];
 		[section appendFormat:@"<uvdesc>%@</uvdesc>\n", [[item objectForKey:@"ultraviolet"] objectForKey:@"description"]];
 		[section appendFormat:@"<typeofprecipitation>%@</typeofprecipitation>\n", [[item objectForKey:@"precipitation"] objectForKey:@"type"]];
 		[section appendFormat:@"<code>%d</code>\n", [[[item objectForKey:@"condition"] objectForKey:@"code"] intValue]];
