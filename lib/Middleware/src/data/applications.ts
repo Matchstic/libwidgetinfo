@@ -1,5 +1,8 @@
 import { Base, NativeError, DataProviderUpdateNamespace } from '../types';
 
+/**
+ * @ignore
+ */
 export interface ApplicationMetadata {
     displayName: string;
     bundleIdentifier: string;

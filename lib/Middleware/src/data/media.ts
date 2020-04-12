@@ -1,17 +1,26 @@
 import { Base, DataProviderUpdateNamespace } from '../types';
 import { ApplicationMetadata } from './applications';
 
+/**
+ * @ignore
+ */
 export interface MediaAlbum {
     title: string;
     tracks: MediaTrack[];
     trackCount: number;
 }
 
+/**
+ * @ignore
+ */
 export interface MediaArtist {
     name: string;
     albums: MediaAlbum;
 }
 
+/**
+ * @ignore
+ */
 export interface MediaTrack {
     title: string;
     album: MediaAlbum;
@@ -21,6 +30,9 @@ export interface MediaTrack {
     number: number;
 }
 
+/**
+ * @ignore
+ */
 export interface MediaCurrentItem {
     track: MediaTrack;
     album: MediaAlbum;
@@ -28,6 +40,7 @@ export interface MediaCurrentItem {
     elapsedDuration: number;
 }
 
+// Always keep as ignore
 /**
  * @ignore
  */

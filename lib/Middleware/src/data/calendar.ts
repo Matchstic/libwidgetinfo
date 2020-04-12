@@ -1,5 +1,8 @@
 import { Base } from '../types';
 
+/**
+ * @ignore
+ */
 export interface CalendarEntry {
     title: string;
     location: string;
@@ -9,6 +12,9 @@ export interface CalendarEntry {
     calendar: CalendarMetadata;
 }
 
+/**
+ * @ignore
+ */
 export interface CalendarMetadata {
     name: string;
     identifier: string;
