@@ -920,14 +920,16 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
 }
 
 - (NSDate*)dateFromISO8601String:(NSString*)input {
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    
-    // 2020-03-05T03:48:34-0800
-    [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZ"];
-    
-    // Always use this locale when parsing fixed format date strings
-    NSLocale *posix = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
-    [formatter setLocale:posix];
+    static NSDateFormatter *formatter;
+    if (!formatter) {
+        formatter = [[NSDateFormatter alloc] init];
+        
+        [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZ"];
+        
+        // Always use this locale when parsing fixed format date strings
+        NSLocale *posix = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+        [formatter setLocale:posix];
+    }
     
     return [formatter dateFromString:input];
 }
