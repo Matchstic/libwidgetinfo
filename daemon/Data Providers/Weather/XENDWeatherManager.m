@@ -338,7 +338,7 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
     } else if ([[self supportedShortCodes] containsObject:firstLanguage]) {
         return firstLanguage;
     } else if ([[self supportedShortCodes] containsObject:[firstLanguage substringToIndex:2]]) {
-        return firstLanguage;
+        return [firstLanguage substringToIndex:2];
     }
     
     // Fallback to English
