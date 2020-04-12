@@ -1,7 +1,17 @@
 [
     {
         "title": "Syntax: Inline Data",
-        "file": "syntax-inline.md"
+        "file": "syntax-inline.md",
+        "children": [
+            {
+                "title": "Usage",
+                "file": "inline-usage.md"
+            },
+            {
+                "title": "Formatters",
+                "file": "inline-formatters.md"
+            }
+        ]
     },
     {
         "title": "Syntax: Callback-based",

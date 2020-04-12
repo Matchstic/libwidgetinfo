@@ -49,6 +49,47 @@ class XENDMiddleware extends NativeInterface {
             prefix: 'xui',
             preloadData: true,
             templateDelimiters: ['{', '}'],
+            formatters: {
+                inject: (target: string, ...args) => {
+                    for (var i = 0; i < args.length; i++) {
+                        var offset = target.indexOf("%s");
+                        if (offset === -1){
+                            break;
+                        }
+
+                        target = target.slice(0, offset) + args[i] + target.slice(offset + 2);
+                    }
+
+                    return target;
+                },
+                time: (target: Date) => {
+                    try {
+                        return target.toLocaleTimeString();
+                    } catch (e) {
+                        return 'invalid date';
+                    }
+                },
+                date: (target: Date, mode?: string) => {
+                    if (!mode) {
+                        mode = 'short';
+                    }
+
+                    let options = {};
+                    if (mode === 'dayname') {
+                        options = { weekday: 'long' };
+                    } else if (mode === 'short') {
+                        options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+                    } else if (mode === 'long') {
+                        options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                    }
+
+                    try {
+                        return target.toLocaleDateString(undefined, options);
+                    } catch (e) {
+                        return 'invalid date';
+                    }
+                }
+            }
         });
 
         const model = {

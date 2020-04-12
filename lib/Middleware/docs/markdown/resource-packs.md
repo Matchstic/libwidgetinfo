@@ -1,4 +1,5 @@
 ## Resources Packs
+### Description
 
 The Widget API allows you to provide resource packs to share content between widgets. This is to help reduce the download size of widgets, and also to access a variety of iconography installed by default.
 
@@ -7,10 +8,10 @@ The Widget API allows you to provide resource packs to share content between wid
 You can use resource packs via a new URI scheme:
 
 ```html
-<img src="xui://resource/default/weather/1.svg" />
+<img src="xui://resource/default/media/play.svg" />
 ```
 
-This will load an image with its source set to a `weather` icon from the `default` resource pack. Anywhere a URL can be referenced, you can use an resource pack, including in CSS.
+This will load an image with its source set to a `media` icon from the `default` resource pack. Anywhere a URL can be referenced, you can use an resource pack, including in CSS.
 
 ### Breakdown of URI scheme
 
@@ -23,9 +24,9 @@ As shown above, the `xui://` URI scheme is used to load content from an resource
 - `default`
     - The name of the resource pack to load from
     - This is where to specify the folder name of your resource pack. For example, specifying `my-great-pack` would load from the `my-great-pack` subfolder inside `/Library/Application Support/Widgets/Resource Packs`
-- `weather/1.svg`
+- `media/play.svg`
     - This is the path to load from inside the specified pack
-    - In this example, the `default` pack has a subfolder named `weather`, which contains a file named `1.svg`
+    - In this example, the `default` pack has a subfolder named `media`, which contains a file named `play.svg`
     - If the resource cannot be found inside your resource pack, then the equivalent fallback from the `default` pack will be loaded instead
 
 You are not limited by the subfolder names used inside the `default` pack. For example:

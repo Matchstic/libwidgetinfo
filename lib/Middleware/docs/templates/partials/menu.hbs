@@ -58,7 +58,7 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                         <a data-type="chapter-link" href="{{path}}/{{filename}}.html" data-context-id="additional">
                                             <div class="menu-toggler linked" data-toggle="collapse" ${ isNormalMode ?
                                             'data-target="#additional-page-{{id}}"' : 'data-target="#xs-additional-page-{{id}}"' }>
-                                                <span class="link-name">{{ name }}</span>
+                                                <span class="link-name"><span class="icon ion-ios-paper"></span>{{ name }}</span>
                                                 <span class="icon ion-ios-arrow-down"></span>
                                             </div>
                                         </a>

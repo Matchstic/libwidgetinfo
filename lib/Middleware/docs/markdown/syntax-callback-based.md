@@ -1,4 +1,5 @@
 ## Syntax: Callback-based
+### Description
 
 You are free to interact with the Widget API through pure JavaScript. This is typically done through registering callback functions, which are then executed whenever data changes.
 
