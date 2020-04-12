@@ -408,7 +408,7 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
     return @{
         @"units": @{
             @"isMetric": [NSNumber numberWithBool:[self _useMetric]],
-            @"temperature": units.temperature == METRIC ? @"°C" : @"°F",
+            @"temperature": units.temperature == METRIC ? @"C" : @"F",
             @"speed": units.speed == METRIC ? @"km/h" : @"mph",
             @"distance": units.distance == METRIC ? @"km" : @"mile",
             @"pressure": units.pressure == METRIC ? @"hPa" : @"inHg",

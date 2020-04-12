@@ -820,7 +820,7 @@ export interface WeatherUnits {
     /**
      * The unit in use for temperature readings
      *
-     * Values: `"°C"` or `"°F"`
+     * Values: `"C"` or `"F"`
      */
     temperature: string;
 
