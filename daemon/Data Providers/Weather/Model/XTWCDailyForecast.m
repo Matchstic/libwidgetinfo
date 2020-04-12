@@ -163,9 +163,25 @@
     // If this day has not yet begun, assume to use day info
     if ([[NSDate date] timeIntervalSince1970] < self.day.validUNIXTime) return YES;
     
-    // Otherwise, use day info if it slots into the right timeframe
-    return [[NSDate date] timeIntervalSince1970] < self.night.validUNIXTime &&
-                [[NSDate date] timeIntervalSince1970] >= self.day.validUNIXTime;
+    // Check against the sunset and sunrise times
+    NSDate *sunsetTime = [self dateFromISO8601String:self.sunSetISOTime];
+    NSDate *sunriseTime = [self dateFromISO8601String:self.sunRiseISOTime];
+    
+    return [[NSDate date] compare:sunriseTime] == NSOrderedDescending &&
+            [[NSDate date] compare:sunsetTime] == NSOrderedAscending;
+}
+
+- (NSDate*)dateFromISO8601String:(NSString*)input {
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    
+    // 2020-03-05T03:48:34-0800
+    [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZ"];
+    
+    // Always use this locale when parsing fixed format date strings
+    NSLocale *posix = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+    [formatter setLocale:posix];
+    
+    return [formatter dateFromString:input];
 }
 
 - (NSString*)cloudCoverPercentage {

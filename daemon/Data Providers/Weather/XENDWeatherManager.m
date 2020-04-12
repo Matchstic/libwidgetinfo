@@ -317,6 +317,7 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
                 [self.delegate onUpdatedWeatherConditions:parsed];
             } @catch (NSException *e) {
                 XENDLog(@"ERROR (weather parsing) :: %@", e);
+                XENDLog(@"%@", e.callStackSymbols);
                 XENDLog(@"Weather data: %@", forecastData);
                 XENDLog(@"Air data: %@", airQualityData);
             }
@@ -873,7 +874,7 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
     NSArray *predictions = [self _cachedHourlyPredictionSinceNow];
     for (XTWCHourlyForecast *prediction in predictions) {
         
-        NSDictionary *item = @{            
+        NSDictionary *item = @{
             @"condition": @{
                 @"code": prediction.conditionIcon,
                 @"description": prediction.conditionDescription,
