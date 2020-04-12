@@ -386,21 +386,9 @@ export interface WeatherHourly {
     };
 
     /**
-    * Average cloud cover expressed as a percentage.
-    *
-    * Values range from: 0 to 100
-    */
-    cloudCoverPercentage: number;
-
-    /**
      * The time that this forecast represents.
      */
     timestamp: Date;
-
-    /**
-     * The index of the forecast in the array of forecasts
-     */
-    hourIndex: number;
 
     /**
      * An object containing the following properties:

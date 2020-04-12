@@ -873,9 +873,7 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
     NSArray *predictions = [self _cachedHourlyPredictionSinceNow];
     for (XTWCHourlyForecast *prediction in predictions) {
         
-        NSDictionary *item = @{
-            @"cloudCoverPercentage": prediction.cloudCoverPercentage,
-            
+        NSDictionary *item = @{            
             @"condition": @{
                 @"code": prediction.conditionIcon,
                 @"description": prediction.conditionDescription,

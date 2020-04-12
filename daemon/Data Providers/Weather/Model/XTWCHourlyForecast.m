@@ -30,7 +30,6 @@
 }
 
 - (void)_parseData:(NSDictionary*)data units:(struct XTWCUnits)units {
-    self.cloudCoverPercentage  = [data objectForKey:@"clds" defaultValue:[NSNull null]];
     self.conditionIcon          = [data objectForKey:@"icon_cd" defaultValue:[NSNull null]];
     self.conditionDescription   = [data objectForKey:@"phrase_32char" defaultValue:@""];
     self.dayIndicator           = [data objectForKey:@"day_ind" defaultValue:[NSNull null]];

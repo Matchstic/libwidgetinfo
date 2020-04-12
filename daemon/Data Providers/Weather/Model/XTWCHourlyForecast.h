@@ -11,13 +11,6 @@
 @interface XTWCHourlyForecast : NSObject
 
 /**
- Average cloud cover expressed as a percentage.
- 
- Values range from: 1 to 100
- */
-@property (nonatomic, strong) NSNumber *cloudCoverPercentage;
-
-/**
  Icon code corresponding to the condition forecasted.
  See page 2, column "icon_code" here: https://docs.google.com/document/d/1MZwWYqki8Ee-V7c7InBuA5CDVkjb3XJgpc39hI9FsI0/edit?pli=1
  */
