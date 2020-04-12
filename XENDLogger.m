@@ -14,10 +14,6 @@ void XENDLog(NSString *format, ...) {
     // Initialize a variable argument list.
     va_start (ap, format);
     
-    if (![format hasSuffix:@"\n"]) {
-        format = [format stringByAppendingString:@"\n"];
-    }
-    
     NSString *body = [[NSString alloc] initWithFormat:format arguments:ap];
     
     // End using variable argument list.
@@ -73,10 +69,8 @@ void XENDLog(NSString *format, ...) {
 - (void)appendToFile:(NSString*)filename logMessage:(NSString*)message {
     [self ensureLogDirectory];
     
-    if (![message hasSuffix:@"\n"]) message = [message stringByAppendingString:@"\n"];
-    
     NSString *qualifiedFilename = [NSString stringWithFormat:@"%@/%@.log", [self logDirectory], filename];
-    NSString *qualifiedMessage = [NSString stringWithFormat:@"(%@) %@", [NSDate date], message];
+    NSString *qualifiedMessage = [NSString stringWithFormat:@"(%@) %@\n", [NSDate date], message];
     
     NSFileHandle *fileHandle = [NSFileHandle fileHandleForWritingAtPath:qualifiedFilename];
     if (fileHandle) {
