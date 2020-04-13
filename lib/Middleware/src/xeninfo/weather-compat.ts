@@ -76,7 +76,7 @@ export default class XenInfoWeather {
                 conditionCode: fcast.condition.code,
                 temperature: fcast.temperature.forecast,
                 percentPrecipitation: Math.round(fcast.precipitation.probability),
-                hourIndex: fcast.hourIndex
+                hourIndex: (fcast as any).hourIndex
             });
         }
 
