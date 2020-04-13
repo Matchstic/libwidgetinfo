@@ -1022,7 +1022,7 @@ export default class Weather extends Base implements WeatherProperties {
     /**
      * @ignore
      */
-    _setData(payload: Weather) {
+    _setData(payload: WeatherProperties) {
         // Don't try to parse an empty object
         if (payload.now === undefined) return;
 

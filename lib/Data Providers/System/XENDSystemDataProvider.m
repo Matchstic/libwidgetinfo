@@ -79,7 +79,7 @@
     // Start monitoring for dynamics
     
     // Locale changed
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_localeChanged:) name:NSSystemClockDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_localeChanged:) name:NSCurrentLocaleDidChangeNotification object:nil];
     
     // Low power mode
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_powerInfoChanged:) name:NSProcessInfoPowerStateDidChangeNotification object:nil];
@@ -115,7 +115,7 @@
     BOOL new24hr = [self _using24h];
     
     if (current24hr != new24hr) {
-        [self.cachedDynamicProperties setObject:@(new24hr) forKey:@"isNetworkConnected"];
+        [self.cachedDynamicProperties setObject:@(new24hr) forKey:@"isTwentyFourHourTimeEnabled"];
         [self notifyWidgetManagerForNewProperties];
     }
 }
