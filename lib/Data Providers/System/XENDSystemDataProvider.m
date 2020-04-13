@@ -111,7 +111,7 @@
 }
 
 - (void)_localeChanged:(NSNotification*)notification {
-    BOOL current24hr = [self.cachedDynamicProperties objectForKey:@"isTwentyFourHourTimeEnabled"];
+    BOOL current24hr = [[self.cachedDynamicProperties objectForKey:@"isTwentyFourHourTimeEnabled"] boolValue];
     BOOL new24hr = [self _using24h];
     
     if (current24hr != new24hr) {
