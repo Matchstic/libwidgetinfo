@@ -668,8 +668,10 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
             @"current": observation.temperature,
             @"dewpoint": observation.dewpoint,
             @"feelsLike": observation.feelsLike,
-            @"maximum": observation.maxTemp,
-            @"minimum": observation.minTemp,
+            @"maximum": prediction ? prediction.maxTemp : [NSNull null],
+            @"minimum": prediction ? prediction.minTemp : [NSNull null],
+            @"maximumLast24Hours": observation.maxTemp,
+            @"minimumLast24Hours": observation.minTemp,
             @"relativeHumidity": observation.relativeHumidity,
             @"heatIndex": observation.heatIndex
         },

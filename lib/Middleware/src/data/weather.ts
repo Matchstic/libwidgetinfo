@@ -113,10 +113,22 @@ export interface WeatherNow {
      *     - The maximum temperature of the air at the time of observation
      *     - Units are automatically converted between metric and imperial depending on the user's preferences.
      *     - See weather.units.temperature at runtime for the units in use.
+     * - `maximumLast24Hours`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
+     *     - The maximum temperature of the air over the last 24 hours
+     *     - Units are automatically converted between metric and imperial depending on the user's preferences.
+     *     - See weather.units.temperature at runtime for the units in use.
+     * - `minimumLast24Hours`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
+     *     - The maximum temperature of the air over the last 24 hours
+     *     - Units are automatically converted between metric and imperial depending on the user's preferences.
+     *     - See weather.units.temperature at runtime for the units in use.
      */
     temperature: {
         minimum: number;
         maximum: number;
+        minimumLast24Hours: number;
+        maximumLast24Hours: number;
         current: number;
         relativeHumidity: number;
         feelsLike: number;

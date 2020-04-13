@@ -64,14 +64,14 @@ See weather.data.units.temperature at runtime for the units in use.
 @property (nonatomic, strong) NSNumber *heatIndex;
 
 /**
-The maximum temperature of the air at the time of observation
+The maximum temperature of the air over the last rolling 24 hour period.
 Units are automatically converted between metric and imperial depending on the user's preferences.
 See weather.data.units.temperature at runtime for the units in use.
 */
 @property (nonatomic, strong) NSNumber *maxTemp;
 
 /**
-The minimum temperature of the air at the time of observation
+The minimum temperature of the air over the last rolling 24 hour period.
 Units are automatically converted between metric and imperial depending on the user's preferences.
 See weather.data.units.temperature at runtime for the units in use.
 */
