@@ -120,7 +120,8 @@ class XENDMiddleware extends NativeInterface {
 
         // Notify the tinybind view of new changes
         console.log('Notifying tinybind of new data');
-        this.bindView.sync();
+        if (this.bindView)
+            this.bindView.sync();
     }
 
     protected onLoad() {
