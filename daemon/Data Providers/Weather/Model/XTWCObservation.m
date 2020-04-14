@@ -67,18 +67,18 @@
 - (void)_parseData:(NSDictionary*)data units:(struct XTWCUnits)units {
     
     // Handle all non-metricy stuff first
-    self.cloudCoverDescription  = [data objectForKey:@"clds" defaultValue:@""];
-    self.conditionIcon          = [data objectForKey:@"wx_icon" defaultValue:[NSNull null]];
+    self.cloudCoverDescription  = [data objectForKey:@"clds" defaultValue:@0];
+    self.conditionIcon          = [data objectForKey:@"wx_icon" defaultValue:@44];
     self.conditionDescription   = [data objectForKey:@"wx_phrase" defaultValue:@""];
-    self.dayIndicator           = [data objectForKey:@"day_ind" defaultValue:[NSNull null]];
-    self.validFromUNIXTime      = [[NSDate date] timeIntervalSince1970]; // [[data objectForKey:@"valid_time_gmt"] intValue];
+    self.dayIndicator           = [data objectForKey:@"day_ind" defaultValue:@"X"];
+    self.validFromUNIXTime      = [[NSDate date] timeIntervalSince1970];
     self.pressureDescription    = [data objectForKey:@"pressure_desc" defaultValue:@""];
     self.pressureTendency       = [data objectForKey:@"pressure_tend" defaultValue:@0];
     self.relativeHumidity       = [data objectForKey:@"rh" defaultValue:@0];
     self.uvDescription          = [data objectForKey:@"uv_desc" defaultValue:@""];
     self.uvIndex                = [data objectForKey:@"uv_index" defaultValue:@0];
-    self.windDirection          = [data objectForKey:@"wdir" defaultValue:[NSNull null]];
-    self.windDirectionCardinal  = [data objectForKey:@"wdir_cardinal" defaultValue:[NSNull null]];
+    self.windDirection          = [data objectForKey:@"wdir" defaultValue:@0];
+    self.windDirectionCardinal  = [data objectForKey:@"wdir_cardinal" defaultValue:@"N"];
     
     NSDictionary *metricValues = [data objectForKey:@"metric"];
     NSDictionary *imperialValues = [data objectForKey:@"imperial"];
@@ -105,17 +105,18 @@
         NSDictionary *pressureValues = units.pressure == METRIC ? metricValues : imperialValues;
         NSDictionary *amountValues = units.amount == METRIC ? metricValues : imperialValues;
         
+        self.temperature        = [temperatureValues objectForKey:@"temp" defaultValue:[NSNull null]];
+        
         self.dewpoint           = [temperatureValues objectForKey:@"dewpt" defaultValue:[NSNull null]];
-        self.feelsLike          = [temperatureValues objectForKey:@"feels_like" defaultValue:[temperatureValues objectForKey:@"temp" defaultValue:[NSNull null]]];
+        self.feelsLike          = [temperatureValues objectForKey:@"feels_like" defaultValue:self.temperature];
         self.gust               = [speedValues objectForKey:@"gust" defaultValue:[NSNull null]];
-        self.heatIndex          = [temperatureValues objectForKey:@"heat_index" defaultValue:[NSNull null]];
+        self.heatIndex          = [temperatureValues objectForKey:@"heat_index" defaultValue:self.temperature];
         self.maxTemp            = [temperatureValues objectForKey:@"max_temp" defaultValue:[NSNull null]];
         self.minTemp            = [temperatureValues objectForKey:@"min_temp" defaultValue:[NSNull null]];
         self.precipHourly       = [amountValues objectForKey:@"precip_hrly" defaultValue:@0];
         self.precipTotal        = [amountValues objectForKey:@"precip_total" defaultValue:@0];
         self.pressure           = [pressureValues objectForKey:@"pressure" defaultValue:[NSNull null]];
-        self.temperature        = [temperatureValues objectForKey:@"temp" defaultValue:[NSNull null]];
-        self.windChill          = [temperatureValues objectForKey:@"wc" defaultValue:[NSNull null]];
+        self.windChill          = [temperatureValues objectForKey:@"wc" defaultValue:self.temperature];
         self.windSpeed          = [speedValues objectForKey:@"wspd" defaultValue:[NSNull null]];
         self.visibility         = [distanceValues objectForKey:@"vis" defaultValue:[NSNull null]];
         self.waterTemperature   = [temperatureValues objectForKey:@"water_temp" defaultValue:[NSNull null]];

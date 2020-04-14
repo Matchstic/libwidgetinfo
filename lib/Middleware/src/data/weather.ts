@@ -68,7 +68,8 @@ export interface WeatherNow {
      * - `code`
      *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - Icon code corresponding to the condition forecasted.
-     *     - See: https://gist.github.com/bzerangue/805520*/
+     *     - See: https://developer.yahoo.com/weather/documentation.html#codes
+     */
     condition: {
         description: string;
         code: number;
@@ -156,6 +157,9 @@ export interface WeatherNow {
 
     /**
      * Average cloud cover expressed as a percentage.
+     *
+     * Note: this is only available during daylight hours. At night, this will be set to `null`.
+     * You should always check if it is `null` before attempting to use this value.
      *
      * Values range from: 0 to 100
      */
@@ -390,7 +394,7 @@ export interface WeatherHourly {
      * - `code`
      *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - Icon code corresponding to the condition forecasted.
-     *     - See: https://gist.github.com/bzerangue/805520
+     *     - See: https://developer.yahoo.com/weather/documentation.html#codes
      */
     condition: {
         description: string;
@@ -688,17 +692,9 @@ export interface WeatherDaily {
 /**
  * This interface represents a nightly weather forecast.
  *
- *
  * It should be used to augment the data available in a daily forecast, and to provide information about moon phases
  */
 export interface WeatherNightly {
-    /**
-    * Average cloud cover expressed as a percentage.
-    *
-    * Values range from: 0 to 100
-    */
-    cloudCoverPercentage: number;
-
     /**
      * An object containing the following properties:
      *
@@ -708,7 +704,7 @@ export interface WeatherNightly {
      * - `code`
      *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - Icon code corresponding to the condition forecasted.
-     *     - See: https://gist.github.com/bzerangue/805520
+     *     - See: https://developer.yahoo.com/weather/documentation.html#codes
      */
     condition: {
         code: number;
@@ -1201,6 +1197,8 @@ export default class Weather extends Base implements WeatherProperties {
                 temperature: {
                     minimum: 0,
                     maximum: 0,
+                    minimumLast24Hours: 0,
+                    maximumLast24Hours: 0,
                     current: 0,
                     relativeHumidity: 0,
                     feelsLike: 0,

@@ -30,19 +30,19 @@
 }
 
 - (void)_parseData:(NSDictionary*)data units:(struct XTWCUnits)units {
-    self.conditionIcon          = [data objectForKey:@"icon_cd" defaultValue:[NSNull null]];
+    self.conditionIcon          = [data objectForKey:@"icon_cd" defaultValue:@44];
     self.conditionDescription   = [data objectForKey:@"phrase_32char" defaultValue:@""];
-    self.dayIndicator           = [data objectForKey:@"day_ind" defaultValue:[NSNull null]];
+    self.dayIndicator           = [data objectForKey:@"day_ind" defaultValue:@"X"];
     self.dayOfWeek              = [data objectForKey:@"dow" defaultValue:[NSNull null]];
     self.forecastHourIndex      = [data objectForKey:@"num" defaultValue:[NSNull null]];
     self.precipProbability      = [data objectForKey:@"pop" defaultValue:@0];
     self.precipType             = [data objectForKey:@"precip_type" defaultValue:@"rain"];
-    self.relativeHumidity       = [data objectForKey:@"rh" defaultValue:[NSNull null]];
+    self.relativeHumidity       = [data objectForKey:@"rh" defaultValue:@0];
     self.uvDescription          = [data objectForKey:@"uv_desc" defaultValue:@""];
     self.uvIndex                = [data objectForKey:@"uv_index" defaultValue:@0];
     self.validUNIXTime          = [[data objectForKey:@"fcst_valid"] intValue];
-    self.windDirection          = [data objectForKey:@"wdir" defaultValue:[NSNull null]];
-    self.windDirectionCardinal  = [data objectForKey:@"wdir_cardinal" defaultValue:[NSNull null]];
+    self.windDirection          = [data objectForKey:@"wdir" defaultValue:@0];
+    self.windDirectionCardinal  = [data objectForKey:@"wdir_cardinal" defaultValue:@"N"];
     
     // Parse units specific things
     NSDictionary *metricValues = [data objectForKey:@"metric"];
@@ -62,14 +62,15 @@
         NSDictionary *speedValues = units.temperature == METRIC ? metricValues : imperialValues;
         NSDictionary *distanceValues = units.temperature == METRIC ? metricValues : imperialValues;
         
-        self.heatIndex          = [temperatureValues objectForKey:@"hi" defaultValue:[NSNull null]];
-        self.gust               = [speedValues objectForKey:@"gust" defaultValue:[NSNull null]];
         self.temperature        = [temperatureValues objectForKey:@"temp" defaultValue:[NSNull null]];
+        
+        self.heatIndex          = [temperatureValues objectForKey:@"hi" defaultValue:self.temperature];
+        self.gust               = [speedValues objectForKey:@"gust" defaultValue:[NSNull null]];
         self.visibility         = [distanceValues objectForKey:@"vis" defaultValue:[NSNull null]];
-        self.windChill          = [temperatureValues objectForKey:@"wc" defaultValue:[NSNull null]];
+        self.windChill          = [temperatureValues objectForKey:@"wc" defaultValue:self.temperature];
         self.windSpeed          = [speedValues objectForKey:@"wspd" defaultValue:[NSNull null]];
         self.dewpoint           = [temperatureValues objectForKey:@"dewpt" defaultValue:[NSNull null]];
-        self.feelsLike          = [temperatureValues objectForKey:@"feels_like" defaultValue:[NSNull null]];
+        self.feelsLike          = [temperatureValues objectForKey:@"feels_like" defaultValue:self.temperature];
     }
 }
 

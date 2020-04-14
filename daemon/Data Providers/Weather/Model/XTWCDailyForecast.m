@@ -114,17 +114,17 @@
     
     // Handle all non-metricy stuff first
     part.cloudCoverPercentage           = [data objectForKey:@"clds" defaultValue:[NSNull null]];
-    part.conditionIcon                  = [data objectForKey:@"icon_cd" defaultValue:[NSNull null]];
-    part.conditionDescription           = [data objectForKey:@"phrase_32char" defaultValue:[NSNull null]];
-    part.dayIndicator                   = [data objectForKey:@"day_ind" defaultValue:[NSNull null]];
+    part.conditionIcon                  = [data objectForKey:@"icon_cd" defaultValue:@44];
+    part.conditionDescription           = [data objectForKey:@"phrase_32char" defaultValue:@""];
+    part.dayIndicator                   = [data objectForKey:@"day_ind" defaultValue:@"X"];
     part.precipProbability              = [data objectForKey:@"pop" defaultValue:@0];
-    part.precipType                     = [data objectForKey:@"precip_type" defaultValue:@"rain"];
+    part.precipType                     = [data objectForKey:@"precip_type" defaultValue:@"precip"];
     part.timeframeDescription           = [data objectForKey:@"qualifier" defaultValue:[NSNull null]];
     part.relativeHumidity               = [data objectForKey:@"rh" defaultValue:@0];
     part.uvDescription                  = [data objectForKey:@"uv_desc" defaultValue:@""];
     part.uvIndex                        = [data objectForKey:@"uv_index" defaultValue:@0];
-    part.windDirection                  = [data objectForKey:@"wdir" defaultValue:[NSNull null]];
-    part.windDirectionCardinal          = [data objectForKey:@"wdir_cardinal" defaultValue:[NSNull null]];
+    part.windDirection                  = [data objectForKey:@"wdir" defaultValue:@0];
+    part.windDirectionCardinal          = [data objectForKey:@"wdir_cardinal" defaultValue:@""];
     part.validUNIXTime                  = [[data objectForKey:@"fcst_valid"] intValue];
     
     // Parse units specific things
@@ -137,18 +137,18 @@
         part.windChill                  = (id)[NSNull null];
         part.windSpeed                  = (id)[NSNull null];
     } else {
-        part.heatIndex                  = units.temperature == METRIC ?
-                                            [metricValues objectForKey:@"hi" defaultValue:[NSNull null]] :
-                                            [imperialValues objectForKey:@"hi" defaultValue:[NSNull null]];
         part.temperature                = units.temperature == METRIC ?
                                             [metricValues objectForKey:@"temp" defaultValue:[NSNull null]] :
                                             [imperialValues objectForKey:@"temp" defaultValue:[NSNull null]];
+        part.heatIndex                  = units.temperature == METRIC ?
+                                            [metricValues objectForKey:@"hi" defaultValue:part.temperature] :
+                                            [imperialValues objectForKey:@"hi" defaultValue:part.temperature];
         part.windChill                  = units.temperature == METRIC ?
-                                            [metricValues objectForKey:@"wc" defaultValue:[NSNull null]] :
-                                            [imperialValues objectForKey:@"wc" defaultValue:[NSNull null]];
+                                            [metricValues objectForKey:@"wc" defaultValue:part.temperature] :
+                                            [imperialValues objectForKey:@"wc" defaultValue:part.temperature];
         part.windSpeed                  = units.speed == METRIC ?
-                                            [metricValues objectForKey:@"wspd" defaultValue:[NSNull null]] :
-                                            [imperialValues objectForKey:@"wspd" defaultValue:[NSNull null]];
+                                            [metricValues objectForKey:@"wspd" defaultValue:@0] :
+                                            [imperialValues objectForKey:@"wspd" defaultValue:@0];
     }
     
     return part;
@@ -160,37 +160,13 @@
     if (self.nightOverride) return NO;
     if (self.day.validUNIXTime == 0) return NO;
     
-    // If this day has not yet begun, assume to use day info
-    if ([[NSDate date] timeIntervalSince1970] < self.day.validUNIXTime) return YES;
-    
-    // Check against the sunset time
-    NSDate *sunsetTime = [self dateFromISO8601String:self.sunSetISOTime];
-    
-    return [[NSDate date] compare:sunsetTime] == NSOrderedAscending;
-}
-
-- (NSDate*)dateFromISO8601String:(NSString*)input {
-    static NSDateFormatter *formatter;
-    if (!formatter) {
-        formatter = [[NSDateFormatter alloc] init];
-        
-        [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZ"];
-        
-        // Always use this locale when parsing fixed format date strings
-        NSLocale *posix = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
-        [formatter setLocale:posix];
-    }
-    
-    return [formatter dateFromString:input];
+    // Use start of night "time" for this date to determine usage
+    return [[NSDate date] timeIntervalSince1970] < self.night.validUNIXTime;
 }
 
 - (NSNumber*)cloudCoverPercentage {
     id result = [self _useDayPart] ? self.day.cloudCoverPercentage : self.night.cloudCoverPercentage;
-    if (!result) {
-        // Use day forecast if not available for night
-        result = self.day.cloudCoverPercentage;
-    }
-    return result ? result : @0;
+    return result ? result : (id)[NSNull null];
 }
 
 - (NSNumber*)conditionIcon {
@@ -225,7 +201,7 @@
    
 - (NSString*)precipType {
     id result = [self _useDayPart] ? self.day.precipType : self.night.precipType;
-    return result ? result : @"rain";
+    return result ? result : @"precip";
 }
    
 - (NSNumber*)relativeHumidity {
