@@ -12,7 +12,16 @@ export default class XenInfoMiddleware implements XenHTMLMiddleware {
     private weatherCompat: XenInfoWeather = null;
 
     public initialise(parent: NativeInterface, providers: Map<DataProviderUpdateNamespace, any>): void {
-        if (!this.requiresXenInfoCompat()) return;
+        if (!this.requiresXenInfoCompat()) {
+            // If XenInfo is installed, it will attempt to keep calling mainUpdate() resulting in
+            // exceptions being thrown. This is *bad*.
+            //
+            // To avoid this, mainUpdate is defined if it is not present with an empty implementation
+
+            (window as any).mainUpdate = () => {};
+
+            return;
+        }
 
         this.providers = providers;
 
