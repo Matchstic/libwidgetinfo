@@ -660,8 +660,8 @@
 		C9DBDBB1244C9679009E855E /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				C9DBDBB2244C9679009E855E /* XENDLogger.m */,
 				C9DBDBB3244C9679009E855E /* XENDLogger.h */,
+				C9DBDBB2244C9679009E855E /* XENDLogger.m */,
 			);
 			path = Shared;
 			sourceTree = "<group>";

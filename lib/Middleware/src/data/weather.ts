@@ -229,7 +229,7 @@ export interface WeatherNow {
      *         - Nitrogen Dioxide
      *         - Sulfur Dioxide
      */
-    airquality: {
+    airQuality: {
         scale: string;
         categoryLevel: string;
         index: number;
@@ -1215,7 +1215,7 @@ export default class Weather extends Base implements WeatherProperties {
                     sunset: new Date(0),
                     isDay: false,
                 },
-                airquality: {
+                airQuality: {
                     scale: '',
                     categoryLevel: '',
                     index: 0,
