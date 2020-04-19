@@ -54,19 +54,8 @@ The source of the data. e.g., DEFRA
  - Carbon Monoxide
  - Nitrogen Dioxide
  - Sulfur Dioxide
- 
- Array item specification:
- {
-    name:                 string;
-    amount:              number;
-    categoryLevel:    string;
-    categoryIndex:    number;
-    index:                  number;
-    description:        string;
-    units:                  string;
- }
  */
-@property (nonatomic, strong) NSArray *pollutants;
+@property (nonatomic, strong) NSDictionary *pollutants;
 
 /**
  Time from which this observation is valid.

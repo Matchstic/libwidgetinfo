@@ -36,16 +36,18 @@ export interface WeatherAirQualityPollutant {
     description: string;
 
     /**
-     * The name of the pollutant
-     */
-    name: string;
-
-    /**
      * The scale position of the pollutant, on a scale from the source providing air quality data
      *
      * For example, this may be the DAQI scale
      */
     index: number;
+
+    /**
+     * A flag denoting whether data about this pollutant is currently available
+     *
+     * You should ignore this pollutant if this is `false`
+     */
+    available: boolean;
 }
 
 /**
@@ -193,7 +195,7 @@ export interface WeatherNow {
     /**
      * Data is only available in the following countries: China, France, India, Germany, Mexico, Spain, UK, US
      *
-     * If air quality data is not available, the `pollutants` array will have a length of 0.
+     * If air quality data is not available, the `source` property will be an empty string (`""`).
      *
      * An object containing the following properties:
      *
@@ -210,7 +212,7 @@ export interface WeatherNow {
      * - `index`
      *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - Air quality index, as per the scale used for measurement.
-     *     - It is based on the concentrations of the following pollutants: Ozone, PM2.5, PM10, Nitrogen Dioxide and Sulfur Dioxide
+     *     - It is based on the concentrations of airborne pollutants
      *     - e.g., a scale of DAQI is from 1-10
      * - `scale`
      *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
@@ -219,15 +221,28 @@ export interface WeatherNow {
      *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - The source of the data. e.g., DEFRA
      * - `pollutants`
-     *     - <i>Type :</i> Array<{@link WeatherAirQualityPollutant}>
-     *     - An array of data about each pollutant. Note that not all may be present at the same time; this is dependant on weather station reports for your area
-     *     - Available pollutants:
-     *         - Ozone
-     *         - PM2.5
-     *         - PM10
-     *         - Carbon Monoxide
-     *         - Nitrogen Dioxide
-     *         - Sulfur Dioxide
+     *     - <i>Type :</i> `literal type`
+     *     - An object mapping data about each pollutant.
+     *     - Note that not all may be present at the same time; this is dependant on weather station reports per area
+     *     - Object properties:
+     *         - `ozone` | <i>Type :</i> {@link WeatherAirQualityPollutant}
+     *         - `pm2.5` | <i>Type :</i> {@link WeatherAirQualityPollutant}
+     *         - `pm10` | <i>Type :</i> {@link WeatherAirQualityPollutant}
+     *         - `carbonmonoxide` | <i>Type :</i> {@link WeatherAirQualityPollutant}
+     *         - `nitrogendioxide` | <i>Type :</i> {@link WeatherAirQualityPollutant}
+     *         - `sulfurdioxide` | <i>Type :</i> {@link WeatherAirQualityPollutant}
+     *
+     * <h6>Example</h6>
+     * <pre class="line-numbers language-javascript">
+     * <code>api.weather.observeData(function (newData) {
+        // Set specific pollutants to be displayed
+<br />
+        if (newData.now.airQuality.pollutants.ozone.available)<br />
+            document.getElementById('#ozone').innerHTML = newData.now.airQuality.pollutants.ozone.categoryLevel;<br />
+        if (newData.now.airQuality.pollutants.carbonmonoxide.available)<br />
+            document.getElementById('#carbon-monoxide').innerHTML = newData.now.airQuality.pollutants.carbonmonoxide.categoryLevel;<br />
+});
+</code></pre>
      */
     airQuality: {
         scale: string;

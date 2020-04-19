@@ -48,21 +48,49 @@
     self.pollutants         = [self _parsePollutantData:[data objectForKey:@"pollutants" defaultValue:@[]]];
 }
 
-- (NSArray*)_parsePollutantData:(NSArray*)data {
-    NSMutableArray *result = [@[] mutableCopy];
+- (NSDictionary*)_parsePollutantData:(NSArray*)data {
+    NSDictionary *defaultItem = @{
+        @"available":       @NO,
+        @"amount":          @0,
+        @"categoryLevel":   @"",
+        @"categoryIndex":   @0,
+        @"index":           @0,
+        @"description":     @"",
+        @"units":           @"",
+    };
+        
+    NSMutableDictionary *result = [@{
+            @"ozone": defaultItem,
+            @"pm2.5": defaultItem,
+            @"pm10": defaultItem,
+            @"nitrogendioxide": defaultItem,
+            @"carbonmonoxide": defaultItem,
+            @"sulfurdioxide": defaultItem,
+    } mutableCopy];
     
     for (NSDictionary *item in data) {
+        NSString *key = @"";
+        NSString *name = [item objectForKey:@"pollutant" defaultValue:@""];
+        if ([name isEqualToString:@""]) continue;
+        
+        if ([name isEqualToString:@"PM2.5"]) key = @"pm2.5";
+        else if ([name isEqualToString:@"PM10"]) key = @"pm10";
+        else if ([name isEqualToString:@"NO2"]) key = @"nitrogendioxide";
+        else if ([name isEqualToString:@"SO2"]) key = @"sulfurdioxide";
+        else if ([name isEqualToString:@"OZONE"]) key = @"ozone";
+        else if ([name isEqualToString:@"CO"]) key = @"carbonmonoxide";
+        
         NSDictionary *parsedItem = @{
-            @"name":            [item objectForKey:@"pollutant" defaultValue:@""],
-            @"amount":          [item objectForKey:@"pollutant_amount" defaultValue:[NSNull null]],
-            @"categoryLevel":   [item objectForKey:@"pollutant_cat" defaultValue:[NSNull null]],
-            @"categoryIndex":   [item objectForKey:@"pollutant_cat_idx" defaultValue:[NSNull null]],
-            @"index":           [item objectForKey:@"pollutant_idx" defaultValue:[NSNull null]],
-            @"description":     [item objectForKey:@"pollutant_phrase" defaultValue:[NSNull null]],
-            @"units":           [item objectForKey:@"pollutant_unit" defaultValue:[NSNull null]],
+            @"available":       @YES,
+            @"amount":          [item objectForKey:@"pollutant_amount" defaultValue:@0],
+            @"categoryLevel":   [item objectForKey:@"pollutant_cat" defaultValue:@""],
+            @"categoryIndex":   [item objectForKey:@"pollutant_cat_idx" defaultValue:@0],
+            @"index":           [item objectForKey:@"pollutant_idx" defaultValue:@0],
+            @"description":     [item objectForKey:@"pollutant_phrase" defaultValue:@""],
+            @"units":           [item objectForKey:@"pollutant_unit" defaultValue:@""],
         };
         
-        [result addObject:parsedItem];
+        [result setObject:parsedItem forKey:key];
     }
     
     return result;
