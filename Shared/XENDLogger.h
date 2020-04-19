@@ -37,4 +37,9 @@ void XENDLog(NSString *format, ...);
  */
 - (void)appendToFile:(NSString*)filename logMessage:(NSString*)message;
 
+/**
+ * Call externally to disable logging to the filesystem
+ */
++ (void)setFilesystemLoggingEnabled:(BOOL)enabled;
+
 @end

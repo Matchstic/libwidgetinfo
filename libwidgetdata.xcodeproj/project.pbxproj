@@ -84,8 +84,6 @@
 		C93045B623D84DA800B0D561 /* XTWCAirQualityObservation.m in Sources */ = {isa = PBXBuildFile; fileRef = C93045B523D84DA800B0D561 /* XTWCAirQualityObservation.m */; };
 		C9478BF12441D2DB00677E31 /* XENDLibraryURLHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = C9478BEF2441D2DB00677E31 /* XENDLibraryURLHandler.h */; };
 		C9478BF22441D2DB00677E31 /* XENDLibraryURLHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = C9478BF02441D2DB00677E31 /* XENDLibraryURLHandler.m */; };
-		C979628D24267DCA007849D8 /* XENDLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = C979628B24267DCA007849D8 /* XENDLogger.h */; };
-		C97962A424268D4F007849D8 /* XENDLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = C979628C24267DCA007849D8 /* XENDLogger.m */; };
 		C97CF9F323217A1200A3A014 /* XENDHijackedWebViewDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = C97CF9F123217A1200A3A014 /* XENDHijackedWebViewDelegate.h */; };
 		C97CF9F423217A1200A3A014 /* XENDHijackedWebViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C97CF9F223217A1200A3A014 /* XENDHijackedWebViewDelegate.m */; };
 		C993D33323DCE6D60084ED1E /* XENDStateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C993D33223DCE6D60084ED1E /* XENDStateManager.m */; };
@@ -104,6 +102,7 @@
 		C9BFD61723C154BD001F46F2 /* XTWCDailyForecast.m in Sources */ = {isa = PBXBuildFile; fileRef = C9BFD61623C154BD001F46F2 /* XTWCDailyForecast.m */; };
 		C9BFD61A23C159C4001F46F2 /* NSDictionary+XENSafeObjectForKey.m in Sources */ = {isa = PBXBuildFile; fileRef = C9BFD61923C159C4001F46F2 /* NSDictionary+XENSafeObjectForKey.m */; };
 		C9DBDBA6244C7C12009E855E /* XENDNaturalConditionGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = C9DBDBA5244C7C12009E855E /* XENDNaturalConditionGenerator.m */; };
+		C9DBDBB4244C967A009E855E /* XENDLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = C9DBDBB2244C9679009E855E /* XENDLogger.m */; };
 		C9F26020240581FF003A5A85 /* XENDWeatherHooks.m in Sources */ = {isa = PBXBuildFile; fileRef = C9F2601F240581FF003A5A85 /* XENDWeatherHooks.m */; };
 		C9F2F3822301BE4100E4863B /* IS2PreProcessor.mm in Sources */ = {isa = PBXBuildFile; fileRef = C9F2F3592301BE4100E4863B /* IS2PreProcessor.mm */; };
 		C9F2F3842301BE4100E4863B /* Compile.hpp in Headers */ = {isa = PBXBuildFile; fileRef = C9F2F35C2301BE4100E4863B /* Compile.hpp */; };
@@ -276,8 +275,6 @@
 		C93045B523D84DA800B0D561 /* XTWCAirQualityObservation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XTWCAirQualityObservation.m; path = "daemon/Data Providers/Weather/Model/XTWCAirQualityObservation.m"; sourceTree = SOURCE_ROOT; };
 		C9478BEF2441D2DB00677E31 /* XENDLibraryURLHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XENDLibraryURLHandler.h; sourceTree = "<group>"; };
 		C9478BF02441D2DB00677E31 /* XENDLibraryURLHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XENDLibraryURLHandler.m; sourceTree = "<group>"; };
-		C979628B24267DCA007849D8 /* XENDLogger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XENDLogger.h; sourceTree = "<group>"; };
-		C979628C24267DCA007849D8 /* XENDLogger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XENDLogger.m; sourceTree = "<group>"; };
 		C979629B24268D34007849D8 /* liblogger.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblogger.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		C97CF9ED23216ED600A3A014 /* XENDPreProcessor-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "XENDPreProcessor-Protocol.h"; sourceTree = "<group>"; };
 		C97CF9F123217A1200A3A014 /* XENDHijackedWebViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XENDHijackedWebViewDelegate.h; sourceTree = "<group>"; };
@@ -308,6 +305,8 @@
 		C9D4BF50241DA7E500DBC002 /* kern_memorystatus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = kern_memorystatus.h; sourceTree = "<group>"; };
 		C9DBDBA4244C7C12009E855E /* XENDNaturalConditionGenerator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XENDNaturalConditionGenerator.h; path = "daemon/Data Providers/Weather/XENDNaturalConditionGenerator.h"; sourceTree = SOURCE_ROOT; };
 		C9DBDBA5244C7C12009E855E /* XENDNaturalConditionGenerator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XENDNaturalConditionGenerator.m; path = "daemon/Data Providers/Weather/XENDNaturalConditionGenerator.m"; sourceTree = SOURCE_ROOT; };
+		C9DBDBB2244C9679009E855E /* XENDLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XENDLogger.m; sourceTree = "<group>"; };
+		C9DBDBB3244C9679009E855E /* XENDLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XENDLogger.h; sourceTree = "<group>"; };
 		C9F2601E240581FF003A5A85 /* XENDWeatherHooks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XENDWeatherHooks.h; path = "daemon/Data Providers/Weather/XENDWeatherHooks.h"; sourceTree = SOURCE_ROOT; };
 		C9F2601F240581FF003A5A85 /* XENDWeatherHooks.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XENDWeatherHooks.m; path = "daemon/Data Providers/Weather/XENDWeatherHooks.m"; sourceTree = SOURCE_ROOT; };
 		C9F2F3592301BE4100E4863B /* IS2PreProcessor.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = IS2PreProcessor.mm; sourceTree = "<group>"; };
@@ -554,15 +553,6 @@
 			path = Connection;
 			sourceTree = "<group>";
 		};
-		C979628A24267DB0007849D8 /* Shared */ = {
-			isa = PBXGroup;
-			children = (
-				C979628B24267DCA007849D8 /* XENDLogger.h */,
-				C979628C24267DCA007849D8 /* XENDLogger.m */,
-			);
-			name = Shared;
-			sourceTree = "<group>";
-		};
 		C97CF9F52321806D00A3A014 /* Internal */ = {
 			isa = PBXGroup;
 			children = (
@@ -667,14 +657,23 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		C9DBDBB1244C9679009E855E /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				C9DBDBB2244C9679009E855E /* XENDLogger.m */,
+				C9DBDBB3244C9679009E855E /* XENDLogger.h */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
 		C9F2F3312301BE1E00E4863B = {
 			isa = PBXGroup;
 			children = (
+				C9DBDBB1244C9679009E855E /* Shared */,
 				C9F2F3A82301BE4700E4863B /* deps */,
 				C9F2F3562301BE4100E4863B /* lib */,
 				C9204FC923317EBD00F9F535 /* Daemon */,
 				C9F2F40E2301C3E000E4863B /* Frameworks */,
-				C979628A24267DB0007849D8 /* Shared */,
 				C9204FC823317EBD00F9F535 /* libwidgetinfodaemon.a */,
 				C9F2F3FD2301BF4F00E4863B /* libwidgetinfo.a */,
 				C9A5E98D2419519300FCD778 /* libobjcipc.a */,
@@ -889,7 +888,6 @@
 				C91F4030242FB1DA00E30466 /* tag_perf.h in Headers */,
 				C91F402A242FB1DA00E30466 /* tokenizer_states.h in Headers */,
 				C9F2F39E2301BE4100E4863B /* Stack.hpp in Headers */,
-				C979628D24267DCA007849D8 /* XENDLogger.h in Headers */,
 				C9F2F3902301BE4100E4863B /* Highlight.hpp in Headers */,
 				C91F402C242FB1DA00E30466 /* string_buffer.h in Headers */,
 				C9204FEE2336447B00F9F535 /* XENDProxySimulatedConnection.h in Headers */,
@@ -1041,7 +1039,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C97962A424268D4F007849D8 /* XENDLogger.m in Sources */,
+				C9DBDBB4244C967A009E855E /* XENDLogger.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

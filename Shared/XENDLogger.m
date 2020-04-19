@@ -7,6 +7,8 @@
 
 #import "XENDLogger.h"
 
+static BOOL filesystemLoggingEnabled = NO;
+
 void XENDLog(NSString *format, ...) {
     // Type to hold information about variable arguments.
     va_list ap;
@@ -49,6 +51,10 @@ void XENDLog(NSString *format, ...) {
     return sharedInstance;
 }
 
++ (void)setFilesystemLoggingEnabled:(BOOL)enabled {
+    filesystemLoggingEnabled = enabled;
+}
+
 - (NSString*)logDirectory {
     return @"/var/mobile/Library/Logs/Xen-HTML";
 }
@@ -67,6 +73,8 @@ void XENDLog(NSString *format, ...) {
 }
 
 - (void)appendToFile:(NSString*)filename logMessage:(NSString*)message {
+    if (!filesystemLoggingEnabled) return;
+    
     [self ensureLogDirectory];
     
     NSString *qualifiedFilename = [NSString stringWithFormat:@"%@/%@.log", [self logDirectory], filename];
