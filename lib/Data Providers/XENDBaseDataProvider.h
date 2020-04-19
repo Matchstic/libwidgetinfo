@@ -68,6 +68,12 @@
 - (void)networkWasConnected;
 
 /**
+* Called when a significant time change occurs.
+* See: https://developer.apple.com/documentation/uikit/uiapplicationsignificanttimechangenotification
+*/
+- (void)noteSignificantTimeChange;
+
+/**
  * URL escapes the provided input
  */
 - (NSString*)escapeString:(NSString*)input;

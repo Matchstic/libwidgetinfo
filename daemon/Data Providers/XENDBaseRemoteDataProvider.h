@@ -39,6 +39,12 @@
 - (void)noteDeviceDidExitSleep;
 
 /**
+ * Called when a significant time change occurs.
+ * See: https://developer.apple.com/documentation/uikit/uiapplicationsignificanttimechangenotification
+ */
+- (void)noteSignificantTimeChange;
+
+/**
  * Called when the daemon is connected to by a remote process
  * @return Cached data for the provider, in the form: "static": ..., "dynamic": ...
  */

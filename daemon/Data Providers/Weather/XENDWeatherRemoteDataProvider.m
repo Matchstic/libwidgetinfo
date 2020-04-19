@@ -45,6 +45,10 @@
     [self.weatherManager networkWasConnected];
 }
 
+- (void)noteSignificantTimeChange {
+    [self.weatherManager noteSignificantTimeChange];
+}
+
 #pragma mark Grab API key from Weather.framework
 
 - (void)intialiseProvider {

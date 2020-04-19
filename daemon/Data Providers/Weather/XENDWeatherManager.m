@@ -111,6 +111,12 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
     }
 }
 
+- (void)noteSignificantTimeChange {
+    // Post update
+    NSDictionary *parsed = [self parseWeatherData:@{} airQualityData:@{} metadata:@{} updateCache:NO];
+    [self.delegate onUpdatedWeatherConditions:parsed];
+}
+
 - (void)pauseUpdateTimer {
     self.timerIsPaused = YES;
     

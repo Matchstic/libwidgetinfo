@@ -42,4 +42,6 @@
  */
 - (void)networkWasDisconnected;
 
+- (void)noteSignificantTimeChange;
+
 @end

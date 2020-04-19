@@ -33,6 +33,7 @@
 - (void)noteDeviceDidExitSleep {}
 - (void)networkWasDisconnected {}
 - (void)networkWasConnected {}
+- (void)noteSignificantTimeChange {}
 
 - (NSDictionary*)currentData {
     NSMutableDictionary *result = [NSMutableDictionary dictionary];

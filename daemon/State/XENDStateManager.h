@@ -13,6 +13,7 @@
 - (void)noteDeviceDidExitSleep;
 - (void)networkWasConnected;
 - (void)networkWasDisconnected;
+- (void)noteSignificantTimeChange;
 
 @end
 

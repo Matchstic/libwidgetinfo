@@ -66,6 +66,10 @@
     
 }
 
+- (void)noteSignificantTimeChange {
+    
+}
+
 - (NSString*)escapeString:(NSString*)input {
     if (!input)
         return @"";

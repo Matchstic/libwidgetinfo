@@ -96,4 +96,10 @@
 	}
 }
 
+- (void)noteSignificantTimeChange {
+    for (XENDBaseRemoteDataProvider *remoteProvider in self.dataProviders.allValues) {
+        [remoteProvider noteSignificantTimeChange];
+    }
+}
+
 @end

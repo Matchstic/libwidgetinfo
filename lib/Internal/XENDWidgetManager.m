@@ -69,6 +69,9 @@ static NSString *preferencesId = @"com.matchstic.xenhtml.libwidgetinfo";
         
         // These get registered globally
         [self _loadURLHandlers];
+        
+        // Setup significant time monitoring
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_significantTimeChanged:) name:UIApplicationSignificantTimeChangeNotification object:nil];
     }
     
     return self;
@@ -283,6 +286,12 @@ static NSString *preferencesId = @"com.matchstic.xenhtml.libwidgetinfo";
         weather.cachedDynamicProperties = [currentCachedDynamicState objectForKey:[XENDWeatherDataProvider providerNamespace]];
     
     return result;
+}
+
+- (void)_significantTimeChanged:(NSNotification*)notification {
+    for (XENDBaseDataProvider *provider in self.dataProviders.allValues) {
+        [provider noteSignificantTimeChange];
+    }
 }
 
 - (void)_loadURLHandlers {
