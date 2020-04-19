@@ -35,7 +35,7 @@ export default class IS2Weather {
         this._lookupMap['currentTemperature'] = () => { return this.provider.now.temperature.current; };
         this._lookupMap['currentCondition'] = () => { return this.provider.now.condition.code; };
         this._lookupMap['currentConditionAsString'] = () => { return this.provider.now.condition.description; };
-        this._lookupMap['naturalLanguageDescription'] = () => { return this.provider.now.condition.description; };
+        this._lookupMap['naturalLanguageDescription'] = () => { return this.provider.now.condition.narrative; };
         this._lookupMap['highForCurrentDay'] = () => { return this.provider.now.temperature.maximum; };
         this._lookupMap['lowForCurrentDay'] = () => { return this.provider.now.temperature.minimum; };
         this._lookupMap['currentWindSpeed'] = () => { return this.provider.now.wind.speed; };
