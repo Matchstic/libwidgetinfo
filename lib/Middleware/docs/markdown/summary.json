@@ -18,6 +18,10 @@
         "file": "syntax-callback-based.md"
     },
     {
+        "title": "Widget Layout",
+        "file": "widget-layout.md"
+    },
+    {
         "title": "Resource Packs",
         "file": "resource-packs.md"
     },

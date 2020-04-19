@@ -4,6 +4,12 @@ The Widget API aims to be a combination of all previous attempts to bridge iOS a
 
 In all widgets, you have access to the `api` object in the global namespace. This serves as entrypoint to the Widget API, making access to it simple.
 
+### Syntax
+
+The Widget API provides two approaches for interaction: **[Inline](additional-documentation/syntax:-inline-data.html)**, and **[Callback-based](additional-documentation/syntax:-callback-based.html)**.
+
+Both can be used interchangably inside the same widget.
+
 Through the use of the new **Inline Syntax**, you can build widgets that can fit in a single Tweet:
 
 ```html
@@ -12,20 +18,18 @@ Through the use of the new **Inline Syntax**, you can build widgets that can fit
 
 The end result is that you no longer have to rely on JavaScript to write widgets, with basic implementations just requiring HTML and CSS.
 
-### Syntax
+Also available is the **Callback-based Syntax**, which allows you to write fully JavaScript-based widgets.
 
-The Widget API provides two approaches for interaction: **[Inline](additional-documentation/syntax:-inline-data.html)**, and **[Callback-based](additional-documentation/syntax:-callback-based.html)**.
+### Other features and improvements
 
-Both can be used interchangably inside the same widget.
-
-### Other features
-
-A number of other features are also made available through the Widget API:
+A number of other features and improvements are also made available through the Widget API:
 
 - [Resource Packs](additional-documentation/resource-packs.html)
     - This allows for sharing resources between widgets, such as icons and backgrounds
 - [Logging](additional-documentation/logging.html)
     - Access real-time logs from your widgets
+- [Widget Layout](additional-documentation/widget-layout.html)
+    - A central (and organised) folder on the filesystem to install widgets
 
 ### Backwards compatibility
 
@@ -35,7 +39,7 @@ Support is available for widgets that need:
 
 - XenInfo
 - WidgetWeather
-- InfoStats 2
+- InfoStats 2 (and 1)
 
 This works "by magic". There is no need to install anything else, or make any changes to widgets.
 
