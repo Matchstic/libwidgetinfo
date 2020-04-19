@@ -20,5 +20,9 @@
     {
         "title": "Resource Packs",
         "file": "resource-packs.md"
+    },
+    {
+        "title": "Logging",
+        "file": "logging.md"
     }
 ]

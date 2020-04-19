@@ -220,7 +220,7 @@ export interface WeatherNow {
      *     - The source of the data. e.g., DEFRA
      * - `pollutants`
      *     - <i>Type :</i> Array<{@link WeatherAirQualityPollutant}>
-     *     - An array of data about each pollutant. Note that not all may be present due to API limitations.
+     *     - An array of data about each pollutant. Note that not all may be present at the same time; this is dependant on weather station reports for your area
      *     - Available pollutants:
      *         - Ozone
      *         - PM2.5

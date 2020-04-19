@@ -24,6 +24,8 @@ A number of other features are also made available through the Widget API:
 
 - [Resource Packs](additional-documentation/resource-packs.html)
     - This allows for sharing resources between widgets, such as icons and backgrounds
+- [Logging](additional-documentation/logging.html)
+    - Access real-time logs from your widgets
 
 ### Backwards compatibility
 
