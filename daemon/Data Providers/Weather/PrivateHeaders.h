@@ -7,11 +7,76 @@
 
 // Weather.framework
 
+#import <CoreLocation/CoreLocation.h>
+
+@interface WFTemperature : NSObject
+
+@property (nonatomic) double celsius;
+@property (nonatomic) double fahrenheit;
+@property (nonatomic) double kelvin;
+
+- (id)init;
+// 0 - celsius, 1 - farenheit, 2 - kelvin
+- (id)initWithTemperatureUnit:(int)arg1 value:(double)arg2;
+
+@end
+
+@interface WADayForecast : NSObject
+
+@property (nonatomic,copy) WFTemperature * high;
+@property (nonatomic,copy) WFTemperature * low;
+@property (assign,nonatomic) unsigned long long icon;
+@property (assign,nonatomic) unsigned long long dayOfWeek;
+@property (assign,nonatomic) unsigned long long dayNumber;
+
+@end
+
+@interface WAHourlyForecast : NSObject <NSCopying>
+
+@property (nonatomic,copy) NSString * time;
+@property (assign,nonatomic) long long hourIndex;
+@property (nonatomic,retain) WFTemperature * temperature;
+@property (nonatomic,copy) NSString * forecastDetail;
+@property (assign,nonatomic) long long conditionCode;
+@property (assign,nonatomic) float percentPrecipitation;
+
+@end
+
 @interface City : NSObject
 
 @property (copy) id location;
 @property (nonatomic, strong) id wfLocation;
 @property (nonatomic) bool isLocalWeatherCity;
+
+- (void)setAirQualityCategory:(NSNumber*)arg1;
+- (void)setAirQualityIdx:(NSNumber*)arg1;
+- (void)setConditionCode:(long long)arg1;
+- (void)setCoordinate:(CLLocationCoordinate2D)arg1;
+- (void)setDayForecasts:(NSArray<WADayForecast*>*)arg1;
+- (void)setDewPoint:(float)arg1;
+- (void)setFeelsLike:(WFTemperature*)arg1;
+- (void)setFullName:(NSString*)arg1;
+- (void)setHeatIndex:(float)arg1;
+- (void)setHourlyForecasts:(NSArray<WAHourlyForecast*>*)arg1;
+- (void)setHumidity:(float)arg1;
+- (void)setIsDay:(bool)arg1;
+- (void)setLatitude:(double)arg1;
+- (void)setLongitude:(double)arg1;
+- (void)setMoonPhase:(unsigned long long)arg1;
+- (void)setObservationTime:(unsigned long long)arg1;
+- (void)setPrecipitationPast24Hours:(double)arg1;
+- (void)setPressure:(float)arg1;
+- (void)setPressureRising:(unsigned long long)arg1;
+- (void)setSunriseTime:(unsigned long long)arg1;
+- (void)setSunsetTime:(unsigned long long)arg1;
+- (void)setTemperature:(WFTemperature*)arg1;
+- (void)setUVIndex:(unsigned long long)arg1;
+- (void)setVisibility:(float)arg1;
+- (void)setWindChill:(float)arg1;
+- (void)setWindDirection:(float)arg1;
+- (void)setWindSpeed:(float)arg1;
+
+- (id)naturalLanguageDescription;
 
 @end
 

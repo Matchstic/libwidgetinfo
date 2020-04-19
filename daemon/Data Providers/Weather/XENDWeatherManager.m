@@ -6,6 +6,8 @@
 //
 
 #import "XENDWeatherManager.h"
+#import "XENDNaturalConditionGenerator.h"
+
 #import "Model/XTWCObservation.h"
 #import "Model/XTWCDailyForecast.h"
 #import "Model/XTWCHourlyForecast.h"
@@ -604,6 +606,11 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
     XTWCAirQualityObservation *airQuality = self.airQualityCache;
     XTWCDailyForecast *prediction = [self _cachedDailyPredictionForNow];
     
+    NSArray *dailyPredictions = [self _cachedDailyPredictionSinceNow];
+    NSArray *hourlyPredictions = [self _cachedHourlyPredictionSinceNow];
+    
+    CLLocation *location = [self.metadataCache objectForKey:@"location"];
+    
     // Validate the observation
     BOOL isObservationValid = [self _validateObservation:observation];
     
@@ -635,6 +642,13 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
         @"condition": @{
             @"code": observation.conditionIcon,
             @"description": observation.conditionDescription,
+            @"narrative": [[XENDNaturalConditionGenerator sharedInstance] naturalConditionForObservation:observation
+                            dayForecasts:dailyPredictions
+                            hourForecasts:hourlyPredictions
+                            isDay:isDayTime
+                            latitude:location.coordinate.latitude
+                            longitude:location.coordinate.longitude
+                            units:[self _units]]
         },
         
         @"precipitation": @{

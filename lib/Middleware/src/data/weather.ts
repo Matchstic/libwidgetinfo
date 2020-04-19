@@ -62,16 +62,20 @@ export interface WeatherNow {
     /**
      * An object containing the following properties:
      *
-     * - `description`
-     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
-     *     - Short description of the condition forecasted
      * - `code`
      *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
      *     - Icon code corresponding to the condition forecasted.
      *     - See: https://developer.yahoo.com/weather/documentation.html#codes
+     * - `description`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
+     *     - Short description of the condition forecasted
+     * - `narrative`
+     *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
+     *     - A longer summary of current weather conditions
      */
     condition: {
         description: string;
+        narrative: string;
         code: number;
     };
 
@@ -272,6 +276,7 @@ export interface WeatherNow {
      *     - Values range from: 1 to 360
      * - `gust`
      *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
+     *     - May be `null`
      *     - The maximum expected wind gust speed.
      *     - Units are automatically converted between metric and imperial depending on the user's preferences.
      *     - See weather.units.speed at runtime for the units in use.
@@ -369,6 +374,7 @@ export interface WeatherHourly {
      *     - Values range from: 1 to 360
      * - `gust`
      *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
+     *     - May be `null`
      *     - The maximum expected wind gust speed.
      *     - Units are automatically converted between metric and imperial depending on the user's preferences.
      *     - See weather.units.speed at runtime for the units in use.
@@ -1192,6 +1198,7 @@ export default class Weather extends Base implements WeatherProperties {
                 isValid: false,
                 condition: {
                     description: 'No data available',
+                    narrative: 'No data available',
                     code: 44
                 },
                 temperature: {

@@ -42,7 +42,7 @@ export default class XenInfoWeather {
             feelsLike: newData.now.temperature.feelsLike,
             chanceofrain: Math.round(newData.now.precipitation.total),
             condition: newData.now.condition.description,
-            naturalCondition: newData.now.condition.description,
+            naturalCondition: newData.now.condition.narrative,
             latlong: newData.metadata.location.latitude + ',' + newData.metadata.location.longitude,
             celsius: newData.units.isMetric ? 'C' : 'F',
             isDay: newData.now.sun.isDay,

@@ -204,6 +204,7 @@ static BOOL handlerEnabled = YES;
     [section appendFormat:@"<pressuredesc>%@</pressuredesc>\n", [[item objectForKey:@"pressure"] objectForKey:@"description"]];
     [section appendFormat:@"<longitude>%f</longitude>\n", [[[metadata objectForKey:@"location"] objectForKey:@"longitude"] doubleValue]];
     [section appendFormat:@"<description>%@</description>\n", [[item objectForKey:@"condition"] objectForKey:@"description"]];
+    [section appendFormat:@"<forecasttext>%@</forecasttext>\n", [[item objectForKey:@"condition"] objectForKey:@"narrative"]];
     
     BOOL isMetric = [[units objectForKey:@"isMetric"] boolValue];
     [section appendFormat:@"<celsius>%@</celsius>\n", isMetric ? @"YES" : @"NO"];
@@ -285,7 +286,7 @@ static BOOL handlerEnabled = YES;
     
     // Add fake "FIO" data
 	
-	[section appendFormat:@"<fioDailySummary>%@</fioDailySummary>\n", [[item objectForKey:@"condition"] objectForKey:@"description"]];
+	[section appendFormat:@"<fioDailySummary>%@</fioDailySummary>\n", [[item objectForKey:@"condition"] objectForKey:@"narrative"]];
 	[section appendString:@"<fioCloudCover>0</fioCloudCover>\n"];
 	[section appendString:@"<fioOzone>0</fioOzone>\n"];
 	[section appendString:@"<fioStormDistance>0</fioStormDistance>\n"];
