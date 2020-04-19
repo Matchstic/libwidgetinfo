@@ -664,7 +664,7 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
         },
         
         @"moon": @{
-            @"phaseDay": prediction ? prediction.lunarPhaseDay : [NSNull null],
+            @"phaseDay": prediction ? [self lunarPhaseDayFromCode:prediction.lunarPhaseCode] : [NSNull null],
             @"phaseCode": prediction ? prediction.lunarPhaseCode : [NSNull null],
             @"phaseDescription": prediction ? prediction.lunarPhaseDescription : [NSNull null],
             // TODO: This fails if the next moonrise is actually e.g. 1am the next day
@@ -728,7 +728,7 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
             
             @"moon": @{
                 @"phaseCode": prediction.lunarPhaseCode,
-                @"phaseDay": prediction.lunarPhaseDay,
+                @"phaseDay": [self lunarPhaseDayFromCode:prediction.lunarPhaseCode],
                 @"phaseDescription": prediction.lunarPhaseDescription,
                 @"moonrise": prediction.moonRiseISOTime,
                 @"moonset": prediction.moonSetISOTime
@@ -791,7 +791,7 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
             
             @"moon": @{
                 @"phaseCode": prediction.lunarPhaseCode,
-                @"phaseDay": prediction.lunarPhaseDay,
+                @"phaseDay": [self lunarPhaseDayFromCode:prediction.lunarPhaseCode] ,
                 @"phaseDescription": prediction.lunarPhaseDescription,
                 @"moonrise": prediction.moonRiseISOTime,
                 @"moonset": prediction.moonSetISOTime
@@ -850,7 +850,7 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
             
             @"moon": @{
                 @"phaseCode": prediction.lunarPhaseCode,
-                @"phaseDay": prediction.lunarPhaseDay,
+                @"phaseDay": [self lunarPhaseDayFromCode:prediction.lunarPhaseCode] ,
                 @"phaseDescription": prediction.lunarPhaseDescription,
                 @"moonrise": prediction.moonRiseISOTime,
                 @"moonset": prediction.moonSetISOTime
@@ -948,6 +948,29 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
     }
     
     return [formatter dateFromString:input];
+}
+
+- (NSNumber*)lunarPhaseDayFromCode:(NSString*)code {
+    // Convert phase code to an approximate day number
+    
+    if ([code isEqualToString:@"NEW"])
+        return @0;
+    else if ([code isEqualToString:@"WXC"])
+        return @4;
+    else if ([code isEqualToString:@"FQT"])
+        return @7;
+    else if ([code isEqualToString:@"WXG"])
+        return @10;
+    else if ([code isEqualToString:@"FUL"])
+        return @14;
+    else if ([code isEqualToString:@"WNG"])
+        return @18;
+    else if ([code isEqualToString:@"LQT"])
+        return @21;
+    else if ([code isEqualToString:@"WNC"])
+        return @24;
+    
+    return @0;
 }
 
 #pragma mark Supported language codes

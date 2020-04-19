@@ -220,7 +220,7 @@ static BOOL handlerEnabled = YES;
     if ([[units objectForKey:@"pressure"] isEqualToString:@"inHg"]) pressure = pressure * 33.8638864; // invert back to metric
     [section appendFormat:@"<pressure>%.2f</pressure>\n", pressure];
     
-    [section appendString:@"<moonphase></moonphase>\n"];
+    [section appendFormat:@"<moonphase>%d</moonphase>\n", [[[item objectForKey:@"moon"] objectForKey:@"phaseDay"] intValue]];
     [section appendFormat:@"<updatetimestring>%@</updatetimestring>\n", [self updateTimeString:[[metadata objectForKey:@"updateTimestamp"] longLongValue]]];
      
 	int feelsLike = 0;
@@ -451,7 +451,8 @@ static BOOL handlerEnabled = YES;
         [section appendString:@"<night>"];
 		
 		[section appendFormat:@"<speed>%d</speed>\n", [[[item objectForKey:@"wind"] objectForKey:@"speed"] intValue]];
-		[section appendFormat:@"<moonphase>%@</moonphase>\n", [[item objectForKey:@"moon"] objectForKey:@"phaseDescription"]];
+		[section appendFormat:@"<moondesc>%@</moondesc>\n", [[item objectForKey:@"moon"] objectForKey:@"phaseDescription"]];
+        [section appendFormat:@"<moonphase>%d</moonphase>\n", [[[item objectForKey:@"moon"] objectForKey:@"phaseDay"] intValue]];
 		[section appendFormat:@"<description>%@</description>\n", [[item objectForKey:@"condition"] objectForKey:@"description"]];
 		[section appendFormat:@"<uvindex>%d</uvindex>\n", [[[item objectForKey:@"ultraviolet"] objectForKey:@"index"] intValue]];
 		[section appendFormat:@"<humidity>%d</humidity>\n", [[[item objectForKey:@"temperature"] objectForKey:@"relativeHumidity"] intValue]];

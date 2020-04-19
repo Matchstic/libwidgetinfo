@@ -316,16 +316,13 @@ export interface WeatherNow {
      *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - A 3 character code that represents the current lunar phase
      *     - Values: NEW (New Moon), WXC (Waxing Crescent), FQT (First Quarter), WXG (Waxing Gibbous), FUL (Full Moon), WNG (Waning Gibbous), LQT (Last Quarter), WNC (Waning Crescent)
-     * - `phaseDay`
-     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
-     *     - The current day number in the lunar cycle
      * - `phaseDescription`
      *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - A short description of the current lunar phase
      */
     moon: {
         phaseCode: string;
-        phaseDay: number;
+        phaseDay: number; // private
         phaseDescription: string;
         moonrise: Date;
         moonset: Date;
@@ -650,16 +647,13 @@ export interface WeatherDaily {
      *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - A 3 character code that represents the current lunar phase
      *     - Values: NEW (New Moon), WXC (Waxing Crescent), FQT (First Quarter), WXG (Waxing Gibbous), FUL (Full Moon), WNG (Waning Gibbous), LQT (Last Quarter), WNC (Waning Crescent)
-     * - `phaseDay`
-     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
-     *     - The current day number in the lunar cycle
      * - `phaseDescription`
      *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - A short description of the current lunar phase
      */
     moon: {
         phaseCode: string;
-        phaseDay: number;
+        phaseDay: number; // private
         phaseDescription: string;
         moonrise: Date;
         moonset: Date;
@@ -732,16 +726,13 @@ export interface WeatherNightly {
      *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - A 3 character code that represents the current lunar phase
      *     - Values: NEW (New Moon), WXC (Waxing Crescent), FQT (First Quarter), WXG (Waxing Gibbous), FUL (Full Moon), WNG (Waning Gibbous), LQT (Last Quarter), WNC (Waning Crescent)
-     * - `phaseDay`
-     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
-     *     - The current day number in the lunar cycle
      * - `phaseDescription`
      *     - <i>Type :</i> [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string)
      *     - A short description of the current lunar phase
      */
     moon: {
         phaseCode: string;
-        phaseDay: number;
+        phaseDay: number; // private
         phaseDescription: string;
         moonrise: Date;
         moonset: Date;
