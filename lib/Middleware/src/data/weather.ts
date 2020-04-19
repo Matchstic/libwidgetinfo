@@ -193,6 +193,8 @@ export interface WeatherNow {
     /**
      * Data is only available in the following countries: China, France, India, Germany, Mexico, Spain, UK, US
      *
+     * If air quality data is not available, the `pollutants` array will have a length of 0.
+     *
      * An object containing the following properties:
      *
      * - `comment`

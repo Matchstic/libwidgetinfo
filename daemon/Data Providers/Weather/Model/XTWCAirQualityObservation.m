@@ -38,12 +38,12 @@
 }
 
 - (void)_parseData:(NSDictionary*)data {
-    self.categoryLevel      = [data objectForKey:@"air_quality_cat" defaultValue:[NSNull null]];
-    self.categoryIndex      = [data objectForKey:@"air_quality_cat_idx" defaultValue:[NSNull null]];
-    self.comment            = [data objectForKey:@"air_quality_cmnt" defaultValue:[NSNull null]];
-    self.index              = [data objectForKey:@"air_quality_idx" defaultValue:[NSNull null]];
-    self.scale              = [data objectForKey:@"air_quality_scale" defaultValue:[NSNull null]];
-    self.source             = [data objectForKey:@"source" defaultValue:[NSNull null]];
+    self.categoryLevel      = [data objectForKey:@"air_quality_cat" defaultValue:@""];
+    self.categoryIndex      = [data objectForKey:@"air_quality_cat_idx" defaultValue:@0];
+    self.comment            = [data objectForKey:@"air_quality_cmnt" defaultValue:@""];
+    self.index              = [data objectForKey:@"air_quality_idx" defaultValue:@0];
+    self.scale              = [data objectForKey:@"air_quality_scale" defaultValue:@""];
+    self.source             = [data objectForKey:@"source" defaultValue:@""];
     self.validFromUNIXTime  = [[data objectForKey:@"process_tm_gmt" defaultValue:@0] intValue];
     self.pollutants         = [self _parsePollutantData:[data objectForKey:@"pollutants" defaultValue:@[]]];
 }
