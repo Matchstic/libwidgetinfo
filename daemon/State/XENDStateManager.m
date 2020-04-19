@@ -76,29 +76,12 @@
             [weakSelf _backlightChanged:(int)state];
         });
         
-        [self restartMidnightTimer];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_significantTimeChange:) name:NSCalendarDayChangedNotification object:nil];
     }
     
     return self;
 }
 
-- (void)restartMidnightTimer {
-    if (self.midnightTimer) {
-        [self.midnightTimer invalidate];
-        self.midnightTimer = nil;
-    }
-    
-    // Calculate time until midnight
-    NSDateComponents *nowComponents = [[NSCalendar currentCalendar] components:NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond fromDate:[NSDate date]];
-    
-    int remainingSeconds = 0;
-    // Hour
-    remainingSeconds += (24 - [nowComponents hour] - 1) * 60 * 60;
-    remainingSeconds += (60 - [nowComponents minute] - 1) * 60;
-    remainingSeconds += 60 - [nowComponents second];
-    
-    self.midnightTimer = [NSTimer scheduledTimerWithTimeInterval:remainingSeconds target:self selector:@selector(_significantTimeChange:) userInfo:nil repeats:NO];
-}
 
 - (void)_reliabilityTimerFired:(NSTimer*)sender {
     BOOL isReachable = [self.reachability isReachable];
@@ -127,9 +110,7 @@
     }
 }
 
-- (void)_significantTimeChange:(NSTimer*)sender {
-    [self restartMidnightTimer];
-    
+- (void)_significantTimeChange:(NSTimer*)sender {    
     [self.delegate noteSignificantTimeChange];
 }
 
