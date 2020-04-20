@@ -90,6 +90,8 @@
                                       isDay:(BOOL)isDay
                                    latitude:(double)latitude
                                   longitude:(double)longitude
+                                    sunrise:(NSDate*)sunrise
+                                     sunset:(NSDate*)sunset
                                       units:(struct XTWCUnits)units {
     
     // Setup a City instance from this observation
@@ -111,8 +113,24 @@
         [city setPressureRising:observation.pressureTendency.longLongValue];
         [city setIsDay:isDay];
         
-        // [city setSunriseTime:];
-        // [city setSunsetTime:];
+        NSCalendar *calendar = [NSCalendar currentCalendar];
+        [calendar setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+
+        NSDateComponents *sunriseComponents = [calendar components:NSCalendarUnitHour | NSCalendarUnitMinute fromDate:sunrise];
+        NSString *formattedSunrise = [NSString stringWithFormat:@"%ld%2.ld", (long)sunriseComponents.hour, (long)sunriseComponents.minute];
+        
+        NSDateComponents *sunsetComponents = [calendar components:NSCalendarUnitHour | NSCalendarUnitMinute fromDate:sunset];
+        NSString *formattedSunset = [NSString stringWithFormat:@"%ld%2.ld", (long)sunsetComponents.hour, (long)sunsetComponents.minute];
+        
+        [city setSunriseTime:atol([formattedSunrise UTF8String])];
+        [city setSunsetTime:atol([formattedSunset UTF8String])];
+        
+        // Observation time
+        NSDateComponents *observationComponents = [calendar components:NSCalendarUnitHour | NSCalendarUnitMinute fromDate:[NSDate date]];
+        
+        NSString *formattedObservation = [NSString stringWithFormat:@"%ld%2.ld", (long)observationComponents.hour, (long)observationComponents.minute];
+        
+        [city setObservationTime:atol([formattedObservation UTF8String])];
         
         [city setTemperature:[self temperatureForValue:observation.temperature units:units]];
         [city setUVIndex:observation.uvIndex.longLongValue];

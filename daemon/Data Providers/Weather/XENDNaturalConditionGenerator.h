@@ -27,6 +27,8 @@
                                       isDay:(BOOL)isDay
                                    latitude:(double)latitude
                                   longitude:(double)longitude
+                                    sunrise:(NSDate*)sunrise
+                                     sunset:(NSDate*)sunset
                                       units:(struct XTWCUnits)units;
 
 @end
