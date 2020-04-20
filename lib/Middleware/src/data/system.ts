@@ -21,26 +21,102 @@ export interface SystemProperties {
 }
 
 /**
- * @ignore
+ * The System provider allows access to various system-level properties about the current device.
+ *
+ * It also provides access to locale-specific information, such as whether 24-hour time is currently enabled.
+ *
+ * **This provider is not yet feature-complete**
+ *
+ * @example
+ * <script>
+ * api.system.observeData(function (newData) {
+ *              console.log('System data has updated');
+ *
+ *              // Set some data to document elements
+ *              document.getElementById('#deviceName').innerHTML = newData.deviceName;
+ *              document.getElementById('#systemVersion').innerHTML = newData.systemVersion;
+ *
+ *              // Call a refresh function, or whatever, to account for if 24-hour time has changed
+ *              refreshElementsThatDisplayTimes();
+ * });
+ * </script>
  */
 export default class System extends Base implements SystemProperties {
+    private timeObservers: Array<() => void> = [];
 
     /////////////////////////////////////////////////////////
     // SystemProperties stub implementation
     /////////////////////////////////////////////////////////
 
+    /**
+     * The user-specified name of the device
+     */
     deviceName: string;
+
+    /**
+     * The type of the device.
+     *
+     * Values: "iPod Touch", "iPad", "iPhone"
+     */
     deviceType: string;
+
+    /**
+     * The model code of the device
+     *
+     * For example, "iPhone10,2"
+     */
     deviceModel: string;
+
+    /**
+     * The advertised name of the device, as from Apple
+     *
+     * For example, "iPhone 11 Pro"
+     */
     deviceModelPromotional: string;
+
+    /**
+     * The iOS system version the device is running
+     */
     systemVersion: string;
 
+    /**
+     * The height of the display, in points.
+     *
+     * For example, the iPhone X has a `deviceDisplayHeight` of 812
+     */
     deviceDisplayHeight: number;
+
+    /**
+     * The width of the display, in points.
+     *
+     * For example, the iPhone X has a `deviceDisplayWidth` of 375
+     */
     deviceDisplayWidth: number;
+
+    /**
+     * @ignore
+     */
     deviceDisplayBrightness: number;
 
+    /**
+     * Specifies whether twenty-four hour time is currently enabled
+     *
+     * Make sure to make use of `observeData` to be notified when the user toggles this.
+     */
     isTwentyFourHourTimeEnabled: boolean;
+
+    /**
+     * Specifies whether Low Power Mode is currently enabled
+     *
+     * Make sure to make use of `observeData` to be notified when the user toggles this.
+     */
     isLowPowerModeEnabled: boolean;
+
+    /**
+     * Specifies whether a network connection is currently available
+     *
+     * Make sure to make use of `observeData` to be notified when its state changes.
+     */
     isNetworkConnected: boolean;
 
     // Replicate here for documentation purposes
@@ -178,6 +254,19 @@ export default class System extends Base implements SystemProperties {
 
             console.error(message);
         }
+
+        // Override toLocaleTimeString to use our 12/24 hour metadata
+        const oldToLocaleTimeString = Date.prototype.toLocaleTimeString;
+        const _this = this;
+        Date.prototype.toLocaleTimeString = function(locales?: string | string[], options?: {}) {
+            if (!options) options = { 'hour12': !_this.isTwentyFourHourTimeEnabled };
+            else options = {
+                'hour12': !_this.isTwentyFourHourTimeEnabled,
+                ...options
+            }
+
+            return oldToLocaleTimeString.apply(this, [locales, options]);
+        }
     }
 
     /**
@@ -189,6 +278,7 @@ export default class System extends Base implements SystemProperties {
     }
 
     /**
+     * @ignore
      * TODO docs
      */
     public async invokeScreenshot(): Promise<void> {
@@ -204,6 +294,7 @@ export default class System extends Base implements SystemProperties {
     }
 
     /**
+     * @ignore
      * TODO docs
      */
     public async lockDevice(): Promise<void> {
@@ -219,6 +310,7 @@ export default class System extends Base implements SystemProperties {
     }
 
     /**
+     * @ignore
      * TODO docs
      */
     public async openApplicationSwitcher(): Promise<void> {
@@ -234,6 +326,7 @@ export default class System extends Base implements SystemProperties {
     }
 
     /**
+     * @ignore
      * TODO docs
      */
     public async openSiri(): Promise<void> {
@@ -249,6 +342,7 @@ export default class System extends Base implements SystemProperties {
     }
 
     /**
+     * @ignore
      * TODO docs
      */
     public async respringDevice(): Promise<void> {
@@ -264,6 +358,7 @@ export default class System extends Base implements SystemProperties {
     }
 
     /**
+     * @ignore
      * TODO docs
      */
     public async vibrateDevice(duration: number = 0.25): Promise<void> {
