@@ -27,7 +27,7 @@ export default class IS2Weather {
         this._lookupMap['lastUpdateTime'] = () => { return this.localeTimeString(this.provider.metadata.updateTimestamp); };
 
         // Locale specific stuff
-        this._lookupMap['isCelsius'] = () => { return this.provider.units.isMetric };
+        this._lookupMap['isCelsius'] = () => { return this.provider.units.temperature === 'C' };
         this._lookupMap['isWindSpeedMph '] = () => { return this.provider.units.speed === 'mph' };
 
         // Current data
