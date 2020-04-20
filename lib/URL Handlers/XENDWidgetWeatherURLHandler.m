@@ -206,7 +206,7 @@ static BOOL handlerEnabled = YES;
     [section appendFormat:@"<description>%@</description>\n", [[item objectForKey:@"condition"] objectForKey:@"description"]];
     [section appendFormat:@"<forecasttext>%@</forecasttext>\n", [[item objectForKey:@"condition"] objectForKey:@"narrative"]];
     
-    BOOL isMetric = [[units objectForKey:@"isMetric"] boolValue];
+    BOOL isMetric = [[units objectForKey:@"temperature"] isEqualToString:@"C"];
     [section appendFormat:@"<celsius>%@</celsius>\n", isMetric ? @"YES" : @"NO"];
     
     // Convert to WW format for pressure
@@ -370,7 +370,7 @@ static BOOL handlerEnabled = YES;
     [section appendString:@"<yahoo>1</yahoo>\n"];
     [section appendString:@"<location4></location4>\n"];
     
-    BOOL isMetric = [[[cachedWeatherData objectForKey:@"units"] objectForKey:@"isMetric"] boolValue];
+    BOOL isMetric = [[[cachedWeatherData objectForKey:@"units"] objectForKey:@"temperature"] isEqualToString:@"C"];
     [section appendFormat:@"<tempunit>%@</tempunit>\n", isMetric ? @"c" : @"f"];
     
     BOOL isUsing24h = [self _using24h];
