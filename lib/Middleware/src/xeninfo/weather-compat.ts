@@ -27,7 +27,7 @@ export default class XenInfoWeather {
             hourlyForecasts: [] as any[],
             city: newData.metadata.address.city,
             address: {
-                street: newData.metadata.address.street,
+                street: newData.metadata.address.house + ' ' + newData.metadata.address.street,
                 neighbourhood: newData.metadata.address.neighbourhood,
                 city: newData.metadata.address.city,
                 postalCode: newData.metadata.address.postalCode,
