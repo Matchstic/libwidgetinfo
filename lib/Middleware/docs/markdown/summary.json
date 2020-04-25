@@ -28,5 +28,9 @@
     {
         "title": "Logging",
         "file": "logging.md"
+    },
+    {
+        "title": "URL Scheme Handling",
+        "file": "url-schemes.md"
     }
 ]

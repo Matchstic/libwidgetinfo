@@ -30,6 +30,8 @@ A number of other features and improvements are also made available through the 
     - Access real-time logs from your widgets
 - [Widget Layout](additional-documentation/widget-layout.html)
     - A central (and organised) folder on the filesystem to install widgets
+- [URL Scheme Handling](additional-documentation/url-scheme-handling.html)
+    - Open URLs in Safari and deep link to installed apps
 
 ### Backwards compatibility
 
