@@ -53,6 +53,7 @@
             forecast.dayOfWeek = model.weekdayNumber.longLongValue;
             forecast.dayNumber = model.forecastDayIndex.longLongValue;
             
+            
             [result addObject:forecast];
         }
         
@@ -66,6 +67,9 @@
         
         NSMutableArray *result = [NSMutableArray array];
         
+        NSCalendar *calendar = [NSCalendar currentCalendar];
+        [calendar setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+        
         for (int i = 0; i < hourForecasts.count; i++) {
             XTWCHourlyForecast *model = [hourForecasts objectAtIndex:i];
             
@@ -75,6 +79,10 @@
             forecast.temperature = [self temperatureForValue:model.temperature units:units];
             forecast.conditionCode = model.conditionIcon.longLongValue;
             forecast.percentPrecipitation = model.precipProbability.floatValue;
+            
+            NSDate *time = [NSDate dateWithTimeIntervalSince1970:model.validUNIXTime];
+            NSDateComponents *forecastComponents = [calendar components:NSCalendarUnitHour fromDate:time];
+            forecast.time = forecastComponents.hour > 0 ? [NSString stringWithFormat:@"%2.ld:00", (long)forecastComponents.hour] : @"00:00";
             
             [result addObject:forecast];
         }
@@ -90,8 +98,8 @@
                                       isDay:(BOOL)isDay
                                    latitude:(double)latitude
                                   longitude:(double)longitude
-                                    sunrise:(NSDate*)sunrise
-                                     sunset:(NSDate*)sunset
+                                    sunrise:(NSString*)sunrise
+                                     sunset:(NSString*)sunset
                                       units:(struct XTWCUnits)units {
     
     // Setup a City instance from this observation
@@ -112,25 +120,25 @@
         [city setPressure:observation.pressure.floatValue];
         [city setPressureRising:observation.pressureTendency.longLongValue];
         [city setIsDay:isDay];
-        
-        NSCalendar *calendar = [NSCalendar currentCalendar];
-        [calendar setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
 
-        NSDateComponents *sunriseComponents = [calendar components:NSCalendarUnitHour | NSCalendarUnitMinute fromDate:sunrise];
-        NSString *formattedSunrise = [NSString stringWithFormat:@"%ld%2.ld", (long)sunriseComponents.hour, (long)sunriseComponents.minute];
+        NSDateComponents *sunriseComponents = [self localTimezoneDateComponentsForString:sunrise];
+        NSString *formattedSunrise = [NSString stringWithFormat:@"%ld%@%ld", (long)sunriseComponents.hour, sunriseComponents.minute < 10 ? @"0" : @"", (long)sunriseComponents.minute];
         
-        NSDateComponents *sunsetComponents = [calendar components:NSCalendarUnitHour | NSCalendarUnitMinute fromDate:sunset];
-        NSString *formattedSunset = [NSString stringWithFormat:@"%ld%2.ld", (long)sunsetComponents.hour, (long)sunsetComponents.minute];
+        NSDateComponents *sunsetComponents = [self localTimezoneDateComponentsForString:sunset];
+        NSString *formattedSunset = [NSString stringWithFormat:@"%ld%@%ld", (long)sunsetComponents.hour, sunsetComponents.minute < 10 ? @"0" : @"", (long)sunsetComponents.minute];
         
         [city setSunriseTime:atol([formattedSunrise UTF8String])];
         [city setSunsetTime:atol([formattedSunset UTF8String])];
         
         // Observation time
-        NSDateComponents *observationComponents = [calendar components:NSCalendarUnitHour | NSCalendarUnitMinute fromDate:[NSDate date]];
+        NSDateComponents *observationComponents = [self localObservationDateComponentsWithSample:sunset];
         
-        NSString *formattedObservation = [NSString stringWithFormat:@"%ld%2.ld", (long)observationComponents.hour, (long)observationComponents.minute];
+        NSString *formattedObservation = [NSString stringWithFormat:@"%ld%@%ld", (long)observationComponents.hour, observationComponents.minute < 10 ? @"0" : @"", (long)observationComponents.minute];
         
         [city setObservationTime:atol([formattedObservation UTF8String])];
+        [city setUpdateTime:[NSDate date]];
+        [city setTimeZone:[self timezoneFromSample:sunset]];
+        [city setTimeZoneUpdateDate:[NSDate date]];
         
         [city setTemperature:[self temperatureForValue:observation.temperature units:units]];
         [city setUVIndex:observation.uvIndex.longLongValue];
@@ -139,8 +147,76 @@
         [city setWindDirection:observation.windDirection.floatValue];
         [city setWindSpeed:observation.windSpeed.floatValue];
         
-        return [city naturalLanguageDescription];
+        long long describedCondition = 0;
+        NSString *result = [city naturalLanguageDescriptionWithDescribedCondition:&describedCondition];
+        
+        return result;
     } else return @"";
+}
+
+- (NSDateComponents*)localTimezoneDateComponentsForString:(NSString*)dateString {
+    NSDateComponents *components = [[NSDateComponents alloc] init];
+    
+    @try {
+        NSString *timeComponent = [[dateString componentsSeparatedByString:@"T"] lastObject];
+        NSArray *timeIndices = [timeComponent componentsSeparatedByString:@":"];
+        
+        components.hour = atol([[timeIndices objectAtIndex:0] UTF8String]);
+        components.minute = atol([[timeIndices objectAtIndex:1] UTF8String]);
+    } @catch (NSException *e) {
+        components.hour = 0;
+        components.minute = 0;
+    }
+
+    return components;
+}
+
+- (NSTimeZone*)timezoneFromSample:(NSString*)sampleString {
+    @try {
+        NSString *timeComponent = [[sampleString componentsSeparatedByString:@"T"] lastObject];
+        NSArray *timeIndices = [timeComponent componentsSeparatedByString:@":"];
+        NSString *timezone = [[timeIndices lastObject] substringFromIndex:2];
+        
+        BOOL positiveOffset = [timezone hasPrefix:@"+"];
+        int offsetHours = atoi([[timezone substringWithRange:NSMakeRange(1, 2)] UTF8String]) * (positiveOffset ? 1 : -1);
+        int offsetMinutes = atoi([[timezone substringWithRange:NSMakeRange(3, 2)] UTF8String]);
+        
+        int offsetSeconds = offsetMinutes * 60 + (offsetHours * 60 * 60);
+        
+        return [NSTimeZone timeZoneForSecondsFromGMT:offsetSeconds];
+    } @catch (NSException *e) {
+        return [NSTimeZone defaultTimeZone];
+    }
+}
+
+- (NSDateComponents*)localObservationDateComponentsWithSample:(NSString*)sampleString {
+    @try {
+        NSString *timeComponent = [[sampleString componentsSeparatedByString:@"T"] lastObject];
+        NSArray *timeIndices = [timeComponent componentsSeparatedByString:@":"];
+        NSString *timezone = [[timeIndices lastObject] substringFromIndex:2];
+        
+        BOOL positiveOffset = [timezone hasPrefix:@"+"];
+        int offsetHours = atoi([[timezone substringWithRange:NSMakeRange(1, 2)] UTF8String]) * (positiveOffset ? 1 : -1);
+        int offsetMinutes = atoi([[timezone substringWithRange:NSMakeRange(3, 2)] UTF8String]);
+        
+        NSCalendar *calendar = [NSCalendar currentCalendar];
+        [calendar setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+        NSDateComponents *observationComponents = [calendar components:NSCalendarUnitHour | NSCalendarUnitMinute fromDate:[NSDate date]];
+        
+        observationComponents.hour += offsetHours;
+        if (observationComponents.hour >= 24) observationComponents.hour -= 24;
+        observationComponents.minute += offsetMinutes;
+        
+        return observationComponents;
+    } @catch (NSException *e) {
+        NSDateComponents *components = [[NSDateComponents alloc] init];
+        
+        components.hour = 0;
+        components.minute = 0;
+        
+        return components;
+    }
+
 }
 
 @end

@@ -75,8 +75,12 @@
 - (void)setWindChill:(float)arg1;
 - (void)setWindDirection:(float)arg1;
 - (void)setWindSpeed:(float)arg1;
+- (void)setUpdateTime:(NSDate *)arg1;
+- (void)setTimeZone:(NSTimeZone *)arg1;
+- (void)setTimeZoneUpdateDate:(NSDate *)arg1;
 
 - (id)naturalLanguageDescription;
+- (id)naturalLanguageDescriptionWithDescribedCondition:(out long long*)arg1;
 
 @end
 

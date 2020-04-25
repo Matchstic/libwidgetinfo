@@ -654,8 +654,8 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
                             isDay:isDayTime
                             latitude:location.coordinate.latitude
                             longitude:location.coordinate.longitude
-                            sunrise:sunriseDate
-                            sunset:sunsetDate
+                            sunrise:prediction.sunRiseISOTime
+                            sunset:prediction.sunSetISOTime
                             units:[self _units]]
         },
         
