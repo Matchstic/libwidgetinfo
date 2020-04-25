@@ -162,12 +162,10 @@ export interface WeatherNow {
     };
 
     /**
-     * Average cloud cover expressed as a percentage.
+     * Forecasted cloud cover expressed as a percentage.
      *
-     * Note: this is only available during daylight hours. At night, this will be set to `null`.
-     * You should always check if it is `null` before attempting to use this value.
-     *
-     * "night" is considered to be 7pm or later, UTC time.
+     * Note: this is only available during daylight hours. After 3pm local time, this value will
+     * be set to `null`. You should always check if it is `null` before attempting to use this value.
      *
      * Values range from: 0 to 100
      */
@@ -561,12 +559,10 @@ export interface WeatherDaily {
     };
 
     /**
-     * Average cloud cover expressed as a percentage.
+     * Forecasted cloud cover expressed as a percentage.
      *
-     * Note: this is only available during daylight hours. At night, this will be set to `null`.
-     * You should always check if it is `null` before attempting to use this value.
-     *
-     * "night" is considered to be 7pm or later, UTC time.
+     * Note: this is only available during daylight hours. After 3pm local time, this value will
+     * be set to `null`. You should always check if it is `null` before attempting to use this value.
      *
      * Values range from: 0 to 100
      */
