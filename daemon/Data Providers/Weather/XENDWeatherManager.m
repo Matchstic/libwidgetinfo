@@ -199,7 +199,7 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
     [self.delegate onUpdatedWeatherConditions:parsed];
 }
 
-- (void)_hourTick:(NSTimer*)sender {
+- (void)noteHourChange {
     // Post cached update to refresh once the hour ticks over
     NSDictionary *parsed = [self parseWeatherData:@{} airQualityData:@{} metadata:@{} updateCache:NO];
     [self.delegate onUpdatedWeatherConditions:parsed];

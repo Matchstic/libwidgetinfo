@@ -34,6 +34,7 @@
 - (void)networkWasDisconnected {}
 - (void)networkWasConnected {}
 - (void)noteSignificantTimeChange {}
+- (void)noteHourChange {}
 
 - (NSDictionary*)currentData {
     NSMutableDictionary *result = [NSMutableDictionary dictionary];

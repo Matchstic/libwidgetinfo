@@ -40,9 +40,13 @@
 
 /**
  * Called when a significant time change occurs.
- * See: https://developer.apple.com/documentation/uikit/uiapplicationsignificanttimechangenotification
  */
 - (void)noteSignificantTimeChange;
+
+/**
+ * Called when the current hour changes
+ */
+- (void)noteHourChange;
 
 /**
  * Called when the daemon is connected to by a remote process

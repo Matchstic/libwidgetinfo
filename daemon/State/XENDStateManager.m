@@ -19,7 +19,7 @@
 @property (nonatomic, strong) Reachability *reachability;
 @property (nonatomic, strong) NSTimer *internalReliabilityTimer;
 
-@property (nonatomic, strong) NSTimer *midnightTimer;
+@property (nonatomic, strong) NSTimer *hourlyTimer;
 
 @end
 
@@ -76,12 +76,36 @@
             [weakSelf _backlightChanged:(int)state];
         });
         
+        // Monitor day changes
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_significantTimeChange:) name:NSCalendarDayChangedNotification object:nil];
+        
+        // Monitor hour changes
+        [self restartHourlyTimer];
     }
     
     return self;
 }
 
+- (void)restartHourlyTimer {
+    if (self.hourlyTimer) {
+        [self.hourlyTimer invalidate];
+        self.hourlyTimer = nil;
+    }
+    NSDateComponents *now = [[NSCalendar currentCalendar] components:NSCalendarUnitSecond | NSCalendarUnitMinute fromDate:[NSDate date]];
+    
+    NSInteger nextHour = 3600 - now.second - (now.minute * 60);
+    
+    self.hourlyTimer = [NSTimer scheduledTimerWithTimeInterval:nextHour target:self selector:@selector(_hourlyTimerFired:) userInfo:nil repeats:NO];
+}
+
+- (void)_hourlyTimerFired:(NSTimer*)timer {
+    [self.hourlyTimer invalidate];
+    self.hourlyTimer = nil;
+    
+    [self.delegate noteHourChange];
+    
+    [self restartHourlyTimer];
+}
 
 - (void)_reliabilityTimerFired:(NSTimer*)sender {
     BOOL isReachable = [self.reachability isReachable];

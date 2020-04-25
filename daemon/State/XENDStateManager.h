@@ -14,6 +14,7 @@
 - (void)networkWasConnected;
 - (void)networkWasDisconnected;
 - (void)noteSignificantTimeChange;
+- (void)noteHourChange;
 
 @end
 

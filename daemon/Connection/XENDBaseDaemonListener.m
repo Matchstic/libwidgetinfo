@@ -102,4 +102,10 @@
     }
 }
 
+- (void)noteHourChange {
+    for (XENDBaseRemoteDataProvider *remoteProvider in self.dataProviders.allValues) {
+        [remoteProvider noteHourChange];
+    }
+}
+
 @end

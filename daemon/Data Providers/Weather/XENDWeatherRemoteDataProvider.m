@@ -49,6 +49,10 @@
     [self.weatherManager noteSignificantTimeChange];
 }
 
+- (void)noteHourChange {
+    [self.weatherManager noteHourChange];
+}
+
 #pragma mark Grab API key from Weather.framework
 
 - (void)intialiseProvider {
