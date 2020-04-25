@@ -26,6 +26,8 @@ This file is set out like a `package.json` file from NPM modules. For now, the f
 - `author`
     - The author's name
 
+Your widget must be installed in any of the following Install Locations for this file to be read.
+
 ### Install Locations
 
 Widgets can be installed in one central place on the user's filesystem: `/var/mobile/Library/Widgets`.
