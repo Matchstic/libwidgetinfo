@@ -165,9 +165,7 @@
                 CLPlacemark *placemark = [placemarks objectAtIndex:0];
                 
                 NSString *streetComponent = @"";
-                if (placemark.subThoroughfare != nil && placemark.thoroughfare != nil) {
-                    streetComponent = [NSString stringWithFormat:@"%@ %@", placemark.subThoroughfare, placemark.thoroughfare];
-                } else if (placemark.thoroughfare != nil) {
+                if (placemark.thoroughfare != nil) {
                     streetComponent = [NSString stringWithFormat:@"%@", placemark.thoroughfare];
                 } else if (placemark.subLocality != nil) { // handle no street address somewhat
                     streetComponent = [NSString stringWithFormat:@"%@", placemark.subLocality];
