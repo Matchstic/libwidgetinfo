@@ -147,10 +147,11 @@
         [city setWindDirection:observation.windDirection.floatValue];
         [city setWindSpeed:observation.windSpeed.floatValue];
         
-        long long describedCondition = 0;
-        NSString *result = [city naturalLanguageDescriptionWithDescribedCondition:&describedCondition];
-        
-        return result;
+        if ([city respondsToSelector:@selector(naturalLanguageDescriptionWithDescribedCondition:)]) {
+            long long describedCondition = 0;
+            return [city naturalLanguageDescriptionWithDescribedCondition:&describedCondition];
+        } else
+            return @"";
     } else return @"";
 }
 
