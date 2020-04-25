@@ -82,6 +82,11 @@
     NSString *url = [[navigationAction.request URL] absoluteString];
     BOOL isXenInfoSpecialCase = [url hasPrefix:@"xeninfo:"];
     
+    if ([url hasPrefix:@"file:"]) {
+        decisionHandler(WKNavigationActionPolicyAllow);
+        return;
+    }
+    
     if (!isXenInfoSpecialCase) {
         // Disallow the navigation, but load the URL in appropriate app
         decisionHandler(WKNavigationActionPolicyCancel);
