@@ -260,11 +260,7 @@ static BOOL handlerEnabled = YES;
     // Handle location things
     
     [section appendFormat:@"<extraLocHouse>%@</extraLocHouse>\n", [[metadata objectForKey:@"address"] objectForKey:@"house"]];
-	
-	NSString *trimmedStreet = [[metadata objectForKey:@"address"] objectForKey:@"street"];
-	trimmedStreet = [trimmedStreet stringByReplacingOccurrencesOfString:[[metadata objectForKey:@"address"] objectForKey:@"house"] withString:@""];
-	
-    [section appendFormat:@"<extraLocStreet>%@</extraLocStreet>\n", trimmedStreet];
+    [section appendFormat:@"<extraLocStreet>%@</extraLocStreet>\n", [[metadata objectForKey:@"address"] objectForKey:@"street"]];
     [section appendString:@"<extraLocXstreet></extraLocXstreet>\n"];
     [section appendFormat:@"<extraLocLine1>%@</extraLocLine1>\n", [[metadata objectForKey:@"address"] objectForKey:@"street"]];
     [section appendFormat:@"<extraLocLine2>%@</extraLocLine2>\n", [[metadata objectForKey:@"address"] objectForKey:@"city"]];
