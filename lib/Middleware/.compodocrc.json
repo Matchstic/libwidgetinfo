@@ -6,7 +6,7 @@
     "includesName": "doc",
     "extTheme": "docs/theme",
     "minimal": true,
-    "name": "Widget API",
+    "name": "Xen HTML API",
     "hideGenerator": true,
     "disableSourceCode": true,
     "disablePrivate": true,

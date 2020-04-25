@@ -1,7 +1,7 @@
 ## Resources Packs
 ### Description
 
-The Widget API allows you to provide resource packs to share content between widgets. This is to help reduce the download size of widgets, and also to access a variety of iconography installed by default.
+The Xen HTML API allows you to provide resource packs to share content between widgets. This is to help reduce the download size of widgets, and also to access a variety of iconography installed by default.
 
 ### Usage
 
@@ -18,7 +18,7 @@ This will load an image with its source set to a `media` icon from the `default`
 As shown above, the `xui://` URI scheme is used to load content from an resource pack. The format is broken down as follows:
 
 - `xui://`
-    - Specifies to load via the Widget API
+    - Specifies to load via the Xen HTML API
 - `resource`
     - Specifies to load from a resource pack
 - `default`

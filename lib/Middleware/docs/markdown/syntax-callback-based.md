@@ -1,7 +1,7 @@
 ## Syntax: Callback-based
 ### Description
 
-You are free to interact with the Widget API through pure JavaScript. This is typically done through registering callback functions, which are then executed whenever data changes.
+You are free to interact with the Xen HTML API through pure JavaScript. This is typically done through registering callback functions, which are then executed whenever data changes.
 
 It is recommended to setup these callbacks during an `onload` event for the document, which are then fired after the widget finished loading to update you with initial data. They are also fired whenever data changes during the lifetime of the widget.
 

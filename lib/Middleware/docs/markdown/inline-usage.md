@@ -4,7 +4,7 @@
 
 Inline syntax can be written directly inside elements using the `{ }` delimeters, or can be used to bind data directly to attributes in your HTML.
 
-When using the `{ }` delimeters, you can access anything in the Widget API; you simply omit the `api.` prefix.
+When using the `{ }` delimeters, you can access anything in the Xen HTML API; you simply omit the `api.` prefix.
 
 ### Attributes
 Replicated from: [tinybind reference](https://blikblum.github.io/tinybind/docs/reference/)</a>
