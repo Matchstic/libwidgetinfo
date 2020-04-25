@@ -79,10 +79,22 @@
     decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction
     decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
     
-    if ([self.originalDelegate respondsToSelector:@selector(webView:decidePolicyForNavigationAction:decisionHandler:)])
+    NSString *url = [[navigationAction.request URL] absoluteString];
+    BOOL isXenInfoSpecialCase = [url hasPrefix:@"xeninfo:"];
+    
+    if (!isXenInfoSpecialCase) {
+        // Disallow the navigation, but load the URL in appropriate app
+        decisionHandler(WKNavigationActionPolicyCancel);
+        
+        if (@available(iOS 10.0, *)) {
+            [[UIApplication sharedApplication] openURL:[navigationAction.request URL] options:@{} completionHandler:nil];
+        } else {
+            [[UIApplication sharedApplication] openURL:[navigationAction.request URL]];
+        }
+    } else if ([self.originalDelegate respondsToSelector:@selector(webView:decidePolicyForNavigationAction:decisionHandler:)])
         [self.originalDelegate webView:webView decidePolicyForNavigationAction:navigationAction decisionHandler:decisionHandler];
     else
-        decisionHandler(WKNavigationActionPolicyAllow);
+        decisionHandler(WKNavigationActionPolicyCancel);
 }
 
 - (void)webView:(WKWebView *)webView
