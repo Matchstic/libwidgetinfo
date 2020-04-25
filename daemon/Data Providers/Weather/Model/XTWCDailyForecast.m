@@ -113,7 +113,7 @@
     TWCDayNightPart *part = [[TWCDayNightPart alloc] init];
     
     // Handle all non-metricy stuff first
-    part.cloudCoverPercentage           = [data objectForKey:@"clds" defaultValue:[NSNull null]];
+    part.cloudCoverPercentage           = [data objectForKey:@"clds" defaultValue:@0];
     part.conditionIcon                  = [data objectForKey:@"icon_cd" defaultValue:@44];
     part.conditionDescription           = [data objectForKey:@"phrase_32char" defaultValue:@""];
     part.dayIndicator                   = [data objectForKey:@"day_ind" defaultValue:@"X"];
@@ -165,8 +165,7 @@
 }
 
 - (NSNumber*)cloudCoverPercentage {
-    id result = [self _useDayPart] ? self.day.cloudCoverPercentage : self.night.cloudCoverPercentage;
-    if (!result && [self _useDayPart]) result = @0;
+    id result = [self _useDayPart] ? self.day.cloudCoverPercentage : [NSNull null];
     return result ? result : (id)[NSNull null];
 }
 

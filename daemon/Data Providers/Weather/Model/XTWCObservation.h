@@ -11,11 +11,9 @@
 @interface XTWCObservation : NSObject
 
 /**
- Average cloud cover expressed as a code.
- 
- Values: SKC, CLR, SCT, FEW, BKN, OVC
+ Average cloud cover
 */
-@property (nonatomic, strong) NSString *cloudCoverDescription;
+@property (nonatomic, strong) NSNumber *cloudCoverDescription;
 
 /**
 Icon code corresponding to the condition forecasted.
