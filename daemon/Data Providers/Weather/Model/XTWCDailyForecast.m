@@ -166,6 +166,7 @@
 
 - (NSNumber*)cloudCoverPercentage {
     id result = [self _useDayPart] ? self.day.cloudCoverPercentage : self.night.cloudCoverPercentage;
+    if (!result && [self _useDayPart]) result = @0;
     return result ? result : (id)[NSNull null];
 }
 
