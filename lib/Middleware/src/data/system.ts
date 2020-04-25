@@ -25,7 +25,7 @@ export interface SystemProperties {
  *
  * It also provides access to locale-specific information, such as whether 24-hour time is currently enabled.
  *
- * **This provider is not yet feature-complete**
+ * **This provider is not yet feature-complete; the listed items below are functional**
  *
  * @example
  * <script>

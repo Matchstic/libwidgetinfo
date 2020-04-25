@@ -1,4 +1,4 @@
-## URL Loading
+## URL Scheme Handling
 ### Description
 
 The Xen HTML API allows you to launch arbitrary URLs from your widgets, including opening webpages in Safari, or invoking custom URL Schemes made available by user applications.
