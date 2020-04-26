@@ -47,10 +47,7 @@
     [self setupWebView];
     
     // Load the webview
-    // NSString *testWidget = @"/opt/simject/var/mobile/Library/iWidgets/Xperia Clock DEBUG/Widget.html";
-    //NSString *testWidget = @"/opt/simject/var/mobile/Library/iWidgets/AppleishBlur/Widget.html";
-    // NSString *testWidget = @"/opt/simject/var/mobile/Library/iWidgets/IS2 Weather Base/Widget.html";
-    NSString *testWidget = @"/opt/simject/var/mobile/Library/SBHTML/UniAW2020_Base_Matt/LockBackground.html";
+    NSString *testWidget = @"/Users/matt/iOS/Projects/Xen-HTML/Deploy/Package/var/mobile/Library/Widgets/Universal/Weather | Forecast/index.html";
     NSURL *url = [NSURL fileURLWithPath:testWidget];
     
     [self.webView loadFileURL:url allowingReadAccessToURL:[NSURL fileURLWithPath:@"/" isDirectory:YES]];
