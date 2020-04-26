@@ -58,7 +58,7 @@ export default class XenInfoWeather {
             condition: newData.now.condition.description,
             naturalCondition: newData.now.condition.narrative,
             latlong: newData.metadata.location.latitude + ',' + newData.metadata.location.longitude,
-            celsius: newData.units.temperature === 'C',
+            celsius: newData.units.temperature,
             isDay: newData.now.sun.isDay,
             conditionCode: newData.now.condition.code,
             updateTimeString: this.weatherUpdateTimeString(newData.metadata.updateTimestamp),
