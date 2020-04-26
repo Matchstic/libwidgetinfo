@@ -7,7 +7,7 @@ The Xen HTML API allows you to launch arbitrary URLs from your widgets, includin
 
 The usage of this is simple: set a new URL to `window.location` at runtime, which is the same as if you were to change the current page.
 
-### Example
+### Examples
 
 The following shows how to open [https://apple.com](https://apple.com) in Safari:
 
@@ -29,4 +29,11 @@ You can use an identical approach for URL schemes, such as opening the Twitter a
 
 ```js
 window.location = 'twitter://user?screen_name=_Matchstic';
+```
+
+Additionally, this works with `<a>` tags too. Simply set the URL as the `href` property:
+
+```html
+<a href="https://apple.com">
+<a href="twitter://user?screen_name=_Matchstic">
 ```
