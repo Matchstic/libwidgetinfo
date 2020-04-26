@@ -557,6 +557,7 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
     // From cached data, fetch the daily prediction that is for today
     uint64_t now = [[NSDate date] timeIntervalSince1970];
     
+    // TODO: Factor in GMT offset
     for (XTWCDailyForecast *prediction in self.dailyPredictionCache) {
         if (prediction.validUNIXTime <= now &&
             prediction.validUNIXTime + (60 * 60 * 24) > now)
@@ -567,13 +568,13 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
 }
 
 - (NSArray*)_cachedDailyPredictionSinceNow {
-    // From cached data, fetch the predictions that follow today's
+    // From cached data, fetch the predictions that include and follow today's
     uint64_t now = [[NSDate date] timeIntervalSince1970];
     
     NSMutableArray *result = [NSMutableArray array];
     
     for (XTWCDailyForecast *prediction in self.dailyPredictionCache) {
-        if (prediction.validUNIXTime > now)
+        if (prediction.validUNIXTime + (60 * 60 * 24) > now)
             [result addObject:prediction];
     }
     
@@ -581,13 +582,13 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
 }
 
 - (NSArray*)_cachedNightlyPredictionSinceNow {
-    // From cached data, fetch the predictions that follow today's
+    // From cached data, fetch the predictions that include and follow today's
     uint64_t now = [[NSDate date] timeIntervalSince1970];
     
     NSMutableArray *result = [NSMutableArray array];
     
     for (XTWCDailyForecast *prediction in self.nightlyPredictionCache) {
-        if (prediction.validUNIXTime > now)
+        if (prediction.validUNIXTime + (60 * 60 * 24) > now)
             [result addObject:prediction];
     }
     
@@ -595,13 +596,13 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
 }
 
 - (NSArray*)_cachedHourlyPredictionSinceNow {
-    // From cached data, fetch the predictions that follow the current hour
+    // From cached data, fetch the predictions that include and follow the current hour
     uint64_t now = [[NSDate date] timeIntervalSince1970];
     
     NSMutableArray *result = [NSMutableArray array];
     
     for (XTWCHourlyForecast *prediction in self.hourlyPredictionCache) {
-        if (prediction.validUNIXTime > now)
+        if (prediction.validUNIXTime + (60 * 60) > now)
             [result addObject:prediction];
     }
     
