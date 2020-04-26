@@ -103,13 +103,7 @@ class XENDMiddleware extends NativeInterface {
         };
 
         window.addEventListener('DOMContentLoaded', (event) => {
-            // Notify providers of load
-            this.dataProviders.forEach((value, key) => {
-                value._documentLoaded();
-            });
-
             // Setup tinybind now that the document has loaded and been parsed
-            console.log('Setting up tinybind with model');
             this.bindView = tinybind.bind(document.body, model);
         });
     }
@@ -119,13 +113,15 @@ class XENDMiddleware extends NativeInterface {
         this.dataProviders.get(update.namespace)._setData(update.payload);
 
         // Notify the tinybind view of new changes
-        console.log('Notifying tinybind of new data');
         if (this.bindView)
             this.bindView.sync();
     }
 
     protected onLoad() {
-        console.log('Middleware onLoad');
+        // Notify providers of load
+        this.dataProviders.forEach((value, key) => {
+            value._documentLoaded();
+        });
 
         // Setup backwards compatibility middlewares
         // This is post-load
