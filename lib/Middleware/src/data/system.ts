@@ -279,6 +279,27 @@ export default class System extends Base implements SystemProperties {
 
     /**
      * @ignore
+     */
+    protected defaultData(): SystemProperties {
+        return {
+            deviceName: '',
+            deviceType:  '',
+            deviceModel: '',
+            deviceModelPromotional: '',
+            systemVersion: '',
+
+            deviceDisplayHeight: 0,
+            deviceDisplayWidth: 0,
+            deviceDisplayBrightness: 0,
+
+            isTwentyFourHourTimeEnabled: false,
+            isLowPowerModeEnabled: false,
+            isNetworkConnected: false
+        };
+    }
+
+    /**
+     * @ignore
      * TODO docs
      */
     public async invokeScreenshot(): Promise<void> {

@@ -1,7 +1,7 @@
 import {
     WeatherProperties
 } from '../data/weather';
-import System from '../data/system';
+import System, { SystemProperties } from '../data/system';
 
 import { DataProviderUpdateNamespace } from '../types';
 
@@ -10,12 +10,26 @@ import { DataProviderUpdateNamespace } from '../types';
  */
 export default class XenInfoWeather {
 
+    private last24hrTime: boolean = false;
+
     constructor(private providers: Map<DataProviderUpdateNamespace, any>,
                 private notifyXenInfoDataChanged: (namespace: string) => void) {
         // Monitor weather data
         providers.get(DataProviderUpdateNamespace.Weather).observeData((newData: WeatherProperties) => {
             this.onWeatherDataChanged(newData);
             this.notifyXenInfoDataChanged('weather');
+        });
+
+        this.last24hrTime = (providers.get(DataProviderUpdateNamespace.System) as System).isTwentyFourHourTimeEnabled;
+
+        // Monitor system changes, for 24 hr time
+        providers.get(DataProviderUpdateNamespace.System).observeData((newData: SystemProperties) => {
+            if (newData.isTwentyFourHourTimeEnabled !== this.last24hrTime) {
+                this.onWeatherDataChanged(providers.get(DataProviderUpdateNamespace.Weather));
+                this.notifyXenInfoDataChanged('weather');
+            }
+
+            this.last24hrTime = newData.isTwentyFourHourTimeEnabled;
         });
     }
 
