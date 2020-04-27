@@ -93,6 +93,11 @@
         return;
     }
     
+    if ([url hasPrefix:@"about:"]) {
+       decisionHandler(WKNavigationActionPolicyAllow);
+       return;
+    }
+    
     if (!isXenInfoSpecialCase) {
         // Disallow the navigation, but load the URL in appropriate app
         decisionHandler(WKNavigationActionPolicyCancel);

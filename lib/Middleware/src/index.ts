@@ -103,6 +103,11 @@ class XENDMiddleware extends NativeInterface {
         };
 
         window.addEventListener('DOMContentLoaded', (event) => {
+            // Notify providers of load
+            this.dataProviders.forEach((value, key) => {
+                value._documentLoaded();
+            });
+
             // Setup tinybind now that the document has loaded and been parsed
             this.bindView = tinybind.bind(document.body, model);
         });
@@ -118,11 +123,6 @@ class XENDMiddleware extends NativeInterface {
     }
 
     protected onLoad() {
-        // Notify providers of load
-        this.dataProviders.forEach((value, key) => {
-            value._documentLoaded();
-        });
-
         // Setup backwards compatibility middlewares
         // This is post-load
         this.groovyAPI.initialise(this, this.dataProviders);

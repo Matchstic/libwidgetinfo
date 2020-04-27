@@ -270,7 +270,9 @@ static BOOL handlerEnabled = YES;
     [section appendFormat:@"<extraLocHouse>%@</extraLocHouse>\n", [[metadata objectForKey:@"address"] objectForKey:@"house"]];
     [section appendFormat:@"<extraLocStreet>%@</extraLocStreet>\n", [[metadata objectForKey:@"address"] objectForKey:@"street"]];
     [section appendString:@"<extraLocXstreet></extraLocXstreet>\n"];
-    [section appendFormat:@"<extraLocLine1>%@</extraLocLine1>\n", [[metadata objectForKey:@"address"] objectForKey:@"street"]];
+    
+    NSString *houseStreet = [NSString stringWithFormat:@"%@ %@", [[metadata objectForKey:@"address"] objectForKey:@"house"], [[metadata objectForKey:@"address"] objectForKey:@"street"]];
+    [section appendFormat:@"<extraLocLine1>%@</extraLocLine1>\n", houseStreet];
     [section appendFormat:@"<extraLocLine2>%@</extraLocLine2>\n", [[metadata objectForKey:@"address"] objectForKey:@"city"]];
     [section appendFormat:@"<extraLocLine3>%@</extraLocLine3>\n", [[metadata objectForKey:@"address"] objectForKey:@"postalCode"]];
     [section appendFormat:@"<extraLocLine4>%@</extraLocLine4>\n", [[metadata objectForKey:@"address"] objectForKey:@"country"]];
@@ -398,11 +400,7 @@ static BOOL handlerEnabled = YES;
     [section appendString:@"<googlelocation>"];
 	
 	[section appendFormat:@"<gHouse>%@</gHouse>\n", [address objectForKey:@"house"]];
-	
-	NSString *trimmedStreet = [address objectForKey:@"street"];
-	trimmedStreet = [trimmedStreet stringByReplacingOccurrencesOfString:[address objectForKey:@"house"] withString:@""];
-	
-	[section appendFormat:@"<gStreet>%@</gStreet>\n", trimmedStreet];
+	[section appendFormat:@"<gStreet>%@</gStreet>\n", [address objectForKey:@"house"]];
 	[section appendFormat:@"<gNeigh>%@</gNeigh>\n", [address objectForKey:@"neighbourhood"]];
 	[section appendFormat:@"<gNeigh2>%@</gNeigh2>\n", [address objectForKey:@"neighbourhood"]];
 	[section appendFormat:@"<gNeigh3>%@</gNeigh3>\n", [address objectForKey:@"neighbourhood"]];
@@ -415,7 +413,8 @@ static BOOL handlerEnabled = YES;
 	[section appendFormat:@"<gPostal>%@</gPostal>\n", [address objectForKey:@"postalCode"]];
 	[section appendString:@"<gPostalSuffix></gPostalSuffix>\n"]; // unavailable
 	 
-	NSString *fullAddress = [NSString stringWithFormat:@"%@, %@, %@ %@ %@",
+	NSString *fullAddress = [NSString stringWithFormat:@"%@ %@, %@, %@ %@ %@",
+                             [address objectForKey:@"house"],
 							 [address objectForKey:@"street"],
 							 [address objectForKey:@"city"],
 							 [address objectForKey:@"state"],
