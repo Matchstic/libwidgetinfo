@@ -132,7 +132,7 @@
     part.uvDescription                  = [data objectForKey:@"uv_desc" defaultValue:@""];
     part.uvIndex                        = [data objectForKey:@"uv_index" defaultValue:@0];
     part.windDirection                  = [data objectForKey:@"wdir" defaultValue:@0];
-    part.windDirectionCardinal          = [data objectForKey:@"wdir_cardinal" defaultValue:@""];
+    part.windDirectionCardinal          = [data objectForKey:@"wdir_cardinal" defaultValue:@"N"];
     part.validUNIXTime                  = [[data objectForKey:@"fcst_valid"] intValue];
     
     // Parse units specific things
