@@ -86,7 +86,7 @@
     decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
     
     NSString *url = [[navigationAction.request URL] absoluteString];
-    BOOL isXenInfoSpecialCase = [url hasPrefix:@"xeninfo:"];
+    BOOL isXenInfoSpecialCase = [url hasPrefix:@"xeninfo:"] || [url hasPrefix:@"mk1:"];
     
     if ([url hasPrefix:@"file:"]) {
         decisionHandler(WKNavigationActionPolicyAllow);
