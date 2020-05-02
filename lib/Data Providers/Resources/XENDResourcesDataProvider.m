@@ -86,12 +86,10 @@
         /* Stats in bytes */
         natural_t mem_used = (vm_stat.active_count + vm_stat.inactive_count + vm_stat.wire_count) * pagesize;
         natural_t mem_free = vm_stat.free_count * pagesize;
-        natural_t mem_total = mem_used + mem_free;
         
         memory = @{
             @"used": @(mem_used),
             @"free": @(mem_free),
-            @"total": @(mem_total),
             @"physical": @([NSProcessInfo processInfo].physicalMemory)
         };
     }

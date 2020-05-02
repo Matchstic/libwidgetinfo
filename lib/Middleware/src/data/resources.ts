@@ -1,5 +1,8 @@
 import { Base } from '../types';
 
+/**
+ * This interface represents details about the device's battery
+ */
 export interface ResourcesBattery {
     /**
      * The current charge level of the battery, measured in percent
@@ -39,6 +42,9 @@ export interface ResourcesBattery {
     timeUntilEmpty: number;
 }
 
+/**
+ * This interface represents details about the device's memory (i.e., RAM)
+ */
 export interface ResourcesMemory {
     /**
      * The amount of used memory, in bytes
@@ -51,11 +57,14 @@ export interface ResourcesMemory {
     free: number;
 
     /**
-     * The amount of total memory, in bytes
+     * The amount of memory available on the device, in bytes
      */
-    total: number;
+    available: number;
 }
 
+/**
+ * This interface represents details about the device's processor
+ */
 export interface ResourcesProcessor {
     /**
      * The average utilisation of the device's processor, taking into account all cores available.
@@ -115,12 +124,12 @@ export default class Resources extends Base implements ResourcesProperties {
     battery: ResourcesBattery;
 
     /**
-     * @ignore
+     * Details about the memory usage of the device
      */
     memory: ResourcesMemory;
 
     /**
-     * @ignore
+     * Details about the usage of the device's processor
      */
     processor: ResourcesProcessor;
 
@@ -157,12 +166,11 @@ export default class Resources extends Base implements ResourcesProperties {
                 source: 'battery',
                 timeUntilCharged: -1,
                 timeUntilEmpty: -1,
-                current: 0
             },
             memory: {
                 used: 0,
                 free: 0,
-                total: 0
+                available: 0
             },
             processor: {
                 load: 0,

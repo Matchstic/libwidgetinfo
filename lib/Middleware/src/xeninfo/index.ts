@@ -2,6 +2,7 @@ import { XenHTMLMiddleware, DataProviderUpdateNamespace } from '../types';
 import NativeInterface from '../native-interface';
 
 import XenInfoWeather from './weather-compat';
+import XenInfoBattery from './battery-compat';
 
 /**
  * @ignore
@@ -10,6 +11,7 @@ export default class XenInfoMiddleware implements XenHTMLMiddleware {
     private providers: Map<DataProviderUpdateNamespace, any>;
 
     private weatherCompat: XenInfoWeather = null;
+    private batteryCompat: XenInfoBattery = null;
 
     public initialise(parent: NativeInterface, providers: Map<DataProviderUpdateNamespace, any>): void {
         if (!this.requiresXenInfoCompat()) return;
@@ -18,6 +20,7 @@ export default class XenInfoMiddleware implements XenHTMLMiddleware {
 
         // Setup compatibility things
         this.weatherCompat = new XenInfoWeather(this.providers, this.notifyXenInfoDataChanged);
+        this.batteryCompat = new XenInfoBattery(this.providers, this.notifyXenInfoDataChanged);
     }
 
     private requiresXenInfoCompat(): boolean {
