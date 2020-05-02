@@ -43,7 +43,7 @@ The string must contain a `%s` where the parameters are to be injected.
 
 ```html
 Markup:
-<div>{ 'some %s of %s' | inject 'example' text' }</div>
+<div>{ 'some %s of %s' | inject 'example' 'text' }</div>
 
 Rendered:
 <div>some example of text</div>

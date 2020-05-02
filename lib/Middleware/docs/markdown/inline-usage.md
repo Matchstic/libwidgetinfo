@@ -54,7 +54,7 @@ Disables the element when the value evaluates to true and enables the element wh
 Inserts the element as well as it's child nodes into the DOM when the value evaluates to true and removes the element when the value evaluates to false.
 
 ```html
-<section xui-if="weather.now._isValid"></section>
+<section xui-if="weather.now.isValid"></section>
 ```
 
 #### `on-[event]`
