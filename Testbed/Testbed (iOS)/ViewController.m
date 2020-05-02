@@ -47,7 +47,7 @@
     [self setupWebView];
     
     // Load the webview
-    NSString *testWidget = @"/Users/matt/iOS/Projects/InfoStats2/Tests/com.matchstic.is2basewidgets_1.0_iphoneos-arm/var/mobile/Library/iWidgets/IS2 System Base/Widget.html";
+    NSString *testWidget = @"/Users/matt/iOS/Projects/Xen-HTML/Deploy/Package/var/mobile/Library/Widgets/Universal/Weather | Forecast/index.html";
     NSURL *url = [NSURL fileURLWithPath:testWidget];
     
     [self.webView loadFileURL:url allowingReadAccessToURL:[NSURL fileURLWithPath:@"/" isDirectory:YES]];
