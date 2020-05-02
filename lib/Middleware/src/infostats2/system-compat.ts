@@ -66,4 +66,13 @@ export default class IS2System {
         this.systemProvider = systemProvider;
         this.resourcesProvider = resourcesProvider;
     }
+
+    public callFn(identifier: string, args: any[]) {
+        const fn = this._lookupMap[identifier];
+        if (fn) {
+            return fn(args);
+        } else {
+            return undefined;
+        }
+    }
 }

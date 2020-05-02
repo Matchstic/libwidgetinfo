@@ -88,9 +88,9 @@
         natural_t mem_free = vm_stat.free_count * pagesize;
         
         memory = @{
-            @"used": @(mem_used),
-            @"free": @(mem_free),
-            @"physical": @([NSProcessInfo processInfo].physicalMemory)
+            @"used": @(mem_used / (1024 * 1024)),
+            @"free": @(mem_free / (1024 * 1024)),
+            @"physical": @([NSProcessInfo processInfo].physicalMemory / (1024 * 1024))
         };
     }
 

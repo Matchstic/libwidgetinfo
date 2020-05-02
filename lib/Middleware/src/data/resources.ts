@@ -47,17 +47,17 @@ export interface ResourcesBattery {
  */
 export interface ResourcesMemory {
     /**
-     * The amount of used memory, in bytes
+     * The amount of used memory, in MB
      */
     used: number;
 
     /**
-     * The amount of free memory, in bytes
+     * The amount of free memory, in MB
      */
     free: number;
 
     /**
-     * The amount of memory available on the device, in bytes
+     * The amount of memory available on the device, in MB
      */
     available: number;
 }

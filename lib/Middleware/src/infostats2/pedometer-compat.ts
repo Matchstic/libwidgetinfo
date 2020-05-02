@@ -27,4 +27,13 @@ export default class IS2Pedometer {
     public initialise() {
         // no-op
     }
+
+    public callFn(identifier: string, args: any[]) {
+        const fn = this._lookupMap[identifier];
+        if (fn) {
+            return fn(args);
+        } else {
+            return undefined;
+        }
+    }
 }
