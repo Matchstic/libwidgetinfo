@@ -14,6 +14,7 @@
 **/
 
 #import "XENDResourcesRemoteDataProvider.h"
+#import "XENDLogger.h"
 
 #import "IOPSKeys.h"
 #import "IOPowerSources.h"
@@ -73,22 +74,39 @@ static void powerSourceChanged(void *context) {
         return;
     }
     
+    /* Example output
+     "Battery Provides Time Remaining" = 1;
+      "Current Capacity" = 100;
+      "Is Charging" = 1;
+      "Is Finishing Charge" = 1;
+      "Is Present" = 1;
+      "Max Capacity" = 100;
+      Name = "InternalBattery-0";
+      "Play Charging Chime" = 1;
+      "Power Source ID" = 3211363;
+      "Power Source State" = "AC Power";
+      "Raw External Connected" = 1;
+      "Show Charging UI" = 1;
+      "Time to Empty" = 0;
+      "Time to Full Charge" = 0;
+      "Transport Type" = Internal;
+      Type = InternalBattery;
+     */
+    
     NSNumber *chargingState = @0;
-    if ([[internalBatteryData objectForKey:@kIOPSIsChargedKey] boolValue]) {
+    if ([[internalBatteryData objectForKey:@kIOPSIsChargedKey] boolValue] ||
+        [[internalBatteryData objectForKey:@kIOPSIsFinishingChargeKey] boolValue]) {
         chargingState = @2;
     } else if ([[internalBatteryData objectForKey:@kIOPSIsChargingKey] boolValue]) {
         chargingState = @1;
     }
-        
+
     NSDictionary *resultData = @{
         @"percentage": [internalBatteryData objectForKey:@kIOPSCurrentCapacityKey],
         @"state": chargingState,
         @"source": [[internalBatteryData objectForKey:@kIOPSPowerSourceStateKey] isEqualToString:@kIOPSACPowerValue] ? @"ac" : @"battery",
         @"timeUntilCharged": [internalBatteryData objectForKey:@kIOPSTimeToFullChargeKey], // mins
         @"timeUntilEmpty": [internalBatteryData objectForKey:@kIOPSTimeToEmptyKey], // mins
-        @"batterySerial": [internalBatteryData objectForKey:@kIOPSHardwareSerialNumberKey],
-        @"health": [internalBatteryData objectForKey:@kIOPSBatteryHealthKey],
-        @"current": [internalBatteryData objectForKey:@kIOPSCurrentKey], // mAh
     };
     
     self.cachedDynamicProperties = [@{

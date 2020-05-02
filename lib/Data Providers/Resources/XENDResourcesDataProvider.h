@@ -15,6 +15,10 @@
 
 #import "XENDProxyDataProvider.h"
 
+/**
+ The resources provider monitors battery state remotely (to take advantage of the daemon registering a single runloop source for
+ power notifications), and everything else locally. This is to avoid crazy amounts of IPC.
+ */
 @interface XENDResourcesDataProvider : XENDProxyDataProvider
 
 @end

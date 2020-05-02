@@ -25,7 +25,7 @@ export interface ResourcesBattery {
      *
      * Note: this will be always 0 if the battery `state` is not charging.
      *
-     * Values: -1 (calculating time), otherwise 0 or higher
+     * Values: -1 or 0 (calculating time), otherwise 1 or higher
      */
     timeUntilCharged: number;
 
@@ -34,40 +34,40 @@ export interface ResourcesBattery {
      *
      * Note: this will be always 0 if the battery `state` is charging, or is fully charged.
      *
-     * Values: -1 (calculating time), otherwise 0 or higher
+     * Values: -1 or 0 (calculating time), otherwise 1 or higher
      */
     timeUntilEmpty: number;
-
-    /**
-     * The hardware serial number of the battery
-     */
-    batterySerial: string;
-
-    /**
-     * A measure of the current health status of the battery.
-     *
-     * Values: `Poor`, `Fair` `Good`
-     */
-    health: string;
-
-    /**
-     * The amount of current, measured in mAh, being supplied by the power source
-     */
-    current: number;
 }
 
-/**
- * @ignore
- */
 export interface ResourcesMemory {
+    /**
+     * The amount of used memory, in bytes
+     */
+    used: number;
 
+    /**
+     * The amount of free memory, in bytes
+     */
+    free: number;
+
+    /**
+     * The amount of total memory, in bytes
+     */
+    total: number;
 }
 
-/**
- * @ignore
- */
 export interface ResourcesProcessor {
+    /**
+     * The average utilisation of the device's processor, taking into account all cores available.
+     *
+     * Value: 0% to 100%
+     */
+    load: number;
 
+    /**
+     * The number of cores available on the device's processor
+     */
+    count: number;
 }
 
 /**
@@ -149,27 +149,28 @@ export default class Resources extends Base implements ResourcesProperties {
         super.observeData(callback);
     }
 
-    /////////////////////////////////////////////////////////
-    // Implementation
-    /////////////////////////////////////////////////////////
+    protected defaultData(): ResourcesProperties {
+        return {
+            battery: {
+                percentage: 0,
+                state: 0,
+                source: 'battery',
+                timeUntilCharged: -1,
+                timeUntilEmpty: -1,
+                current: 0
+            },
+            memory: {
+                used: 0,
+                free: 0,
+                total: 0
+            },
+            processor: {
+                load: 0,
+                count: 0
+            },
+            disk: {
 
-    /**
-     * Converts a battery status into a translated string
-     * @param status Status to convert
-     * @return Translated status
-     */
-    public batteryStatusToString(status: XENDBatteryStatus): string {
-        switch (status) {
-            case XENDBatteryStatus.Charging:
-                return 'Charging';
-            case XENDBatteryStatus.Discharging:
-                return 'Discharging';
-            case XENDBatteryStatus.FullyCharged:
-                return 'Fully Charged';
-            default:
-                return '';
+            }
         }
     }
-
-
 }
