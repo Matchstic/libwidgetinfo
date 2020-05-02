@@ -59,8 +59,9 @@ int main (int argc, const char * argv[]) {
 ```
 
 4. Link `liblogger.a` and `libobjcipc.a` to the daemon wrapper binary
-5. Add a LaunchDaemon plist to `/Library/LaunchDaemons/` in the end `.deb`, with the example contents from `daemon/launchd.plist`.
-6. Compile the TypeScript layer:
+5. Link `daemon/frameworks/IOKit.tbd` to the daemon wrapper binary
+6. Add a LaunchDaemon plist to `/Library/LaunchDaemons/` in the end `.deb`, with the example contents from `daemon/launchd.plist`.
+7. Compile the TypeScript layer:
 
     - Install `npm` and `yarn`
     - `cd` to `libwidgetinfo/lib/Middleware`

@@ -98,6 +98,10 @@
 		C9AFC05B23896298007FD971 /* XENDWeatherRemoteDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = C9AFC05A23896298007FD971 /* XENDWeatherRemoteDataProvider.m */; };
 		C9AFC0672389738B007FD971 /* XENDWeatherManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C9AFC0662389738B007FD971 /* XENDWeatherManager.m */; };
 		C9AFC06B2389A216007FD971 /* XENDLocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C9AFC06A2389A216007FD971 /* XENDLocationManager.m */; };
+		C9B3D6EF245DC4B4004D048E /* XENDResourcesRemoteDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = C9B3D6EE245DC4B4004D048E /* XENDResourcesRemoteDataProvider.m */; };
+		C9B3D6F6245DCA9C004D048E /* IOKit.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C9B3D6F5245DCA9C004D048E /* IOKit.tbd */; };
+		C9B3D6FE245DCFD7004D048E /* XENDResourcesDataProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = C9B3D6FC245DCFD7004D048E /* XENDResourcesDataProvider.h */; };
+		C9B3D6FF245DCFD7004D048E /* XENDResourcesDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = C9B3D6FD245DCFD7004D048E /* XENDResourcesDataProvider.m */; };
 		C9BFD61423C154AD001F46F2 /* XTWCObservation.m in Sources */ = {isa = PBXBuildFile; fileRef = C9BFD61323C154AD001F46F2 /* XTWCObservation.m */; };
 		C9BFD61723C154BD001F46F2 /* XTWCDailyForecast.m in Sources */ = {isa = PBXBuildFile; fileRef = C9BFD61623C154BD001F46F2 /* XTWCDailyForecast.m */; };
 		C9BFD61A23C159C4001F46F2 /* NSDictionary+XENSafeObjectForKey.m in Sources */ = {isa = PBXBuildFile; fileRef = C9BFD61923C159C4001F46F2 /* NSDictionary+XENSafeObjectForKey.m */; };
@@ -296,6 +300,14 @@
 		C9AFC0662389738B007FD971 /* XENDWeatherManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XENDWeatherManager.m; path = "daemon/Data Providers/Weather/XENDWeatherManager.m"; sourceTree = SOURCE_ROOT; };
 		C9AFC0692389A216007FD971 /* XENDLocationManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XENDLocationManager.h; path = "daemon/Data Providers/Location/XENDLocationManager.h"; sourceTree = SOURCE_ROOT; };
 		C9AFC06A2389A216007FD971 /* XENDLocationManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XENDLocationManager.m; path = "daemon/Data Providers/Location/XENDLocationManager.m"; sourceTree = SOURCE_ROOT; };
+		C9B3D6ED245DC4B4004D048E /* XENDResourcesRemoteDataProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XENDResourcesRemoteDataProvider.h; path = "daemon/Data Providers/Resources/XENDResourcesRemoteDataProvider.h"; sourceTree = SOURCE_ROOT; };
+		C9B3D6EE245DC4B4004D048E /* XENDResourcesRemoteDataProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XENDResourcesRemoteDataProvider.m; path = "daemon/Data Providers/Resources/XENDResourcesRemoteDataProvider.m"; sourceTree = SOURCE_ROOT; };
+		C9B3D6F1245DC615004D048E /* IOPSKeys.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = IOPSKeys.h; path = "daemon/Data Providers/Resources/IOPSKeys.h"; sourceTree = SOURCE_ROOT; };
+		C9B3D6F2245DC73D004D048E /* IOPowerSources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = IOPowerSources.h; path = "daemon/Data Providers/Resources/IOPowerSources.h"; sourceTree = SOURCE_ROOT; };
+		C9B3D6F3245DCA13004D048E /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/IOKit.framework; sourceTree = DEVELOPER_DIR; };
+		C9B3D6F5245DCA9C004D048E /* IOKit.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = IOKit.tbd; path = daemon/frameworks/IOKit.tbd; sourceTree = "<group>"; };
+		C9B3D6FC245DCFD7004D048E /* XENDResourcesDataProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XENDResourcesDataProvider.h; sourceTree = "<group>"; };
+		C9B3D6FD245DCFD7004D048E /* XENDResourcesDataProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XENDResourcesDataProvider.m; sourceTree = "<group>"; };
 		C9BFD61223C154AD001F46F2 /* XTWCObservation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XTWCObservation.h; path = "daemon/Data Providers/Weather/Model/XTWCObservation.h"; sourceTree = SOURCE_ROOT; };
 		C9BFD61323C154AD001F46F2 /* XTWCObservation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XTWCObservation.m; path = "daemon/Data Providers/Weather/Model/XTWCObservation.m"; sourceTree = SOURCE_ROOT; };
 		C9BFD61523C154BD001F46F2 /* XTWCDailyForecast.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XTWCDailyForecast.h; path = "daemon/Data Providers/Weather/Model/XTWCDailyForecast.h"; sourceTree = SOURCE_ROOT; };
@@ -362,6 +374,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9B3D6F6245DCA9C004D048E /* IOKit.tbd in Frameworks */,
 				C993D33823DCF5CE0084ED1E /* SystemConfiguration.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -530,6 +543,7 @@
 		C9204FDB2331806300F9F535 /* Data Providers */ = {
 			isa = PBXGroup;
 			children = (
+				C9B3D6EC245DC491004D048E /* Resources */,
 				C9AFC0682389A206007FD971 /* Location */,
 				C9AFC060238966BF007FD971 /* Weather */,
 				C9AFC05F238966BB007FD971 /* Media */,
@@ -637,6 +651,26 @@
 				C9AFC06A2389A216007FD971 /* XENDLocationManager.m */,
 			);
 			path = Location;
+			sourceTree = "<group>";
+		};
+		C9B3D6EC245DC491004D048E /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				C9B3D6ED245DC4B4004D048E /* XENDResourcesRemoteDataProvider.h */,
+				C9B3D6EE245DC4B4004D048E /* XENDResourcesRemoteDataProvider.m */,
+				C9B3D6F1245DC615004D048E /* IOPSKeys.h */,
+				C9B3D6F2245DC73D004D048E /* IOPowerSources.h */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		C9B3D6FB245DCF99004D048E /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				C9B3D6FC245DCFD7004D048E /* XENDResourcesDataProvider.h */,
+				C9B3D6FD245DCFD7004D048E /* XENDResourcesDataProvider.m */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		C9BFD61123C1549A001F46F2 /* Model */ = {
@@ -788,6 +822,7 @@
 				C919CA6A233026A4001391A5 /* XENDBaseDataProvider.m */,
 				C9AFC05E238966A1007FD971 /* Weather */,
 				C9AFC05D2389669D007FD971 /* Media */,
+				C9B3D6FB245DCF99004D048E /* Resources */,
 				C9AFC05C23896697007FD971 /* System */,
 			);
 			path = "Data Providers";
@@ -807,6 +842,8 @@
 		C9F2F40E2301C3E000E4863B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C9B3D6F5245DCA9C004D048E /* IOKit.tbd */,
+				C9B3D6F3245DCA13004D048E /* IOKit.framework */,
 				C993D33723DCF5CE0084ED1E /* SystemConfiguration.framework */,
 				C9F2F40F2301C3E100E4863B /* WebKit.framework */,
 				C9A5E98E2419519300FCD778 /* Foundation.framework */,
@@ -831,6 +868,7 @@
 			files = (
 				C91F3FA2242FA9B100E30466 /* OGElement.h in Headers */,
 				C9F2F3A72301BE4100E4863B /* XENDPreprocessorManager.h in Headers */,
+				C9B3D6FE245DCFD7004D048E /* XENDResourcesDataProvider.h in Headers */,
 				C91F4036242FB1DA00E30466 /* tag_sizes.h in Headers */,
 				C9204FF92336509900F9F535 /* XENDMediaDataProvider.h in Headers */,
 				C91F4032242FB1DA00E30466 /* replacement.h in Headers */,
@@ -1021,6 +1059,7 @@
 				C993D33323DCE6D60084ED1E /* XENDStateManager.m in Sources */,
 				C9AFC0672389738B007FD971 /* XENDWeatherManager.m in Sources */,
 				C9204FF623364FD800F9F535 /* XENDMediaRemoteDataProvider.m in Sources */,
+				C9B3D6EF245DC4B4004D048E /* XENDResourcesRemoteDataProvider.m in Sources */,
 				C9204FD623317EF300F9F535 /* XENDSimulatedDaemonListener.m in Sources */,
 				C9204FE32331834300F9F535 /* XENDBaseRemoteDataProvider.m in Sources */,
 				C9BFD61723C154BD001F46F2 /* XTWCDailyForecast.m in Sources */,
@@ -1062,6 +1101,7 @@
 				C91F4039242FB1DA00E30466 /* tokenizer.c in Sources */,
 				C919CA6C233026A4001391A5 /* XENDBaseDataProvider.m in Sources */,
 				C91F401D242FB1DA00E30466 /* svg_attrs.c in Sources */,
+				C9B3D6FF245DCFD7004D048E /* XENDResourcesDataProvider.m in Sources */,
 				C9204FF32336487200F9F535 /* XENDProxyBaseConnection.m in Sources */,
 				C9F2F39F2301BE4100E4863B /* Highlight.cpp in Sources */,
 				C91F402D242FB1DA00E30466 /* error.c in Sources */,
@@ -1172,6 +1212,10 @@
 				);
 				INSTALL_PATH = /usr/lib;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/daemon/frameworks",
+				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = libwidgetinfodaemon;
@@ -1240,6 +1284,10 @@
 				);
 				INSTALL_PATH = /usr/lib;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/daemon/frameworks",
+				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = libwidgetinfodaemon;

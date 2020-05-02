@@ -13,13 +13,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 **/
 
-#import <Foundation/Foundation.h>
-#import "../XENDBaseDataProvider.h"
+#import "XENDResourcesDataProvider.h"
 
-@interface XENDProxyDataProvider : XENDBaseDataProvider
+@implementation XENDResourcesDataProvider
 
-- (void)notifyUpdatedDynamicProperties:(NSDictionary*)dynamicProperties;
-- (void)notifyUpdatedLocalProperties:(NSDictionary*)localProperties;
-- (void)notifyDaemonConnected;
++ (NSString*)providerNamespace {
+    return @"resources";
+}
+
+- (void)intialiseProvider {
+    // Setup RAM and CPU monitoring
+}
 
 @end

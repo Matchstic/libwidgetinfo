@@ -17,6 +17,10 @@
 #import "XENDProxyManager.h"
 #import "XENDLogger.h"
 
+@interface XENDProxyDataProvider ()
+@property (nonatomic, strong) NSMutableDictionary *cachedLocalProperties;
+@end
+
 @implementation XENDProxyDataProvider
 
 - (instancetype)init {
@@ -64,6 +68,33 @@
     
     // Notify widget manager of new data
     [self notifyWidgetManagerForNewProperties];
+}
+
+- (void)notifyUpdatedLocalProperties:(NSDictionary*)localProperties {
+    if ([self.cachedLocalProperties isEqualToDictionary:localProperties]) {
+        XENDLog(@"DEBUG :: Not updating properties in namespace %@ because they haven't changed", [self _subclassNamespace]);
+        return;
+    }
+    
+    self.cachedLocalProperties = [localProperties copy];
+    
+    // Notify widget manager of new data
+    [self notifyWidgetManagerForNewProperties];
+}
+
+- (NSDictionary*)cachedData {
+    NSMutableDictionary *result = [NSMutableDictionary dictionary];
+    
+    if (self.cachedDynamicProperties)
+        [result addEntriesFromDictionary:self.cachedDynamicProperties];
+    
+    if (self.cachedLocalProperties)
+        [result addEntriesFromDictionary:self.cachedLocalProperties];
+    
+    if (self.cachedStaticProperties)
+        [result addEntriesFromDictionary:self.cachedStaticProperties];
+    
+    return result;
 }
 
 /////////////////////////////////////////////////////////

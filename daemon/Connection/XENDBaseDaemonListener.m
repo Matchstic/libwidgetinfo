@@ -16,6 +16,7 @@
 #import "../Data Providers/XENDBaseRemoteDataProvider.h"
 #import "../Data Providers/Media/XENDMediaRemoteDataProvider.h"
 #import "../Data Providers/Weather/XENDWeatherRemoteDataProvider.h"
+#import "../Data Providers/Resources/XENDResourcesRemoteDataProvider.h"
 
 @interface XENDBaseDaemonListener ()
 
@@ -49,6 +50,9 @@
     
     XENDWeatherRemoteDataProvider *weather = [[XENDWeatherRemoteDataProvider alloc] initWithConnection:self];
     [result setObject:weather forKey:[[weather class] providerNamespace]];
+    
+    XENDResourcesRemoteDataProvider *resources = [[XENDResourcesRemoteDataProvider alloc] initWithConnection:self];
+    [result setObject:resources forKey:[[resources class] providerNamespace]];
     
     return result;
 }
