@@ -102,7 +102,7 @@
     NSDate *date = [NSDate dateWithTimeIntervalSince1970:self.validUNIXTime];
     NSDateComponents* comp = [[NSCalendar currentCalendar] components:NSCalendarUnitWeekday fromDate:date];
     
-    self.weekdayNumber          = [NSNumber numberWithLong:[comp weekday]];
+    self.weekdayNumber          = [NSNumber numberWithLong:[comp weekday] - 1];
     
     // Parse units specific things
     NSDictionary *unitSpecificValues = units.temperature == METRIC ? [data objectForKey:@"metric"] : [data objectForKey:@"imperial"];
