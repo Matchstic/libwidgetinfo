@@ -46,11 +46,5 @@ Available icons, grouped by subfolder:
 - `weather`
     - `[0-47].svg` (e.g., all weather icons that relate to a weather condition code)
     - `unknown.svg`
-- `media`
-    - `backward.svg`
-    - `forward.svg`
-    - `pause.svg`
-    - `play.svg`
-    - `repeat.svg`
-    - `shuffle.svg`
-    - `stop.svg`
+- `battery`
+    - `[0-100].svg` (an image is provided for each battery level 'step', e.g. 10.svg, 20.svg, ...)
