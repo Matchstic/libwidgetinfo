@@ -100,10 +100,36 @@ static NSString *preferencesId = @"com.matchstic.xenhtml.libwidgetinfo";
 - (void)notifyWebViewLoaded:(WKWebView*)webView {
     // Inject cached data
     
+    NSString *updateString = [self _updateString:YES];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [webView evaluateJavaScript:updateString completionHandler:^(id object, NSError *error) {
+            if (error) {
+                NSLog(@"notifyWebViewLoaded :: ERROR during JS execution: %@", error);
+            }
+        }];
+    });
+}
+
+// Exposed for the battery manager
+- (void)notifyWidgetUnpaused:(WKWebView*)webView {
+    NSString *updateString = [self _updateString:NO];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [webView evaluateJavaScript:updateString completionHandler:^(id object, NSError *error) {
+            if (error) {
+                NSLog(@"notifyWebViewLoaded :: ERROR during JS execution: %@", error);
+            }
+        }];
+    });
+}
+
+- (NSString*)_updateString:(BOOL)isFirstLoad {
     NSString *updateString = @"";
     
     // Add loaded method call
-    updateString = [updateString stringByAppendingString:@"api._middleware.onLoad();\n"];
+    if (isFirstLoad)
+        updateString = [updateString stringByAppendingString:@"api._middleware.onLoad();\n"];
     
     for (NSString *providerNamespace in self.dataProviders.allKeys) {
         XENDBaseDataProvider *provider = [self.dataProviders objectForKey:providerNamespace];
@@ -117,13 +143,7 @@ static NSString *preferencesId = @"com.matchstic.xenhtml.libwidgetinfo";
         updateString = [updateString stringByAppendingString:innerUpdateString];
     }
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [webView evaluateJavaScript:updateString completionHandler:^(id object, NSError *error) {
-            if (error) {
-                NSLog(@"notifyWebViewLoaded :: ERROR during JS execution: %@", error);
-            }
-        }];
-    });
+    return updateString;
 }
 
 - (void)injectRuntime:(WKUserContentController*)contentController {
