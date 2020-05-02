@@ -15,6 +15,7 @@
 @property NSArray * children;
 @property NSArray * classes;
 @property NSDictionary * attributes;
+@property NSString *underlyingTagName;
 
 -(NSArray*)elementsWithAttribute:(NSString *)attribute andValue:(NSString *)value;
 

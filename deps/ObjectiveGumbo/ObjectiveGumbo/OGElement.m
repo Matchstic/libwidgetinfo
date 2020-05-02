@@ -22,6 +22,11 @@
 -(NSString*)htmlWithIndentation:(int)indentationLevel
 {
     NSString *tagName = [OGUtility tagForGumboTag:self.tag];
+    if (self.tag == GUMBO_TAG_UNKNOWN) {
+        // Use the generated tag name
+        tagName = self.underlyingTagName;
+    }
+    
     BOOL isVoid = [OGUtility tagNameIsVoid:tagName];
     
     NSMutableString *html = [NSMutableString stringWithFormat:@"<%@", tagName];

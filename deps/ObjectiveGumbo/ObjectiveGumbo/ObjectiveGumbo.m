@@ -98,6 +98,17 @@
         elementNode.tag = gumboNode->v.element.tag;
         elementNode.tagNamespace = gumboNode->v.element.tag_namespace;
         
+        GumboStringPiece tagname = gumboNode->v.element.original_tag;
+        gumbo_tag_from_original_text(&tagname);
+        
+        // Record the original tag name in the event that gumbo doesn't know it
+        int length = MIN(1024, tagname.length);
+        char *internalTagName[length + 1];
+        memset(internalTagName, 0, sizeof(internalTagName));
+        memcpy(internalTagName, tagname.data, length);
+        
+        elementNode.underlyingTagName = [NSString stringWithCString:(const char*)internalTagName encoding:NSASCIIStringEncoding];
+        
         NSMutableDictionary * attributes = [[NSMutableDictionary alloc] init];
         
         GumboVector * cAttributes = &gumboNode->v.element.attributes;
