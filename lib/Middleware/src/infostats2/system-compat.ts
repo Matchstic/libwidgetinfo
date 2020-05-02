@@ -17,7 +17,7 @@ export default class IS2System {
             switch (this.resourcesProvider.battery.state) {
                 case 0: return 'Unplugged';
                 case 1: return 'Charging';
-                case 2: return 'Fully charged'
+                case 2: return 'Fully Charged'
                 default:
                     return '';
             }
