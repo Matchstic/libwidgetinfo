@@ -80,6 +80,13 @@ export default class System extends Base implements SystemProperties {
     systemVersion: string;
 
     /**
+     * The current language of the device.
+     *
+     * This is analogous to calling `navigator.language`.
+     */
+    language: string = navigator.language;
+
+    /**
      * The height of the display, in points.
      *
      * For example, the iPhone X has a `deviceDisplayHeight` of 812
