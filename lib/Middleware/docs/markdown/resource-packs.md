@@ -32,7 +32,7 @@ As shown above, the `xui://` URI scheme is used to load content from an resource
 You are not limited by the subfolder names used inside the `default` pack. For example:
 
 ```html
-<img src="xui://images/testing/backdrops/big.png">
+<img src="xui://resource/testing/backdrops/big.png">
 ```
 
 This is perfectly valid, so long as the `testing` resource pack has a subfolder named `backdrops`.
