@@ -142,7 +142,7 @@ static BOOL handlerEnabled = YES;
         [section appendFormat:@"<code>%d</code>\n", [[[item objectForKey:@"condition"] objectForKey:@"code"] intValue]];
         [section appendFormat:@"<cardinal>%@</cardinal>\n", [[item objectForKey:@"wind"] objectForKey:@"cardinal"]];
         [section appendFormat:@"<low>%d</low>\n", [[[item objectForKey:@"temperature"] objectForKey:@"minimum"] intValue]];
-        [section appendFormat:@"<dayofweek>%ld</dayofweek>\n", [[item objectForKey:@"weekdayNumber"] longValue]];
+        [section appendFormat:@"<dayofweek>%ld</dayofweek>\n", [[item objectForKey:@"weekdayNumber"] longValue] + 1];
         [section appendFormat:@"<pop>%d</pop>\n", [[[item objectForKey:@"precipitation"] objectForKey:@"probability"] intValue]];
         [section appendFormat:@"<direction>%d</direction>\n", [[[item objectForKey:@"wind"] objectForKey:@"degrees"] intValue]];
 		

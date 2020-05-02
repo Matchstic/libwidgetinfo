@@ -102,7 +102,7 @@ export default class XenInfoWeather {
                 low: fcast.temperature.minimum,
                 high: fcast.temperature.maximum,
                 dayNumber: i,
-                dayOfWeek: fcast.weekdayNumber,
+                dayOfWeek: fcast.weekdayNumber + 1,
                 icon: fcast.condition.code
             });
         }

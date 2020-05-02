@@ -113,8 +113,8 @@ export default class IS2Weather {
             dailyForecasts.push({
                 low: fcast.temperature.minimum,
                 high: fcast.temperature.maximum,
-                dayNumber: fcast.weekdayNumber,
-                dayOfWeek: fcast.timestamp.getDay() + 1, // 1 is Sunday due to US conventions
+                dayNumber: i,
+                dayOfWeek: fcast.weekdayNumber,
                 condition: fcast.condition.code
             });
         }
