@@ -126,6 +126,12 @@ export default class System extends Base implements SystemProperties {
      *
      * The new data is provided as the parameter into your callback function.
      *
+     * Data will change due to the following events:
+     *
+     * - User changes the 24hr time setting of their device
+     * - Network connection state changes
+     * - Low Power Mode state changes
+     *
      * @param callback A callback that is notified whenever the provider's data change
      */
     public observeData(callback: (newData: SystemProperties) => void) {

@@ -78,7 +78,6 @@ Appends a new instance of the element in place for each item in an array. Each e
 ```html
 <ul>
   <li xui-each-forecast="weather.hourly" xui-data-id="forecast.hourIndex">
-    <img xui-src="'xui://resource/default/weather/' + forecast.condition.code + '.svg'" />
     <span>{ forecast.temperature.feelsLike }</span>
   </li>
 <ul>

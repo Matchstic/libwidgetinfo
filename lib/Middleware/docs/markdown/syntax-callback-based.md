@@ -26,4 +26,19 @@ This observation pattern is identical across all data providers.
 
 ### Initial load
 
-It is important to be aware that widget data is loaded asynchronously; it is not available when your `onload` function is started. This is why you should register a callback instead, since this will be called as soon as data is available. The delay is typically in the order of a few milliseconds.
+It is important to be aware that widget data is loaded asynchronously; it is **not available when your `onload` function is ran**. This is why you should register a callback instead, since this will be called as soon as data becomes available. The delay is typically in the order of a few milliseconds.
+
+### Assumed knowledge
+
+When building widgets to be callback-based, it is assumed that you have an understanding of how JavaScript works. Particularly, you should know how to work with the following data types:
+
+- number
+- string
+- boolean
+- Date
+
+If not, it's easy to learn! Since widgets are effectively webpages, you can use any resource that teaches how to work with JavaScript. Recommended resources are as follows:
+
+- [W3Schools](https://www.w3schools.com/)
+- [Mozilla web docs (MDN)](https://developer.mozilla.org/en-US/)
+

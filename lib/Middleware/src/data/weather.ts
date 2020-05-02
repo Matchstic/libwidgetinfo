@@ -991,7 +991,8 @@ export interface WeatherProperties {
  *
  * Inline:
  * <div id="weatherDisplay">
- *               <p id="temperature">{ weather.now.temperature.current + weather.units.temperature }</p>
+ *               <img class="icon" xui-src="'xui://resource/default/weather/%s.svg' | inject weather.now.condition.code" />
+ *               <p id="temperature">{ weather.now.temperature.current }{ weather.units.temperature }</p>
  *               <p id="city">{ weather.metadata.address.city }</p>
  * </div>
  */
@@ -1021,7 +1022,11 @@ export default class Weather extends Base implements WeatherProperties {
     nightly:    WeatherNightly[];
 
     /**
-     * Specifies the units data is returned in. You do not need to do any conversions yourself
+     * Specifies the units data is returned in. You do not need to do any conversions yourself.
+     *
+     * These units are specified by the user's current locale settings. For example, setting the
+     * device's region to "United States" will change the units to be Farenheit for temperature,
+     * and inHg for pressure.
      */
     units:      WeatherUnits;
 
@@ -1036,6 +1041,11 @@ export default class Weather extends Base implements WeatherProperties {
      * provider changes.
      *
      * The new data is provided as the parameter into your callback function.
+     *
+     * Data will change due to the following events:
+     *
+     * - A new weather update has completed
+     * - User changes temperature units between Celsius and Farenheit
      *
      * @param callback A callback that is notified whenever the provider's data change
      */
