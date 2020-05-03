@@ -115,11 +115,13 @@ static void powerSourceChanged(void *context) {
     self.lastUpdateWasCharging = [chargingState intValue] != 0;
     
     int averageTimeRemaining = [self averageTimeRemaining:extensiveBatteryInfo];
+    if (averageTimeRemaining == NAN) averageTimeRemaining = -1;
     
     // Calculate health
     double maxCapacity = [[extensiveBatteryInfo objectForKey:@"DesignCapacity"] doubleValue];
     double absoluteCapacity = [[extensiveBatteryInfo objectForKey:@"AbsoluteCapacity"] doubleValue];
     int healthPercentage = (absoluteCapacity / maxCapacity) * 100.0;
+    if (healthPercentage == NAN) healthPercentage = 100;
     
     // Generate capacity information
     NSDictionary *capacity = @{
