@@ -19,9 +19,11 @@
 #import "IOPSKeys.h"
 #import "IOPowerSources.h"
 
-#define MAX_AMPERAGE_SAMPLES 10
-#define AMPERAGE_SAMPLE_RATE 20
-#define SAMPLE_COUNT_TO_FORCE_UPDATE 30 // Leads to a forced update every 10 mins
+// Using a window of 1hr's worth of samples
+#define MAX_AMPERAGE_SAMPLES 60
+#define MIN_AMPERAGE_SAMPLES 10
+#define AMPERAGE_SAMPLE_RATE 60
+#define SAMPLE_COUNT_TO_FORCE_UPDATE 10 // Leads to a forced update every 10 mins
 
 @interface XENDResourcesRemoteDataProvider ()
 @property (nonatomic, strong) NSTimer *amperageSampler;
@@ -147,7 +149,7 @@ static void powerSourceChanged(void *context) {
 // Returns in minutes
 - (int)averageTimeRemaining:(NSDictionary*)extensiveBatteryInfo {
     // Return 'calculating' if there is not enough samples
-    if (self.amperageSamples.count < MAX_AMPERAGE_SAMPLES) return -1;
+    if (self.amperageSamples.count < MIN_AMPERAGE_SAMPLES) return -1;
     
     double remainingCapacity = [[extensiveBatteryInfo objectForKey:@"AppleRawCurrentCapacity"] doubleValue];
     if (remainingCapacity == 0) return -1;
@@ -182,7 +184,7 @@ static void powerSourceChanged(void *context) {
     
     NSNumber *sample = [extensiveBatteryInfo objectForKey:@"Amperage"];
     
-    BOOL willBecomeFull = self.amperageSamples.count == MAX_AMPERAGE_SAMPLES - 1;
+    BOOL willBecomeViable = self.amperageSamples.count == MIN_AMPERAGE_SAMPLES - 1;
     if (self.amperageSamples.count == MAX_AMPERAGE_SAMPLES) {
         // Pop off the oldest value
         [self.amperageSamples removeLastObject];
@@ -194,7 +196,7 @@ static void powerSourceChanged(void *context) {
     // This is to keep the readout of time remaining somewhat fresh
     self.sampleIncrementor++;
 
-    if (willBecomeFull) {
+    if (willBecomeViable) {
         XENDLog(@"Generating a power event due to there now being enough amperage samples");
         
         // Fire off a power update event, now that there is enough samples to derive the time remaining
