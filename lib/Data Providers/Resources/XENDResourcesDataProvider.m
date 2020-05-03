@@ -83,9 +83,9 @@
     if (host_statistics(host_port, HOST_VM_INFO, (host_info_t)&vm_stat, &host_size) != KERN_SUCCESS) {
         NSLog(@"ERROR :: Failed to fetch memory information");
     } else {
-        /* Stats in bytes */
-        natural_t mem_used = (vm_stat.active_count + vm_stat.inactive_count + vm_stat.wire_count) * pagesize;
-        natural_t mem_free = vm_stat.free_count * pagesize;
+        // Note: inactive pages are treated as free pages
+        natural_t mem_used = (vm_stat.active_count + vm_stat.wire_count) * pagesize;
+        natural_t mem_free = (vm_stat.free_count + vm_stat.inactive_count) * pagesize;
         
         // Ensure not NaN
         if (mem_used == NAN) mem_used = 0;
