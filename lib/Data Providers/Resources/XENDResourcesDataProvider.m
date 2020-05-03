@@ -94,7 +94,7 @@
         memory = @{
             @"used": @(mem_used / (1024 * 1024)),
             @"free": @(mem_free / (1024 * 1024)),
-            @"physical": @([NSProcessInfo processInfo].physicalMemory != NAN ? [NSProcessInfo processInfo].physicalMemory / (1024 * 1024) : 0)
+            @"available": @([NSProcessInfo processInfo].physicalMemory != NAN ? [NSProcessInfo processInfo].physicalMemory / (1024 * 1024) : 0)
         };
     }
 
