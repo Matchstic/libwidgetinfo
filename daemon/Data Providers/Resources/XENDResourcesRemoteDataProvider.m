@@ -21,10 +21,12 @@
 
 #define MAX_AMPERAGE_SAMPLES 10
 #define AMPERAGE_SAMPLE_RATE 20
+#define SAMPLE_COUNT_TO_FORCE_UPDATE 30 // Leads to a forced update every 10 mins
 
 @interface XENDResourcesRemoteDataProvider ()
 @property (nonatomic, strong) NSTimer *amperageSampler;
 @property (nonatomic, strong) NSMutableArray *amperageSamples;
+@property (nonatomic, readwrite) int sampleIncrementor;
 @property (nonatomic, readwrite) BOOL lastUpdateWasCharging;
 
 - (void)_updateBatteryState:(NSArray*)sourceData;
@@ -56,6 +58,7 @@ static void powerSourceChanged(void *context) {
 
 - (void)intialiseProvider {
     self.lastUpdateWasCharging = NO;
+    self.sampleIncrementor = 0;
     self.amperageSamples = [NSMutableArray array];
     
     // Setup battery state monitoring
@@ -104,29 +107,37 @@ static void powerSourceChanged(void *context) {
     
     // Check if the amperage samples need to be reset, due to AC power disconnection
     if ([chargingState intValue] == 0 && self.lastUpdateWasCharging) {
-        XENDLog(@"DEBUG :: Cleared amperage samples due to coming off power");
         self.amperageSamples = [NSMutableArray array];
     }
     
     self.lastUpdateWasCharging = [chargingState intValue] != 0;
     
-    double averageTimeRemaining = [self averageTimeRemaining:extensiveBatteryInfo];
-    XENDLog(@"*** average time remaining: %d, samples: %@", averageTimeRemaining, self.amperageSamples);
+    int averageTimeRemaining = [self averageTimeRemaining:extensiveBatteryInfo];
     
     // Calculate health
     double maxCapacity = [[extensiveBatteryInfo objectForKey:@"DesignCapacity"] doubleValue];
     double absoluteCapacity = [[extensiveBatteryInfo objectForKey:@"AbsoluteCapacity"] doubleValue];
     int healthPercentage = (absoluteCapacity / maxCapacity) * 100.0;
+    
+    // Generate capacity information
+    NSDictionary *capacity = @{
+        @"current": [extensiveBatteryInfo objectForKey:@"AppleRawCurrentCapacity"] ? [extensiveBatteryInfo objectForKey:@"AppleRawCurrentCapacity"] : @-1,
+        @"maximim": [extensiveBatteryInfo objectForKey:@"AbsoluteCapacity"] ? [extensiveBatteryInfo objectForKey:@"AbsoluteCapacity"] : @-1,
+        @"design": [extensiveBatteryInfo objectForKey:@"DesignCapacity"] ? [extensiveBatteryInfo objectForKey:@"DesignCapacity"] : @-1,
+    };
 
     NSDictionary *resultData = @{
-        @"percentage": [internalBatteryData objectForKey:@kIOPSCurrentCapacityKey],
+        @"percentage": [internalBatteryData objectForKey:@kIOPSCurrentCapacityKey] ? [internalBatteryData objectForKey:@kIOPSCurrentCapacityKey] : @0,
         @"state": chargingState,
         @"source": [[internalBatteryData objectForKey:@kIOPSPowerSourceStateKey] isEqualToString:@kIOPSACPowerValue] ? @"ac" : @"battery",
         @"timeUntilEmpty": @(averageTimeRemaining), // mins
         @"serial": [extensiveBatteryInfo objectForKey:@"Serial"] ? [extensiveBatteryInfo objectForKey:@"Serial"] : @"",
-        @"health": @(healthPercentage)
+        @"health": @(healthPercentage),
+        @"capacity": capacity,
+        @"cycles": [extensiveBatteryInfo objectForKey:@"CycleCount"] ? [extensiveBatteryInfo objectForKey:@"CycleCount"] : @-1
     };
     
+    // Notify remote of new battery data
     self.cachedDynamicProperties = [@{
         @"battery": resultData
     } mutableCopy];
@@ -134,13 +145,12 @@ static void powerSourceChanged(void *context) {
 }
 
 // Returns in minutes
-- (double)averageTimeRemaining:(NSDictionary*)extensiveBatteryInfo {
+- (int)averageTimeRemaining:(NSDictionary*)extensiveBatteryInfo {
     // Return 'calculating' if there is not enough samples
     if (self.amperageSamples.count < MAX_AMPERAGE_SAMPLES) return -1;
     
     double remainingCapacity = [[extensiveBatteryInfo objectForKey:@"AppleRawCurrentCapacity"] doubleValue];
-    
-    XENDLog(@"remainingCapacity: %f", remainingCapacity);
+    if (remainingCapacity == 0) return -1;
     
     // Calculate average from current samples
     double drainRate = -1;
@@ -148,15 +158,11 @@ static void powerSourceChanged(void *context) {
         drainRate += fabs([sample doubleValue]);
     }
     
-    XENDLog(@"Cumulative drain rate: %f", drainRate);
-    
     if (drainRate == -1) {
         return -1;
     }
     
     drainRate /= (double)self.amperageSamples.count;
-    
-    XENDLog(@"Calculated drain rate: %f", drainRate);
     
     // Remaining Battery Life [h] = Battery Remaining Capacity [mAh/mWh] / Battery Rolling Average Drain Rate [mA/mW]
     return (remainingCapacity / drainRate) * 60;
@@ -184,11 +190,18 @@ static void powerSourceChanged(void *context) {
     
     [self.amperageSamples insertObject:sample atIndex:0];
     
-    XENDLog(@"DEBUG :: Added amperage sample: %d", [sample intValue]);
-    
+    // Every now and again, we'll push an update after obtaining X samples
+    // This is to keep the readout of time remaining somewhat fresh
+    self.sampleIncrementor++;
+
     if (willBecomeFull) {
-        XENDLog(@"DEBUG :: Generating a power event due to there now being enough amperage samples");
+        XENDLog(@"Generating a power event due to there now being enough amperage samples");
+        
         // Fire off a power update event, now that there is enough samples to derive the time remaining
+        powerSourceChanged((__bridge void *)(self));
+    } else if (self.sampleIncrementor >= SAMPLE_COUNT_TO_FORCE_UPDATE) {
+        self.sampleIncrementor = 0;
+        
         powerSourceChanged((__bridge void *)(self));
     }
 }
