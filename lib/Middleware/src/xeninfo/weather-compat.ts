@@ -31,6 +31,9 @@ export default class XenInfoWeather {
 
             this.last24hrTime = newData.isTwentyFourHourTimeEnabled;
         });
+
+        // Do initial update
+        this.onWeatherDataChanged(providers.get(DataProviderUpdateNamespace.Weather));
     }
 
     onWeatherDataChanged(newData: WeatherProperties): void {

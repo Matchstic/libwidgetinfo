@@ -79,8 +79,5 @@ export class Base {
      */
     public observeData(callback: (newData: any) => void) {
         this.observers.push(callback);
-
-        // Call the observer with initial data
-        callback(this);
     }
 }

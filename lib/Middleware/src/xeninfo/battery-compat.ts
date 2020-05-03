@@ -16,6 +16,9 @@ export default class XenInfoBattery {
             this.onDataChanged(newData);
             this.notifyXenInfoDataChanged('battery');
         });
+
+        // Do initial update
+        this.onDataChanged(providers.get(DataProviderUpdateNamespace.Resources));
     }
 
     onDataChanged(data: ResourcesProperties) {
