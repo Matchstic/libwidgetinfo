@@ -156,10 +156,17 @@ static NSString *preferencesId = @"com.matchstic.xenhtml.libwidgetinfo";
     NSString *scriptLocation = @"/Users/matt/iOS/Projects/Xen-HTML/deps/libwidgetinfo/lib/Middleware/build/libwidgetinfo.js";
 #endif
     
+    // Runtime script
     NSString *content = [NSString stringWithContentsOfFile:scriptLocation encoding:NSUTF8StringEncoding error:NULL];
     WKUserScript *runtimeScript = [[WKUserScript alloc] initWithSource:content injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
     
     [contentController addUserScript:runtimeScript];
+    
+    // Add an additional script to push initial data immediately
+    NSString *dataContent = [self _updateString:NO];
+    WKUserScript *dataRuntimeScript = [[WKUserScript alloc] initWithSource:dataContent injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
+    
+    [contentController addUserScript:dataRuntimeScript];
     
     // Setup message handler
     [contentController addScriptMessageHandler:self.messageHandler name:@"libwidgetinfo"];
