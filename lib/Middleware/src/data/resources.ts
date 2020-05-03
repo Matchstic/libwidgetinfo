@@ -19,12 +19,16 @@ export interface ResourcesBattery {
     /**
      * Specifies whether the device is running using battery power, or AC power.
      *
-     * Values: `ac` (running off AC power), `battery` (running on the internal battery)
+     * Values: `"ac"` (running off AC power), `"battery"` (running on the internal battery)
      */
     source: string;
 
     /**
      * The estimated time, in minutes, of how long until the battery will become empty.
+     *
+     * This is based on a rolling average of battery usage over a 3 minute window, and so may fluctuate over time.
+     *
+     * When the charger is disconnected, this will remain at -1 until the first 3-minute window has passed. This is to generate enough samples for an accurate estimate.
      *
      * Values: -1 (calculating time), otherwise 0 or higher
      */
@@ -41,6 +45,32 @@ export interface ResourcesBattery {
      * Values: 0% to 100%
      */
     health: number;
+
+    /**
+     * An object containing the following properties:
+     *
+     * - `current`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
+     *     - The current capacity of the battery, measured in mAh
+     * - `maximum`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
+     *     - The maximum capacity of the battery, measured in mAh
+     *     - Over a long time period this will decrease, due to wearing of the battery
+     * - `design`
+     *     - <i>Type :</i> [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number)
+     *     - The design capacity of the battery, measured in mAh
+     *     - This is the capacity of the battery when it was manufactured
+     */
+    capacity: {
+        current: number;
+        maximum: number;
+        design: number;
+    }
+
+    /**
+     * The count of charge cycles the battery has undergone
+     */
+    cycles: number;
 }
 
 /**
@@ -168,6 +198,12 @@ export default class Resources extends Base implements ResourcesProperties {
                 timeUntilEmpty: -1,
                 serial: '',
                 health: 0,
+                capacity: {
+                    current: -1,
+                    maximum: -1,
+                    design: -1
+                },
+                cycles: 0
             },
             memory: {
                 used: 0,
