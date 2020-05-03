@@ -67,7 +67,7 @@
 
 - (void)_onMonitorFired:(NSTimer*)timer {
     // Get processor state, and memory state
-    NSDictionary *memory;
+    NSDictionary *memory = @{};
     
     // See: https://stackoverflow.com/questions/5012886/determining-the-available-amount-of-ram-on-an-ios-device/8540665#8540665
     mach_port_t host_port;
@@ -86,6 +86,10 @@
         /* Stats in bytes */
         natural_t mem_used = (vm_stat.active_count + vm_stat.inactive_count + vm_stat.wire_count) * pagesize;
         natural_t mem_free = vm_stat.free_count * pagesize;
+        
+        // Ensure not NaN
+        if (mem_used == NAN) mem_used = 0;
+        if (mem_free == NAN) mem_free = 0;
         
         memory = @{
             @"used": @(mem_used / (1024 * 1024)),
@@ -138,6 +142,7 @@
     }
     
     if (usage == NAN) usage = 0.0;
+    if (cpuCount == NAN) cpuCount = 0;
     
     NSDictionary *processor = @{
         @"load": @(usage),
