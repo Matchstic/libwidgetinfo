@@ -16,6 +16,7 @@
 #import "XENDWidgetManager.h"
 #import "../Data Providers/XENDBaseDataProvider.h"
 #import "../URL Handlers/XENDBaseURLHandler.h"
+#import "XENDLogger.h"
 
 // Provider imports
 #import "../Data Providers/System/XENDSystemDataProvider.h"
@@ -222,17 +223,23 @@ static NSString *preferencesId = @"com.matchstic.xenhtml.libwidgetinfo";
 }
 
 -(NSString*)_parseToJSON:(NSDictionary*)dict {
-    NSError *error;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict
-                                                       options:0
-                                                         error:&error];
-    
-    if (!jsonData) {
-        NSLog(@"%s: error: %@", __func__, error.localizedDescription);
+    @try {
+        NSError *error;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict
+                                                           options:0
+                                                             error:&error];
+        
+        if (!jsonData) {
+            NSLog(@"%s: error: %@", __func__, error.localizedDescription);
+            return @"{}";
+        } else {
+            return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        }
+    } @catch (NSException *exception) {
+        XENDLog(@"ERROR :: toJSON :: %@", exception);
         return @"{}";
-    } else {
-        return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     }
+
 }
 
 - (void)_flushCurrentDynamicStateToDisk:(NSTimer*)sender {
