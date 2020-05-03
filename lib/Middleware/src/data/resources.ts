@@ -12,7 +12,7 @@ export interface ResourcesBattery {
     /**
      * The current charge state.
      *
-     * Values: 0 (discharging), 1 (charging), 2 (fully charged)
+     * Values: `0` (discharging), `1` (charging), `2` (fully charged)
      */
     state: number;
 
@@ -26,9 +26,11 @@ export interface ResourcesBattery {
     /**
      * The estimated time, in minutes, of how long until the battery will become empty.
      *
-     * This is based on a rolling average of battery usage over a 3 minute window, and so may fluctuate over time.
+     * A rolling average of battery usage over a 1 hour window is used to estimate the time, and so may fluctuate. It is linked directly to
+     * the user's usage of the device over the past 1 hour.
      *
-     * When the charger is disconnected, this will remain at -1 until the first 3-minute window has passed. This is to generate enough samples for an accurate estimate.
+     * When the charger is disconnected, this will remain at -1 until the first 5 minutes have passed.
+     * This is to generate enough samples for an initial estimate.
      *
      * Values: -1 (calculating time), otherwise 0 or higher
      */
