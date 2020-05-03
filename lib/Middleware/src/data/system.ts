@@ -269,13 +269,15 @@ export default class System extends Base implements SystemProperties {
         }
 
         // Override toLocaleTimeString to use our 12/24 hour metadata
+        // Only do this if the locale field is not set by the user
         const oldToLocaleTimeString = Date.prototype.toLocaleTimeString;
         const _this = this;
         Date.prototype.toLocaleTimeString = function(locales?: string | string[], options?: {}) {
-            if (!options) options = { 'hour12': !_this.isTwentyFourHourTimeEnabled };
-            else options = {
-                'hour12': !_this.isTwentyFourHourTimeEnabled,
-                ...options
+            if (locales === undefined || locales === null || locales.length === 0) {
+                if (!options) options = { 'hour12': !_this.isTwentyFourHourTimeEnabled };
+                else options = Object.assign(options, {
+                    'hour12': !_this.isTwentyFourHourTimeEnabled,
+                });
             }
 
             return oldToLocaleTimeString.apply(this, [locales, options]);
