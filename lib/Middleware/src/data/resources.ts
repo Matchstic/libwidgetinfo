@@ -24,22 +24,23 @@ export interface ResourcesBattery {
     source: string;
 
     /**
-     * The estimated time, in minutes, of when the battery will be fully charged.
+     * The estimated time, in minutes, of how long until the battery will become empty.
      *
-     * Note: this will be always 0 if the battery `state` is not charging.
-     *
-     * Values: -1 or 0 (calculating time), otherwise 1 or higher
-     */
-    timeUntilCharged: number;
-
-    /**
-     * The estimated time, in minutes, of when the battery will become empty.
-     *
-     * Note: this will be always 0 if the battery `state` is charging, or is fully charged.
-     *
-     * Values: -1 or 0 (calculating time), otherwise 1 or higher
+     * Values: -1 (calculating time), otherwise 0 or higher
      */
     timeUntilEmpty: number;
+
+    /**
+     * The hardware serial number of the battery
+     */
+    serial: string;
+
+    /**
+     * The health of the battery, represented as a percentage
+     *
+     * Values: 0% to 100%
+     */
+    health: number;
 }
 
 /**
@@ -164,8 +165,9 @@ export default class Resources extends Base implements ResourcesProperties {
                 percentage: 0,
                 state: 0,
                 source: 'battery',
-                timeUntilCharged: -1,
                 timeUntilEmpty: -1,
+                serial: '',
+                health: 0,
             },
             memory: {
                 used: 0,

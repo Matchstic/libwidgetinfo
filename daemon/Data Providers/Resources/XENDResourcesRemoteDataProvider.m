@@ -19,7 +19,14 @@
 #import "IOPSKeys.h"
 #import "IOPowerSources.h"
 
+#define MAX_AMPERAGE_SAMPLES 10
+#define AMPERAGE_SAMPLE_RATE 20
+
 @interface XENDResourcesRemoteDataProvider ()
+@property (nonatomic, strong) NSTimer *amperageSampler;
+@property (nonatomic, strong) NSMutableArray *amperageSamples;
+@property (nonatomic, readwrite) BOOL lastUpdateWasCharging;
+
 - (void)_updateBatteryState:(NSArray*)sourceData;
 @end
 
@@ -48,6 +55,9 @@ static void powerSourceChanged(void *context) {
 }
 
 - (void)intialiseProvider {
+    self.lastUpdateWasCharging = NO;
+    self.amperageSamples = [NSMutableArray array];
+    
     // Setup battery state monitoring
     CFRunLoopSourceRef source = IOPSNotificationCreateRunLoopSource(powerSourceChanged, (__bridge void *)(self));
     if (source) {
@@ -55,6 +65,9 @@ static void powerSourceChanged(void *context) {
         
         // Get initial data
         powerSourceChanged((__bridge void *)(self));
+        
+        // Start sampling current amperage
+        self.amperageSampler = [NSTimer scheduledTimerWithTimeInterval:AMPERAGE_SAMPLE_RATE target:self selector:@selector(_averageAmperageSampleFired:) userInfo:nil repeats:YES];
     } else
         NSLog(@"ERROR :: Failed to setup battery state monitoring");
 }
@@ -74,24 +87,12 @@ static void powerSourceChanged(void *context) {
         return;
     }
     
-    /* Example output
-     "Battery Provides Time Remaining" = 1;
-      "Current Capacity" = 100;
-      "Is Charging" = 1;
-      "Is Finishing Charge" = 1;
-      "Is Present" = 1;
-      "Max Capacity" = 100;
-      Name = "InternalBattery-0";
-      "Play Charging Chime" = 1;
-      "Power Source ID" = 3211363;
-      "Power Source State" = "AC Power";
-      "Raw External Connected" = 1;
-      "Show Charging UI" = 1;
-      "Time to Empty" = 0;
-      "Time to Full Charge" = 0;
-      "Transport Type" = Internal;
-      Type = InternalBattery;
-     */
+    io_service_t powerSource = IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceMatching("IOPMPowerSource"));
+    CFMutableDictionaryRef batteryProperties = NULL;
+    
+    IORegistryEntryCreateCFProperties(powerSource, &batteryProperties, NULL, 0);
+    
+    NSDictionary *extensiveBatteryInfo = (__bridge_transfer NSDictionary *)batteryProperties;
     
     NSNumber *chargingState = @0;
     if ([[internalBatteryData objectForKey:@kIOPSIsChargedKey] boolValue] ||
@@ -100,13 +101,30 @@ static void powerSourceChanged(void *context) {
     } else if ([[internalBatteryData objectForKey:@kIOPSIsChargingKey] boolValue]) {
         chargingState = @1;
     }
+    
+    // Check if the amperage samples need to be reset, due to AC power disconnection
+    if ([chargingState intValue] == 0 && self.lastUpdateWasCharging) {
+        XENDLog(@"DEBUG :: Cleared amperage samples due to coming off power");
+        self.amperageSamples = [NSMutableArray array];
+    }
+    
+    self.lastUpdateWasCharging = [chargingState intValue] != 0;
+    
+    double averageTimeRemaining = [self averageTimeRemaining:extensiveBatteryInfo];
+    XENDLog(@"*** average time remaining: %d, samples: %@", averageTimeRemaining, self.amperageSamples);
+    
+    // Calculate health
+    double maxCapacity = [[extensiveBatteryInfo objectForKey:@"DesignCapacity"] doubleValue];
+    double absoluteCapacity = [[extensiveBatteryInfo objectForKey:@"AbsoluteCapacity"] doubleValue];
+    int healthPercentage = (absoluteCapacity / maxCapacity) * 100.0;
 
     NSDictionary *resultData = @{
         @"percentage": [internalBatteryData objectForKey:@kIOPSCurrentCapacityKey],
         @"state": chargingState,
         @"source": [[internalBatteryData objectForKey:@kIOPSPowerSourceStateKey] isEqualToString:@kIOPSACPowerValue] ? @"ac" : @"battery",
-        @"timeUntilCharged": [internalBatteryData objectForKey:@kIOPSTimeToFullChargeKey], // mins
-        @"timeUntilEmpty": [internalBatteryData objectForKey:@kIOPSTimeToEmptyKey], // mins
+        @"timeUntilEmpty": @(averageTimeRemaining), // mins
+        @"serial": [extensiveBatteryInfo objectForKey:@"Serial"] ? [extensiveBatteryInfo objectForKey:@"Serial"] : @"",
+        @"health": @(healthPercentage)
     };
     
     self.cachedDynamicProperties = [@{
@@ -115,6 +133,268 @@ static void powerSourceChanged(void *context) {
     [self notifyRemoteForNewDynamicProperties];
 }
 
+// Returns in minutes
+- (double)averageTimeRemaining:(NSDictionary*)extensiveBatteryInfo {
+    // Return 'calculating' if there is not enough samples
+    if (self.amperageSamples.count < MAX_AMPERAGE_SAMPLES) return -1;
+    
+    double remainingCapacity = [[extensiveBatteryInfo objectForKey:@"AppleRawCurrentCapacity"] doubleValue];
+    
+    XENDLog(@"remainingCapacity: %f", remainingCapacity);
+    
+    // Calculate average from current samples
+    double drainRate = -1;
+    for (NSNumber *sample in self.amperageSamples) {
+        drainRate += fabs([sample doubleValue]);
+    }
+    
+    XENDLog(@"Cumulative drain rate: %f", drainRate);
+    
+    if (drainRate == -1) {
+        return -1;
+    }
+    
+    drainRate /= (double)self.amperageSamples.count;
+    
+    XENDLog(@"Calculated drain rate: %f", drainRate);
+    
+    // Remaining Battery Life [h] = Battery Remaining Capacity [mAh/mWh] / Battery Rolling Average Drain Rate [mA/mW]
+    return (remainingCapacity / drainRate) * 60;
+}
 
+- (void)_averageAmperageSampleFired:(NSTimer*)timer {
+    // Don't update samples whilst charging
+    if (self.lastUpdateWasCharging) return;
+    
+    // Get a sample of the current amperage used
+    io_service_t powerSource = IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceMatching("IOPMPowerSource"));
+    CFMutableDictionaryRef batteryProperties = NULL;
+    
+    IORegistryEntryCreateCFProperties(powerSource, &batteryProperties, NULL, 0);
+    
+    NSDictionary *extensiveBatteryInfo = (__bridge_transfer NSDictionary *)batteryProperties;
+    
+    NSNumber *sample = [extensiveBatteryInfo objectForKey:@"Amperage"];
+    
+    BOOL willBecomeFull = self.amperageSamples.count == MAX_AMPERAGE_SAMPLES - 1;
+    if (self.amperageSamples.count == MAX_AMPERAGE_SAMPLES) {
+        // Pop off the oldest value
+        [self.amperageSamples removeLastObject];
+    }
+    
+    [self.amperageSamples insertObject:sample atIndex:0];
+    
+    XENDLog(@"DEBUG :: Added amperage sample: %d", [sample intValue]);
+    
+    if (willBecomeFull) {
+        XENDLog(@"DEBUG :: Generating a power event due to there now being enough amperage samples");
+        // Fire off a power update event, now that there is enough samples to derive the time remaining
+        powerSourceChanged((__bridge void *)(self));
+    }
+}
 
 @end
+
+/* Example limited output
+ "Battery Provides Time Remaining" = 1;
+  "Current Capacity" = 100;
+  "Is Charging" = 1;
+  "Is Finishing Charge" = 1;
+  "Is Present" = 1;
+  "Max Capacity" = 100;
+  Name = "InternalBattery-0";
+  "Play Charging Chime" = 1;
+  "Power Source ID" = 3211363;
+  "Power Source State" = "AC Power";
+  "Raw External Connected" = 1;
+  "Show Charging UI" = 1;
+  "Time to Empty" = 0;
+  "Time to Full Charge" = 0;
+  "Transport Type" = Internal;
+  Type = InternalBattery;
+ */
+
+// Extensive battery informatione example:
+/*
+ PostChargeWaitSeconds: 120
+ built-in: 1
+ AppleRawAdapterDetails: (
+         {
+         AdapterID = 0;
+         Current = 2400;
+         Description = "usb host";
+         FamilyCode = "-536854528";
+         PMUConfiguration = 2420;
+         SharedSource = 0;
+         Source = 0;
+         UsbHvcHvcIndex = 0;
+         UsbHvcMenu =         (
+         );
+         Voltage = 5000;
+         Watts = 12;
+     },
+         {
+         AdapterID = 0;
+         Current = 0;
+         Description = batt;
+         ErrorFlags = 0;
+         PMUConfiguration = "-1";
+         SharedSource = 0;
+         Source = 0;
+         Voltage = 5000;
+         Watts = 0;
+     }
+ )
+ CurrentCapacity: 100
+ PostDischargeWaitSeconds: 120
+ CarrierMode: {
+     CarrierModeHighVoltage = 4100;
+     CarrierModeLowVoltage = 3600;
+     CarrierModeStatus = 0;
+ }
+ TimeRemaining: 65535
+ ChargerConfiguration: 2420
+ IOReportLegend: (
+         {
+         IOReportChannelInfo =         {
+             IOReportChannelUnit = 0;
+         };
+         IOReportChannels =         (
+                         (
+                 7167869599145487988,
+                 6460407809,
+                 BatteryCycleCount
+             ),
+                         (
+                 7881712903662169456,
+                 6460407809,
+                 BatteryMaxTemp
+             ),
+                         (
+                 7883953708359576944,
+                 6460407809,
+                 BatteryMinTemp
+             ),
+                         (
+                 7881713247109672052,
+                 6460407809,
+                 BatteryMaxPackVoltage
+             ),
+                         (
+                 7883954051807079540,
+                 6460407809,
+                 BatteryMinPackVoltage
+             ),
+                         (
+                 7881713191223763049,
+                 6460407809,
+                 BatteryChargeCurrent
+             ),
+                  <…>
+ AtCriticalLevel: 0
+ BatteryCellDisconnectCount: 0
+ UpdateTime: 1588460094
+ Amperage: 428
+ PresentDOD: 820
+ AppleRawCurrentCapacity: 2343
+ AbsoluteCapacity: 2406
+ AvgTimeToFull: 65535
+ ExternalConnected: 1
+ ExternalChargeCapable: 1
+ AppleRawBatteryVoltage: 4270
+ BootVoltage: 4219
+ BatteryData: {
+     AlgoChemID = 5648;
+     BatteryHealthMetric = 199;
+     BatterySerialNumber = XXXXXXXXXXXXXXXXXXX;
+     Cell1CurrentAccumulator = 41495;
+     Cell2CurrentAccumulator = 45976;
+     CellCurrentAccumulatorCount = 230;
+     ChemID = 5648;
+     ChemicalWeightedRa = 146;
+     CurrentAccumulator = "-95923";
+     CurrentAccumulatorCount = 9597;
+     CurrentSenseMonitorStatus = 0;
+     CycleCount = 577;
+     DailyMaxSoc = 99;
+     DailyMinSoc = 98;
+     DesignCapacity = 2701;
+     Flags = 0;
+     GaugeResetCounter = 0;
+     ISS = 348;
+     ITMiscStatus = 10725;
+     LifetimeData =     {
+         AverageTemperature = 27;
+         CycleCountLastQmax = 10;
+         FlashWriteCount = 1334;
+         HighAvgCurrentLastRun = "-941";
+         LowAvgCurrentLastRun = "-39";
+         MaximimChargeCurrent = 2187;
+         MaximimDischargeCurrent = "-3027";
+         MaximimOverChargedCapacity = 212;
+         MaximimOverDischargedCapacity = "-66";
+         MaximumDeltaVoltage = 128;
+         MaximumFCC = 2805;
+         MaximumPackVoltag<…>
+ BatteryInstalled: 1
+ IOReportLegendPublic: 1
+ AppleRawExternalConnected: 1
+ BatteryFCCData: {
+     DOD0 = 8336;
+     PassedCharge = "-1142";
+     Qstart = 1201;
+     ResScale = 0;
+ }
+ KioskMode: {
+     KioskModeFullChargeVoltage = 0;
+     KioskModeHighSocDays = 0;
+     KioskModeHighSocSeconds = 0;
+     KioskModeLastHighSocHours = 0;
+     KioskModeMode = 0;
+ }
+ Serial: XXXXXXXXXXXXXXXXXXXXXX
+ NominalChargeCapacity: 2380
+ FullyCharged: 0
+ BatteryInvalidWakeSeconds: 30
+ ChargerData: {
+     ChargerID = "-1";
+     ChargerStatus = 663592;
+     ChargingCurrent = 464;
+     ChargingVoltage = 4285;
+     NotChargingReason = 0;
+     VacVoltageLimit = 4290;
+ }
+ AdapterDetails: {
+     AdapterID = 0;
+     Current = 2400;
+     Description = "usb host";
+     FamilyCode = "-536854528";
+     PMUConfiguration = 2420;
+     SharedSource = 0;
+     Source = 0;
+     UsbHvcHvcIndex = 0;
+     UsbHvcMenu =     (
+     );
+     Voltage = 5000;
+     Watts = 12;
+ }
+ MaxCapacity: 100
+ InstantAmperage: 428
+ GasGaugeFirmwareVersion: 1538
+ Location: 0
+ BestAdapterIndex: 0
+ Temperature: 2879
+ DesignCapacity: 2701
+ AdapterInfo: 16384
+ IsCharging: 1
+ Voltage: 4270
+ ManufactureDate: 7376
+ UserVisiblePathUpdated: 1588460094
+ CycleCount: 577
+ ITMiscStatus: 10725
+ AppleRawMaxCapacity: 2383
+ GaugeFlagRaw: 8192
+ VirtualTemperature: 2819
+ AppleChargeRateLimitIndex: 0
+
+ */

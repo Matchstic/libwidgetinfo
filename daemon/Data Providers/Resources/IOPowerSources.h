@@ -27,6 +27,64 @@
 #ifndef _IOKIT_IOPOWERSOURCES_H
 #define _IOKIT_IOPOWERSOURCES_H
 
+typedef mach_port_t    io_object_t;
+
+typedef io_object_t    io_connect_t;
+typedef io_object_t    io_enumerator_t;
+typedef io_object_t    io_iterator_t;
+typedef io_object_t    io_registry_entry_t;
+typedef io_object_t    io_service_t;
+
+typedef UInt32        IOOptionBits;
+
+/*! @const kIOMasterPortDefault
+    @abstract The default mach port used to initiate communication with IOKit.
+    @discussion When specifying a master port to IOKit functions, the NULL argument indicates "use the default". This is a synonym for NULL, if you'd rather use a named constant.
+*/
+
+extern
+const mach_port_t kIOMasterPortDefault;
+
+/*! @function IOServiceMatching
+    @abstract Create a matching dictionary that specifies an IOService class match.
+    @discussion A very common matching criteria for IOService is based on its class. IOServiceMatching will create a matching dictionary that specifies any IOService of a class, or its subclasses. The class is specified by C-string name.
+    @param name The class name, as a const C-string. Class matching is successful on IOService's of this class or any subclass.
+    @result The matching dictionary created, is returned on success, or zero on failure. The dictionary is commonly passed to IOServiceGetMatchingServices or IOServiceAddNotification which will consume a reference, otherwise it should be released with CFRelease by the caller. */
+
+CFMutableDictionaryRef
+IOServiceMatching(
+    const char *    name );
+
+/*! @function IORegistryEntryCreateCFProperties
+    @abstract Create a CF dictionary representation of a registry entry's property table.
+    @discussion This function creates an instantaneous snapshot of a registry entry's property table, creating a CFDictionary analogue in the caller's task. Not every object available in the kernel is represented as a CF container; currently OSDictionary, OSArray, OSSet, OSSymbol, OSString, OSData, OSNumber, OSBoolean are created as their CF counterparts.
+    @param entry The registry entry handle whose property table to copy.
+    @param properties A CFDictionary is created and returned the caller on success. The caller should release with CFRelease.
+    @param allocator The CF allocator to use when creating the CF containers.
+    @param options No options are currently defined.
+    @result A kern_return_t error code. */
+
+kern_return_t
+IORegistryEntryCreateCFProperties(
+    io_registry_entry_t    entry,
+    CFMutableDictionaryRef * properties,
+        CFAllocatorRef        allocator,
+    IOOptionBits        options );
+
+/*!
+    @function IOServiceGetMatchingService
+    @abstract Look up a registered IOService object that matches a matching dictionary.
+    @discussion This is the preferred method of finding IOService objects currently registered by IOKit (that is, objects that have had their registerService() methods invoked). To find IOService objects that aren't yet registered, use an iterator as created by IORegistryEntryCreateIterator(). IOServiceAddMatchingNotification can also supply this information and install a notification of new IOServices. The matching information used in the matching dictionary may vary depending on the class of service being looked up.
+    @param masterPort The master port obtained from IOMasterPort(). Pass kIOMasterPortDefault to look up the default master port.
+    @param matching A CF dictionary containing matching information, of which one reference is always consumed by this function (Note prior to the Tiger release there was a small chance that the dictionary might not be released if there was an error attempting to serialize the dictionary). IOKitLib can construct matching dictionaries for common criteria with helper functions such as IOServiceMatching, IOServiceNameMatching, IOBSDNameMatching, IOOpenFirmwarePathMatching.
+    @result The first service matched is returned on success. The service must be released by the caller.
+  */
+
+io_service_t
+IOServiceGetMatchingService(
+    mach_port_t    masterPort,
+    CFDictionaryRef    matching );
+
 /*!
     @header IOPowerSources.h
     IOPowerSources provides uniform access to the state of power sources attached to the system.
@@ -82,5 +140,42 @@ CFDictionaryRef IOPSGetPowerSourceDescription(CFTypeRef blob, CFTypeRef ps);
         release the CFRunLoopSource.
 */
 CFRunLoopSourceRef IOPSNotificationCreateRunLoopSource(IOPowerSourceCallbackType, void *);
+
+/*!
+ * @function    IOPSGetTimeRemainingEstimate
+ *
+ * @abstract    Returns the estimated minutes remaining until all power sources
+ *              (battery and/or UPS's) are empty, or returns <code>@link kIOPSTimeRemainingUnlimited@/link </code>
+ *              if attached to an unlimited power source.
+ *
+ * @discussion
+ *              If attached to an "Unlimited" power source, like AC power or any external source, the
+ *              return value is <code>@link kIOPSTimeRemainingUnlimited@/link </code>
+ *
+ *              If the system is on "Limited" power, like a battery or UPS,
+ *              but is still calculating the time remaining, which may
+ *              take several seconds after each system power event
+ *              (e.g. waking from sleep, or unplugging AC Power), the return value is
+ *              <code>@link kIOPSTimeRemainingUnknown@/link </code>
+ *
+ *              Otherwise, if the system is on "Limited" power and the system has an accurate time
+ *              remaining estimate, the system returns a CFTimeInterval estimate of the time
+ *              remaining until the system is out of battery power.
+ *
+ *              If you require more detailed battery information, use
+ *              <code>@link IOPSCopyPowerSourcesInfo @/link></code>
+ *              and <code>@link IOPSGetPowerSourceDescription @/link></code>.
+ *
+ * @result
+ *              Returns <code>@link kIOPSTimeRemainingUnknown@/link</code> if the
+ *              OS cannot determine the time remaining.
+ *
+ *              Returns <code>@link kIOPSTimeRemainingUnlimited@/link</code> if the
+ *              system has an unlimited power source.
+ *
+ *              Otherwise returns a positive number of type CFTimeInterval, indicating the time
+ *              remaining in seconds until all power sources are depleted.
+ */
+CFTimeInterval IOPSGetTimeRemainingEstimate(void);
 
 #endif /* _IOKIT_IOPOWERSOURCES_H */
