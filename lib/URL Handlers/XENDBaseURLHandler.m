@@ -26,7 +26,7 @@
     completionHandler(nil, nil, nil);
 }
 
-#pragma mark NSURLProtocol implementation
+#pragma mark - NSURLProtocol implementation
 
 + (BOOL)canInitWithRequest:(NSURLRequest *)request {
     return [self canHandleURL:request.URL];

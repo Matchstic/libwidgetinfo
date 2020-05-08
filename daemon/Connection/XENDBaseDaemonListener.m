@@ -57,7 +57,7 @@
     return result;
 }
 
-#pragma mark Daemon connection implementation
+#pragma mark - Daemon connection implementation
 
 - (void)didReceiveWidgetMessage:(NSDictionary*)data functionDefinition:(NSString*)definition inNamespace:(NSString*)providerNamespace callback:(void(^)(NSDictionary*))callback {
     
@@ -77,7 +77,7 @@
     // Allow subclass to override this
 }
 
-#pragma mark State related things
+#pragma mark - State related things
 
 - (void)requestCurrentDeviceStateWithCallback:(void(^)(NSDictionary*))callback {
     callback([self.stateManager summariseState]);

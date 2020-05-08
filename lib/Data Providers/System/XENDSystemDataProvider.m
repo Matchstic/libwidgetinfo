@@ -45,7 +45,7 @@
     [self notifyWidgetManagerForNewProperties];
 }
 
-#pragma mark Message handlers
+#pragma mark - Message handlers
 
 - (NSDictionary*)handleLogMessage:(NSDictionary*)data {
     if (!data || ![data objectForKey:@"message"]) {
@@ -78,7 +78,7 @@
     return @{};
 }
 
-#pragma mark Private initialisation
+#pragma mark - Private initialisation
 
 - (void)intialiseProvider {
     [self _setupStaticProperties];

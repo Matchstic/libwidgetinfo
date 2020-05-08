@@ -74,7 +74,7 @@ static inline void propertiesChangedCallback(CFNotificationCenterRef center, voi
     }];
 }
 
-#pragma mark Subclass overrides
+#pragma mark - Subclass overrides
 
 - (void)didReceiveWidgetMessage:(NSDictionary*)data functionDefinition:(NSString*)definition inNamespace:(NSString*)providerNamespace callback:(void(^)(NSDictionary*))callback {
     

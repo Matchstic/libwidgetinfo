@@ -34,7 +34,7 @@
     return self;
 }
 
-#pragma mark WKNavigationDelegate
+#pragma mark - WKNavigationDelegate
 
 - (void)webView:(WKWebView *)webView
     didStartProvisionalNavigation:(WKNavigation *)navigation {

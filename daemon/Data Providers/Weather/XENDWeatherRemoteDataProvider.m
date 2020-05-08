@@ -61,7 +61,7 @@
     [self.weatherManager noteHourChange];
 }
 
-#pragma mark Grab API key from Weather.framework
+#pragma mark - Grab API key from Weather.framework
 
 - (void)intialiseProvider {
     // Make sure that our private API usage is going to be safe
@@ -172,7 +172,7 @@
     }
 }
 
-#pragma mark Weather manager handling
+#pragma mark - Weather manager handling
 
 - (void)configureWeatherManager:(NSString*)apiKey {
     if (!apiKey || [apiKey isEqualToString:@""]) {

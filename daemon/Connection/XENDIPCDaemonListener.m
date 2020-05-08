@@ -87,7 +87,7 @@ int libwidgetinfo_main_ipc(void) {
     CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), (__bridge CFStringRef)name, NULL, NULL, YES);
 }
 
-#pragma mark Inherited overrides
+#pragma mark - Inherited overrides
 
 - (void)notifyUpdatedDynamicProperties:(NSDictionary*)dynamicProperties forNamespace:(NSString*)dataProviderNamespace {
     // Emit notification for changed properties

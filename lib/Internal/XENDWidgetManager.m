@@ -173,7 +173,7 @@ static NSString *preferencesId = @"com.matchstic.xenhtml.libwidgetinfo";
     [contentController addScriptMessageHandler:self.messageHandler name:@"libwidgetinfo"];
 }
 
-#pragma mark Message handler delegate
+#pragma mark - Message handler delegate
 
 - (void)onMessageReceivedWithPayload:(NSDictionary*)payload forWebView:(WKWebView*)webview {
     // Payload is an NSDictionary conforming to NativeInterfaceMessage
@@ -285,7 +285,7 @@ static NSString *preferencesId = @"com.matchstic.xenhtml.libwidgetinfo";
     return state ? [NSKeyedUnarchiver unarchiveObjectWithData:state] : nil;
 }
 
-#pragma mark Data provider handling
+#pragma mark - Data provider handling
 
 - (void)updateWidgetsWithNewData:(NSDictionary*)data forNamespace:(NSString*)providerNamespace {
     NSDictionary *payload = @{ @"namespace": providerNamespace, @"payload": data };

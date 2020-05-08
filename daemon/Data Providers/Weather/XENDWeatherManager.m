@@ -101,7 +101,7 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
     return self;
 }
 
-#pragma mark Update state management
+#pragma mark - Update state management
 
 - (void)networkWasDisconnected {
     XENDLog(@"networkWasDisconnected");
@@ -213,7 +213,7 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
     [self.delegate onUpdatedWeatherConditions:parsed];
 }
 
-#pragma mark Update implementation
+#pragma mark - Update implementation
 
 - (void)refreshWeather {
     // Queue if no network, and update from cached data for now
@@ -980,7 +980,7 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
         return @7;
     else if ([code isEqualToString:@"WXG"])
         return @10;
-    else if ([code isEqualToString:@"FUL"])
+    else if ([code isEqualToString:@"F"])
         return @14;
     else if ([code isEqualToString:@"WNG"])
         return @18;
@@ -992,7 +992,7 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
     return @0;
 }
 
-#pragma mark Supported language codes
+#pragma mark - Supported language codes
 
 - (NSArray*)supportedLongCodes {
     return @[

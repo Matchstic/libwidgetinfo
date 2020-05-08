@@ -201,7 +201,7 @@
     }
 }
 
-#pragma mark CLLocationManagerDelegate
+#pragma mark - CLLocationManagerDelegate
 
 - (void)locationManager:(id)arg1 didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
     if (self.authorisationStatus == kCLAuthorizationStatusNotDetermined &&

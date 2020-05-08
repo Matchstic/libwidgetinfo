@@ -305,6 +305,7 @@
 		C9AFC06A2389A216007FD971 /* XENDLocationManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XENDLocationManager.m; path = "daemon/Data Providers/Location/XENDLocationManager.m"; sourceTree = SOURCE_ROOT; };
 		C9B3511124659CB600E531E1 /* XENDMyLocationURLHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XENDMyLocationURLHandler.h; sourceTree = "<group>"; };
 		C9B3511224659CB600E531E1 /* XENDMyLocationURLHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XENDMyLocationURLHandler.m; sourceTree = "<group>"; };
+		C9B351152465A16400E531E1 /* MediaRemote.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MediaRemote.h; path = "daemon/Data Providers/Media/MediaRemote.h"; sourceTree = SOURCE_ROOT; };
 		C9B3D6ED245DC4B4004D048E /* XENDResourcesRemoteDataProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XENDResourcesRemoteDataProvider.h; path = "daemon/Data Providers/Resources/XENDResourcesRemoteDataProvider.h"; sourceTree = SOURCE_ROOT; };
 		C9B3D6EE245DC4B4004D048E /* XENDResourcesRemoteDataProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XENDResourcesRemoteDataProvider.m; path = "daemon/Data Providers/Resources/XENDResourcesRemoteDataProvider.m"; sourceTree = SOURCE_ROOT; };
 		C9B3D6F1245DC615004D048E /* IOPSKeys.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = IOPSKeys.h; path = "daemon/Data Providers/Resources/IOPSKeys.h"; sourceTree = SOURCE_ROOT; };
@@ -633,6 +634,7 @@
 			children = (
 				C9204FF423364FD800F9F535 /* XENDMediaRemoteDataProvider.h */,
 				C9204FF523364FD800F9F535 /* XENDMediaRemoteDataProvider.m */,
+				C9B351152465A16400E531E1 /* MediaRemote.h */,
 			);
 			path = Media;
 			sourceTree = "<group>";
