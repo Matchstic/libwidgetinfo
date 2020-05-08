@@ -4,9 +4,18 @@ import { ApplicationMetadata } from './applications';
 /**
  * @ignore
  */
+export interface MediaLibrary {
+    artists: MediaArtist[];
+    albums: MediaAlbum[];
+}
+
+/**
+ * @ignore
+ */
 export interface MediaAlbum {
+    id: string; // Used to reference the album to load tracks
     title: string;
-    tracks: MediaTrack[];
+    artwork: string; // URL of the album artwork, loaded by the native side. May be an empty string, if so, no artwork
     trackCount: number;
 }
 
@@ -14,8 +23,9 @@ export interface MediaAlbum {
  * @ignore
  */
 export interface MediaArtist {
+    id: string; // Used to reference the artist to load albums
     name: string;
-    albums: MediaAlbum;
+    albumCount: number;
 }
 
 /**
@@ -25,19 +35,12 @@ export interface MediaTrack {
     title: string;
     album: MediaAlbum;
     artist: MediaArtist;
-    artwork: string; // URL of the artwork, exposed by the native side
+    artwork: string; // URL of the track artwork, loaded by the native side. May be an empty string, if so, no artwork
+    composer: string;
+    genre: string;
     length: number;
-    number: number;
-}
-
-/**
- * @ignore
- */
-export interface MediaCurrentItem {
-    track: MediaTrack;
-    album: MediaAlbum;
-    artist: MediaArtist;
-    elapsedDuration: number;
+    number: number; // The track number on its corresponding album
+    elapsedDuration: number; // available only on the current track
 }
 
 // Always keep as ignore
@@ -45,18 +48,16 @@ export interface MediaCurrentItem {
  * @ignore
  */
 export interface MediaProperties {
-    currentTrack: MediaCurrentItem;
-    upcomingTracks: MediaTrack[];
-
-    userArtists: MediaArtist[];
-    userAlbums: MediaAlbum[];
+    nowPlaying: MediaTrack;
+    queue: MediaTrack[]; // Only the next 15 tracks, need to provide total queue length too
+    library: MediaLibrary[];
 
     isPlaying: boolean;
     isStopped: boolean;
     isShuffleEnabled: boolean;
 
     volume: number;
-    playingApplication: ApplicationMetadata;
+    nowPlayingApplication: ApplicationMetadata;
 }
 
 /**
@@ -65,25 +66,23 @@ export interface MediaProperties {
 export default class Media extends Base implements MediaProperties {
 
     // NOTE: Don't rely on native layer to push through elapsed time
-    // It'll come through on pause/play etc, but should really handle that here
-    // to avoid massive communication overhead
+    // It'll come through on pause/play etc, but need to manually run a timer here to update
+    // observers of it - likely with its own observer array?
 
     /////////////////////////////////////////////////////////
     // MediaProperties stub implementation
     /////////////////////////////////////////////////////////
 
-    currentTrack: MediaCurrentItem;
-    upcomingTracks: MediaTrack[];
-
-    userArtists: MediaArtist[];
-    userAlbums: MediaAlbum[];
+    nowPlaying: MediaTrack;
+    queue: MediaTrack[];
+    library: MediaLibrary[];
 
     isPlaying: boolean;
     isStopped: boolean;
     isShuffleEnabled: boolean;
 
     volume: number;
-    playingApplication: ApplicationMetadata;
+    nowPlayingApplication: ApplicationMetadata;
 
     // Replicate here for documentation purposes
     /**
@@ -121,6 +120,110 @@ export default class Media extends Base implements MediaProperties {
                 functionDefinition: 'togglePlayState',
                 data: {}
             }, (newState: boolean) => {
+                resolve(newState);
+            });
+        });
+    }
+
+    /**
+     * Retrieves the user's music library at the current point in time.
+     *
+     * @example
+     * api.media.getUserLibrary().then(function(library) {
+     *              // Work with the `library` object
+     * });
+     *
+     * @return A promise that resolves with the user's library as an object. See {@link MediaLibrary} for details.
+     */
+    public async getUserLibrary(): Promise<MediaLibrary> {
+        return new Promise<MediaLibrary>((resolve, reject) => {
+            this.connection.sendNativeMessage({
+                namespace: DataProviderUpdateNamespace.Applications,
+                functionDefinition: 'userLibrary',
+                data: {}
+            }, (newState: MediaLibrary) => {
+                resolve(newState);
+            });
+        });
+    }
+
+    /**
+     * Retrieves the list of albums associated with this artist
+     * @param artist The artist to lookup. This parameter may the artist `id`, or an object that represents the artist
+     *
+     * @example
+     * // Example of getting albums for an artist in the user's library
+     * // Previously, getUserLibrary has been called to get the `library` variable.
+     *
+     * var artist = library.artists[0];
+     * api.media.getAlbumsForArtist(artist).then(function(albums) {
+     *              // Work with the `albums` array
+     * });
+     *
+     * @example
+     * // Example of retrieving associated albums for the currently playing track
+     * var artist = api.media.nowPlaying.artist;
+     * api.media.getAlbumsForArtist(artist).then(function(albums) {
+     *              // Work with the `albums` array
+     * });
+     *
+     * @return A promise that resolves with an array of {@link MediaAlbum}.
+     */
+    public async getAlbumsForArtist(artist: string | MediaArtist): Promise<MediaAlbum[]> {
+        const id = typeof artist === 'string' ? artist : artist.id;
+
+        return new Promise<MediaAlbum[]>((resolve, reject) => {
+            this.connection.sendNativeMessage({
+                namespace: DataProviderUpdateNamespace.Applications,
+                functionDefinition: 'getAlbumsForArtist',
+                data: {
+                    id: id
+                }
+            }, (newState: MediaAlbum[]) => {
+                resolve(newState);
+            });
+        });
+    }
+
+    /**
+     * Retrieves the list of tracks associated with this album
+     * @param album The album to lookup. This parameter may the album `id`, or an object that represents the album
+     *
+     * @example
+     * // Example of getting tracks for an album in the user's library
+     * // Previously, getAlbumsForArtist has been called to get the `albums` variable.
+     *
+     * var album = albums[0];
+     * api.media.getTracksForAlbum(album).then(function(tracks) {
+     *              // Work with the `tracks` array
+     * });
+     *
+     * // Alternatively, where getUserLibrary has been called to get the `library` variable.
+     * var album = library.albums[0];
+     * api.media.getTracksForAlbum(album).then(function(tracks) {
+     *              // Work with the `tracks` array
+     * });
+     *
+     * @example
+     * // Example of retrieving the other tracks in the same album as the currently playing track
+     * var album = api.media.nowPlaying.album;
+     * api.media.getTracksForAlbum(album).then(function(tracks) {
+     *              // Work with the `tracks` array
+     * });
+     *
+     * @return A promise that resolves with an array of {@link MediaTrack}.
+     */
+    public async getTracksForAlbum(album: string | MediaAlbum): Promise<MediaTrack[]> {
+        const id = typeof album === 'string' ? album : album.id;
+
+        return new Promise<MediaTrack[]>((resolve, reject) => {
+            this.connection.sendNativeMessage({
+                namespace: DataProviderUpdateNamespace.Applications,
+                functionDefinition: 'getTracksForAlbum',
+                data: {
+                    id: id
+                }
+            }, (newState: MediaTrack[]) => {
                 resolve(newState);
             });
         });
