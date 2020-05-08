@@ -68,6 +68,7 @@ extern "C" {
     extern CFStringRef kMRMediaRemoteNowPlayingInfoUniqueIdentifier;
     extern CFStringRef kMRMediaRemoteNowPlayingInfoRadioStationIdentifier;
     extern CFStringRef kMRMediaRemoteNowPlayingInfoRadioStationHash;
+    extern CFStringRef kMRMediaRemoteNowPlayingInfoClientPropertiesData;
     extern CFStringRef kMRMediaRemoteOptionMediaType;
     extern CFStringRef kMRMediaRemoteOptionSourceID;
     extern CFStringRef kMRMediaRemoteOptionTrackID;
@@ -156,5 +157,27 @@ extern "C" {
 #if __cplusplus
 }
 #endif
+
+// Should be initialised with the result of kMRMediaRemoteNowPlayingInfoClientPropertiesData
+@interface _MRNowPlayingClientProtobuf : NSObject
+
+@property (nonatomic) BOOL hasProcessIdentifier;
+@property (nonatomic) int processIdentifier;
+@property (nonatomic, readonly) BOOL hasBundleIdentifier;
+@property (nonatomic, strong) NSString* bundleIdentifier;
+@property (nonatomic, readonly) BOOL hasParentApplicationBundleIdentifier;
+@property (nonatomic, strong) NSString* parentApplicationBundleIdentifier;
+@property (nonatomic) BOOL hasProcessUserIdentifier;
+@property (nonatomic) int processUserIdentifier;
+@property (nonatomic) BOOL hasNowPlayingVisibility;
+@property (nonatomic) int nowPlayingVisibility;
+@property (nonatomic, readonly) BOOL hasTintColor;
+@property (nonatomic, readonly) BOOL hasDisplayName;
+@property (nonatomic, strong) NSString* displayName;
+
+- (instancetype)initWithData:(NSData*)arg1;
+
+@end
+
 
 #endif /* MEDIAREMOTE_H_ */

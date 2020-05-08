@@ -13,9 +13,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 **/
 
+#import <sys/sysctl.h>
+
 #import "XENDMediaRemoteDataProvider.h"
 #import "XENDLogger.h"
 #import "MediaRemote.h"
+
+// libproc.h does not exist for iOS
+int proc_pidpath(int pid, void *buffer, uint32_t buffersize);
 
 @interface XENDMediaRemoteDataProvider ()
 @property (nonatomic, strong) NSLock *writeLock;
@@ -60,11 +65,6 @@
     // Setup media notifications
     MRMediaRemoteRegisterForNowPlayingNotifications(dispatch_get_main_queue());
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-        selector:@selector(onNowPlayingApplicationChanged:)
-        name:(__bridge NSString*)kMRMediaRemoteNowPlayingApplicationDidChangeNotification
-        object:nil];
-    
     [[NSNotificationCenter defaultCenter]
         addObserver:self
         selector:@selector(onNowPlayingDataChanged:)
@@ -91,7 +91,6 @@
     
     // Setup initial data
     [self onNowPlayingDataChanged:nil];
-    [self onNowPlayingApplicationChanged:nil];
     [self onNowPlayingApplicationIsPlayingChanged:nil];
 }
 
@@ -100,7 +99,41 @@
                                    ^(CFDictionaryRef info) {
         NSDictionary *data = (__bridge NSDictionary*)info;
         
-        XENDLog(@"onNowPlayingDataChanged: %@", data);
+        XENDLog(@"*** onNowPlayingDataChanged: %@", data);
+        
+        // Handle application information
+        if (data && [data objectForKey:@"kMRMediaRemoteNowPlayingInfoClientPropertiesData"]) {
+            NSData *clientData = [data objectForKey:@"kMRMediaRemoteNowPlayingInfoClientPropertiesData"];
+            
+            _MRNowPlayingClientProtobuf *clientProtobuf = [[_MRNowPlayingClientProtobuf alloc] initWithData:clientData];
+            
+            NSString *bundleIdentifier = nil;
+            
+            if (clientProtobuf.hasParentApplicationBundleIdentifier)
+                bundleIdentifier = clientProtobuf.parentApplicationBundleIdentifier;
+            else if (clientProtobuf.hasBundleIdentifier)
+                bundleIdentifier = clientProtobuf.bundleIdentifier;
+            
+            XENDLog(@"*** (protobuf) Now playing application is %@", bundleIdentifier);
+            
+            
+        } else {
+            // Lookup application via its PID
+            MRMediaRemoteGetNowPlayingApplicationPID(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
+                                                     ^(int pid) {
+                if (pid > 0) {
+                    NSString *bundleIdentifier = [self bundleIdentifierForPID:pid];
+                    
+                    XENDLog(@"*** (PID) Now playing application is %@", bundleIdentifier);
+                    
+                    // TODO: Set title == the application name, and update playing application
+                } else {
+                    XENDLog(@"*** (PID) Now playing application PID is invalid");
+                    
+                    // TODO: Set no playing data, i.e., stopped state
+                }
+            });
+        }
     });
 }
 
@@ -113,33 +146,33 @@
     });
 }
 
-- (void)onNowPlayingApplicationChanged:(NSNotification*)notification {
-    // Update now playing application details
+- (NSString*)bundleIdentifierForPID:(int)pid {
     
-    /*
-    MRMediaRemoteGetNowPlayingClient(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
-                                     ^(id clientObj) {
-        NSString *appBundleIdentifier = @"";
+    char pathbuf[MAXPATHLEN];
 
-        if (clientObj) {
-            // Lookup the bundle identifier for the now playing app
-            appBundleIdentifier = (__bridge NSString*)MRNowPlayingClientGetBundleIdentifier(clientObj);
-            if (!appBundleIdentifier)
-                appBundleIdentifier = (__bridge NSString*)MRNowPlayingClientGetParentAppBundleIdentifier(clientObj);
+    int ret = proc_pidpath(pid, pathbuf, sizeof(pathbuf));
+    if (ret <= 0 ) {
+        NSLog(@"ERROR: Failed to find path for pid %d", pid);
+        return nil;
+    }
 
-            // TODO: Ask the applications provider for an object that maps to this bundle ID
-            
-        }
-
-        client = @{
-            @"bundleIdentifier": appBundleIdentifier,
-        };
-        
-        
-    });*/
+    NSString *path = [NSString stringWithCString:pathbuf
+                                        encoding:NSASCIIStringEncoding];
+    
+    // Get the bundle ID for this absolute path
+    NSString *bundlePath = [NSString stringWithFormat:@"%@/Info.plist", [path stringByDeletingLastPathComponent]];
+    NSDictionary *bundleManifest = [NSDictionary dictionaryWithContentsOfFile:bundlePath];
+    
+    if (bundleManifest) {
+        return [bundleManifest objectForKey:@"CFBundleIdentifier"];
+    } else {
+        return nil;
+    }
 }
 
 @end
+
+#pragma mark - Notes
 
 /* Example now playing data (music app):
  {
@@ -184,3 +217,32 @@
      kMRMediaRemoteNowPlayingInfoiTunesStoreSubscriptionAdamIdentifier = 1021582759;
  }
  */
+
+/* Example data from random mp3 on Safari:
+ Artwork is shown as the app icon
+ {
+     kMRMediaRemoteNowPlayingInfoClientPropertiesData = {length = 69, bytes = 0x08997d12 1b636f6d 2e617070 6c652e57 ... 3a065361 66617269 };
+     kMRMediaRemoteNowPlayingInfoContentItemIdentifier = 11251550;
+     kMRMediaRemoteNowPlayingInfoDuration = "174.8114285714286";
+     kMRMediaRemoteNowPlayingInfoElapsedTime = 0;
+     kMRMediaRemoteNowPlayingInfoPlaybackRate = 1;
+     kMRMediaRemoteNowPlayingInfoTimestamp = "2020-05-08 15:08:03 +0000";
+     kMRMediaRemoteNowPlayingInfoTitle = "hyperion-records.co.uk";
+     kMRMediaRemoteNowPlayingInfoUniqueIdentifier = 11251550;
+ }
+ */
+
+
+// Some apps may not provide any now playing data (such as the YouTube app). In these cases, swap the now playing data for the application name. Do this in the TypeScript layer, however
+
+// Now playing data changed is NOT called for every "elapsed" update; only for when pause/play/item changes.
+// In TS layer, need to do a timer per second that internally handles this
+
+// kMRMediaRemoteNowPlayingInfoClientPropertiesData entry is protobuf in NSData, and should be passed to an instance of _MRNowPlayingClientProtobuf to get details back
+// If this is not available, then should fallback to using MRMediaRemoteGetNowPlayingApplicationPID, pass to proc_pidpath, and then get the bundle id from there
+
+// Use kMRMediaRemoteNowPlayingInfoArtworkIdentifier to key/value the artwork, empty string if missing, otherwise app bundleIdentifier if no playing data is available
+
+// MRMediaRemoteGetNowPlayingPlaybackQueue ?
+
+// What about Apple Music Radio?
