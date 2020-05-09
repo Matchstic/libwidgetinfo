@@ -9,7 +9,6 @@ export interface ApplicationMetadata {
     icon: string;
     badge: string;
     isInstalling: boolean;
-    isNewlyInstalled: boolean;
     isSystemApplication: boolean;
 }
 

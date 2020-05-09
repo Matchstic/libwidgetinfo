@@ -37,10 +37,13 @@
             @"icon": @"",
             @"badge": @"",
             @"isInstalling": @NO,
-            @"isNewlyInstalled": @NO,
             @"isSystemApplication": @NO
         };
     }
+    
+    BOOL isSystem = [[[proxy bundleURL] absoluteString] hasPrefix:@"/Applications"];
+    
+    // TODO: Find badge value
     
     return @{
         @"name": [proxy localizedName] ? [proxy localizedName] : @"",
@@ -48,8 +51,7 @@
         @"icon": [NSString stringWithFormat:@"xui://application/icon/%@", proxy.applicationIdentifier],
         @"badge": @"",
         @"isInstalling": @(proxy.isPlaceholder),
-        @"isNewlyInstalled": @NO,
-        @"isSystemApplication": @NO
+        @"isSystemApplication": @(isSystem)
     };
 }
 
