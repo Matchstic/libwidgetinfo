@@ -5,14 +5,14 @@ import { ApplicationMetadata } from './applications';
  * @ignore
  */
 export interface MediaLibrary {
-    artists: MediaArtist[];
-    albums: MediaAlbum[];
+    artists: MediaLibraryArtist[];
+    albums: MediaLibraryAlbum[];
 }
 
 /**
  * @ignore
  */
-export interface MediaAlbum {
+export interface MediaLibraryAlbum {
     id: string; // Used to reference the album to load tracks
     title: string;
     artwork: string; // URL of the album artwork, loaded by the native side. May be an empty string, if so, no artwork
@@ -22,10 +22,9 @@ export interface MediaAlbum {
 /**
  * @ignore
  */
-export interface MediaArtist {
+export interface MediaLibraryArtist {
     id: string; // Used to reference the artist to load albums
     name: string;
-    albumCount: number;
 }
 
 /**
@@ -33,14 +32,14 @@ export interface MediaArtist {
  */
 export interface MediaTrack {
     title: string;
-    album: MediaAlbum;
-    artist: MediaArtist;
+    album: string;
+    artist: string;
     artwork: string; // URL of the track artwork, loaded by the native side. May be an empty string, if so, no artwork
     composer: string;
     genre: string;
     length: number;
     number: number; // The track number on its corresponding album
-    elapsedDuration: number; // available only on the current track
+    elapsed: number; // available only on the current track
 }
 
 // Always keep as ignore
@@ -50,7 +49,6 @@ export interface MediaTrack {
 export interface MediaProperties {
     nowPlaying: MediaTrack;
     queue: MediaTrack[]; // Only the next 15 tracks, need to provide total queue length too
-    library: MediaLibrary[];
 
     isPlaying: boolean;
     isStopped: boolean;
@@ -75,7 +73,6 @@ export default class Media extends Base implements MediaProperties {
 
     nowPlaying: MediaTrack;
     queue: MediaTrack[];
-    library: MediaLibrary[];
 
     isPlaying: boolean;
     isStopped: boolean;
@@ -169,17 +166,17 @@ export default class Media extends Base implements MediaProperties {
      *
      * @return A promise that resolves with an array of {@link MediaAlbum}.
      */
-    public async getAlbumsForArtist(artist: string | MediaArtist): Promise<MediaAlbum[]> {
+    public async getAlbumsForArtist(artist: string | MediaLibraryArtist): Promise<MediaLibraryAlbum[]> {
         const id = typeof artist === 'string' ? artist : artist.id;
 
-        return new Promise<MediaAlbum[]>((resolve, reject) => {
+        return new Promise<MediaLibraryAlbum[]>((resolve, reject) => {
             this.connection.sendNativeMessage({
                 namespace: DataProviderUpdateNamespace.Applications,
                 functionDefinition: 'getAlbumsForArtist',
                 data: {
                     id: id
                 }
-            }, (newState: MediaAlbum[]) => {
+            }, (newState: MediaLibraryAlbum[]) => {
                 resolve(newState);
             });
         });
@@ -213,7 +210,7 @@ export default class Media extends Base implements MediaProperties {
      *
      * @return A promise that resolves with an array of {@link MediaTrack}.
      */
-    public async getTracksForAlbum(album: string | MediaAlbum): Promise<MediaTrack[]> {
+    public async getTracksForAlbum(album: string | MediaLibraryAlbum): Promise<MediaTrack[]> {
         const id = typeof album === 'string' ? album : album.id;
 
         return new Promise<MediaTrack[]>((resolve, reject) => {

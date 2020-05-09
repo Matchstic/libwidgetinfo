@@ -4,12 +4,12 @@ import { Base, NativeError, DataProviderUpdateNamespace } from '../types';
  * @ignore
  */
 export interface ApplicationMetadata {
-    displayName: string;
-    bundleIdentifier: string;
-    applicationIcon: string;
-    badgeValue: string;
-    showsInstallationProgress: boolean;
-    newlyInstalled: boolean;
+    name: string;
+    identifier: string;
+    icon: string;
+    badge: string;
+    isInstalling: boolean;
+    isNewlyInstalled: boolean;
     isSystemApplication: boolean;
 }
 

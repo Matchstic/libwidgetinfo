@@ -19,8 +19,8 @@
 #import "IOPSKeys.h"
 #import "IOPowerSources.h"
 
-// Using a window of 1hr's worth of samples
-#define MAX_AMPERAGE_SAMPLES 60
+// Using a window of 30min
+#define MAX_AMPERAGE_SAMPLES 30
 #define MIN_AMPERAGE_SAMPLES 10
 #define AMPERAGE_SAMPLE_RATE 60
 #define SAMPLE_COUNT_TO_FORCE_UPDATE 10 // Leads to a forced update every 10 mins

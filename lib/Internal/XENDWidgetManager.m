@@ -23,6 +23,7 @@
 #import "../Data Providers/Media/XENDMediaDataProvider.h"
 #import "../Data Providers/Weather/XENDWeatherDataProvider.h"
 #import "../Data Providers/Resources/XENDResourcesDataProvider.h"
+#import "../Data Providers/Applications/XENDApplicationsDataProvider.h"
 
 // URL handler imports
 #import "../URL Handlers/XENDWidgetWeatherURLHandler.h"
@@ -335,6 +336,12 @@ static NSString *preferencesId = @"com.matchstic.xenhtml.libwidgetinfo";
     [result setObject:resources forKey:[XENDResourcesDataProvider providerNamespace]];
     if (currentCachedDynamicState && [resources.cachedDynamicProperties isEqualToDictionary:@{}])
         resources.cachedDynamicProperties = [currentCachedDynamicState objectForKey:[XENDResourcesDataProvider providerNamespace]];
+    
+    XENDApplicationsDataProvider *apps = [[XENDApplicationsDataProvider alloc] init];
+    [apps registerDelegate:self];
+    [result setObject:apps forKey:[XENDApplicationsDataProvider providerNamespace]];
+    if (currentCachedDynamicState && [apps.cachedDynamicProperties isEqualToDictionary:@{}])
+        apps.cachedDynamicProperties = [currentCachedDynamicState objectForKey:[XENDApplicationsDataProvider providerNamespace]];
     
     return result;
 }

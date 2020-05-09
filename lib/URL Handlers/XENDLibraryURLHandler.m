@@ -16,6 +16,10 @@
 #import "XENDLibraryURLHandler.h"
 #import "XENDLogger.h"
 
+#import "../Internal/XENDWidgetManager-Internal.h"
+#import "../Data Providers/Applications/XENDApplicationsDataProvider.h"
+#import "../Data Providers/Media/XENDMediaDataProvider.h"
+
 #if TARGET_IPHONE_SIMULATOR==0
 static NSString *libraryResourceBasePath = @"/Library/Application Support/Widgets/Resource Packs";
 #else
@@ -35,14 +39,24 @@ static NSString *libraryResourceBasePath = @"/opt/simject/Library/Application Su
     // - Forwarding internal images, such as media artwork and app icons
     
     NSString *host = [url host];
-              
-    NSData *data = nil;
-    NSString *mimetype = nil;
+    
     if ([host isEqualToString:@"resource"]) {
-        data = [self loadLibraryFileAtPath:[url path] mimetype:&mimetype];
+        NSString *mimetype = nil;
+        NSData *data = [self loadLibraryFileAtPath:[url path] mimetype:&mimetype];
+        completionHandler(nil, data, mimetype);
+    } else if ([host isEqualToString:@"application"]) {
+        [self loadIconDataAtPath:[url path] callback:^(NSData *result) {
+            completionHandler(nil, result, @"image/png");
+        }];
+    } else if ([host isEqualToString:@"media"]) {
+        [self loadMediaArtworkAtPath:[url path] callback:^(NSData *result) {
+            completionHandler(nil, result, @"image/png");
+        }];
+    } else {
+        completionHandler(nil, nil, nil);
     }
     
-    completionHandler(nil, data, mimetype);
+    
 }
 
 - (NSData*)loadLibraryFileAtPath:(NSString*)path mimetype:(NSString**)mimetype {
@@ -96,6 +110,24 @@ static NSString *libraryResourceBasePath = @"/opt/simject/Library/Application Su
     }
     
     return @"application/octet-stream";
+}
+
+- (void)loadIconDataAtPath:(NSString*)path callback:(void (^)(NSData *result))callback {
+    XENDApplicationsDataProvider *apps = (XENDApplicationsDataProvider*)[[XENDWidgetManager sharedInstance] providerForNamespace:@"applications"];
+    
+    NSString *bundleIdentifier = [path lastPathComponent];
+    [apps requestIconDataForBundleIdentifier:bundleIdentifier callback:^(NSDictionary *result) {
+        callback([result objectForKey:@"data"]);
+    }];
+}
+
+- (void)loadMediaArtworkAtPath:(NSString*)path callback:(void (^)(NSData *result))callback {
+    XENDMediaDataProvider *media = (XENDMediaDataProvider*)[[XENDWidgetManager sharedInstance] providerForNamespace:@"media"];
+    
+    NSString *artworkIdentifier = [path lastPathComponent];
+    [media requestArtworkForIdentifier:artworkIdentifier callback:^(NSDictionary *result) {
+        callback([result objectForKey:@"data"]);
+    }];
 }
 
 @end

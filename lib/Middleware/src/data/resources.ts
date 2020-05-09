@@ -26,8 +26,8 @@ export interface ResourcesBattery {
     /**
      * The estimated time, in minutes, of how long until the battery will become empty.
      *
-     * A rolling average of battery usage over a 1 hour window is used to estimate the time, and so may fluctuate. It is linked directly to
-     * the user's usage of the device over the past 1 hour.
+     * A rolling average of battery usage over a 30 minute window is used to estimate the time, and so may fluctuate. It is linked directly to
+     * the user's usage of the device over the past 30 minutes.
      *
      * When the charger is disconnected, this will remain at -1 until the first 5 minutes have passed.
      * This is to generate enough samples for an initial estimate.

@@ -23,4 +23,10 @@
 
 // Everything is proxied for this provider
 
+- (void)requestArtworkForIdentifier:(NSString*)identifier callback:(void (^)(NSDictionary *result))callback {
+    [self didReceiveWidgetMessage:@{
+        @"identifier": identifier
+    } functionDefinition:@"_loadArtwork" callback:callback];
+}
+
 @end

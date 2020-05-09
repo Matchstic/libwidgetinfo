@@ -18,12 +18,15 @@
 #import "XENDMediaRemoteDataProvider.h"
 #import "XENDLogger.h"
 #import "MediaRemote.h"
+#import "NSDictionary+XENSafeObjectForKey.h"
+#import "XENDApplicationsManager.h"
 
 // libproc.h does not exist for iOS
 int proc_pidpath(int pid, void *buffer, uint32_t buffersize);
 
 @interface XENDMediaRemoteDataProvider ()
 @property (nonatomic, strong) NSLock *writeLock;
+@property (nonatomic, strong) NSDictionary *artworkCache;
 @end
 
 @implementation XENDMediaRemoteDataProvider
@@ -34,7 +37,9 @@ int proc_pidpath(int pid, void *buffer, uint32_t buffersize);
 
 - (void)didReceiveWidgetMessage:(NSDictionary*)data functionDefinition:(NSString*)definition callback:(void(^)(NSDictionary*))callback {
     
-    if ([definition isEqualToString:@"nextTrack"]) {
+    if ([definition isEqualToString:@"_loadArtwork"]) {
+        callback([self _loadArtwork:data]);
+    } else if ([definition isEqualToString:@"nextTrack"]) {
         callback([self nextTrack]);
     } else if ([definition isEqualToString:@"previousTrack"]) {
         callback([self previousTrack]);
@@ -55,6 +60,13 @@ int proc_pidpath(int pid, void *buffer, uint32_t buffersize);
     
     
     return @{};
+}
+
+- (NSDictionary*)_loadArtwork:(NSDictionary*)request {
+    NSData *result = [self.artworkCache objectForKey:[request objectForKey:@"identifier"]];
+    return @{
+        @"data": result != nil ? result : [NSNull null]
+    };
 }
 
 #pragma mark - MediaRemote.framework notifications
@@ -97,9 +109,72 @@ int proc_pidpath(int pid, void *buffer, uint32_t buffersize);
 - (void)onNowPlayingDataChanged:(NSNotification*)notification {
     MRMediaRemoteGetNowPlayingInfo(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
                                    ^(CFDictionaryRef info) {
+        
         NSDictionary *data = (__bridge NSDictionary*)info;
         
-        XENDLog(@"*** onNowPlayingDataChanged: %@", data);
+        __block NSMutableDictionary *nowPlayingTrack = nil;
+        __block NSMutableDictionary *artworkCache = [NSMutableDictionary dictionary];
+        __block NSDictionary *nowPlayingApplication = nil;
+        
+        void (^finalise)(BOOL) = ^(BOOL isStopped) {
+            [self.writeLock lock];
+            
+            self.artworkCache = artworkCache;
+            [self.cachedDynamicProperties setObject:nowPlayingTrack forKey:@"nowPlaying"];
+            [self.cachedDynamicProperties setObject:nowPlayingApplication forKey:@"nowPlayingApplication"];
+            [self.cachedDynamicProperties setObject:@(isStopped) forKey:@"isStopped"];
+            
+            [self.writeLock unlock];
+            
+            XENDLog(@"*** New media data");
+            XENDLog(@"%@", self.cachedDynamicProperties);
+            
+            [self notifyRemoteForNewDynamicProperties];
+        };
+        
+        if (data) {
+            NSString *contentIdentifier = [data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoUniqueIdentifier defaultValue:nil];
+            
+            if (!contentIdentifier) {
+                XENDLog(@"ERROR :: Media is missing a unique ID");
+                return;
+            }
+            
+            // Do flat namespace stuff first
+            nowPlayingTrack = [@{
+                @"id": contentIdentifier,
+                @"title": [data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoTitle defaultValue:@""],
+                @"artist": [data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoArtist defaultValue:@""],
+                @"album": [data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoAlbum defaultValue:@""],
+                @"composer": [data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoComposer defaultValue:@""],
+                @"genre": [data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoGenre defaultValue:@""],
+                @"length": [data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoDuration defaultValue:@0],
+                @"elapsed": [data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoElapsedTime defaultValue:@0],
+                @"number": [data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoTrackNumber defaultValue:@0],
+            } mutableCopy];
+            
+            // Artwork, if available
+            NSData *artworkData = [data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoArtworkData];
+            if (artworkData && artworkData.length > 0) {
+                [artworkCache setObject:artworkData forKey:contentIdentifier];
+                [nowPlayingTrack setObject:[NSString stringWithFormat:@"xui://media/artwork/%@", contentIdentifier] forKey:@"artwork"];
+            } else {
+                [nowPlayingTrack setObject:@"" forKey:@"artwork"];
+            }
+        } else {
+            nowPlayingTrack = [@{
+                @"id": @"",
+                @"title": @"",
+                @"artist": @"",
+                @"album": @"",
+                @"artwork": @"",
+                @"composer": @"",
+                @"genre": @"",
+                @"length": @0,
+                @"elapsed": @0,
+                @"number": @0,
+            } mutableCopy];
+        }
         
         // Handle application information
         if (data && [data objectForKey:@"kMRMediaRemoteNowPlayingInfoClientPropertiesData"]) {
@@ -116,7 +191,9 @@ int proc_pidpath(int pid, void *buffer, uint32_t buffersize);
             
             XENDLog(@"*** (protobuf) Now playing application is %@", bundleIdentifier);
             
+            nowPlayingApplication = [[XENDApplicationsManager sharedInstance] metadataForApplication:bundleIdentifier];
             
+            finalise(NO);
         } else {
             // Lookup application via its PID
             MRMediaRemoteGetNowPlayingApplicationPID(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
@@ -126,11 +203,17 @@ int proc_pidpath(int pid, void *buffer, uint32_t buffersize);
                     
                     XENDLog(@"*** (PID) Now playing application is %@", bundleIdentifier);
                     
-                    // TODO: Set title == the application name, and update playing application
-                } else {
-                    XENDLog(@"*** (PID) Now playing application PID is invalid");
+                    nowPlayingApplication = [[XENDApplicationsManager sharedInstance] metadataForApplication:bundleIdentifier];
+                    [nowPlayingTrack setObject:[nowPlayingApplication objectForKey:@"name"] forKey:@"title"];
+                    [nowPlayingTrack setObject:[nowPlayingApplication objectForKey:@"icon"] forKey:@"artwork"];
                     
-                    // TODO: Set no playing data, i.e., stopped state
+                    finalise(NO);
+                } else {
+                    XENDLog(@"*** No now playing application");
+                    
+                    nowPlayingApplication = [[XENDApplicationsManager sharedInstance] metadataForApplication:@""];
+                    
+                    finalise(YES);
                 }
             });
         }
@@ -143,6 +226,12 @@ int proc_pidpath(int pid, void *buffer, uint32_t buffersize);
         BOOL isPlaying = (BOOL)playing;
         
         XENDLog(@"onNowPlayingIsPlayingChanged: %d", isPlaying);
+        
+        [self.writeLock lock];
+        [self.cachedDynamicProperties setObject:@(isPlaying) forKey:@"isPlaying"];
+        [self.writeLock unlock];
+        
+        [self notifyRemoteForNewDynamicProperties];
     });
 }
 
@@ -233,13 +322,10 @@ int proc_pidpath(int pid, void *buffer, uint32_t buffersize);
  */
 
 
-// Some apps may not provide any now playing data (such as the YouTube app). In these cases, swap the now playing data for the application name. Do this in the TypeScript layer, however
+// Some apps may not provide any now playing data (such as the YouTube app). In these cases, swap the now playing data for the application name.
 
 // Now playing data changed is NOT called for every "elapsed" update; only for when pause/play/item changes.
 // In TS layer, need to do a timer per second that internally handles this
-
-// kMRMediaRemoteNowPlayingInfoClientPropertiesData entry is protobuf in NSData, and should be passed to an instance of _MRNowPlayingClientProtobuf to get details back
-// If this is not available, then should fallback to using MRMediaRemoteGetNowPlayingApplicationPID, pass to proc_pidpath, and then get the bundle id from there
 
 // Use kMRMediaRemoteNowPlayingInfoArtworkIdentifier to key/value the artwork, empty string if missing, otherwise app bundleIdentifier if no playing data is available
 

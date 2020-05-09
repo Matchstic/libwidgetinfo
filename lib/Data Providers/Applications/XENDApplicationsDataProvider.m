@@ -13,15 +13,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 **/
 
-#import "XENDProxyDataProvider.h"
+#import "XENDApplicationsDataProvider.h"
 
-@interface XENDMediaDataProvider : XENDProxyDataProvider
+@implementation XENDApplicationsDataProvider
 
-/**
- * Requests media artwork for the specified id
- * @param identifier The identifier to load artwork data for
- * @param callback The callback invoked after a response is recieved
- */
-- (void)requestArtworkForIdentifier:(NSString*)identifier callback:(void (^)(NSDictionary *result))callback;
++ (NSString*)providerNamespace {
+    return @"applications";
+}
+
+- (void)requestIconDataForBundleIdentifier:(NSString*)bundleIdentifer callback:(void (^)(NSDictionary *result))callback {
+    [self didReceiveWidgetMessage:@{
+        @"identifier": bundleIdentifer
+    } functionDefinition:@"_loadIcon" callback:callback];
+}
 
 @end

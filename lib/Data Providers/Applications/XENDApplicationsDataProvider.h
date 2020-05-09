@@ -15,13 +15,13 @@
 
 #import "XENDProxyDataProvider.h"
 
-@interface XENDMediaDataProvider : XENDProxyDataProvider
+@interface XENDApplicationsDataProvider : XENDProxyDataProvider
 
 /**
- * Requests media artwork for the specified id
- * @param identifier The identifier to load artwork data for
+ * Requests icon data for the specified application
+ * @param bundleIdentifer The application to load icon data for
  * @param callback The callback invoked after a response is recieved
  */
-- (void)requestArtworkForIdentifier:(NSString*)identifier callback:(void (^)(NSDictionary *result))callback;
+- (void)requestIconDataForBundleIdentifier:(NSString*)bundleIdentifer callback:(void (^)(NSDictionary *result))callback;
 
 @end

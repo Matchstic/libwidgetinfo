@@ -69,6 +69,8 @@ extern "C" {
     extern CFStringRef kMRMediaRemoteNowPlayingInfoRadioStationIdentifier;
     extern CFStringRef kMRMediaRemoteNowPlayingInfoRadioStationHash;
     extern CFStringRef kMRMediaRemoteNowPlayingInfoClientPropertiesData;
+    extern CFStringRef kMRMediaRemoteNowPlayingInfoArtistiTunesStoreAdamIdentifier;
+    extern CFStringRef kMRMediaRemoteNowPlayingInfoAlbumiTunesStoreAdamIdentifier;
     extern CFStringRef kMRMediaRemoteOptionMediaType;
     extern CFStringRef kMRMediaRemoteOptionSourceID;
     extern CFStringRef kMRMediaRemoteOptionTrackID;
