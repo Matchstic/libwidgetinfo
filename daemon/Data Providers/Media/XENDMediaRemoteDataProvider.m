@@ -80,6 +80,19 @@ int proc_pidpath(int pid, void *buffer, uint32_t buffersize);
     [[NSNotificationCenter defaultCenter]
         addObserver:self
         selector:@selector(onNowPlayingDataChanged:)
+        name:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoDidChangeNotification
+        object:nil];
+    
+    // Appears to be necessary alongside the now playing info notification
+    [[NSNotificationCenter defaultCenter]
+        addObserver:self
+        selector:@selector(onNowPlayingDataChanged:)
+        name:(__bridge NSString*)kMRPlaybackQueueContentItemsChangedNotification
+        object:nil];
+    
+    [[NSNotificationCenter defaultCenter]
+        addObserver:self
+        selector:@selector(onNowPlayingDataChanged:)
         name:(__bridge NSString*)kMRMediaRemoteNowPlayingApplicationClientStateDidChange
         object:nil];
     
@@ -87,12 +100,6 @@ int proc_pidpath(int pid, void *buffer, uint32_t buffersize);
         addObserver:self
         selector:@selector(onNowPlayingDataChanged:)
         name:(__bridge NSString*)kMRMediaRemoteNowPlayingPlaybackQueueDidChangeNotification
-        object:nil];
-    
-    [[NSNotificationCenter defaultCenter]
-        addObserver:self
-        selector:@selector(onNowPlayingDataChanged:)
-        name:(__bridge NSString*)kMRPlaybackQueueContentItemsChangedNotification
         object:nil];
     
     [[NSNotificationCenter defaultCenter]
@@ -218,6 +225,14 @@ int proc_pidpath(int pid, void *buffer, uint32_t buffersize);
             });
         }
     });
+    
+    // Also request the now playing queue.
+    // GONE in iOS 11+
+    /*MRMediaRemoteGetNowPlayingPlaybackQueue(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
+                                            ^(CFDictionaryRef info) {
+        NSDictionary *data = (__bridge NSDictionary*)info;
+        NSLog(@"*** Now playing queue data: %@", data);
+    });*/
 }
 
 - (void)onNowPlayingApplicationIsPlayingChanged:(NSNotification*)notification {
@@ -321,14 +336,9 @@ int proc_pidpath(int pid, void *buffer, uint32_t buffersize);
  }
  */
 
-
-// Some apps may not provide any now playing data (such as the YouTube app). In these cases, swap the now playing data for the application name.
-
 // Now playing data changed is NOT called for every "elapsed" update; only for when pause/play/item changes.
 // In TS layer, need to do a timer per second that internally handles this
 
-// Use kMRMediaRemoteNowPlayingInfoArtworkIdentifier to key/value the artwork, empty string if missing, otherwise app bundleIdentifier if no playing data is available
-
 // MRMediaRemoteGetNowPlayingPlaybackQueue ?
 
-// What about Apple Music Radio?
+// Swap to using our own serial dispatch queue. This enforces write ordering on the dynamic properties, and so can remove the lock
