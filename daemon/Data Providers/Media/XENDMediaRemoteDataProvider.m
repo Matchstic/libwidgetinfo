@@ -31,7 +31,7 @@ static XENDMediaRemoteDataProvider *internalSharedInstance;
 
 @interface XENDMediaRemoteDataProvider ()
 @property (nonatomic, strong) dispatch_queue_t updateQueue;
-@property (nonatomic, strong) NSDictionary *artworkCache;
+@property (nonatomic, strong) NSData *currentArtwork;
 @property (nonatomic, readwrite) int updateRequestId;
 @property (nonatomic, readwrite) long long lastElapsedTimeObservation;
 
@@ -144,9 +144,8 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
 }
 
 - (NSDictionary*)_loadArtwork:(NSDictionary*)request {
-    NSData *result = [self.artworkCache objectForKey:[request objectForKey:@"identifier"]];
     return @{
-        @"data": result != nil ? result : [NSNull null]
+        @"data": self.currentArtwork != nil ? self.currentArtwork : [NSNull null]
     };
 }
 
@@ -166,6 +165,12 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
         addObserver:self
         selector:@selector(onNowPlayingDataChanged:)
         name:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoDidChangeNotification
+        object:nil];
+    
+    [[NSNotificationCenter defaultCenter]
+        addObserver:self
+        selector:@selector(onNowPlayingDataChanged:)
+        name:(__bridge NSString*)kMRPlaybackQueueContentItemsChangedNotification
         object:nil];
     
     [[NSNotificationCenter defaultCenter]
@@ -213,7 +218,7 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
     self.updateRequestId = updateRequestId;
     
     __block NSMutableDictionary *nowPlayingTrack = nil;
-    __block NSMutableDictionary *artworkCache = [NSMutableDictionary dictionary];
+    __block NSData *currentArtwork = nil;
     __block NSDictionary *nowPlayingApplication = nil;
     __block BOOL isStopped = NO;
     __block BOOL isPlaying = NO;
@@ -270,10 +275,10 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
             } mutableCopy];
             
             // Artwork, if available
-            NSData *artworkData = [data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoArtworkData];
-            if (artworkData && artworkData.length > 0) {
-                [artworkCache setObject:artworkData forKey:contentIdentifier];
-                [nowPlayingTrack setObject:[NSString stringWithFormat:@"xui://media/artwork/%@", contentIdentifier] forKey:@"artwork"];
+            currentArtwork = [data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoArtworkData];
+            if (currentArtwork && currentArtwork.length > 0) {
+                // Add the observation time as a cache buster
+                [nowPlayingTrack setObject:[NSString stringWithFormat:@"xui://media/artwork/current?_c=%llu", observationTime] forKey:@"artwork"];
             } else {
                 [nowPlayingTrack setObject:@"" forKey:@"artwork"];
             }
@@ -307,6 +312,11 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
             
             nowPlayingApplication = [[XENDApplicationsManager sharedInstance] metadataForApplication:bundleIdentifier];
             
+            // Swap with application icon if necessary
+            if ([bundleIdentifier isEqualToString:@"com.apple.mobilesafari"]) {
+                [nowPlayingTrack setObject:[nowPlayingApplication objectForKey:@"icon"] forKey:@"artwork"];
+            }
+            
             isStopped = NO;
             
             // Exit dispatch group
@@ -327,7 +337,7 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
                     // Exit dispatch group
                     dispatch_group_leave(serviceGroup);
                 } else {
-                    XENDLog(@"*** No now playing application");
+                    XENDLog(@"*** No \"Now Playing\" application");
                     
                     nowPlayingApplication = [[XENDApplicationsManager sharedInstance] metadataForApplication:@""];
                     
@@ -346,8 +356,6 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
                                                    ^(Boolean playing) {
         isPlaying = (BOOL)playing;
         
-        XENDLog(@"Is playing changed: %d", isPlaying);
-        
         // Exit dispatch group
         dispatch_group_leave(serviceGroup);
     });
@@ -358,9 +366,8 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
         float vol;
         [[objc_getClass("AVSystemController") sharedAVSystemController] getVolume:&vol forCategory:@"Audio/Video"];
         
-        int adjustedVolume = vol * 100;
-        
-        XENDLog(@"Volume changed: %d%%", adjustedVolume);
+        // Change it to be a percent between 0 and 100
+        adjustedVolume = vol * 100;
         
         // Exit dispatch group
         dispatch_group_leave(serviceGroup);
@@ -369,13 +376,10 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
     dispatch_group_notify(serviceGroup, self.updateQueue, ^{
         // Ensure a newer update hasn't started after us
         if (self.updateRequestId != updateRequestId) {
-            XENDLog(@"DEBUG :: Dropping update request with ID: %d", updateRequestId);
             return;
-        } else {
-            XENDLog(@"DEBUG :: Allowing update request with ID: %d", updateRequestId);
         }
         
-        self.artworkCache = artworkCache;
+        self.currentArtwork = currentArtwork;
         [self.cachedDynamicProperties setObject:nowPlayingTrack forKey:@"nowPlaying"];
         [self.cachedDynamicProperties setObject:nowPlayingApplication forKey:@"nowPlayingApplication"];
         [self.cachedDynamicProperties setObject:@(isStopped) forKey:@"isStopped"];
@@ -410,6 +414,8 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
         @"volume": @0,
         @"_elapsedChangedTime": @0
     } mutableCopy];
+    
+    self.currentArtwork = nil;
     
     [self notifyRemoteForNewDynamicProperties];
 }

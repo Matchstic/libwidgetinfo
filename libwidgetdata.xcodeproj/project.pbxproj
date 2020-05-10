@@ -84,6 +84,8 @@
 		C93045B623D84DA800B0D561 /* XTWCAirQualityObservation.m in Sources */ = {isa = PBXBuildFile; fileRef = C93045B523D84DA800B0D561 /* XTWCAirQualityObservation.m */; };
 		C9478BF12441D2DB00677E31 /* XENDLibraryURLHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = C9478BEF2441D2DB00677E31 /* XENDLibraryURLHandler.h */; };
 		C9478BF22441D2DB00677E31 /* XENDLibraryURLHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = C9478BF02441D2DB00677E31 /* XENDLibraryURLHandler.m */; };
+		C94927812468B0D400B7DF85 /* XENDXenInfoURLHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = C949277F2468B0D400B7DF85 /* XENDXenInfoURLHandler.h */; };
+		C94927822468B0D400B7DF85 /* XENDXenInfoURLHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = C94927802468B0D400B7DF85 /* XENDXenInfoURLHandler.m */; };
 		C97CF9F323217A1200A3A014 /* XENDHijackedWebViewDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = C97CF9F123217A1200A3A014 /* XENDHijackedWebViewDelegate.h */; };
 		C97CF9F423217A1200A3A014 /* XENDHijackedWebViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C97CF9F223217A1200A3A014 /* XENDHijackedWebViewDelegate.m */; };
 		C993D33323DCE6D60084ED1E /* XENDStateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C993D33223DCE6D60084ED1E /* XENDStateManager.m */; };
@@ -287,6 +289,8 @@
 		C9478BEF2441D2DB00677E31 /* XENDLibraryURLHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XENDLibraryURLHandler.h; sourceTree = "<group>"; };
 		C9478BF02441D2DB00677E31 /* XENDLibraryURLHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XENDLibraryURLHandler.m; sourceTree = "<group>"; };
 		C94927792468766E00B7DF85 /* AVFoundation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AVFoundation.h; path = "daemon/Data Providers/Media/AVFoundation.h"; sourceTree = SOURCE_ROOT; };
+		C949277F2468B0D400B7DF85 /* XENDXenInfoURLHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XENDXenInfoURLHandler.h; sourceTree = "<group>"; };
+		C94927802468B0D400B7DF85 /* XENDXenInfoURLHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XENDXenInfoURLHandler.m; sourceTree = "<group>"; };
 		C979629B24268D34007849D8 /* liblogger.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblogger.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		C97CF9ED23216ED600A3A014 /* XENDPreProcessor-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "XENDPreProcessor-Protocol.h"; sourceTree = "<group>"; };
 		C97CF9F123217A1200A3A014 /* XENDHijackedWebViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XENDHijackedWebViewDelegate.h; sourceTree = "<group>"; };
@@ -532,6 +536,8 @@
 				C9B3511224659CB600E531E1 /* XENDMyLocationURLHandler.m */,
 				C92013DC2411A704009CBBFB /* XENDWidgetWeatherURLHandler.h */,
 				C92013DD2411A704009CBBFB /* XENDWidgetWeatherURLHandler.m */,
+				C949277F2468B0D400B7DF85 /* XENDXenInfoURLHandler.h */,
+				C94927802468B0D400B7DF85 /* XENDXenInfoURLHandler.m */,
 			);
 			path = "URL Handlers";
 			sourceTree = "<group>";
@@ -920,6 +926,7 @@
 				C91F4036242FB1DA00E30466 /* tag_sizes.h in Headers */,
 				C9204FF92336509900F9F535 /* XENDMediaDataProvider.h in Headers */,
 				C91F4032242FB1DA00E30466 /* replacement.h in Headers */,
+				C94927812468B0D400B7DF85 /* XENDXenInfoURLHandler.h in Headers */,
 				C9F2F3882301BE4100E4863B /* Syntax.hpp in Headers */,
 				C9F2F3932301BE4100E4863B /* Error.hpp in Headers */,
 				C91F4020242FB1DA00E30466 /* insertion_mode.h in Headers */,
@@ -1150,6 +1157,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C91F3FAA242FA9B100E30466 /* OGText.m in Sources */,
+				C94927822468B0D400B7DF85 /* XENDXenInfoURLHandler.m in Sources */,
 				C91F4028242FB1DA00E30466 /* utf8.c in Sources */,
 				C91F4039242FB1DA00E30466 /* tokenizer.c in Sources */,
 				C919CA6C233026A4001391A5 /* XENDBaseDataProvider.m in Sources */,

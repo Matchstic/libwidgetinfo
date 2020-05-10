@@ -50,7 +50,7 @@ static NSString *libraryResourceBasePath = @"/opt/simject/Library/Application Su
         }];
     } else if ([host isEqualToString:@"media"]) {
         [self loadMediaArtworkAtPath:[url path] callback:^(NSData *result) {
-            completionHandler(nil, result, @"image/png");
+            completionHandler(nil, result, @"image/jpeg");
         }];
     } else {
         completionHandler(nil, nil, nil);
@@ -117,7 +117,9 @@ static NSString *libraryResourceBasePath = @"/opt/simject/Library/Application Su
     
     NSString *bundleIdentifier = [path lastPathComponent];
     [apps requestIconDataForBundleIdentifier:bundleIdentifier callback:^(NSDictionary *result) {
-        callback([result objectForKey:@"data"]);
+        NSData *data = [result objectForKey:@"data"];
+        if ([data isKindOfClass:[NSNull class]]) data = nil;
+        callback(data);
     }];
 }
 
@@ -126,7 +128,9 @@ static NSString *libraryResourceBasePath = @"/opt/simject/Library/Application Su
     
     NSString *artworkIdentifier = [path lastPathComponent];
     [media requestArtworkForIdentifier:artworkIdentifier callback:^(NSDictionary *result) {
-        callback([result objectForKey:@"data"]);
+        NSData *data = [result objectForKey:@"data"];
+        if ([data isKindOfClass:[NSNull class]]) data = nil;
+        callback(data);
     }];
 }
 

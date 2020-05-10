@@ -15,6 +15,7 @@
 
 #import "XENDHijackedWebViewDelegate.h"
 #import "../Internal/XENDWidgetManager.h"
+#import "../URL Handlers/XENDXenInfoURLHandler.h"
 
 @interface XENDHijackedWebViewDelegate ()
 
@@ -86,7 +87,7 @@
     decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
     
     NSString *url = [[navigationAction.request URL] absoluteString];
-    BOOL isXenInfoSpecialCase = [url hasPrefix:@"xeninfo:"] || [url hasPrefix:@"mk1:"];
+    BOOL isSpecialCase = [url hasPrefix:@"xeninfo:"] || [url hasPrefix:@"mk1:"];
     
     if ([url hasPrefix:@"file:"]) {
         decisionHandler(WKNavigationActionPolicyAllow);
@@ -98,7 +99,17 @@
        return;
     }
     
-    if (!isXenInfoSpecialCase) {
+    if ([url hasPrefix:@"xeninfo:"]) {
+        // Forward "actions" to the legacy handler
+        if ([XENDXenInfoURLHandler handleNavigationRequest:navigationAction.request.URL]) {
+            // Handled internally.
+            decisionHandler(WKNavigationActionPolicyCancel);
+            
+            return;
+        }
+    }
+    
+    if (!isSpecialCase) {
         // Disallow the navigation, but load the URL in appropriate app
         decisionHandler(WKNavigationActionPolicyCancel);
         
@@ -108,7 +119,11 @@
             [[UIApplication sharedApplication] openURL:[navigationAction.request URL]];
         }
     } else if ([self.originalDelegate respondsToSelector:@selector(webView:decidePolicyForNavigationAction:decisionHandler:)])
-        [self.originalDelegate webView:webView decidePolicyForNavigationAction:navigationAction decisionHandler:decisionHandler];
+        [self.originalDelegate webView:webView decidePolicyForNavigationAction:navigationAction decisionHandler:^(WKNavigationActionPolicy policy) {
+            // Always cancel the result
+            
+            decisionHandler(WKNavigationActionPolicyCancel);
+        }];
     else
         decisionHandler(WKNavigationActionPolicyCancel);
 }

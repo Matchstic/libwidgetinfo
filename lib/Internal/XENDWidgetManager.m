@@ -30,6 +30,7 @@
 #import "../URL Handlers/XENDInfoStats1URLHandler.h"
 #import "../URL Handlers/XENDLibraryURLHandler.h"
 #import "../URL Handlers/XENDMyLocationURLHandler.h"
+#import "../URL Handlers/XENDXenInfoURLHandler.h"
 
 // Horrible internal hacks for NSURLProtocol to work as intended
 #import <objc/runtime.h>
@@ -362,6 +363,7 @@ static NSString *preferencesId = @"com.matchstic.xenhtml.libwidgetinfo";
     [NSURLProtocol registerClass:[XENDLibraryURLHandler class]];
     [NSURLProtocol registerClass:[XENDInfoStats1URLHandler class]];
     [NSURLProtocol registerClass:[XENDMyLocationURLHandler class]];
+    [NSURLProtocol registerClass:[XENDXenInfoURLHandler class]];
 }
 
 // Used internally by the URL handlers
