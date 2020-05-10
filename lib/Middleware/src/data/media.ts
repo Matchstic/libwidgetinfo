@@ -118,6 +118,9 @@ export interface MediaProperties {
  */
 export default class Media extends Base implements MediaProperties {
 
+    private volumeSetDebouncer: any = null;
+    private seekDebouncer: any = null;
+
     // NOTE: Don't rely on native layer to push through elapsed time
     // It'll come through on pause/play etc, but need to manually run a timer here to update
     // observers of it - likely with its own observer array?
@@ -137,6 +140,8 @@ export default class Media extends Base implements MediaProperties {
      * This is only populated if the playing application supports it. Otherwise, it's an empty list.
      *
      * NOTE: Information is only available up to the next 15 tracks.
+     *
+     * @ignore
      */
     queue: MediaTrack[];
 
@@ -158,7 +163,9 @@ export default class Media extends Base implements MediaProperties {
     isShuffleEnabled: boolean;
 
     /**
-     * @ignore
+     * Specifies the current volume used for audio output.
+     *
+     * Value: 0% to 100%
      */
     volume: number;
 
@@ -189,26 +196,157 @@ export default class Media extends Base implements MediaProperties {
      *
      * @example
      * api.media.togglePlayState();
-     *
-     * @example
-     * // Alternatively:
-     * api.media.togglePlayState().then(function(newState) { });
-     *
-     * @return A promise that resolves with the new play/pause state
      */
-    public async togglePlayState(): Promise<boolean> {
-        return new Promise<boolean>((resolve, reject) => {
-            this.connection.sendNativeMessage({
-                namespace: DataProviderUpdateNamespace.Applications,
-                functionDefinition: 'togglePlayState',
-                data: {}
-            }, (newState: boolean) => {
-                resolve(newState);
-            });
-        });
+    public togglePlayPause(): void {
+        this.connection.sendNativeMessage({
+            namespace: DataProviderUpdateNamespace.Media,
+            functionDefinition: 'togglePlayPause',
+            data: {}
+        }, () => {});
     }
 
     /**
+     * Advances playback to the next media item, if possible.
+     *
+     * @example
+     * api.media.nextTrack();
+     */
+    public nextTrack(): void {
+        this.connection.sendNativeMessage({
+            namespace: DataProviderUpdateNamespace.Media,
+            functionDefinition: 'nextTrack',
+            data: {}
+        }, () => {});
+    }
+
+    /**
+     * Changes playback to the previous media item, if possible.
+     *
+     * @example
+     * api.media.previousTrack();
+     */
+    public previousTrack(): void {
+        this.connection.sendNativeMessage({
+            namespace: DataProviderUpdateNamespace.Media,
+            functionDefinition: 'previousTrack',
+            data: {}
+        }, () => {});
+    }
+
+    /**
+     * Toggles the current shuffle state; only available for music playback
+     *
+     * @example
+     * api.media.toggleShuffle();
+     */
+    public toggleShuffle(): void {
+        this.connection.sendNativeMessage({
+            namespace: DataProviderUpdateNamespace.Media,
+            functionDefinition: 'toggleShuffle',
+            data: {}
+        }, () => {});
+    }
+
+    /**
+     * Toggles the current repeat state; only available for music playback
+     *
+     * @example
+     * api.media.toggleRepeat();
+     */
+    public toggleRepeat(): void {
+        this.connection.sendNativeMessage({
+            namespace: DataProviderUpdateNamespace.Media,
+            functionDefinition: 'toggleRepeat',
+            data: {}
+        }, () => {});
+    }
+
+    /**
+     * Jumps back playback by 15 seconds, or to the start of the track if necessary.
+     *
+     * @example
+     * api.media.goBackFifteenSeconds();
+     */
+    public goBackFifteenSeconds(): void {
+        this.connection.sendNativeMessage({
+            namespace: DataProviderUpdateNamespace.Media,
+            functionDefinition: 'goBackFifteenSeconds',
+            data: {}
+        }, () => {});
+    }
+
+    /**
+     * Jumps forward playback by 15 seconds, or to the start of the track if necessary.
+     *
+     * @example
+     * api.media.skipFifteenSeconds();
+     */
+    public skipFifteenSeconds(): void {
+        this.connection.sendNativeMessage({
+            namespace: DataProviderUpdateNamespace.Media,
+            functionDefinition: 'skipFifteenSeconds',
+            data: {}
+        }, () => {});
+    }
+
+    /**
+     * Sets the volume of audio for playback.
+     *
+     * Internally, this will "debounce" any requests to set the volume, so that only the latest value
+     * will be applied.
+     *
+     * @param level A percentage between 0 and 100
+     *
+     * @example
+     * api.media.setVolume(50); // Sets volume to 50%
+     */
+    public setVolume(level: number): void {
+        if (this.volumeSetDebouncer) {
+            clearTimeout(this.volumeSetDebouncer);
+            this.volumeSetDebouncer = null;
+        }
+
+        this.volumeSetDebouncer = setTimeout(() => {
+            this.connection.sendNativeMessage({
+                namespace: DataProviderUpdateNamespace.Media,
+                functionDefinition: 'setVolume',
+                data: {
+                    value: level
+                }
+            }, () => {});
+        }, 100);
+    }
+
+    /**
+     * Seeks playback to the specified position in the currently playing track.
+     *
+     * Internally, this will "debounce" any requests to change playback position, so that only the latest value
+     * will be applied.
+     *
+     * @param time A value between 0 and the current `length` parameter of the playing track.
+     *
+     * @example
+     * api.media.seekToPosition(20); // Seeks to 20 seconds into the track
+     */
+    public seekToPosition(time: number): void {
+        if (this.seekDebouncer) {
+            clearTimeout(this.seekDebouncer);
+            this.seekDebouncer = null;
+        }
+
+        this.seekDebouncer = setTimeout(() => {
+            this.connection.sendNativeMessage({
+                namespace: DataProviderUpdateNamespace.Media,
+                functionDefinition: 'seekToPosition',
+                data: {
+                    value: time
+                }
+            }, () => {});
+        }, 100);
+    }
+
+    /**
+     * @ignore
      * Retrieves the user's music library at the current point in time.
      *
      * @example
@@ -221,7 +359,7 @@ export default class Media extends Base implements MediaProperties {
     public async getUserLibrary(): Promise<MediaLibrary> {
         return new Promise<MediaLibrary>((resolve, reject) => {
             this.connection.sendNativeMessage({
-                namespace: DataProviderUpdateNamespace.Applications,
+                namespace: DataProviderUpdateNamespace.Media,
                 functionDefinition: 'userLibrary',
                 data: {}
             }, (newState: MediaLibrary) => {
@@ -231,6 +369,7 @@ export default class Media extends Base implements MediaProperties {
     }
 
     /**
+     * @ignore
      * Retrieves the list of albums associated with this artist
      * @param artist The artist to lookup. This parameter may the artist `id`, or an object that represents the artist
      *
@@ -257,7 +396,7 @@ export default class Media extends Base implements MediaProperties {
 
         return new Promise<MediaLibraryAlbum[]>((resolve, reject) => {
             this.connection.sendNativeMessage({
-                namespace: DataProviderUpdateNamespace.Applications,
+                namespace: DataProviderUpdateNamespace.Media,
                 functionDefinition: 'getAlbumsForArtist',
                 data: {
                     id: id
@@ -269,6 +408,7 @@ export default class Media extends Base implements MediaProperties {
     }
 
     /**
+     * @ignore
      * Retrieves the list of tracks associated with this album
      * @param album The album to lookup. This parameter may the album `id`, or an object that represents the album
      *
@@ -301,7 +441,7 @@ export default class Media extends Base implements MediaProperties {
 
         return new Promise<MediaTrack[]>((resolve, reject) => {
             this.connection.sendNativeMessage({
-                namespace: DataProviderUpdateNamespace.Applications,
+                namespace: DataProviderUpdateNamespace.Media,
                 functionDefinition: 'getTracksForAlbum',
                 data: {
                     id: id

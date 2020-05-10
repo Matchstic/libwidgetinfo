@@ -23,6 +23,7 @@
 @property (nonatomic, readonly) NSArray *audioComponents;
 @property (nonatomic, readonly) NSNumber *betaExternalVersionIdentifier;
 @property (nonatomic, readonly) int bundleModTime;
+@property (nonatomic,readonly) NSURL * bundleURL; 
 @property (nonatomic, readonly) NSString *companionApplicationIdentifier;
 @property (readonly) NSString *complicationPrincipalClass;
 @property (nonatomic, readonly) NSArray *deviceFamily;
@@ -62,8 +63,8 @@
 @property (nonatomic, readonly) unsigned long long originalInstallType;
 @property (nonatomic, readonly) NSArray *plugInKitPlugins;
 @property (nonatomic, readonly) NSString *preferredArchitecture;
-@property (nonatomic, copy) NSArray *privateDocumentIconNames;
-@property (nonatomic, retain) LSApplicationProxy *privateDocumentTypeOwner;
+// @property (nonatomic, copy) NSArray *privateDocumentIconNames;
+// @property (nonatomic, retain) LSApplicationProxy *privateDocumentTypeOwner;
 @property (nonatomic, readonly) NSNumber *purchaserDSID;
 @property (nonatomic, readonly) NSString *ratingLabel;
 @property (nonatomic, readonly) NSNumber *ratingRank;

@@ -14,10 +14,13 @@
 **/
 
 #import <sys/sysctl.h>
+#import <dlfcn.h>
+#import <objc/runtime.h>
 
 #import "XENDMediaRemoteDataProvider.h"
 #import "XENDLogger.h"
 #import "MediaRemote.h"
+#import "AVFoundation.h"
 #import "NSDictionary+XENSafeObjectForKey.h"
 #import "XENDApplicationsManager.h"
 
@@ -25,12 +28,16 @@
 int proc_pidpath(int pid, void *buffer, uint32_t buffersize);
 
 @interface XENDMediaRemoteDataProvider ()
-@property (nonatomic, strong) NSLock *writeLock;
+@property (nonatomic, strong) dispatch_queue_t updateQueue;
 @property (nonatomic, strong) NSDictionary *artworkCache;
 @end
 
 @implementation XENDMediaRemoteDataProvider
 
++ (void)load {
+    dlopen("/System/Library/PrivateFrameworks/Celestial.framework/Celestial", RTLD_NOW);
+}
+    
 + (NSString*)providerNamespace {
     return @"media";
 }
@@ -39,10 +46,24 @@ int proc_pidpath(int pid, void *buffer, uint32_t buffersize);
     
     if ([definition isEqualToString:@"_loadArtwork"]) {
         callback([self _loadArtwork:data]);
+    } else if ([definition isEqualToString:@"togglePlayPause"]) {
+        callback([self togglePlayPause]);
     } else if ([definition isEqualToString:@"nextTrack"]) {
         callback([self nextTrack]);
     } else if ([definition isEqualToString:@"previousTrack"]) {
         callback([self previousTrack]);
+    } else if ([definition isEqualToString:@"toggleShuffle"]) {
+        callback([self toggleShuffle]);
+    } else if ([definition isEqualToString:@"setRepeatMode"]) {
+        callback([self toggleRepeat]);
+    } else if ([definition isEqualToString:@"goBackFifteenSeconds"]) {
+        callback([self goBackFifteenSeconds]);
+    } else if ([definition isEqualToString:@"skipFifteenSeconds"]) {
+        callback([self skipFifteenSeconds]);
+    } else if ([definition isEqualToString:@"setVolume"]) {
+        callback([self setVolume:data]);
+    } else if ([definition isEqualToString:@"seekToPosition"]) {
+        callback([self seekToPosition:data]);
     } else {
         callback(@{});
     }
@@ -50,14 +71,64 @@ int proc_pidpath(int pid, void *buffer, uint32_t buffersize);
 
 #pragma mark - Message implementation
 
+- (NSDictionary*)togglePlayPause {
+    MRMediaRemoteSendCommand(kMRTogglePlayPause, nil);
+    return @{};
+}
+
 - (NSDictionary*)nextTrack {
-    
-    
+    MRMediaRemoteSendCommand(kMRNextTrack, nil);
     return @{};
 }
 
 - (NSDictionary*)previousTrack {
+    MRMediaRemoteSendCommand(kMRPreviousTrack, nil);
+    return @{};
+}
+
+- (NSDictionary*)toggleShuffle {
+    MRMediaRemoteSendCommand(kMRToggleShuffle, nil);
+    return @{};
+}
+
+- (NSDictionary*)toggleRepeat {
+    MRMediaRemoteSendCommand(kMRToggleRepeat, nil);
+    return @{};
+}
+
+- (NSDictionary*)goBackFifteenSeconds {
+    MRMediaRemoteSendCommand(kMRGoBackFifteenSeconds, nil);
+    return @{};
+}
+
+- (NSDictionary*)skipFifteenSeconds {
+    MRMediaRemoteSendCommand(kMRSkipFifteenSeconds, nil);
+    return @{};
+}
+
+- (NSDictionary*)setVolume:(NSDictionary*)data {
+    int percentage = [[data objectForKey:@"value"] intValue];
+    float actual = (float)percentage / 100.0;
+    if (actual < 0.0) actual = 0.0;
+    else if (actual > 1.0) actual = 1.0;
     
+    [[objc_getClass("AVSystemController") sharedAVSystemController] setVolumeTo:actual forCategory:@"Audio/Video"];
+    
+    return @{};
+}
+
+- (NSDictionary*)seekToPosition:(NSDictionary*)data {
+    int position = [[data objectForKey:@"value"] intValue];
+    
+    // Fetch the current track length
+    NSDictionary *nowPlaying = [self.cachedDynamicProperties objectForKey:@"nowPlaying"];
+    int length = [[nowPlaying objectForKey:@"length"] intValue];
+    
+    if (length == 0) return @{}; // Cannot seek
+    else if (position < 0) position = 0;
+    else if (position > length) position = length - 1;
+    
+    MRMediaRemoteSetElapsedTime((double)position);
     
     return @{};
 }
@@ -72,11 +143,12 @@ int proc_pidpath(int pid, void *buffer, uint32_t buffersize);
 #pragma mark - MediaRemote.framework notifications
 
 - (void)intialiseProvider {
-    self.writeLock = [[NSLock alloc] init];
+    self.updateQueue = dispatch_queue_create("com.matchstic.widgetinfo/media", NULL);
     
     // Setup media notifications
     MRMediaRemoteRegisterForNowPlayingNotifications(dispatch_get_main_queue());
     
+    // CHECKME: Appears to be more of a legacy notification
     [[NSNotificationCenter defaultCenter]
         addObserver:self
         selector:@selector(onNowPlayingDataChanged:)
@@ -96,6 +168,7 @@ int proc_pidpath(int pid, void *buffer, uint32_t buffersize);
         name:(__bridge NSString*)kMRMediaRemoteNowPlayingApplicationClientStateDidChange
         object:nil];
     
+    // CHECKME: Could just use this instead of content items?
     [[NSNotificationCenter defaultCenter]
         addObserver:self
         selector:@selector(onNowPlayingDataChanged:)
@@ -108,13 +181,21 @@ int proc_pidpath(int pid, void *buffer, uint32_t buffersize);
         name:(__bridge NSString*)kMRMediaRemoteNowPlayingApplicationIsPlayingDidChangeNotification
         object:nil];
     
+    // Monitor volume state - also handles when the user changes volume via hardware keys
+    [[NSNotificationCenter defaultCenter]
+        addObserver:self
+        selector:@selector(onOutputVolumeChanged:)
+        name:@"AVSystemController_EffectiveVolumeDidChangeNotification"
+        object:nil];
+    
     // Setup initial data
     [self onNowPlayingDataChanged:nil];
     [self onNowPlayingApplicationIsPlayingChanged:nil];
+    [self onOutputVolumeChanged:nil];
 }
 
 - (void)onNowPlayingDataChanged:(NSNotification*)notification {
-    MRMediaRemoteGetNowPlayingInfo(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
+    MRMediaRemoteGetNowPlayingInfo(self.updateQueue,
                                    ^(CFDictionaryRef info) {
         
         NSDictionary *data = (__bridge NSDictionary*)info;
@@ -124,17 +205,10 @@ int proc_pidpath(int pid, void *buffer, uint32_t buffersize);
         __block NSDictionary *nowPlayingApplication = nil;
         
         void (^finalise)(BOOL) = ^(BOOL isStopped) {
-            [self.writeLock lock];
-            
             self.artworkCache = artworkCache;
             [self.cachedDynamicProperties setObject:nowPlayingTrack forKey:@"nowPlaying"];
             [self.cachedDynamicProperties setObject:nowPlayingApplication forKey:@"nowPlayingApplication"];
             [self.cachedDynamicProperties setObject:@(isStopped) forKey:@"isStopped"];
-            
-            [self.writeLock unlock];
-            
-            XENDLog(@"*** New media data");
-            XENDLog(@"%@", self.cachedDynamicProperties);
             
             [self notifyRemoteForNewDynamicProperties];
         };
@@ -196,19 +270,15 @@ int proc_pidpath(int pid, void *buffer, uint32_t buffersize);
             else if (clientProtobuf.hasBundleIdentifier)
                 bundleIdentifier = clientProtobuf.bundleIdentifier;
             
-            XENDLog(@"*** (protobuf) Now playing application is %@", bundleIdentifier);
-            
             nowPlayingApplication = [[XENDApplicationsManager sharedInstance] metadataForApplication:bundleIdentifier];
             
             finalise(NO);
         } else {
             // Lookup application via its PID
-            MRMediaRemoteGetNowPlayingApplicationPID(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
+            MRMediaRemoteGetNowPlayingApplicationPID(self.updateQueue,
                                                      ^(int pid) {
                 if (pid > 0) {
                     NSString *bundleIdentifier = [self bundleIdentifierForPID:pid];
-                    
-                    XENDLog(@"*** (PID) Now playing application is %@", bundleIdentifier);
                     
                     nowPlayingApplication = [[XENDApplicationsManager sharedInstance] metadataForApplication:bundleIdentifier];
                     [nowPlayingTrack setObject:[nowPlayingApplication objectForKey:@"name"] forKey:@"title"];
@@ -225,27 +295,30 @@ int proc_pidpath(int pid, void *buffer, uint32_t buffersize);
             });
         }
     });
-    
-    // Also request the now playing queue.
-    // GONE in iOS 11+
-    /*MRMediaRemoteGetNowPlayingPlaybackQueue(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
-                                            ^(CFDictionaryRef info) {
-        NSDictionary *data = (__bridge NSDictionary*)info;
-        NSLog(@"*** Now playing queue data: %@", data);
-    });*/
 }
 
 - (void)onNowPlayingApplicationIsPlayingChanged:(NSNotification*)notification {
-    MRMediaRemoteGetNowPlayingApplicationIsPlaying(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
+    MRMediaRemoteGetNowPlayingApplicationIsPlaying(self.updateQueue,
                                                    ^(Boolean playing) {
         BOOL isPlaying = (BOOL)playing;
         
-        XENDLog(@"onNowPlayingIsPlayingChanged: %d", isPlaying);
+        XENDLog(@"Is playing changed: %d", isPlaying);
         
-        [self.writeLock lock];
         [self.cachedDynamicProperties setObject:@(isPlaying) forKey:@"isPlaying"];
-        [self.writeLock unlock];
+        [self notifyRemoteForNewDynamicProperties];
+    });
+}
+
+- (void)onOutputVolumeChanged:(NSNotification*)notification {
+    dispatch_async(self.updateQueue, ^{
+        float vol;
+        [[objc_getClass("AVSystemController") sharedAVSystemController] getVolume:&vol forCategory:@"Audio/Video"];
         
+        int adjustedVolume = vol * 100;
+        
+        XENDLog(@"Volume changed: %d%%", adjustedVolume);
+        
+        [self.cachedDynamicProperties setObject:@(adjustedVolume) forKey:@"volume"];
         [self notifyRemoteForNewDynamicProperties];
     });
 }
@@ -340,5 +413,48 @@ int proc_pidpath(int pid, void *buffer, uint32_t buffersize);
 // In TS layer, need to do a timer per second that internally handles this
 
 // MRMediaRemoteGetNowPlayingPlaybackQueue ?
+// MRNowPlayingStateGetPlaybackQueue
 
 // Swap to using our own serial dispatch queue. This enforces write ordering on the dynamic properties, and so can remove the lock
+
+// Also request the now playing queue.
+// GONE in iOS 11+
+/*MRMediaRemoteGetNowPlayingPlaybackQueue(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
+                                        ^(CFDictionaryRef info) {
+    NSDictionary *data = (__bridge NSDictionary*)info;
+    NSLog(@"*** Now playing queue data: %@", data);
+});*/
+
+// MRPlaybackQueueRequestRef MRPlaybackQueueRequestCreateDefault()
+// void MRServiceClientPlaybackQueueRequestCallback(MRNowPlayingPlayerPathRef, MRPlaybackQueueRequestRef, __strong MRPlaybackQueueRequestTransactionCallbackCompletion)
+
+/*void *handle = dlopen("/System/Library/PrivateFrameworks/MediaRemote.framework/MediaRemote", RTLD_LAZY);
+
+void* (*MRPlaybackQueueRequestCreateDefault)(void) = dlsym(handle, "MRPlaybackQueueRequestCreateDefault");
+void* (*MRServiceClientPlaybackQueueRequestCallback)(void *, void*, void(^)(void*)) = dlsym(handle, "MRServiceClientPlaybackQueueRequestCallback");
+void* (*MRNowPlayingPlayerPathCreate)(void *, void*, void*) = dlsym(handle, "MRNowPlayingPlayerPathCreate");
+
+NSLog(@"MRPlaybackQueueRequestCreateDefault == %d, MRServiceClientPlaybackQueueRequestCallback == %d, MRNowPlayingPlayerPathCreate == %d",
+      MRPlaybackQueueRequestCreateDefault != NULL,
+      MRServiceClientPlaybackQueueRequestCallback != NULL,
+      MRNowPlayingPlayerPathCreate != NULL);
+
+if (MRPlaybackQueueRequestCreateDefault && MRServiceClientPlaybackQueueRequestCallback && MRNowPlayingPlayerPathCreate) {
+    
+    XENDLog(@"*** Requesting playback queue...");
+    
+    void *playerPath = [[objc_getClass("MRMediaRemoteServiceClient") sharedServiceClient] activePlayerPath];
+    MRNowPlayingOriginClient *originClient = [[objc_getClass("MRNowPlayingOriginClientManager") sharedManager] originClientForPlayerPath:playerPath];
+    void *origin = originClient.origin;
+    
+    void *playerRef = MRNowPlayingPlayerPathCreate(origin, NULL, playerPath);
+    void *queueRef = MRPlaybackQueueRequestCreateDefault();
+    
+    MRServiceClientPlaybackQueueRequestCallback(playerRef, queueRef, ^(void* something) {
+        XENDLog(@"*** Got a response?");
+        XENDLog(@"%x", something);
+    });
+    
+} else {
+    XENDLog(@"*** Cannot find playback queue API");
+}*/

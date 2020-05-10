@@ -115,32 +115,33 @@ extern "C" {
     Boolean MRMediaRemoteSendCommand(MRCommand command, id userInfo);
 
     void MRMediaRemoteSetPlaybackSpeed(int speed);
-    void MRMediaRemoteSetElapsedTime(double elapsedTime);
+    void MRMediaRemoteSetElapsedTime(double time);
+    void MRMediaRemoteSetShuffleMode(int mode);
+    void MRMediaRemoteSetRepeatMode(int mode);
+
+    void MRMediaRemoteRegisterForShuffleModeChangesWithHandler(dispatch_queue_t queue, void (^callback)(int mode));
+    void MRMediaRemoteRegisterForRepeatModeChangesWithHandler(dispatch_queue_t queue, void (^callback)(int mode));
 
     void MRMediaRemoteSetNowPlayingApplicationOverrideEnabled(Boolean enabled);
 
     void MRMediaRemoteRegisterForNowPlayingNotifications(dispatch_queue_t queue);
-    void MRMediaRemoteUnregisterForNowPlayingNotifications();
+    void MRMediaRemoteUnregisterForNowPlayingNotifications(void);
 
-    void MRMediaRemoteBeginRouteDiscovery();
-    void MRMediaRemoteEndRouteDiscovery();
+    void MRMediaRemoteBeginRouteDiscovery(void);
+    void MRMediaRemoteEndRouteDiscovery(void);
 
-    CFArrayRef MRMediaRemoteCopyPickableRoutes();
+    CFArrayRef MRMediaRemoteCopyPickableRoutes(void);
 
     typedef void (^MRMediaRemoteGetNowPlayingInfoCompletion)(CFDictionaryRef information);
     typedef void (^MRMediaRemoteGetNowPlayingApplicationPIDCompletion)(int PID);
     typedef void (^MRMediaRemoteGetNowPlayingApplicationIsPlayingCompletion)(Boolean isPlaying);
-    typedef void (^MRMediaRemoteGetNowPlayingClientBlock)(id clientObj);
 
     void MRMediaRemoteGetNowPlayingApplicationPID(dispatch_queue_t queue, MRMediaRemoteGetNowPlayingApplicationPIDCompletion completion);
     void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowPlayingInfoCompletion completion);
     void MRMediaRemoteGetNowPlayingApplicationIsPlaying(dispatch_queue_t queue, MRMediaRemoteGetNowPlayingApplicationIsPlayingCompletion completion);
 
+    void MRMediaRemoteKeepAlive(void);
 
-    void MRMediaRemoteKeepAlive();
-    void MRMediaRemoteSetElapsedTime(double time);
-    void MRMediaRemoteSetShuffleMode(int mode);
-    void MRMediaRemoteSetRepeatMode(int mode);
 
     /*
     * The identifier can be obtained using MRMediaRemoteCopyPickableRoutes.
@@ -151,7 +152,7 @@ extern "C" {
     void MRMediaRemoteSetPickedRouteWithPassword(CFStringRef route, CFStringRef password);
 
     CFArrayRef MRMediaRemoteCopyPickableRoutesForCategory(NSString *category);
-    Boolean MRMediaRemotePickedRouteHasVolumeControl();
+    Boolean MRMediaRemotePickedRouteHasVolumeControl(void);
     void MRMediaRemoteSetCanBeNowPlayingApplication(Boolean can);
     void MRMediaRemoteSetNowPlayingInfo(CFDictionaryRef information);
 
@@ -180,6 +181,5 @@ extern "C" {
 - (instancetype)initWithData:(NSData*)arg1;
 
 @end
-
 
 #endif /* MEDIAREMOTE_H_ */

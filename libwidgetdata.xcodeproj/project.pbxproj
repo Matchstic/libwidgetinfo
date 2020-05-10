@@ -286,6 +286,7 @@
 		C93045B523D84DA800B0D561 /* XTWCAirQualityObservation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XTWCAirQualityObservation.m; path = "daemon/Data Providers/Weather/Model/XTWCAirQualityObservation.m"; sourceTree = SOURCE_ROOT; };
 		C9478BEF2441D2DB00677E31 /* XENDLibraryURLHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XENDLibraryURLHandler.h; sourceTree = "<group>"; };
 		C9478BF02441D2DB00677E31 /* XENDLibraryURLHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XENDLibraryURLHandler.m; sourceTree = "<group>"; };
+		C94927792468766E00B7DF85 /* AVFoundation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AVFoundation.h; path = "daemon/Data Providers/Media/AVFoundation.h"; sourceTree = SOURCE_ROOT; };
 		C979629B24268D34007849D8 /* liblogger.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblogger.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		C97CF9ED23216ED600A3A014 /* XENDPreProcessor-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "XENDPreProcessor-Protocol.h"; sourceTree = "<group>"; };
 		C97CF9F123217A1200A3A014 /* XENDHijackedWebViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XENDHijackedWebViewDelegate.h; sourceTree = "<group>"; };
@@ -665,6 +666,7 @@
 		C9AFC05F238966BB007FD971 /* Media */ = {
 			isa = PBXGroup;
 			children = (
+				C94927792468766E00B7DF85 /* AVFoundation.h */,
 				C9B351152465A16400E531E1 /* MediaRemote.h */,
 				C9204FF423364FD800F9F535 /* XENDMediaRemoteDataProvider.h */,
 				C9204FF523364FD800F9F535 /* XENDMediaRemoteDataProvider.m */,
