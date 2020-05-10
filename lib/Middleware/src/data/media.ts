@@ -33,6 +33,12 @@ export interface MediaLibraryArtist {
  */
 export interface MediaTrack {
     /**
+     * Internal usage only
+     * @ignore
+     */
+    id: string;
+
+    /**
      * The title of the track
      */
     title: string;
@@ -102,17 +108,20 @@ export interface MediaProperties {
 
     volume: number;
     nowPlayingApplication: ApplicationMetadata;
+
+    // internal only
+    _elapsedChangedTime: number;
 }
 
 /**
  * The Media provider brings together data about any currently playing media on the user's device.
  *
- * It provides access to everything available to the stock "Now Playing" widget of the Control Centre. This includes artwork, the "Up next" queue, and so forth.
+ * It provides access to everything available to the stock "Now Playing" widget of the Control Centre. This includes artwork, track title, and so forth.
  *
- * Also provided is a few utility functions, such as:
+ * Also provided are a few utility functions, such as:
  * - "Seeking" within the current track
  * - Changing play/pause state
- * - Skip forward or backwards between tracks
+ * - Skipping forward or backwards between tracks
  *
  * You can register for an update timer, which notifies your code when the `elapsed` time of the current track changes.
  */
@@ -120,6 +129,11 @@ export default class Media extends Base implements MediaProperties {
 
     private volumeSetDebouncer: any = null;
     private seekDebouncer: any = null;
+    private elapsedTimeObservers = [];
+
+    // Elapsed time handling
+    private elapsedInterval: any = null;
+    private elapsedTimeSeed: number = 0;
 
     // NOTE: Don't rely on native layer to push through elapsed time
     // It'll come through on pause/play etc, but need to manually run a timer here to update
@@ -174,6 +188,11 @@ export default class Media extends Base implements MediaProperties {
      */
     nowPlayingApplication: ApplicationMetadata;
 
+    /**
+     * @ignore
+     */
+    _elapsedChangedTime: number;
+
     // Replicate here for documentation purposes
     /**
      * Register a function that gets called whenever the data of this
@@ -185,6 +204,24 @@ export default class Media extends Base implements MediaProperties {
      */
     public observeData(callback: (newData: MediaProperties) => void) {
         super.observeData(callback);
+    }
+
+    /**
+     * Register a function that gets called whenever elapsed time of the current track changes.
+     *
+     * This automatically handles pause/play for you.
+     *
+     * The current elapsed time (in seconds) is provided as the parameter to your callback function.
+     *
+     * @param callback A callback that is notified whenever the elapsed time changes. You can expect it to be called once a second when media is playing.
+     *
+     * @example
+     * api.media.observeElapsedTime(function(newElapsedTime) {
+     *              // Update UI with new elapsed time value
+     * });
+     */
+    public observeElapsedTime(callback: (elapsedTime: number) => void) {
+        this.elapsedTimeObservers.push(callback);
     }
 
     /////////////////////////////////////////////////////////
@@ -450,5 +487,99 @@ export default class Media extends Base implements MediaProperties {
                 resolve(newState);
             });
         });
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////
+    // Internal API
+    //////////////////////////////////////////////////////////////////////////////////////////
+
+    private clearElapsedInterval() {
+        if (this.elapsedInterval) {
+            clearInterval(this.elapsedInterval);
+        }
+    }
+
+    private restartElapsedInterval() {
+        this.clearElapsedInterval();
+
+        // No point running the interval if length is <= 0
+        if (this.nowPlaying.length <= 0) {
+            return;
+        }
+
+        this.elapsedTimeSeed = this.nowPlaying.elapsed;
+
+        this.elapsedInterval = setInterval(() => {
+            // Calculate elapsed interval based on the seed and observation time.
+            const observationDifference = Date.now() - this._elapsedChangedTime;
+
+            let newValue = Math.ceil(this.elapsedTimeSeed + (observationDifference / 1000));
+
+            // Cap at track length if required
+            if (newValue > this.nowPlaying.length) newValue = this.nowPlaying.length;
+
+            // Ignore duplicated updates
+            if (newValue === this.nowPlaying.elapsed) {
+                return;
+            }
+
+            this.nowPlaying.elapsed = newValue;
+
+            // Notify observers
+            this.elapsedTimeObservers.forEach((fn: (time: number) => void) => {
+                fn(this.nowPlaying.elapsed);
+            });
+        }, 100);
+    }
+
+    private stopElapsedInterval() {
+        this.clearElapsedInterval();
+    }
+
+    // Overridden for elapsed timer handling
+    /**
+     * @ignore
+     */
+    _setData(payload: MediaProperties) {
+        super._setData(payload);
+
+        if (!payload.isPlaying || payload.isStopped) {
+            // Stop the updater since we are now paused or stopped
+            this.stopElapsedInterval();
+        } else {
+            // Restart for new playing state
+            this.restartElapsedInterval();
+        }
+    }
+
+    protected defaultData(): MediaProperties {
+        return {
+            _elapsedChangedTime: 0,
+            nowPlaying: {
+                id: '',
+                title: '',
+                artist: '',
+                album: '',
+                artwork: '',
+                composer: '',
+                genre: '',
+                length: 0,
+                elapsed: 0,
+                number: 0,
+            },
+            queue: [],
+            isPlaying: false,
+            isStopped: true,
+            isShuffleEnabled: false,
+            volume: 0,
+            nowPlayingApplication: {
+                name: '',
+                identifier: '',
+                icon: '',
+                badge: '',
+                isInstalling: false,
+                isSystemApplication: false
+            }
+        };
     }
 }

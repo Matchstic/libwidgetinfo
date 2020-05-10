@@ -30,6 +30,8 @@ int proc_pidpath(int pid, void *buffer, uint32_t buffersize);
 @interface XENDMediaRemoteDataProvider ()
 @property (nonatomic, strong) dispatch_queue_t updateQueue;
 @property (nonatomic, strong) NSDictionary *artworkCache;
+@property (nonatomic, readwrite) int updateRequestId;
+@property (nonatomic, readwrite) long long lastElapsedTimeObservation;
 @end
 
 @implementation XENDMediaRemoteDataProvider
@@ -143,7 +145,9 @@ int proc_pidpath(int pid, void *buffer, uint32_t buffersize);
 #pragma mark - MediaRemote.framework notifications
 
 - (void)intialiseProvider {
+    self.updateRequestId = 0;
     self.updateQueue = dispatch_queue_create("com.matchstic.widgetinfo/media", NULL);
+    self.lastElapsedTimeObservation = 0;
     
     // Setup media notifications
     MRMediaRemoteRegisterForNowPlayingNotifications(dispatch_get_main_queue());
@@ -155,20 +159,6 @@ int proc_pidpath(int pid, void *buffer, uint32_t buffersize);
         name:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoDidChangeNotification
         object:nil];
     
-    // Appears to be necessary alongside the now playing info notification
-    [[NSNotificationCenter defaultCenter]
-        addObserver:self
-        selector:@selector(onNowPlayingDataChanged:)
-        name:(__bridge NSString*)kMRPlaybackQueueContentItemsChangedNotification
-        object:nil];
-    
-    [[NSNotificationCenter defaultCenter]
-        addObserver:self
-        selector:@selector(onNowPlayingDataChanged:)
-        name:(__bridge NSString*)kMRMediaRemoteNowPlayingApplicationClientStateDidChange
-        object:nil];
-    
-    // CHECKME: Could just use this instead of content items?
     [[NSNotificationCenter defaultCenter]
         addObserver:self
         selector:@selector(onNowPlayingDataChanged:)
@@ -177,50 +167,83 @@ int proc_pidpath(int pid, void *buffer, uint32_t buffersize);
     
     [[NSNotificationCenter defaultCenter]
         addObserver:self
-        selector:@selector(onNowPlayingApplicationIsPlayingChanged:)
+        selector:@selector(onNowPlayingDataChanged:)
+        name:(__bridge NSString*)kMRMediaRemoteNowPlayingApplicationClientStateDidChange
+        object:nil];
+    
+    [[NSNotificationCenter defaultCenter]
+        addObserver:self
+        selector:@selector(onNowPlayingDataChanged:)
         name:(__bridge NSString*)kMRMediaRemoteNowPlayingApplicationIsPlayingDidChangeNotification
         object:nil];
     
     // Monitor volume state - also handles when the user changes volume via hardware keys
     [[NSNotificationCenter defaultCenter]
         addObserver:self
-        selector:@selector(onOutputVolumeChanged:)
+        selector:@selector(onNowPlayingDataChanged:)
         name:@"AVSystemController_EffectiveVolumeDidChangeNotification"
         object:nil];
     
     // Setup initial data
     [self onNowPlayingDataChanged:nil];
-    [self onNowPlayingApplicationIsPlayingChanged:nil];
-    [self onOutputVolumeChanged:nil];
 }
 
 - (void)onNowPlayingDataChanged:(NSNotification*)notification {
+    /*
+     All possible data checks are done in this single callback.
+     
+     This is to ensure that incremental changes don't cause havoc with e.g. the elapsed time, and also
+     aggregates all updates together to avoid large amounts of IPC traffic.
+     
+     The downside of course is that MR* functions are called in a higher frequency, which is NOT ideal.
+     */
+    __block int updateRequestId = self.updateRequestId + 1;
+    self.updateRequestId = updateRequestId;
+    
+    __block NSMutableDictionary *nowPlayingTrack = nil;
+    __block NSMutableDictionary *artworkCache = [NSMutableDictionary dictionary];
+    __block NSDictionary *nowPlayingApplication = nil;
+    __block BOOL isStopped = NO;
+    __block BOOL isPlaying = NO;
+    __block int adjustedVolume = 0;
+    __block long long elapsedChangedTime = self.lastElapsedTimeObservation;
+    
+    dispatch_group_t serviceGroup = dispatch_group_create();
+
+    // Now playing data
+    dispatch_group_enter(serviceGroup);
     MRMediaRemoteGetNowPlayingInfo(self.updateQueue,
                                    ^(CFDictionaryRef info) {
         
         NSDictionary *data = (__bridge NSDictionary*)info;
-        
-        __block NSMutableDictionary *nowPlayingTrack = nil;
-        __block NSMutableDictionary *artworkCache = [NSMutableDictionary dictionary];
-        __block NSDictionary *nowPlayingApplication = nil;
-        
-        void (^finalise)(BOOL) = ^(BOOL isStopped) {
-            self.artworkCache = artworkCache;
-            [self.cachedDynamicProperties setObject:nowPlayingTrack forKey:@"nowPlaying"];
-            [self.cachedDynamicProperties setObject:nowPlayingApplication forKey:@"nowPlayingApplication"];
-            [self.cachedDynamicProperties setObject:@(isStopped) forKey:@"isStopped"];
-            
-            [self notifyRemoteForNewDynamicProperties];
-        };
         
         if (data) {
             NSString *contentIdentifier = [data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoUniqueIdentifier defaultValue:nil];
             
             if (!contentIdentifier) {
                 XENDLog(@"ERROR :: Media is missing a unique ID");
+                
+                // Exit dispatch group
+                dispatch_group_leave(serviceGroup);
                 return;
             }
             
+            // Get observation time
+            struct timeval tv;
+
+            gettimeofday(&tv, NULL);
+            long long observationTime = (((long long)tv.tv_sec) * 1000) + (tv.tv_usec / 1000);
+            
+            // Figure out the elapsed timestamp
+            // This is used by the JS layer to figure out the current elapsed time.
+            NSNumber *currentElapsedTime = [[self.cachedDynamicProperties objectForKey:@"nowPlaying"] objectForKey:@"elapsed"];
+            if (![currentElapsedTime isEqualToNumber:[data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoElapsedTime defaultValue:@0]]) {
+                
+                // Values have changed, so update observation time
+                elapsedChangedTime = observationTime;
+                self.lastElapsedTimeObservation = observationTime;
+            }
+                
             // Do flat namespace stuff first
             nowPlayingTrack = [@{
                 @"id": contentIdentifier,
@@ -272,7 +295,10 @@ int proc_pidpath(int pid, void *buffer, uint32_t buffersize);
             
             nowPlayingApplication = [[XENDApplicationsManager sharedInstance] metadataForApplication:bundleIdentifier];
             
-            finalise(NO);
+            isStopped = NO;
+            
+            // Exit dispatch group
+            dispatch_group_leave(serviceGroup);
         } else {
             // Lookup application via its PID
             MRMediaRemoteGetNowPlayingApplicationPID(self.updateQueue,
@@ -284,32 +310,38 @@ int proc_pidpath(int pid, void *buffer, uint32_t buffersize);
                     [nowPlayingTrack setObject:[nowPlayingApplication objectForKey:@"name"] forKey:@"title"];
                     [nowPlayingTrack setObject:[nowPlayingApplication objectForKey:@"icon"] forKey:@"artwork"];
                     
-                    finalise(NO);
+                    isStopped = NO;
+                    
+                    // Exit dispatch group
+                    dispatch_group_leave(serviceGroup);
                 } else {
                     XENDLog(@"*** No now playing application");
                     
                     nowPlayingApplication = [[XENDApplicationsManager sharedInstance] metadataForApplication:@""];
                     
-                    finalise(YES);
+                    isStopped = YES;
+                    
+                    // Exit dispatch group
+                    dispatch_group_leave(serviceGroup);
                 }
             });
         }
     });
-}
-
-- (void)onNowPlayingApplicationIsPlayingChanged:(NSNotification*)notification {
+    
+    // Playback state
+    dispatch_group_enter(serviceGroup);
     MRMediaRemoteGetNowPlayingApplicationIsPlaying(self.updateQueue,
                                                    ^(Boolean playing) {
-        BOOL isPlaying = (BOOL)playing;
+        isPlaying = (BOOL)playing;
         
         XENDLog(@"Is playing changed: %d", isPlaying);
         
-        [self.cachedDynamicProperties setObject:@(isPlaying) forKey:@"isPlaying"];
-        [self notifyRemoteForNewDynamicProperties];
+        // Exit dispatch group
+        dispatch_group_leave(serviceGroup);
     });
-}
-
-- (void)onOutputVolumeChanged:(NSNotification*)notification {
+    
+    // Volume state
+    dispatch_group_enter(serviceGroup);
     dispatch_async(self.updateQueue, ^{
         float vol;
         [[objc_getClass("AVSystemController") sharedAVSystemController] getVolume:&vol forCategory:@"Audio/Video"];
@@ -318,7 +350,27 @@ int proc_pidpath(int pid, void *buffer, uint32_t buffersize);
         
         XENDLog(@"Volume changed: %d%%", adjustedVolume);
         
+        // Exit dispatch group
+        dispatch_group_leave(serviceGroup);
+    });
+    
+    dispatch_group_notify(serviceGroup, self.updateQueue, ^{
+        // Ensure a newer update hasn't started after us
+        if (self.updateRequestId != updateRequestId) {
+            XENDLog(@"DEBUG :: Dropping update request with ID: %d", updateRequestId);
+            return;
+        } else {
+            XENDLog(@"DEBUG :: Allowing update request with ID: %d", updateRequestId);
+        }
+        
+        self.artworkCache = artworkCache;
+        [self.cachedDynamicProperties setObject:nowPlayingTrack forKey:@"nowPlaying"];
+        [self.cachedDynamicProperties setObject:nowPlayingApplication forKey:@"nowPlayingApplication"];
+        [self.cachedDynamicProperties setObject:@(isStopped) forKey:@"isStopped"];
+        [self.cachedDynamicProperties setObject:@(isPlaying) forKey:@"isPlaying"];
         [self.cachedDynamicProperties setObject:@(adjustedVolume) forKey:@"volume"];
+        [self.cachedDynamicProperties setObject:@(elapsedChangedTime) forKey:@"_elapsedChangedTime"];
+        
         [self notifyRemoteForNewDynamicProperties];
     });
 }
