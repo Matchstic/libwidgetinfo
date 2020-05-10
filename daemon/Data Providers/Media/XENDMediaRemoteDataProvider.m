@@ -27,12 +27,20 @@
 // libproc.h does not exist for iOS
 int proc_pidpath(int pid, void *buffer, uint32_t buffersize);
 
+static XENDMediaRemoteDataProvider *internalSharedInstance;
+
 @interface XENDMediaRemoteDataProvider ()
 @property (nonatomic, strong) dispatch_queue_t updateQueue;
 @property (nonatomic, strong) NSDictionary *artworkCache;
 @property (nonatomic, readwrite) int updateRequestId;
 @property (nonatomic, readwrite) long long lastElapsedTimeObservation;
+
+- (void)springboardRelaunched;
 @end
+
+static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef info) {
+    [internalSharedInstance springboardRelaunched];
+}
 
 @implementation XENDMediaRemoteDataProvider
 
@@ -149,10 +157,11 @@ int proc_pidpath(int pid, void *buffer, uint32_t buffersize);
     self.updateQueue = dispatch_queue_create("com.matchstic.widgetinfo/media", NULL);
     self.lastElapsedTimeObservation = 0;
     
+    internalSharedInstance = self;
+    
     // Setup media notifications
     MRMediaRemoteRegisterForNowPlayingNotifications(dispatch_get_main_queue());
     
-    // CHECKME: Appears to be more of a legacy notification
     [[NSNotificationCenter defaultCenter]
         addObserver:self
         selector:@selector(onNowPlayingDataChanged:)
@@ -184,18 +193,21 @@ int proc_pidpath(int pid, void *buffer, uint32_t buffersize);
         name:@"AVSystemController_EffectiveVolumeDidChangeNotification"
         object:nil];
     
+    // Clear cache on SpringBoard launch
+    CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, &onSpringBoardLaunch, CFSTR("SBSpringBoardDidLaunchNotification"), NULL, 0);
+    
     // Setup initial data
     [self onNowPlayingDataChanged:nil];
 }
 
 - (void)onNowPlayingDataChanged:(NSNotification*)notification {
     /*
-     All possible data checks are done in this single callback.
-     
-     This is to ensure that incremental changes don't cause havoc with e.g. the elapsed time, and also
-     aggregates all updates together to avoid large amounts of IPC traffic.
-     
-     The downside of course is that MR* functions are called in a higher frequency, which is NOT ideal.
+     * All possible data checks are done in this single callback.
+     *
+     * This is to ensure that incremental changes don't cause havoc with e.g. the elapsed time, and also
+     * aggregates updates together to avoid large amounts of IPC traffic.
+     *
+     * The downside of course is that MR* functions are called in a higher frequency, which is NOT ideal.
      */
     __block int updateRequestId = self.updateRequestId + 1;
     self.updateRequestId = updateRequestId;
@@ -373,6 +385,33 @@ int proc_pidpath(int pid, void *buffer, uint32_t buffersize);
         
         [self notifyRemoteForNewDynamicProperties];
     });
+}
+
+- (void)springboardRelaunched {
+    // SpringBoard causes any now playing app to be killed on a fresh startup. So, we should clear OUR internal data
+    // too as a result.
+    
+    self.cachedDynamicProperties = [@{
+        @"nowPlaying": @{
+            @"id": @"",
+            @"title": @"",
+            @"artist": @"",
+            @"album": @"",
+            @"artwork": @"",
+            @"composer": @"",
+            @"genre": @"",
+            @"length": @0,
+            @"elapsed": @0,
+            @"number": @0,
+        },
+        @"nowPlayingApplication": [[XENDApplicationsManager sharedInstance] metadataForApplication:@""],
+        @"isPlaying": @NO,
+        @"isStopped": @YES,
+        @"volume": @0,
+        @"_elapsedChangedTime": @0
+    } mutableCopy];
+    
+    [self notifyRemoteForNewDynamicProperties];
 }
 
 - (NSString*)bundleIdentifierForPID:(int)pid {
