@@ -7,8 +7,14 @@
 
 #import "XENDApplicationsManager.h"
 #import "PrivateHeaders.h"
+#import <dlfcn.h>
 
 @implementation XENDApplicationsManager
+
++ (void)load {
+    // For icon loading
+    dlopen("/System/Library/PrivateFrameworks/IconServices.framework/IconServices", RTLD_NOW);
+}
 
 + (instancetype)sharedInstance {
     static XENDApplicationsManager *sharedInstance = nil;
@@ -25,7 +31,25 @@
     LSApplicationProxy *proxy = [LSApplicationProxy applicationProxyForIdentifier:bundleIdentifier];
     if (!proxy || !bundleIdentifier || [bundleIdentifier isEqualToString:@""]) return nil;
     
-    return [proxy iconDataForVariant:1];
+    NSDictionary *icons = [proxy iconsDictionary];
+    NSString *iconFileName = [[[icons objectForKey:@"CFBundlePrimaryIcon"] objectForKey:@"CFBundleIconFiles"] lastObject];
+    
+    // Seems to be off by one... Needs validation
+    NSNumber *screenScale = (__bridge NSNumber*)MGCopyAnswer(CFSTR("main-screen-scale"));
+    NSLog(@"SCREEN SCALE: %@", screenScale);
+    
+    NSString *suffix = @"";
+    if ([screenScale intValue] > 1) {
+        suffix = [NSString stringWithFormat:@"@%dx", [screenScale intValue] - 1];
+    }
+    
+    NSString *path = [NSString stringWithFormat:@"%@/%@%@.png", [proxy.bundleURL path], iconFileName, suffix];
+    
+    // Load image data
+    NSLog(@"Loading from %@", path);
+    
+    // TODO: Apply mask image - See MobileIcons.framework on disk for the mask image PNG
+    return [NSData dataWithContentsOfFile:path];
 }
 
 - (NSDictionary*)metadataForApplication:(NSString*)bundleIdentifier {

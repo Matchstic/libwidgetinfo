@@ -24,20 +24,34 @@
     
     // Redirect loading of the artwork file to media provider.
     // it is ALWAYS the now playing artwork
-    
+
     XENDMediaDataProvider *media = (XENDMediaDataProvider*)[[XENDWidgetManager sharedInstance] providerForNamespace:@"media"];
+    XENDApplicationsDataProvider *apps = (XENDApplicationsDataProvider*)[[XENDWidgetManager sharedInstance] providerForNamespace:@"applications"];
+    
     NSDictionary *cachedData = [media cachedData];
     
     NSDictionary *nowPlaying = [cachedData objectForKey:@"nowPlaying"];
     NSString *artwork = [nowPlaying objectForKey:@"artwork"];
     
-    NSString *artworkIdentifier = [artwork lastPathComponent];
-    [media requestArtworkForIdentifier:artworkIdentifier callback:^(NSDictionary *result) {
-        NSData *data = [result objectForKey:@"data"];
-        if ([data isKindOfClass:[NSNull class]]) data = nil;
-        
-        completionHandler(nil, data, @"image/jpeg");
-    }];
+    BOOL isApplicationIcon = [artwork hasPrefix:@"xui://application"];
+    
+    NSString *identifier = [artwork lastPathComponent];
+    
+    if (isApplicationIcon) {
+        [apps requestIconDataForBundleIdentifier:identifier callback:^(NSDictionary *result) {
+            NSData *data = [result objectForKey:@"data"];
+            if ([data isKindOfClass:[NSNull class]]) data = nil;
+            
+            completionHandler(nil, data, @"image/png");
+        }];
+    } else {
+        [media requestArtworkForIdentifier:identifier callback:^(NSDictionary *result) {
+            NSData *data = [result objectForKey:@"data"];
+            if ([data isKindOfClass:[NSNull class]]) data = nil;
+            
+            completionHandler(nil, data, @"image/jpeg");
+        }];
+    }
 }
 
 // Legacy compatibility

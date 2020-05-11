@@ -55,8 +55,6 @@ static NSString *libraryResourceBasePath = @"/opt/simject/Library/Application Su
     } else {
         completionHandler(nil, nil, nil);
     }
-    
-    
 }
 
 - (NSData*)loadLibraryFileAtPath:(NSString*)path mimetype:(NSString**)mimetype {

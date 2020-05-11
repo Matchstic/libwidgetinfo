@@ -8,6 +8,8 @@
 #ifndef PrivateHeaders_h
 #define PrivateHeaders_h
 
+CFPropertyListRef MGCopyAnswer(CFStringRef property);
+
 @interface LSApplicationProxy : NSObject
 
 @property (nonatomic, readonly) NSNumber *ODRDiskUsage;
@@ -104,6 +106,7 @@
 - (void)setPrivateDocumentIconNames:(id)arg1;
 - (void)setPrivateDocumentTypeOwner:(id)arg1;
 - (void)setUserInitiatedUninstall:(bool)arg1;
+- (NSDictionary *)iconsDictionary;
 
 @end
 
