@@ -2,15 +2,16 @@ import Weather, {
     WeatherProperties
 } from '../data/weather';
 
+import IS2Base from './base';
+
 /**
  * @ignore
  */
-export default class IS2Weather {
-    private _observers: any = {};
-    private _lookupMap: any = {};
+export default class IS2Weather extends IS2Base {
     private provider: Weather;
 
     constructor() {
+        super();
         // Map ObjC selectors to JS functions
 
         // System stuff
@@ -64,22 +65,10 @@ export default class IS2Weather {
 
         this.provider.observeData((newData: WeatherProperties) => {
             // Update observers so that they fetch new data
-            Object.keys(this._observers).forEach((key: string) => {
-                const fn = this._observers[key];
-
-                if (fn)
-                    fn();
-            });
+            this.notifyObservers();
         });
-    }
 
-    public callFn(identifier: string, args: any[]) {
-        const fn = this._lookupMap[identifier];
-        if (fn) {
-            return fn(args);
-        } else {
-            return undefined;
-        }
+        this.notifyObservers();
     }
 
     private localeTimeString(date: Date): string {

@@ -1,15 +1,17 @@
 import System from '../data/system';
 import Resources from '../data/resources';
 
+import IS2Base from './base';
+
 /**
  * @ignore
  */
-export default class IS2System {
-    private _lookupMap: any = {};
+export default class IS2System extends IS2Base {
     private systemProvider: System;
     private resourcesProvider: Resources;
 
     constructor() {
+        super();
         // Map ObjC selectors to JS functions
 
         this._lookupMap['batteryPercent']               = () => { return this.resourcesProvider.battery.percentage };
@@ -65,14 +67,5 @@ export default class IS2System {
     public initialise(systemProvider: System, resourcesProvider: Resources) {
         this.systemProvider = systemProvider;
         this.resourcesProvider = resourcesProvider;
-    }
-
-    public callFn(identifier: string, args: any[]) {
-        const fn = this._lookupMap[identifier];
-        if (fn) {
-            return fn(args);
-        } else {
-            return undefined;
-        }
     }
 }

@@ -2,15 +2,16 @@ import Calendar, {
     CalendarProperties
 } from '../data/calendar';
 
+import IS2Base from './base';
+
 /**
  * @ignore
  */
-export default class IS2Calendar {
-    private _observers: any = {};
-    private _lookupMap: any = {};
+export default class IS2Calendar extends IS2Base {
     private provider: Calendar;
 
     constructor() {
+        super();
         // Map ObjC selectors to JS functions
 
         // System stuff
@@ -33,21 +34,7 @@ export default class IS2Calendar {
 
         this.provider.observeData((newData: CalendarProperties) => {
             // Update observers so that they fetch new data
-            Object.keys(this._observers).forEach((key: string) => {
-                const fn = this._observers[key];
-
-                if (fn)
-                    fn();
-            });
+            this.notifyObservers();
         });
-    }
-
-    public callFn(identifier: string, args: any[]) {
-        const fn = this._lookupMap[identifier];
-        if (fn) {
-            return fn(args);
-        } else {
-            return undefined;
-        }
     }
 }

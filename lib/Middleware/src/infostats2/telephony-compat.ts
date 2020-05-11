@@ -1,10 +1,11 @@
+import IS2Base from './base';
+
 /**
  * @ignore
  */
-export default class IS2Telephony {
-    private _lookupMap: any = {};
-
+export default class IS2Telephony extends IS2Base {
     constructor() {
+        super();
         // Map ObjC selectors to JS functions
 
         this._lookupMap['phoneSignalBars']                  = () => { /* not implemented */ return 0; };
@@ -20,14 +21,5 @@ export default class IS2Telephony {
 
     public initialise() {
         // no-op
-    }
-
-    public callFn(identifier: string, args: any[]) {
-        const fn = this._lookupMap[identifier];
-        if (fn) {
-            return fn(args);
-        } else {
-            return undefined;
-        }
     }
 }
