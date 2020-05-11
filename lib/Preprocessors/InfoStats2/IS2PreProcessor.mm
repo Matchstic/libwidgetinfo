@@ -32,7 +32,7 @@
     if (!isCycriptType) return contents;
     
     // Compile cycript to ES5
-    std::string result = Compile([contents cStringUsingEncoding:NSUTF8StringEncoding], true, false);
+    std::string result = Compile([contents cStringUsingEncoding:NSUTF8StringEncoding], false, false);
     NSString *output = [NSString stringWithUTF8String:result.c_str()];
     
     // Sort out objc_msgSend
