@@ -41,7 +41,7 @@ export default class IS2Location extends IS2Base {
         this._lookupMap['ISOCountryCodeForCurrentLocation'] = () => { return this.provider.metadata.address.countryISOCode; };
         this._lookupMap['postCodeForCurrentLocation']       = () => { return this.provider.metadata.address.postalCode; };
         this._lookupMap['streetForCurrentLocation']         = () => { return this.provider.metadata.address.street; };
-        this._lookupMap['houseNumberForCurrentLocation ']   = () => { return this.provider.metadata.address.house; };
+        this._lookupMap['houseNumberForCurrentLocation']    = () => { return this.provider.metadata.address.house; };
     }
 
     public initialise(provider: Weather) {
