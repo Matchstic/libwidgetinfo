@@ -28,5 +28,13 @@ export default class XenInfoMedia {
         (window as any).album = data.nowPlaying.album;
         (window as any).title = data.nowPlaying.title;
         (window as any).isplaying = data.isPlaying;
+
+        // Why the hell weren't these documented for XI?!
+
+        (window as any).musicBundle = data.nowPlayingApplication.identifier;
+        (window as any).currentDuration = data.nowPlaying.length;
+        (window as any).currentElapsedTime = data.nowPlaying.elapsed;
+        (window as any).shuffleEnabled = false;
+        (window as any).repeatEnabled = false;
     }
 }
