@@ -8,7 +8,6 @@
 #ifndef AVFoundation_h
 #define AVFoundation_h
 
-
 @interface AVSystemController : NSObject
 
 +(id)sharedAVSystemController;
