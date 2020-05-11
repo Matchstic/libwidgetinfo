@@ -149,6 +149,13 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
     };
 }
 
+- (BOOL)_validate:(const char*)symbol {
+    void *handle = dlopen("/System/Library/PrivateFrameworks/MediaRemote.framework/MediaRemote", RTLD_LAZY);
+    void *resolved = dlsym(handle, symbol);
+    
+    return resolved != NULL;
+}
+
 #pragma mark - MediaRemote.framework notifications
 
 - (void)intialiseProvider {
@@ -157,6 +164,16 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
     self.lastElapsedTimeObservation = 0;
     
     internalSharedInstance = self;
+    
+    // Validate that all of the symbols used are actually available.
+    if (![self _validate:"MRMediaRemoteRegisterForNowPlayingNotifications"] ||
+        ![self _validate:"MRMediaRemoteGetNowPlayingInfo"] ||
+        ![self _validate:"MRMediaRemoteGetNowPlayingInfo"] ||
+        ![self _validate:"MRMediaRemoteGetNowPlayingApplicationPID"]) {
+    
+        XENDLog(@"*** ERROR: Media provider is missing required symbols, refusing to load");
+        return;
+    }
     
     // Setup media notifications
     MRMediaRemoteRegisterForNowPlayingNotifications(dispatch_get_main_queue());
@@ -446,9 +463,9 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
 
 @end
 
-#pragma mark - Notes
+#pragma mark - Example MediaRemote output
 
-/* Example now playing data (music app):
+/* Now playing data (music app):
  {
      kMRMediaRemoteNowPlayingInfoAlbum = "That's the Spirit";
      kMRMediaRemoteNowPlayingInfoAlbumiTunesStoreAdamIdentifier = 1021582747;
@@ -485,14 +502,14 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
          cntrUID = 1;
          libEligible = 1;
          rdwn = 1;
-         sfid = "143444-2,29";
+         sfid = "000000-0,00";
      };
      kMRMediaRemoteNowPlayingInfoiTunesStoreIdentifier = 1021582759;
      kMRMediaRemoteNowPlayingInfoiTunesStoreSubscriptionAdamIdentifier = 1021582759;
  }
  */
 
-/* Example data from random mp3 on Safari:
+/* Random mp3 on Safari:
  Artwork is shown as the app icon
  {
      kMRMediaRemoteNowPlayingInfoClientPropertiesData = {length = 69, bytes = 0x08997d12 1b636f6d 2e617070 6c652e57 ... 3a065361 66617269 };
@@ -506,15 +523,11 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
  }
  */
 
-// Now playing data changed is NOT called for every "elapsed" update; only for when pause/play/item changes.
-// In TS layer, need to do a timer per second that internally handles this
-
-// MRMediaRemoteGetNowPlayingPlaybackQueue ?
-// MRNowPlayingStateGetPlaybackQueue
-
-// Swap to using our own serial dispatch queue. This enforces write ordering on the dynamic properties, and so can remove the lock
+#pragma mark - Notes
 
 // Also request the now playing queue.
+// MRMediaRemoteGetNowPlayingPlaybackQueue ?
+// MRNowPlayingStateGetPlaybackQueue
 // GONE in iOS 11+
 /*MRMediaRemoteGetNowPlayingPlaybackQueue(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
                                         ^(CFDictionaryRef info) {
