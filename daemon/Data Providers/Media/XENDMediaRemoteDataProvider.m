@@ -252,7 +252,13 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
         NSDictionary *data = (__bridge NSDictionary*)info;
         
         if (data) {
-            NSString *contentIdentifier = [data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoUniqueIdentifier defaultValue:nil];
+            // iOS 11+ -> kMRMediaRemoteNowPlayingInfoContentItemIdentifier
+            // iOS 10 -> kMRMediaRemoteNowPlayingInfoUniqueIdentifier
+                        
+            NSString *contentIdentifier = [data objectForKey:@"kMRMediaRemoteNowPlayingInfoContentItemIdentifier" defaultValue:nil];
+            if (!contentIdentifier) {
+                contentIdentifier = [data objectForKey:@"kMRMediaRemoteNowPlayingInfoUniqueIdentifier" defaultValue:nil];
+            }
             
             if (!contentIdentifier) {
                 XENDLog(@"ERROR :: Media is missing a unique ID");
@@ -294,8 +300,19 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
             // Artwork, if available
             currentArtwork = [data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoArtworkData];
             if (currentArtwork && currentArtwork.length > 0) {
-                // Add the observation time as a cache buster
-                [nowPlayingTrack setObject:[NSString stringWithFormat:@"xui://media/artwork/current?_c=%llu", observationTime] forKey:@"artwork"];
+                // Check if this artwork is the same as the previous
+                // This will prevent a lot of image loads from JS world
+                
+                if ([currentArtwork isEqualToData:self.currentArtwork]) {
+                    // Re-use the same URL
+                    NSDictionary *lastNowPlaying = [self.cachedDynamicProperties objectForKey:@"nowPlaying"];
+                    NSString *lastArtworkURL = [lastNowPlaying objectForKey:@"artwork"];
+                    
+                    [nowPlayingTrack setObject:lastArtworkURL forKey:@"artwork"];
+                } else {
+                    // Add the observation time as a cache buster
+                    [nowPlayingTrack setObject:[NSString stringWithFormat:@"xui://media/artwork/current?_c=%llu", observationTime] forKey:@"artwork"];
+                }
             } else {
                 [nowPlayingTrack setObject:@"" forKey:@"artwork"];
             }
