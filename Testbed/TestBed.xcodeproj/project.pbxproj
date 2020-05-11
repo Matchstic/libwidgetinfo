@@ -12,6 +12,8 @@
 		C9A5E9B02419523E00FCD778 /* libobjcipc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9A5E9AF2419523E00FCD778 /* libobjcipc.a */; };
 		C9B3511A2465A6C600E531E1 /* MediaRemote.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C9B351182465A6C600E531E1 /* MediaRemote.tbd */; };
 		C9B3D6FA245DCB41004D048E /* IOKit.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C9B3D6F7245DCAE2004D048E /* IOKit.tbd */; };
+		C9D0737D2469884A0072AEDB /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9D0737B2469884A0072AEDB /* MobileCoreServices.framework */; };
+		C9D0737F2469884E0072AEDB /* libMobileGestalt.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C9D0737E2469884E0072AEDB /* libMobileGestalt.tbd */; };
 		C9F2F2242301B8E300E4863B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C9F2F2232301B8E300E4863B /* AppDelegate.m */; };
 		C9F2F2272301B8E300E4863B /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9F2F2262301B8E300E4863B /* ViewController.m */; };
 		C9F2F22A2301B8E300E4863B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C9F2F2282301B8E300E4863B /* Main.storyboard */; };
@@ -78,6 +80,8 @@
 /* Begin PBXFileReference section */
 		C9B351182465A6C600E531E1 /* MediaRemote.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = MediaRemote.tbd; path = ../daemon/frameworks/MediaRemote.tbd; sourceTree = "<group>"; };
 		C9B3D6F7245DCAE2004D048E /* IOKit.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = IOKit.tbd; path = ../daemon/frameworks/IOKit.tbd; sourceTree = "<group>"; };
+		C9D0737B2469884A0072AEDB /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS13.2.sdk/System/Library/Frameworks/MobileCoreServices.framework; sourceTree = DEVELOPER_DIR; };
+		C9D0737E2469884E0072AEDB /* libMobileGestalt.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libMobileGestalt.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS13.2.sdk/usr/lib/libMobileGestalt.tbd; sourceTree = DEVELOPER_DIR; };
 		C9EF3F3B21D4F7F900611626 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
 		C9F2F2202301B8E300E4863B /* Testbed (iOS).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Testbed (iOS).app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9F2F2222301B8E300E4863B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -101,6 +105,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9D0737F2469884E0072AEDB /* libMobileGestalt.tbd in Frameworks */,
+				C9D0737D2469884A0072AEDB /* MobileCoreServices.framework in Frameworks */,
 				C9B3511A2465A6C600E531E1 /* MediaRemote.tbd in Frameworks */,
 				C9B3D6FA245DCB41004D048E /* IOKit.tbd in Frameworks */,
 				C97962AB24268E83007849D8 /* liblogger.a in Frameworks */,
@@ -136,6 +142,8 @@
 		C9EF3F3A21D4F7F900611626 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C9D0737E2469884E0072AEDB /* libMobileGestalt.tbd */,
+				C9D0737B2469884A0072AEDB /* MobileCoreServices.framework */,
 				C9B351182465A6C600E531E1 /* MediaRemote.tbd */,
 				C9B3D6F7245DCAE2004D048E /* IOKit.tbd */,
 				C9F2F4142301CB9C00E4863B /* WebKit.framework */,
