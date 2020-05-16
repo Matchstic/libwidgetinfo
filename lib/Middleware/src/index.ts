@@ -62,6 +62,10 @@ class XENDMiddleware extends NativeInterface {
 
                     return target;
                 },
+                fallback: (target: string, ...args) => {
+                    if (target.length === 0 || target === '') return args[0];
+                    else return target;
+                },
                 time: (target: Date) => {
                     try {
                         return target.toLocaleTimeString();
