@@ -25,6 +25,15 @@ This file is set out like a `package.json` file from NPM modules. For now, the f
     - The name of the widget, if different from the folder name
 - `author`
     - The author's name
+- `size`
+    - Specifies the width and height of your widget
+    - This can be in `"px"`, or percentage of the screen size
+    - Allowed keys:
+        - `width`: set as `"px"` or `"%"`
+        - `max-width`: set as `"px"`
+        - `height`: set as `"px"` or `"%"`
+        - `max-height`: set as `"px"`
+    - All default widgets include this field, which are useful as an example
 
 Your widget must be installed in any of the following Install Locations for this file to be read.
 

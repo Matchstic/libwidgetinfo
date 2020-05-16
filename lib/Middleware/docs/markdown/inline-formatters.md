@@ -82,3 +82,24 @@ Markup:
 Rendered:
 <div>06/04/2020</div>
 ```
+
+#### `fallback`
+
+Outputs the left value if it has a length of more than 0, otherwise outputs the parameter as a fallback value.
+
+Parameters:
+- **value**:
+    - A string to output if the left value is empty
+
+#### Example:
+
+```html
+Markup:
+<img xui-src="media.nowPlaying.artwork | fallback 'xui://resource/default/media/no-artwork.svg'" />
+
+Rendered (if media.nowPlaying.artwork has contents):
+<img src="xui://media/<whatever>" />
+
+Rendered (if media.nowPlaying.artwork has zero contents):
+<img src="xui://resource/default/media/no-artwork.svg" />
+```
