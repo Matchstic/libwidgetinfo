@@ -379,10 +379,15 @@ export default class Media extends Base implements MediaProperties {
                     value: time
                 }
             }, () => {
-                // TODO: Update internal elapsed time
 
             });
         }, 50);
+
+        // Stop elapsed timer, set new value, and await new API data
+        this.dropNextInterval = true;
+
+        this.stopElapsedInterval();
+        this.nowPlaying.elapsed = time;
     }
 
     /**
@@ -496,6 +501,7 @@ export default class Media extends Base implements MediaProperties {
     // Internal API
     //////////////////////////////////////////////////////////////////////////////////////////
 
+    private dropNextInterval: boolean = false;
     private clearElapsedInterval() {
         if (this.elapsedInterval) {
             clearInterval(this.elapsedInterval);
@@ -510,6 +516,8 @@ export default class Media extends Base implements MediaProperties {
             return;
         }
 
+        this.dropNextInterval = false;
+
         this.elapsedTimeSeed = this.nowPlaying.elapsed;
 
         this.elapsedInterval = setInterval(() => {
@@ -522,7 +530,7 @@ export default class Media extends Base implements MediaProperties {
             if (newValue > this.nowPlaying.length) newValue = this.nowPlaying.length;
 
             // Ignore duplicated updates
-            if (newValue === this.nowPlaying.elapsed) {
+            if (newValue === this.nowPlaying.elapsed || this.dropNextInterval) {
                 return;
             }
 
