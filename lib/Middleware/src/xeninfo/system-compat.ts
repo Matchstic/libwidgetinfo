@@ -17,6 +17,7 @@ export default class XenInfoSystem {
 
         // Do initial update
         this.onDataChanged(providers.get(DataProviderUpdateNamespace.System));
+        this.notifyXenInfoDataChanged('system');
     }
 
     onDataChanged(data: SystemProperties) {

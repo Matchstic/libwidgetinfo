@@ -114,6 +114,9 @@ class XENDMiddleware extends NativeInterface {
 
             // Setup tinybind now that the document has loaded and been parsed
             this.bindView = tinybind.bind(document.body, model);
+
+            // Initialise backwards compatibility before the initial call to onload
+            this.xeninfo.initialise(this, this.dataProviders);
         });
     }
 
@@ -130,7 +133,6 @@ class XENDMiddleware extends NativeInterface {
         // Setup backwards compatibility middlewares
         // This is post-load
         this.groovyAPI.initialise(this, this.dataProviders);
-        this.xeninfo.initialise(this, this.dataProviders);
     }
 
     public dataProviderInNamespace(namespace: DataProviderUpdateNamespace) {

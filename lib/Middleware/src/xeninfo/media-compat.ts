@@ -19,6 +19,7 @@ export default class XenInfoMedia {
 
         // Do initial update
         this.onDataChanged(providers.get(DataProviderUpdateNamespace.Media));
+        this.notifyXenInfoDataChanged('music');
     }
 
     onDataChanged(data: MediaProperties) {
