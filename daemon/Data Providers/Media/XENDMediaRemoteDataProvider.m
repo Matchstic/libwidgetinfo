@@ -223,6 +223,8 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
 }
 
 - (void)onNowPlayingDataChanged:(NSNotification*)notification {
+    XENDLog(@"onNowPlayingChanged with notification %@", notification.name);
+    
     /*
      * All possible data checks are done in this single callback.
      *
