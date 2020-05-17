@@ -103,7 +103,9 @@ static void powerSourceChanged(void *context) {
     if ([[internalBatteryData objectForKey:@kIOPSIsChargedKey] boolValue] ||
         [[internalBatteryData objectForKey:@kIOPSIsFinishingChargeKey] boolValue]) {
         chargingState = @2;
-    } else if ([[internalBatteryData objectForKey:@kIOPSIsChargingKey] boolValue]) {
+    // Rely on the "show charging key" for charging state.
+    // I presume this is false for Apple's battery case
+    } else if ([[internalBatteryData objectForKey:@kIOPSShowChargingUIKey] boolValue]) {
         chargingState = @1;
     }
     

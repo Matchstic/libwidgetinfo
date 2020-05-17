@@ -235,6 +235,14 @@
 #define kIOPSIsChargingKey             "Is Charging"
 
 /*!
+    @define kIOPSShowChargingUIKey
+    @abstract CFDictionary key for whether the charging UI should be displayed for the current power source
+        <br>Implementing this key is REQUIRED
+        <br>Type CFBoolean - kCFBooleanTrue or kCFBooleanFalse
+*/
+#define kIOPSShowChargingUIKey             "Show Charging UI"
+
+/*!
     @define kIOPSIsPresentKey
     @abstract CFDictionary key for the current power source's presence.
     <br>For instance, a PowerBook with the capacity for two batteries but
