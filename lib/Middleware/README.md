@@ -33,6 +33,12 @@ A number of other features and improvements are also made available through the 
 - [URL Scheme Handling](additional-documentation/url-scheme-handling.html)
     - Open URLs in Safari and deep link to installed apps
 
+### Example widgets
+
+A number of example widgets are available to use for learning the API, or simply to use on a daily basis.
+
+After installing Xen HTML, these can be found at `/var/mobile/Library/Universal`. More information can be found [here](additional-documentation/example-widgets.html)
+
 ### Backwards compatibility
 
 Backwards compatibility is provided to older widgets, allowing them to run on newer versions of iOS.
@@ -42,6 +48,7 @@ Support is available for widgets that need:
 - XenInfo
 - WidgetWeather
 - InfoStats 2 (and 1)
+- myLocation
 
 This works "by magic". There is no need to install anything else, or make any changes to widgets.
 

@@ -1,14 +1,41 @@
 import { Base, NativeError, DataProviderUpdateNamespace } from '../types';
 
 /**
- * @ignore
+ * Specifies a set of data about an application on the user's device.
  */
 export interface ApplicationMetadata {
+    /**
+     * The name of the application
+     */
     name: string;
+
+    /**
+     * The bundle identifier of the application, such as `"com.apple.mobilesafari"`
+     */
     identifier: string;
+
+    /**
+     * The URL to the application's icon.
+     *
+     * This is ready to be set as the `src` attribute of an `<img>` tag
+     */
     icon: string;
+
+    /**
+     * The current badge text for this application
+     */
     badge: string;
+
+    /**
+     * Specifies if this application is currently being installed
+     */
     isInstalling: boolean;
+
+    /**
+     * Specifies if this application is a system app (e.g., installed to `/Applications`).
+     *
+     * Any application installed from Cydia/Zebra/Sileo will have this set as `true`.
+     */
     isSystemApplication: boolean;
 }
 

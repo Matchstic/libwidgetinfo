@@ -217,7 +217,7 @@ export default class Media extends Base implements MediaProperties {
      *
      * @example
      * api.media.observeElapsedTime(function(newElapsedTime) {
-     *              // Update UI with new elapsed time value
+     *               // Update UI with new elapsed time value
      * });
      */
     public observeElapsedTime(callback: (elapsedTime: number) => void) {
@@ -232,7 +232,7 @@ export default class Media extends Base implements MediaProperties {
      * Toggles play/pause of the current media item.
      *
      * @example
-     * api.media.togglePlayState();
+     * api.media.togglePlayPause();
      */
     public togglePlayPause(): void {
         this.connection.sendNativeMessage({

@@ -32,5 +32,9 @@
     {
         "title": "URL Scheme Handling",
         "file": "url-schemes.md"
+    },
+    {
+        "title": "Example Widgets",
+        "file": "example-widgets.md"
     }
 ]
