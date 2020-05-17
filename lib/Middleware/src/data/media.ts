@@ -351,7 +351,7 @@ export default class Media extends Base implements MediaProperties {
                     value: level
                 }
             }, () => {});
-        }, 100);
+        }, 50);
     }
 
     /**
@@ -378,8 +378,11 @@ export default class Media extends Base implements MediaProperties {
                 data: {
                     value: time
                 }
-            }, () => {});
-        }, 100);
+            }, () => {
+                // TODO: Update internal elapsed time
+
+            });
+        }, 50);
     }
 
     /**
@@ -541,7 +544,17 @@ export default class Media extends Base implements MediaProperties {
      * @ignore
      */
     _setData(payload: MediaProperties) {
+        let seedChanged = true;
+
+        if (payload._elapsedChangedTime === this._elapsedChangedTime) {
+            // Time seed has not changed, so keep using the same elapsed time
+            seedChanged = false;
+            payload.nowPlaying.elapsed = this.nowPlaying.elapsed;
+        }
+
         super._setData(payload);
+
+        if (!seedChanged) return;
 
         if (!payload.isPlaying || payload.isStopped) {
             // Stop the updater since we are now paused or stopped
