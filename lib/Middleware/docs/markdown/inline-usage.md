@@ -57,16 +57,6 @@ Inserts the element as well as it's child nodes into the DOM when the value eval
 <section xui-if="weather.now.isValid"></section>
 ```
 
-#### `on-[event]`
-
-Binds an event listener on the element using the event specified in [event] and the bound object (should return a function) as the callback.
-
-If the end value of the binding changes to a different function, this binder will automatically unbind the old callback and bind a new listener to the new function.
-
-```html
-<button xui-on-click="media.togglePlayState">Pause</button>
-```
-
 #### `each-[item]`
 
 Appends a new instance of the element in place for each item in an array. Each element is bound in a scope with three special properties:
