@@ -562,12 +562,10 @@ export default class Media extends Base implements MediaProperties {
 
         super._setData(payload);
 
-        if (!seedChanged) return;
-
         if (!payload.isPlaying || payload.isStopped) {
             // Stop the updater since we are now paused or stopped
             this.stopElapsedInterval();
-        } else {
+        } else if (seedChanged) {
             // Restart for new playing state
             this.restartElapsedInterval();
         }
