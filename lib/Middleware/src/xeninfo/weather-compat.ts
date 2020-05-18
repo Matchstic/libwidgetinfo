@@ -34,6 +34,9 @@ export default class XenInfoWeather {
 
         // Do initial update
         this.onWeatherDataChanged(providers.get(DataProviderUpdateNamespace.Weather));
+    }
+
+    onFirstUpdate() {
         this.notifyXenInfoDataChanged('weather');
     }
 

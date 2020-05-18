@@ -27,6 +27,13 @@ export default class XenInfoMiddleware implements XenHTMLMiddleware {
         this.batteryCompat = new XenInfoBattery(this.providers, this.notifyXenInfoDataChanged);
         this.systemCompat = new XenInfoSystem(this.providers, this.notifyXenInfoDataChanged);
         this.mediaCompat = new XenInfoMedia(this.providers, this.notifyXenInfoDataChanged);
+
+        // Fire off first updates - ensures that if a widget uses data from another provider
+        // in the specified namespace, everything just *works*
+        this.weatherCompat.onFirstUpdate();
+        this.batteryCompat.onFirstUpdate();
+        this.systemCompat.onFirstUpdate();
+        this.mediaCompat.onFirstUpdate();
     }
 
     private requiresXenInfoCompat(): boolean {
