@@ -19,7 +19,6 @@
 #import <ObjectiveGumbo/ObjectiveGumbo.h>
 
 @interface XENDPreprocessorManager ()
-@property (nonatomic, strong) NSString *baseDocumentPath;
 @property (nonatomic, strong) NSArray* preprocessors;
 @end
 
@@ -55,7 +54,7 @@
 }
 
 - (NSString*)parseDocument:(NSString*)filepath {
-    self.baseDocumentPath = [filepath stringByDeletingLastPathComponent];
+    NSString *baseDocumentPath = [filepath stringByDeletingLastPathComponent];
     
     NSError *error;
     NSString *html = [NSString stringWithContentsOfFile:filepath encoding:NSUTF8StringEncoding error:&error];
@@ -73,12 +72,12 @@
     }
     
     // Parse all script sections
-    document = [self _parseNodes:document];
+    document = [self _parseNodes:document baseDocumentPath:baseDocumentPath];
     
     return [document html];
 }
 
-- (OGElement*)_parseNodes:(OGElement*)document {
+- (OGElement*)_parseNodes:(OGElement*)document baseDocumentPath:(NSString*)baseDocumentPath {
     // loop over head and body.
     NSArray *scriptNodes = [document elementsWithTag:GUMBO_TAG_SCRIPT];
     
@@ -99,7 +98,7 @@
         
         if (externalFileReference != nil) {
             // Handle reading from correct file
-            NSString *externalFilepath = [NSString stringWithFormat:@"%@/%@", self.baseDocumentPath, externalFileReference];
+            NSString *externalFilepath = [NSString stringWithFormat:@"%@/%@", baseDocumentPath, externalFileReference];
             
             NSLog(@"DEBUG :: Loading script src from %@", externalFilepath);
             
