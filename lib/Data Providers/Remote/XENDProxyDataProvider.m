@@ -60,7 +60,6 @@
 
 - (void)notifyUpdatedDynamicProperties:(NSDictionary*)dynamicProperties {
     if ([self.cachedDynamicProperties isEqualToDictionary:dynamicProperties]) {
-        XENDLog(@"DEBUG :: Not updating properties in namespace %@ because they haven't changed", [self _subclassNamespace]);
         return;
     }
     
@@ -72,7 +71,6 @@
 
 - (void)notifyUpdatedLocalProperties:(NSDictionary*)localProperties {
     if ([self.cachedLocalProperties isEqualToDictionary:localProperties]) {
-        XENDLog(@"DEBUG :: Not updating properties in namespace %@ because they haven't changed", [self _subclassNamespace]);
         return;
     }
     

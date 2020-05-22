@@ -236,157 +236,151 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
     __block int updateRequestId = self.updateRequestId + 1;
     self.updateRequestId = updateRequestId;
     
-    __block NSMutableDictionary *nowPlayingTrack = nil;
+    // Setup default data
+    __block NSMutableDictionary *nowPlayingTrack = [
+        @{
+            @"id": @"",
+            @"title": @"",
+            @"artist": @"",
+            @"album": @"",
+            @"artwork": @"",
+            @"composer": @"",
+            @"genre": @"",
+            @"length": @0,
+            @"elapsed": @0,
+            @"number": @0,
+        } mutableCopy];
     __block NSData *currentArtwork = nil;
-    __block NSDictionary *nowPlayingApplication = nil;
+    __block NSDictionary *nowPlayingApplication = [[XENDApplicationsManager sharedInstance] metadataForApplication:@""];;
     __block BOOL isStopped = NO;
     __block BOOL isPlaying = NO;
     __block int adjustedVolume = 0;
     __block long long elapsedChangedTime = self.lastElapsedTimeObservation;
     
+    // Get observation time
+    struct timeval tv;
+
+    gettimeofday(&tv, NULL);
+    long long observationTime = (((long long)tv.tv_sec) * 1000) + (tv.tv_usec / 1000);
+    
+    // Setup dispatch group
     dispatch_group_t serviceGroup = dispatch_group_create();
-
-    // Now playing data
+    
+    // Do PID first, then now playing info
     dispatch_group_enter(serviceGroup);
-    MRMediaRemoteGetNowPlayingInfo(self.updateQueue,
-                                   ^(CFDictionaryRef info) {
-        
-        NSDictionary *data = (__bridge NSDictionary*)info;
-        
-        if (data) {
-            // iOS 11+ -> kMRMediaRemoteNowPlayingInfoContentItemIdentifier
-            // iOS 10 -> kMRMediaRemoteNowPlayingInfoUniqueIdentifier
-                        
-            NSString *contentIdentifier = [data objectForKey:@"kMRMediaRemoteNowPlayingInfoContentItemIdentifier" defaultValue:nil];
-            if (!contentIdentifier) {
-                contentIdentifier = [data objectForKey:@"kMRMediaRemoteNowPlayingInfoUniqueIdentifier" defaultValue:nil];
-            }
-            
-            if (!contentIdentifier) {
-                XENDLog(@"ERROR :: Media is missing a unique ID");
-                
-                // Exit dispatch group
-                dispatch_group_leave(serviceGroup);
-                return;
-            }
-            
-            // Get observation time
-            struct timeval tv;
-
-            gettimeofday(&tv, NULL);
-            long long observationTime = (((long long)tv.tv_sec) * 1000) + (tv.tv_usec / 1000);
-            
-            // Figure out the elapsed timestamp
-            // This is used by the JS layer to figure out the current elapsed time.
-            NSNumber *currentElapsedTime = [[self.cachedDynamicProperties objectForKey:@"nowPlaying"] objectForKey:@"elapsed"];
-            BOOL playState = [[self.cachedDynamicProperties objectForKey:@"isPlaying"] boolValue];
-            BOOL stopState = [[self.cachedDynamicProperties objectForKey:@"isStopped"] boolValue];
-            
-            BOOL shouldUpdateElapsedTime = ![currentElapsedTime isEqualToNumber:[data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoElapsedTime defaultValue:@0]] || !playState || stopState;
-            
-            if (shouldUpdateElapsedTime) {
-                // Values have changed, so update observation time
-                elapsedChangedTime = observationTime;
-                self.lastElapsedTimeObservation = observationTime;
-            }
-                
-            // Do flat namespace stuff first
-            nowPlayingTrack = [@{
-                @"id": contentIdentifier,
-                @"title": [data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoTitle defaultValue:@""],
-                @"artist": [data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoArtist defaultValue:@""],
-                @"album": [data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoAlbum defaultValue:@""],
-                @"composer": [data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoComposer defaultValue:@""],
-                @"genre": [data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoGenre defaultValue:@""],
-                @"length": [data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoDuration defaultValue:@0],
-                @"elapsed": [data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoElapsedTime defaultValue:@0],
-                @"number": [data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoTrackNumber defaultValue:@0],
-            } mutableCopy];
-            
-            // Artwork, if available
-            currentArtwork = [data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoArtworkData];
-            if (currentArtwork && currentArtwork.length > 0) {
-                // Check if this artwork is the same as the previous
-                // This will prevent a lot of image loads from JS world
-                
-                if ([currentArtwork isEqualToData:self.currentArtwork]) {
-                    // Re-use the same URL
-                    NSDictionary *lastNowPlaying = [self.cachedDynamicProperties objectForKey:@"nowPlaying"];
-                    NSString *lastArtworkURL = [lastNowPlaying objectForKey:@"artwork"];
-                    
-                    [nowPlayingTrack setObject:lastArtworkURL forKey:@"artwork"];
-                } else {
-                    // Add the observation time as a cache buster
-                    [nowPlayingTrack setObject:[NSString stringWithFormat:@"xui://media/artwork/current?_c=%llu", observationTime] forKey:@"artwork"];
-                }
-            } else {
-                [nowPlayingTrack setObject:@"" forKey:@"artwork"];
-            }
-        } else {
-            nowPlayingTrack = [@{
-                @"id": @"",
-                @"title": @"",
-                @"artist": @"",
-                @"album": @"",
-                @"artwork": @"",
-                @"composer": @"",
-                @"genre": @"",
-                @"length": @0,
-                @"elapsed": @0,
-                @"number": @0,
-            } mutableCopy];
-        }
-        
-        // Handle application information
-        if (data && [data objectForKey:@"kMRMediaRemoteNowPlayingInfoClientPropertiesData"]) {
-            NSData *clientData = [data objectForKey:@"kMRMediaRemoteNowPlayingInfoClientPropertiesData"];
-            
-            _MRNowPlayingClientProtobuf *clientProtobuf = [[_MRNowPlayingClientProtobuf alloc] initWithData:clientData];
-            
-            NSString *bundleIdentifier = nil;
-            
-            if (clientProtobuf.hasParentApplicationBundleIdentifier)
-                bundleIdentifier = clientProtobuf.parentApplicationBundleIdentifier;
-            else if (clientProtobuf.hasBundleIdentifier)
-                bundleIdentifier = clientProtobuf.bundleIdentifier;
+    MRMediaRemoteGetNowPlayingApplicationPID(self.updateQueue,
+                                             ^(int pid) {
+        if (pid > 0) {
+            NSString *bundleIdentifier = [self bundleIdentifierForPID:pid];
             
             nowPlayingApplication = [[XENDApplicationsManager sharedInstance] metadataForApplication:bundleIdentifier];
-            
-            // Swap with application icon if necessary
-            if ([bundleIdentifier isEqualToString:@"com.apple.mobilesafari"]) {
-                [nowPlayingTrack setObject:[nowPlayingApplication objectForKey:@"icon"] forKey:@"artwork"];
-            }
+            [nowPlayingTrack setObject:[nowPlayingApplication objectForKey:@"name"] forKey:@"title"];
+            [nowPlayingTrack setObject:[nowPlayingApplication objectForKey:@"icon"] forKey:@"artwork"];
             
             isStopped = NO;
             
-            // Exit dispatch group
-            dispatch_group_leave(serviceGroup);
-        } else {
-            // Lookup application via its PID
-            MRMediaRemoteGetNowPlayingApplicationPID(self.updateQueue,
-                                                     ^(int pid) {
-                if (pid > 0) {
-                    NSString *bundleIdentifier = [self bundleIdentifierForPID:pid];
+            // Now playing info
+            MRMediaRemoteGetNowPlayingInfo(self.updateQueue,
+                                       ^(CFDictionaryRef info) {
+            
+                NSDictionary *data = (__bridge NSDictionary*)info;
+                
+                if (data) {
+                    // iOS 11+ -> kMRMediaRemoteNowPlayingInfoContentItemIdentifier
+                    // iOS 10 -> kMRMediaRemoteNowPlayingInfoUniqueIdentifier
+                                
+                    NSString *contentIdentifier = [data objectForKey:@"kMRMediaRemoteNowPlayingInfoContentItemIdentifier" defaultValue:nil];
+                    if (!contentIdentifier) {
+                        contentIdentifier = [data objectForKey:@"kMRMediaRemoteNowPlayingInfoUniqueIdentifier" defaultValue:nil];
+                    }
+                    
+                    if (!contentIdentifier) {
+                        XENDLog(@"ERROR :: Media is missing a unique ID");
+                        
+                        // Exit dispatch group
+                        dispatch_group_leave(serviceGroup);
+                        return;
+                    }
+                    
+                    // Figure out the elapsed timestamp
+                    // This is used by the JS layer to figure out the current elapsed time.
+                    NSNumber *currentElapsedTime = [[self.cachedDynamicProperties objectForKey:@"nowPlaying"] objectForKey:@"elapsed"];
+                    BOOL playState = [[self.cachedDynamicProperties objectForKey:@"isPlaying"] boolValue];
+                    BOOL stopState = [[self.cachedDynamicProperties objectForKey:@"isStopped"] boolValue];
+                    
+                    BOOL shouldUpdateElapsedTime = ![currentElapsedTime isEqualToNumber:[data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoElapsedTime defaultValue:@0]] || !playState || stopState;
+                    
+                    if (shouldUpdateElapsedTime) {
+                        // Values have changed, so update observation time
+                        elapsedChangedTime = observationTime;
+                        self.lastElapsedTimeObservation = observationTime;
+                    }
+                        
+                    // Do flat namespace stuff first
+                    nowPlayingTrack = [@{
+                        @"id": contentIdentifier,
+                        @"title": [data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoTitle defaultValue:@""],
+                        @"artist": [data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoArtist defaultValue:@""],
+                        @"album": [data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoAlbum defaultValue:@""],
+                        @"composer": [data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoComposer defaultValue:@""],
+                        @"genre": [data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoGenre defaultValue:@""],
+                        @"length": [data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoDuration defaultValue:@0],
+                        @"elapsed": [data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoElapsedTime defaultValue:@0],
+                        @"number": [data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoTrackNumber defaultValue:@0],
+                    } mutableCopy];
+                    
+                    // Artwork, if available
+                    currentArtwork = [data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoArtworkData];
+                    if (currentArtwork && currentArtwork.length > 0) {
+                        // Check if this artwork is the same as the previous
+                        // This will prevent a lot of image loads from JS world
+                        
+                        if ([currentArtwork isEqualToData:self.currentArtwork]) {
+                            // Re-use the same URL
+                            NSDictionary *lastNowPlaying = [self.cachedDynamicProperties objectForKey:@"nowPlaying"];
+                            NSString *lastArtworkURL = [lastNowPlaying objectForKey:@"artwork"];
+                            
+                            [nowPlayingTrack setObject:lastArtworkURL forKey:@"artwork"];
+                        } else {
+                            // Add the observation time as a cache buster
+                            [nowPlayingTrack setObject:[NSString stringWithFormat:@"xui://media/artwork/current?_c=%llu", observationTime] forKey:@"artwork"];
+                        }
+                    } else {
+                        [nowPlayingTrack setObject:@"" forKey:@"artwork"];
+                    }
+                }
+                
+                // Handle detailed metadata for now playing app
+                if (data && [data objectForKey:@"kMRMediaRemoteNowPlayingInfoClientPropertiesData"]) {
+                    NSData *clientData = [data objectForKey:@"kMRMediaRemoteNowPlayingInfoClientPropertiesData"];
+                    
+                    _MRNowPlayingClientProtobuf *clientProtobuf = [[_MRNowPlayingClientProtobuf alloc] initWithData:clientData];
+                    
+                    NSString *bundleIdentifier = nil;
+                    
+                    if (clientProtobuf.hasParentApplicationBundleIdentifier)
+                        bundleIdentifier = clientProtobuf.parentApplicationBundleIdentifier;
+                    else if (clientProtobuf.hasBundleIdentifier)
+                        bundleIdentifier = clientProtobuf.bundleIdentifier;
                     
                     nowPlayingApplication = [[XENDApplicationsManager sharedInstance] metadataForApplication:bundleIdentifier];
-                    [nowPlayingTrack setObject:[nowPlayingApplication objectForKey:@"name"] forKey:@"title"];
-                    [nowPlayingTrack setObject:[nowPlayingApplication objectForKey:@"icon"] forKey:@"artwork"];
                     
-                    isStopped = NO;
-                    
-                    // Exit dispatch group
-                    dispatch_group_leave(serviceGroup);
-                } else {
-                    XENDLog(@"*** No \"Now Playing\" application");
-                    
-                    nowPlayingApplication = [[XENDApplicationsManager sharedInstance] metadataForApplication:@""];
-                    
-                    isStopped = YES;
-                    
-                    // Exit dispatch group
-                    dispatch_group_leave(serviceGroup);
+                    // Swap with application icon if necessary
+                    if ([bundleIdentifier isEqualToString:@"com.apple.mobilesafari"]) {
+                        [nowPlayingTrack setObject:[nowPlayingApplication objectForKey:@"icon"] forKey:@"artwork"];
+                    }
                 }
+                
+                // Exit dispatch group
+                dispatch_group_leave(serviceGroup);
             });
+        } else {
+            XENDLog(@"*** No \"Now Playing\" application");
+            
+            isStopped = YES;
+            
+            // Exit dispatch group
+            dispatch_group_leave(serviceGroup);
         }
     });
     

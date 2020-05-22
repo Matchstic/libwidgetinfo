@@ -29,7 +29,7 @@ export default class XenInfoMiddleware implements XenHTMLMiddleware {
         this.mediaCompat = new XenInfoMedia(this.providers, this.notifyXenInfoDataChanged);
 
         // Fire off first updates - ensures that if a widget uses data from another provider
-        // in the specified namespace, everything just *works*
+        // than the specified namespace, everything just *works*
         this.weatherCompat.onFirstUpdate();
         this.batteryCompat.onFirstUpdate();
         this.systemCompat.onFirstUpdate();

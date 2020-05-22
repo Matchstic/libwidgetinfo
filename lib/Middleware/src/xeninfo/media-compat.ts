@@ -12,7 +12,6 @@ export default class XenInfoMedia {
 
         // Monitor resources data
         providers.get(DataProviderUpdateNamespace.Media).observeData((newData: MediaProperties) => {
-
             this.onDataChanged(newData);
             this.notifyXenInfoDataChanged('music');
         });
