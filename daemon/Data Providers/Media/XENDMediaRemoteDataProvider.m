@@ -279,7 +279,10 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
             // Figure out the elapsed timestamp
             // This is used by the JS layer to figure out the current elapsed time.
             NSNumber *currentElapsedTime = [[self.cachedDynamicProperties objectForKey:@"nowPlaying"] objectForKey:@"elapsed"];
-            BOOL shouldUpdateElapsedTime = ![currentElapsedTime isEqualToNumber:[data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoElapsedTime defaultValue:@0]];
+            BOOL playState = [[self.cachedDynamicProperties objectForKey:@"isPlaying"] boolValue];
+            BOOL stopState = [[self.cachedDynamicProperties objectForKey:@"isStopped"] boolValue];
+            
+            BOOL shouldUpdateElapsedTime = ![currentElapsedTime isEqualToNumber:[data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoElapsedTime defaultValue:@0]] || !playState || stopState;
             
             if (shouldUpdateElapsedTime) {
                 // Values have changed, so update observation time
