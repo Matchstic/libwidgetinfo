@@ -128,7 +128,17 @@
         
         OGText *textNode = [[OGText alloc] initWithText:content andType:GUMBO_NODE_TEXT];
         scriptNode.children = @[textNode]; // Reset children
-        scriptNode.attributes = @{}; // Reset attributes
+        
+        // Clear type attribute if necessary
+        NSArray *handledScriptTypes = @[@"text/cycript"];
+        
+        if ([handledScriptTypes containsObject:[scriptNode.attributes objectForKey:@"type"]]) {
+            NSMutableDictionary *newAttributes = [scriptNode.attributes mutableCopy];
+            
+            [newAttributes removeObjectForKey:@"type"];
+            
+            scriptNode.attributes = newAttributes;
+        }
     }
     
     return document;
