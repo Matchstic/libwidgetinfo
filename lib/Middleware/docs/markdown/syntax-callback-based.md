@@ -36,6 +36,7 @@ When building widgets to be callback-based, it is assumed that you have an under
 - string
 - boolean
 - Date
+- object
 
 If not, it's easy to learn! Since widgets are effectively webpages, you can use any resource that teaches how to work with JavaScript. Recommended resources are as follows:
 
