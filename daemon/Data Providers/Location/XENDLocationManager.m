@@ -167,6 +167,7 @@
     } else {
         [self.geocoder reverseGeocodeLocation:location completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
             if (error) {
+                XENDLog(@"Geocode ERROR :: %@", error);
                 completionHandler(nil, error);
             } else {
                 CLPlacemark *placemark = [placemarks objectAtIndex:0];

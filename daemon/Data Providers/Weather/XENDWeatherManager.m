@@ -229,19 +229,30 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
     
     XENDLog(@"Refreshing weather...");
     
-    [self _doRefreshWeatherWithCompletion:^{
-        // Restart the update timer with the full interval
-        [self _restartUpdateTimerWithInterval:UPDATE_INTERVAL * 60];
+    [self _doRefreshWeatherWithCompletion:^(BOOL offline) {
+        if (offline && self.networkIsDisconnected) {
+            // Network must have been lost during the update.
+            // Wait until it is restored
+            
+            self.refreshQueuedDuringNetworkDisconnected = YES;
+        } else if (offline) {
+            // network is apparently offline but internal checks say its fine?
+            // Might be a transient issue, so try again with short delay
+            [self _restartUpdateTimerWithInterval:5];
+        } else {
+            // Restart the update timer with the full interval
+            [self _restartUpdateTimerWithInterval:UPDATE_INTERVAL * 60];
+        }
     }];
 }
 
-- (void)_doRefreshWeatherWithCompletion:(void(^)(void))completionHandler {
+- (void)_doRefreshWeatherWithCompletion:(void(^)(BOOL offline))completionHandler {
     
     // 1. Get current location from the location manager
     [self.locationManager fetchCurrentLocationWithCompletionHandler:^(NSError *error, CLLocation *location) {
         if (error && error.code == kXENLocationErrorNotInitialised) {
             XENDLog(@"WARN :: Waiting for location manager to gain an authorisation stataus");
-            completionHandler();
+            completionHandler(NO);
             return;
         }
         
@@ -265,6 +276,8 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
         __block NSDictionary *airQualityData = nil;
         __block NSDictionary *addressData = nil;
         
+        __block BOOL offlineErrorOccurred = NO;
+        
         dispatch_group_t serviceGroup = dispatch_group_create();
 
         dispatch_group_enter(serviceGroup);
@@ -276,6 +289,10 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
                 
                 if (parseError) {
                     XENDLog(@"ERROR (forecast download) :: %@", parseError);
+                    
+                    if (parseError.code == NSURLErrorNotConnectedToInternet) {
+                        offlineErrorOccurred = YES;
+                    }
                 }
             } else {
                 XENDLog(@"ERROR (forecast download) :: %@", error);
@@ -295,6 +312,10 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
                 
                 if (parseError) {
                     XENDLog(@"ERROR (air download) :: %@", parseError);
+                    
+                    if (parseError.code == NSURLErrorNotConnectedToInternet) {
+                        offlineErrorOccurred = YES;
+                    }
                 }
             } else {
                 XENDLog(@"ERROR (air download) :: %@", error);
@@ -316,7 +337,13 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
         }];
         
         dispatch_group_notify(serviceGroup, dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),^{
-            // 3.a. Setup metadata object
+            // 3.a. Cancel and retry if network was offline
+            if (offlineErrorOccurred) {
+                completionHandler(YES);
+                return;
+            }
+            
+            // 3.b. Setup metadata object
             NSDictionary *metadata = @{
                 @"address": addressData != nil ? addressData : [NSNull null],
                 @"updated": [NSDate date],
@@ -339,9 +366,8 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
                 XENDLog(@"Air data: %@", airQualityData);
             }
 
-            
             // 6. Finish off
-            completionHandler();
+            completionHandler(NO);
         });
 
     }];
