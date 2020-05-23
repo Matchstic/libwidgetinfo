@@ -100,8 +100,6 @@
             // Handle reading from correct file
             NSString *externalFilepath = [NSString stringWithFormat:@"%@/%@", baseDocumentPath, externalFileReference];
             
-            NSLog(@"DEBUG :: Loading script src from %@", externalFilepath);
-            
             content = [NSString stringWithContentsOfFile:externalFilepath encoding:NSUTF8StringEncoding error:nil];
             
             // Insert script name as source mapping

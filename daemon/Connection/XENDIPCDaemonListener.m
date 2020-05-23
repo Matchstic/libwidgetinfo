@@ -80,9 +80,7 @@ int libwidgetinfo_main_ipc(void) {
     }];
 }
 
-- (void)broadcastMessage:(NSString*)name {
-    XENDLog(@"*** DEBUG :: Broadcast message %@", name);
-    
+- (void)broadcastMessage:(NSString*)name {    
     // Broadcast notification for new state change
     CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), (__bridge CFStringRef)name, NULL, NULL, YES);
 }

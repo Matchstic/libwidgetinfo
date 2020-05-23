@@ -132,7 +132,6 @@
 - (void)_locationSettledWithLocation:(CLLocation*)location {
     // Notify callbacks, and clear pending completions
     
-    XENDLog(@"DEBUG :: Location settled");
     [self.locationManager stopUpdatingLocation];
     
     [self.locationSettledTimer invalidate];

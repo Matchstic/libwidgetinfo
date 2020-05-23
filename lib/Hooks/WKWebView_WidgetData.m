@@ -78,16 +78,10 @@
 }
 
 - (WKNavigation *)xenhtml_loadFileURL:(NSURL *)URL allowingReadAccessToURL:(NSURL *)readAccessURL {
-    NSLog(@"DEBUG :: Call into swizzled loadFileURL");
-    
     if (![self _hasInjectedRuntime]) {
-        NSLog(@"DEBUG :: Returning original implementation");
-        
         // Return the original implementation
         return [self xenhtml_loadFileURL:URL allowingReadAccessToURL:readAccessURL];
     } else {
-        NSLog(@"DEBUG :: Beginning pre-processing...");
-        
         NSString *filePath = [URL path];
         NSURL *baseUrl = [URL URLByDeletingLastPathComponent];
         
@@ -95,8 +89,6 @@
         
         // Setup our hijacked navigation delegate if required
         if (![self hijackedNavigationDelegate]) {
-            NSLog(@"DEBUG :: Injecting navigation delegate...");
-            
             [self setHijackedNavigationDelegate:[[XENDHijackedWebViewDelegate alloc] initWithOriginalDelegate:self.navigationDelegate]];
             
             self.navigationDelegate = [self hijackedNavigationDelegate];
@@ -105,15 +97,12 @@
         // Register widget
         [[XENDWidgetManager sharedInstance] registerWebView:self];
         
-        NSLog(@"DEBUG :: Finished injection");
-        
         return [self loadHTMLString:preprocessedDocument baseURL:baseUrl];
     }
 }
 
 - (void)xenhtml_stopLoading {
     NSString *url = [self.URL absoluteString];
-    NSLog(@"DEBUG :: Unregistering widget presenting from: %@", url);
     
     [[XENDWidgetManager sharedInstance] deregisterWebView:self];
     

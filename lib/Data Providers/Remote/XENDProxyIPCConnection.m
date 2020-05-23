@@ -58,8 +58,6 @@ static inline void propertiesChangedCallback(CFNotificationCenterRef center, voi
 
 - (void)_sendTestConnection {
     // Send test connection to server
-    XENDLog(@"DEBUG :: Sending test connection...");
-    
     [OBJCIPC sendMessageToServerWithMessageName:@"testConnection" dictionary:@{} replyHandler:^(NSDictionary *data) {
         XENDLog(@"INFO :: Daemon connection established");
         
@@ -111,7 +109,6 @@ static inline void propertiesChangedCallback(CFNotificationCenterRef center, voi
             if (data == nil) {
                 XENDLog(@"ERROR :: Cannot fetch new properties");
             } else {
-                XENDLog(@"DEBUG :: Fetched updated properties in namespace: %@", namespace);
                 // Only pass through dynamic properties, statics were fetched previously
                 [self notifyUpdatedDynamicProperties:[data objectForKey:@"dynamic"] forNamespace:namespace];
             }
@@ -123,8 +120,6 @@ static inline void propertiesChangedCallback(CFNotificationCenterRef center, voi
     [self requestCurrentDeviceStateWithCallback:^(NSDictionary *args) {
         NSNumber *sleep = [args objectForKey:@"sleep"];
         NSNumber *network = [args objectForKey:@"network"];
-        
-        XENDLog(@"DEBUG :: Notified of new device state: %@", args);
         
         BOOL currentSleepState = [self.currentDeviceState objectForKey:@"sleep"];
         BOOL currentNetworkState = [self.currentDeviceState objectForKey:@"network"];

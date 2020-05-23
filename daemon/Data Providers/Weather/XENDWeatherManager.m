@@ -170,7 +170,6 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
 }
 
 - (void)_updateTimerFired:(NSTimer*)timer {
-    XENDLog(@"*** DEBUG :: Update timer fired");
     [self refreshWeather];
 }
 
@@ -252,10 +251,6 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
         
         if (error && error.code == kXENLocationErrorCachedOnly) {
             XENDLog(@"WARN :: Using old location fix, might be inaccurate");
-        }
-        
-        if (!error) {
-            XENDLog(@"DEBUG :: Got new location fix");
         }
         
         // 2. Create necessary requests for forecast and air quality

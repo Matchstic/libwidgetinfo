@@ -69,7 +69,6 @@
     NSString *url = [webView.URL absoluteString];
     
     if (![url isEqualToString:@""] && ![url isEqualToString:@"about:blank"]) {
-        NSLog(@"DEBUG :: Notify widget has loaded, presenting from: %@", url);
         [[XENDWidgetManager sharedInstance] notifyWebViewLoaded:webView];
     }
 }
