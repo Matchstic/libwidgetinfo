@@ -30,14 +30,27 @@ export default class XenInfoMedia {
         (window as any).artist = data.nowPlaying.artist;
         (window as any).album = data.nowPlaying.album;
         (window as any).title = data.nowPlaying.title;
-        (window as any).isplaying = data.isPlaying;
+        (window as any).isplaying = data.isPlaying ? 1 : 0;
 
         // Why the hell weren't these documented for XI?!
 
         (window as any).musicBundle = data.nowPlayingApplication.identifier;
-        (window as any).currentDuration = data.nowPlaying.length;
-        (window as any).currentElapsedTime = data.nowPlaying.elapsed;
-        (window as any).shuffleEnabled = false;
-        (window as any).repeatEnabled = false;
+        (window as any).currentDuration = this.secondsToFormatted(data.nowPlaying.length);
+        (window as any).currentElapsedTime = this.secondsToFormatted(data.nowPlaying.elapsed);
+        (window as any).shuffleEnabled = 'disabled';
+        (window as any).repeatEnabled = 'disabled';
+    }
+
+    private secondsToFormatted(seconds: number): string {
+        if (seconds === 0) return '0:00';
+
+        const isNegative = seconds < 0;
+        if (isNegative) return '0:00';
+
+        seconds = Math.abs(seconds);
+        const minutes = Math.floor(seconds / 60)
+        const secs = Math.floor(seconds - (minutes * 60));
+
+        return minutes + ':' + (secs < 10 ? '0' : '') + secs;
     }
 }
