@@ -181,11 +181,19 @@
                     streetComponent = @"Unknown street";
                 }
                 
+                // Gradually fallback the city name
+                NSString *cityFallback = placemark.locality;
+                if (!cityFallback) cityFallback = placemark.subLocality;
+                if (!cityFallback) cityFallback = placemark.subAdministrativeArea;
+                if (!cityFallback) cityFallback = placemark.administrativeArea;
+                if (!cityFallback) cityFallback = placemark.country;
+                if (!cityFallback) cityFallback = @"";
+                
                 NSDictionary *reverseGeocodedAddress = @{
                     @"house": placemark.subThoroughfare ? placemark.subThoroughfare : @"",
                     @"street": streetComponent,
                     @"neighbourhood": placemark.subLocality ? placemark.subLocality : @"",
-                    @"city": placemark.locality ? placemark.locality : @"",
+                    @"city": cityFallback ? cityFallback : @"",
                     @"postalCode": placemark.postalCode ? placemark.postalCode : @"",
                     @"county": placemark.subAdministrativeArea ? placemark.subAdministrativeArea : @"",
                     @"state": placemark.administrativeArea ? placemark.administrativeArea : @"",
