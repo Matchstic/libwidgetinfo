@@ -596,8 +596,6 @@ export default class Media extends Base implements MediaProperties {
             payload.nowPlaying.elapsed = this.nowPlaying.elapsed;
         }
 
-        console.log('DEBUG :: supported actions are: ' + JSON.stringify(payload.supportedActions));
-
         super._setData(payload);
 
         if (!payload.isPlaying || payload.isStopped) {
