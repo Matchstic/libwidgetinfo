@@ -28,6 +28,27 @@ export interface MediaLibraryArtist {
 }
 
 /**
+ * Different media sources may support different sets of actions. For example,
+ * you cannot skip music on a radio station.
+ */
+export interface MediaSupportedActions {
+    /**
+     * If enabled, the user can skip between tracks, and set the current elapsed time.
+     */
+    skip: boolean;
+
+    /**
+     * If enabled, the users can jump 15 seconds ahead in the current track.
+     */
+    skipFifteenSeconds: boolean;
+
+    /**
+     * If enabled, the users can rewind by 15 seconds in the current track.
+     */
+    goBackFifteenSeconds: boolean;
+}
+
+/**
  * This interface represents a media track, including music videos. Be aware that not all fields will
  * always have data; not all apps report the same level of detail.
  */
@@ -80,16 +101,15 @@ export interface MediaTrack {
     length: number;
 
     /**
-     * The track number on its corresponding album
+     * The track number on its corresponding album, starting from 1
      */
     number: number;
 
     /**
      * The elapsed playback time, measured in seconds. This is only available on the currently playing track
      *
-     * NOTE: This may be reported as 0 in some cases, if the playing application doesn't make this information available
-     *
-     * NOTE: This may also be reported as negative, such as when streaming media over AirPlay. This can be assumed to be representative of a "buffering" state.
+     * NOTE: This may be reported as 0 in some cases, if the playing application doesn't make this information available.
+     * It may also be reported as negative, such as when streaming media over AirPlay. This can be assumed to be representative of a "buffering" state.
      */
     elapsed: number; // available only on the current track
 }
@@ -108,6 +128,8 @@ export interface MediaProperties {
 
     volume: number;
     nowPlayingApplication: ApplicationMetadata;
+
+    supportedActions: MediaSupportedActions;
 
     // internal only
     _elapsedChangedTime: number;
@@ -187,6 +209,11 @@ export default class Media extends Base implements MediaProperties {
      * Provides details about the application that is currently playing media
      */
     nowPlayingApplication: ApplicationMetadata;
+
+    /**
+     * Provides details about what actions are currently supported by the playing application.
+     */
+    supportedActions: MediaSupportedActions;
 
     /**
      * @ignore
@@ -305,6 +332,9 @@ export default class Media extends Base implements MediaProperties {
      * api.media.goBackFifteenSeconds();
      */
     public goBackFifteenSeconds(): void {
+        // Deny if not available
+        if (this.supportedActions.goBackFifteenSeconds === false) return;
+
         this.connection.sendNativeMessage({
             namespace: DataProviderUpdateNamespace.Media,
             functionDefinition: 'goBackFifteenSeconds',
@@ -319,6 +349,9 @@ export default class Media extends Base implements MediaProperties {
      * api.media.skipFifteenSeconds();
      */
     public skipFifteenSeconds(): void {
+        // Deny if not available
+        if (this.supportedActions.skipFifteenSeconds === false) return;
+
         this.connection.sendNativeMessage({
             namespace: DataProviderUpdateNamespace.Media,
             functionDefinition: 'skipFifteenSeconds',
@@ -366,6 +399,9 @@ export default class Media extends Base implements MediaProperties {
      * api.media.seekToPosition(20); // Seeks to 20 seconds into the track
      */
     public seekToPosition(time: number): void {
+        // Deny if not available
+        if (this.supportedActions.skip === false) return;
+
         if (this.seekDebouncer) {
             clearTimeout(this.seekDebouncer);
             this.seekDebouncer = null;
@@ -560,6 +596,8 @@ export default class Media extends Base implements MediaProperties {
             payload.nowPlaying.elapsed = this.nowPlaying.elapsed;
         }
 
+        console.log('DEBUG :: supported actions are: ' + JSON.stringify(payload.supportedActions));
+
         super._setData(payload);
 
         if (!payload.isPlaying || payload.isStopped) {
@@ -598,6 +636,11 @@ export default class Media extends Base implements MediaProperties {
                 badge: '',
                 isInstalling: false,
                 isSystemApplication: false
+            },
+            supportedActions: {
+                skip: true,
+                skipFifteenSeconds: false,
+                goBackFifteenSeconds: false
             }
         };
     }

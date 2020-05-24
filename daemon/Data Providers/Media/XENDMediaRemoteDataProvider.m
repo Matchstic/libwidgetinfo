@@ -250,6 +250,12 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
             @"elapsed": @0,
             @"number": @0,
         } mutableCopy];
+    __block NSMutableDictionary *allowedActions = [
+       @{
+           @"skip": @YES,
+           @"skipFifteenSeconds": @NO,
+           @"goBackFifteenSeconds": @NO
+       } mutableCopy];
     __block NSData *currentArtwork = nil;
     __block NSDictionary *nowPlayingApplication = [[XENDApplicationsManager sharedInstance] metadataForApplication:@""];;
     __block BOOL isStopped = NO;
@@ -348,6 +354,23 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
                     } else {
                         [nowPlayingTrack setObject:@"" forKey:@"artwork"];
                     }
+                    
+                    // Actions - skip
+                    if ([data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoProhibitsSkip]) {
+                        NSNumber *prohibitSkip = [data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoProhibitsSkip defaultValue:@NO];
+                        
+                        [allowedActions setObject:@(![prohibitSkip boolValue]) forKey:@"skip"];
+                    }
+                    
+                    // Actions - skip15
+                    if ([data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoSupportsFastForward15Seconds]) {
+                        [allowedActions setObject:[data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoSupportsFastForward15Seconds defaultValue:@NO] forKey:@"skipFifteenSeconds"];
+                    }
+                    
+                    // Actions - rewind15
+                    if ([data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoSupportsRewind15Seconds]) {
+                        [allowedActions setObject:[data objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoSupportsRewind15Seconds defaultValue:@NO] forKey:@"goBackFifteenSeconds"];
+                    }
                 }
                 
                 // Handle detailed metadata for now playing app
@@ -416,6 +439,7 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
         self.currentArtwork = currentArtwork;
         [self.cachedDynamicProperties setObject:nowPlayingTrack forKey:@"nowPlaying"];
         [self.cachedDynamicProperties setObject:nowPlayingApplication forKey:@"nowPlayingApplication"];
+        [self.cachedDynamicProperties setObject:allowedActions forKey:@"supportedActions"];
         [self.cachedDynamicProperties setObject:@(isStopped) forKey:@"isStopped"];
         [self.cachedDynamicProperties setObject:@(isPlaying) forKey:@"isPlaying"];
         [self.cachedDynamicProperties setObject:@(adjustedVolume) forKey:@"volume"];
@@ -443,6 +467,11 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
             @"number": @0,
         },
         @"nowPlayingApplication": [[XENDApplicationsManager sharedInstance] metadataForApplication:@""],
+        @"supportedActions": @{
+            @"skip": @YES,
+            @"skipFifteenSeconds": @NO,
+            @"goBackFifteenSeconds": @NO
+        },
         @"isPlaying": @NO,
         @"isStopped": @YES,
         @"volume": @0,
