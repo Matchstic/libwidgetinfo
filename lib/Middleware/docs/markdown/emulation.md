@@ -3,7 +3,7 @@
 
 Developing widgets directly on a device can be difficult.
 
-As part of the Xen Widget API, a script is made available to you that you can add into widgets during development. This hooks up a set of default data which you can then use (and modify) to develop your widgets.
+As part of the Xen HTML API, a script is made available to you that you can add into widgets during development. This hooks up a set of default data which you can then use (and modify) to develop your widgets.
 
 It can be downloaded from [here](https://raw.githubusercontent.com/Matchstic/libwidgetinfo/master/emulation/emulation.js).
 
@@ -28,7 +28,7 @@ To use this script, download it to your widget's folder, and then add it to your
 
  ### Caveats
 
- It is important to note that [Resource Packs](additional-documentation/resource-packs.html) do not work when running your widget on a desktop, via `emulation.js`. You will need to test that on a real device.
+ It is important to note that [Resource Packs](resource-packs.html) do not work when running your widget on a desktop, via `emulation.js`. You will need to test that on a real device.
 
  ### Future Changes
 

@@ -1,4 +1,4 @@
-## Resources Packs
+## Resource Packs
 ### Description
 
 The Xen HTML API allows you to provide resource packs to share content between widgets. This is to help reduce the download size of widgets, and also to access a variety of iconography installed by default.

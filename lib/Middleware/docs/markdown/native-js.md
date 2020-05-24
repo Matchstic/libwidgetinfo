@@ -23,13 +23,13 @@ You can help improve it by creating a new ticket [here](https://github.com/Match
 
 ### `toLocaleTimeString`
 
-To support 24- versus 12-hour time, the `toLocaleTimeString` function on `Date` objects has been hooked to automatically request 12-hour time if `api.system.isTwentyFourHourTimeEnabled` is `true`.
+To support 24- versus 12-hour time, the `toLocaleTimeString` function on `Date` objects has been hooked to automatically request 12-hour time if `api.system.isTwentyFourHourTimeEnabled` is `false`.
 
-To disable this behaviour, you need to use it like follows:
+If you want to disable this behaviour, you can do the following:
 
 ```js
 var date = new Date();
 var timestring = date.toLocaleTimeString(undefined, { 'no12HourHook': true, ... /* any other options */ });
 ```
 
-
+In most cases, you won't need to do this, and instead can use `toLocaleTimeString` normally.
