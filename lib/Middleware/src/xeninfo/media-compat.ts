@@ -12,24 +12,19 @@ export default class XenInfoMedia {
 
         // Do initial update
         this.onDataChanged(providers.get(DataProviderUpdateNamespace.Media));
-        console.log('Set initial media data');
 
         // Monitor resources data
         providers.get(DataProviderUpdateNamespace.Media).observeData((newData: MediaProperties) => {
             this.onDataChanged(newData);
             this.notifyXenInfoDataChanged('music');
-            console.log('Notified of new media data due to API update');
         });
     }
 
     onFirstUpdate() {
         this.notifyXenInfoDataChanged('music');
-        console.log('Notified of new media data due to first update');
     }
 
     onDataChanged(data: MediaProperties) {
-        console.log('Sample: ' + JSON.stringify(data.nowPlaying) + ', isPlaying: ' + data.isPlaying);
-
         // Update media info
         (window as any).artist = data.nowPlaying.artist.length > 0 ? data.nowPlaying.artist : '(null)';
         (window as any).album = data.nowPlaying.album.length > 0 ? data.nowPlaying.album : '(null)';
