@@ -48,3 +48,11 @@ Available icons, grouped by subfolder:
     - `unknown.svg`
 - `battery`
     - `[0-100].svg` (an image is provided for each battery level 'step', e.g. 10.svg, 20.svg, ...)
+- `media`
+    - `next.svg`
+    - `no-artwork.svg`
+    - `pause.svg`
+    - `play.svg`
+    - `previous.svg`
+    - `volume-max.svg`
+    - `volume-min.svg`
