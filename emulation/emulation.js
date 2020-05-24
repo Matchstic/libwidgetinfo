@@ -20,7 +20,7 @@
  *
  * NOTE: XH2 specific APIs like Resource Packs are NOT available.
  *
- * ______ WARNING: You MUST remove this script before running on an iOS device! _______
+ * ______ WARNING: You MUST remove this script before releasing your widget! _______
  */
 
 // Change this configuration to load different weather conditions
