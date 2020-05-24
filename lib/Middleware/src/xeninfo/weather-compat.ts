@@ -14,6 +14,10 @@ export default class XenInfoWeather {
 
     constructor(private providers: Map<DataProviderUpdateNamespace, any>,
                 private notifyXenInfoDataChanged: (namespace: string) => void) {
+
+        // Do initial update
+        this.onWeatherDataChanged(providers.get(DataProviderUpdateNamespace.Weather));
+
         // Monitor weather data
         providers.get(DataProviderUpdateNamespace.Weather).observeData((newData: WeatherProperties) => {
             this.onWeatherDataChanged(newData);
@@ -31,9 +35,6 @@ export default class XenInfoWeather {
 
             this.last24hrTime = newData.isTwentyFourHourTimeEnabled;
         });
-
-        // Do initial update
-        this.onWeatherDataChanged(providers.get(DataProviderUpdateNamespace.Weather));
     }
 
     onFirstUpdate() {
@@ -66,7 +67,7 @@ export default class XenInfoWeather {
             naturalCondition: newData.now.condition.narrative,
             latlong: newData.metadata.location.latitude + ',' + newData.metadata.location.longitude,
             celsius: newData.units.temperature,
-            isDay: newData.now.sun.isDay,
+            isDay: newData.now.sun.isDay ? 1 : 0,
             conditionCode: newData.now.condition.code,
             updateTimeString: this.weatherUpdateTimeString(newData.metadata.updateTimestamp),
             humidity: newData.now.temperature.relativeHumidity,

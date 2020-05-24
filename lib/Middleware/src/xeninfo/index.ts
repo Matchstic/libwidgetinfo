@@ -11,11 +11,7 @@ import XenInfoMedia from './media-compat';
  */
 export default class XenInfoMiddleware implements XenHTMLMiddleware {
     private providers: Map<DataProviderUpdateNamespace, any>;
-
-    private weatherCompat: XenInfoWeather = null;
-    private batteryCompat: XenInfoBattery = null;
-    private systemCompat: XenInfoSystem = null;
-    private mediaCompat: XenInfoMedia = null;
+    private compat: any[] = [];
 
     public initialise(parent: NativeInterface, providers: Map<DataProviderUpdateNamespace, any>): void {
         if (!this.requiresXenInfoCompat()) return;
@@ -23,17 +19,23 @@ export default class XenInfoMiddleware implements XenHTMLMiddleware {
         this.providers = providers;
 
         // Setup compatibility things
-        this.weatherCompat = new XenInfoWeather(this.providers, this.notifyXenInfoDataChanged);
-        this.batteryCompat = new XenInfoBattery(this.providers, this.notifyXenInfoDataChanged);
-        this.systemCompat = new XenInfoSystem(this.providers, this.notifyXenInfoDataChanged);
-        this.mediaCompat = new XenInfoMedia(this.providers, this.notifyXenInfoDataChanged);
+        this.compat.push(new XenInfoWeather(this.providers, this.notifyXenInfoDataChanged));
+        this.compat.push(new XenInfoBattery(this.providers, this.notifyXenInfoDataChanged));
+        this.compat.push(new XenInfoSystem(this.providers, this.notifyXenInfoDataChanged));
+        this.compat.push(new XenInfoMedia(this.providers, this.notifyXenInfoDataChanged));
+    }
 
+    public onFirstUpdate() {
         // Fire off first updates - ensures that if a widget uses data from another provider
         // than the specified namespace, everything just *works*
-        this.weatherCompat.onFirstUpdate();
-        this.batteryCompat.onFirstUpdate();
-        this.systemCompat.onFirstUpdate();
-        this.mediaCompat.onFirstUpdate();
+
+        this.compat.forEach((compat: any) => {
+            try {
+                compat.onFirstUpdate();
+            } catch (e) {
+                window.onerror(e);
+            }
+        });
     }
 
     private requiresXenInfoCompat(): boolean {
@@ -43,9 +45,8 @@ export default class XenInfoMiddleware implements XenHTMLMiddleware {
     private notifyXenInfoDataChanged(namespace: string) {
         // Call mainUpdate with changed namespace
         if ((window as any).mainUpdate !== undefined) {
+            // Hitting user-defined code at this point, which very well may throw an exception
             (window as any).mainUpdate(namespace);
         }
     }
-
-    invokeAction(action: any): void {}
 }

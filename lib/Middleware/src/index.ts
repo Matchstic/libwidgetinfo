@@ -132,6 +132,7 @@ class XENDMiddleware extends NativeInterface {
     protected onLoad() {
         // Setup backwards compatibility middlewares
         // This is post-load
+        this.xeninfo.onFirstUpdate();
         this.groovyAPI.initialise(this, this.dataProviders);
     }
 
