@@ -273,7 +273,7 @@ export default class System extends Base implements SystemProperties {
         const _this = this;
         Date.prototype.toLocaleTimeString = function(locales?: string | string[], options?: {}) {
             if (!options) options = { 'hour12': !_this.isTwentyFourHourTimeEnabled };
-            else options = {
+            else if (!('no12HourHook' in options)) options = {
                 'hour12': !_this.isTwentyFourHourTimeEnabled,
                 ...options
             }

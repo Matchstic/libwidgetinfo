@@ -36,5 +36,13 @@
     {
         "title": "Example Widgets",
         "file": "example-widgets.md"
+    },
+    {
+        "title": "Native JavaScript APIs",
+        "file": "native-js.md"
+    },
+    {
+        "title": "Emulation",
+        "file": "emulation.md"
     }
 ]
