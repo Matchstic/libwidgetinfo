@@ -1,4 +1,7 @@
 /**
+ * Name: emulation.js
+ * Version: 0.0.1
+ *
  * This script is to allow testing of XH2-based widgets in a desktop browser.
  *
  * Usage:
