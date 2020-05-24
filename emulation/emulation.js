@@ -82,10 +82,180 @@ const system = {
 };
 
 //////////////////////////////////////////////////////////////////////
+// Media data
+//////////////////////////////////////////////////////////////////////
+
+const media = {
+    nowPlaying: {
+        id: '3a9d8565-1fbd-4c93-9c03-e865476a1802',
+        title: 'We Will Rock You',
+        artist: 'Queen',
+        album: 'News of the World',
+        // On a real device, this instead will be `xui://media/artwork/current?_c=1590355335432`, with much higher resolution
+        // Base64 is used here just for the sake of being able to include an image directly inside this script
+        artwork: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQA' +
+                 'APoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAAsTAAALEwEAmpwYAAAEdmlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPHg6eG' +
+                 '1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNS40LjAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0' +
+                 'dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogIC' +
+                 'AgICAgICAgICB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIKICAgICAgICAgICAgeG1sbnM6c3RSZWY9Imh0' +
+                 'dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiCiAgICAgICAgICAgIHhtbG5zOnRpZmY9Imh0dHA6Ly9ucy5hZG' +
+                 '9iZS5jb20vdGlmZi8xLjAvIgogICAgICAgICAgICB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iPgogICAgICAgICA8' +
+                 'eG1wTU06RGVyaXZlZEZyb20gcmRmOnBhcnNlVHlwZT0iUmVzb3VyY2UiPgogICAgICAgICAgICA8c3RSZWY6aW5zdGFuY2VJRD54bXAuaWlkOj' +
+                 'VBMjQ3Qzk0NzkxMUUxMTE5M0QzRjk2MjBGNTU0M0U5PC9zdFJlZjppbnN0YW5jZUlEPgogICAgICAgICAgICA8c3RSZWY6ZG9jdW1lbnRJRD54' +
+                 'bXAuZGlkOjI2M0ZCRTkwNkQyMDY4MTFBN0I3OTJERjlBNURFOEY1PC9zdFJlZjpkb2N1bWVudElEPgogICAgICAgICA8L3htcE1NOkRlcml2ZW' +
+                 'RGcm9tPgogICAgICAgICA8eG1wTU06RG9jdW1lbnRJRD54bXAuZGlkOkE3RUZBNjU4MTE3QTExRTE5QTc5QUQxQTM0MEFEMTE1PC94bXBNTTpE' +
+                 'b2N1bWVudElEPgogICAgICAgICA8eG1wTU06SW5zdGFuY2VJRD54bXAuaWlkOkE3RUZBNjU3MTE3QTExRTE5QTc5QUQxQTM0MEFEMTE1PC94bX' +
+                 'BNTTpJbnN0YW5jZUlEPgogICAgICAgICA8eG1wTU06T3JpZ2luYWxEb2N1bWVudElEPnhtcC5kaWQ6MjYzRkJFOTA2RDIwNjgxMUE3Qjc5MkRG' +
+                 'OUE1REU4RjU8L3htcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD4KICAgICAgICAgPHRpZmY6T3JpZW50YXRpb24+MTwvdGlmZjpPcmllbnRhdGlvbj' +
+                 '4KICAgICAgICAgPHhtcDpDcmVhdG9yVG9vbD5BZG9iZSBQaG90b3Nob3AgQ1M1IFdpbmRvd3M8L3htcDpDcmVhdG9yVG9vbD4KICAgICAgPC9y' +
+                 'ZGY6RGVzY3JpcHRpb24+CiAgIDwvcmRmOlJERj4KPC94OnhtcG1ldGE+CjldwVoAABH6SURBVFgJLZlZcBzndYVPd09Pzz7YiR0EQJAESJGgKC' +
+                 '4StVCmxIiSI2VzpSpOIlmpSpXzkLich1RSeWDKcZJKpZyH+MEpx1HK2RzZscuxFTsqrbQkixJJUdwFUqQIktiIAQbALD0z3T35/pHJGhGY7v7/' +
+                 '+9977jnntqw/+LNjTScWV61eV63ZkGO7Mn8CO5SiSDW/oWYzUqSmglIoj2tF29ZEJdCmINLJnKuepni+qRy/d0ZNVbk3aVladB0txB1tqjW1Ys' +
+                 'XkJuIKo4bsIJDFfbJZjLWa/Bya7Sp1WbbDpymHywSjWBhz1HSkWIp/A26ybEXmQYKzzYVyne8jWY4lN+moGjY11mzq+burOjnUpl0x6dGFdZ3o' +
+                 'zOmzc2uqsqj/i02rBOeykcOaP+hqV4GzmzUDiy9ZX3GLkzUJll8DIuT+GB+xhxWSEg5px+MJeV5Sbjwll0y6ri2HTSzLkc2DMRaxPIJuNGX7ZJ' +
+                 'SHunn4fGdGX8yn9PD8uvLVQE7aUrbeUDUTU8McxIspxf71PBn2a6onLEUZ1jKpIUDbZnOTQNY12XQc9iPjlItDECMxcE7FLJMxNm1EPMwjFIAD' +
+                 'RApZJODOgEB9ArQjylIJla9HesV1tZ6QXppZVshGr/bm9djVVc3k03JZh1zI4WANdnixP6+n2TwOZGrVSA2ej3O93LSUBhbNmCUKJ5d7LFOpkO' +
+                 'fIdJyYTJZjlhOTTUrzXCwSbFsYcAILHNnKg6UFFuiuB1o12SC7FmB5sB5qJuHqjf6cQgKZ5edPPFatRcpxrZp2lHYt3WGzgZWa/iOfUIL1+xpS' +
+                 'lnWW4662VBu6zeHIm5IE4pvEEodNiRPUvMDhPCK3G1GoyK/ooZsLGvHrGivVNVCpqocyHr26QOqlsUaoUbK5HreVTTiarNZ0X6WmRCPStmaoSs' +
+                 'bRx56jgzxXaItpOmho+2JVHXVpb60Bvl2FaVc7woaeXFwTBdEWvj9YrqmbJnx8paR2/t1X8pUj2KeWNloNV6fczgNHdhyvNXzN5ZNa4tRVslSl' +
+                 'cZbpuBttCS0kDBBEVig/gK5SpnJ7XHVKOQcoltJxRTRQguwVyOQa2Su7Md0m89erC9qol3WbgP2qrzXb02xnSvNkrkKzhARwi/sq4HWRNaiPCj' +
+                 'H2AX9zfJqmWf74K59rlgiwzrEcWjziBAmwwd1adyPaHfqhrCFBJsqh7AKNALVAPorxczPrKp6kAVjMZ2PXbEj5MgDp6NYHNTwyrrBS0uWZ8zr5' +
+                 '8YdaY582EhBCFXWzF43oE5hHxUC50gS9RrBxs5YfgEEu2NyYAnchmzgNQFqq0W220ilbFfCQAikNcGgAbRNQokTXZtmEklt8F5gsA4M4mzVYq6' +
+                 '3u6Ff2HNPE+DY5sRiHyCmfSinleTp767LmahXR9NCPpRgZixNUENpgj4zRMGkCDFmHHCpWBxdNom0QYLP1JZl0PWgFbJJJz0vQ+aGagN+mISK4' +
+                 'x2JhG3yFnS4/EyRUEbK0WTyqhZrKjKgzk5JfXlMdiin7PoHE1N3Zp6HVZVWbC6rWyA77WnxMWI5DBonBHDgiUI9uN9fsBtxlNdmEBxzwF5ggyF' +
+                 'oz9ik/2ZTCIhgXumly0tAIDZ1mk+EYmXXrJtim4nRsBAO0x3PKcqh6I1ChcFcbtape+Kdv6ycvvWLaVE3K1ue2y/eLcB5JICnmT8ihCaMFLdPN' +
+                 'FjBwwbSz7/6x4xFESRhs+mkW4l5czQacwAMR+DPlJj4CDwnJ1CbW4k5DK9RJFs3FoVUje11eroW/M2dn9MPv/lBHnnpKTjKmzzz2mFJJV5WNNa' +
+                 '3TtZPb7+VgdZVCHyXj8CxryNvIm021zJ+IhNhN+MbiFE30scmpLb40J22Q8lqMIONNiDMAAg3KZ0DGZbJoQTHmpEYNQTRfmB0oDY22USqrC2l7' +
+                 '/ovP6satO9o5vUdFAsvlutTW3tXKWrlYVamaUDbTSfoaipMx0PJpWcGlbfBILDGj0kbzyLZsus+mVAGlNhk1e9biYI9rpkHiDhoQEJQ5A8ihZc' +
+                 '2x5Zjy8mXSTf5CZxsam9qhzra0Ls5cV7UEr/Z2KZXOYioqrSDcqMY6ngLwaeoWcmADoSaKZRt1MyoGPbE8e3CD0UED1qACoNnbc7wWzkzpbCI1' +
+                 'EhpwwYZSjEhbiRg6HZMH+F0CNIs7QKMIZSUh5YXZO2pv7+Y5Xz9++T+VoIuNamVz7QRhaXBsG6RfVrlaoEEgclNF/poqV6qrqhBH0kkp5hCiIU' +
+                 'yTznjKg4wDhT6GKZ2Qi7myjRVy6hwCuuAwaCOA5gdwpTrHM887oZIorGGBfH5QEz1jOvP9b+hU0tPUtu2gwtHlDy5odW5RwwM9ray4lLGjs11z' +
+                 'lTl02KzjUsVA1XJZ48MHtbW7WwPdWZJlMkPZYkhYiF7GoBgQ1/q4ISXlBg8FaEDYJovGOhmNDAxggII5uSmRA49ZZNNa3tDt+oqm9j2qd06e0N' +
+                 'iWZ6WVdS3MLUA7y+B3TLnOHhSpoo9v32C/uPxGFYgEUFJdu7cdUbtpmso6vdjFdbBlgrRxMKbURATduNAKOCQiH3117Tipxkah27WwZvKK8wAO' +
+                 'NJJDuewQ2mGRJjyxUV/T3Owq6kCGwqJOnDyliS0jWi+taXrfAcocavH2nLLZLFxbpmFi2tTWpQ7IPO6mMa3rujpzQWO79quwUiSD4MtD6ANKad' +
+                 'QiZjZt4Y9s4aMd8Bb6ZTrVa3VsBP0EVhys0FyojjGfriFYDtSA3O1MGg9oa764obHRYc1eOq0fvPOqHv/NZzUwOKSZmXNaWSnoof5hHXvwKTIa' +
+                 'Vy6danGoTRLibkLBnp365JOPNT9/Gy3+819uUinV6eZS2VcCKxRDL0sbvuavLKlzeIs29RuTAGdFvryMR1kRf39DAbSTtNs5hIdSuMhVqwCYXi' +
+                 'oCrjww5RGoOJ9v9JcsL0A73eM7dejAAxof6lWdTm0Yi0dZ4/Fk67laZaOlQqvra+Z70+JwoOEiw2dg3xBdMB/ouWd+Ww/0jerOtYqefPDz2jW8' +
+                 'XyvFOTm+rQObn9bnDn+ZmQFwM0s0OFAIlxr+cmjFIKgokWvT4NR+dezao7auHpVvr0iFsjo29WGGLfmcKIajT6bzSmc7OBgSSyUDesGmitlM1j' +
+                 'QpBAzWapzCaGyrocBaae6mlgD2vnu3KwEWzp+9qImRHdqamNSxrU9pi9um3lyHRvt3qeIvttTGGN0GPFYjw725Xu3sndRQvke10oasXFbxrozS' +
+                 'jAo2HTzc1y8vkaTRgA77RmTSMfJGyZNJM4LEWz4Ay09joAam/kb/LFJtWmVsaExtW7YraOvVH/3FX+mji1d18bWf69Gdh1oOZGG5gP0fUk9Pv6' +
+                 'rnbN2zdRtUxcBE5oJGUcGtoj4491MyhdY7SeQOV+3haLZv1TSfGJk2HVwjsBh7JpN4JmLwyxsEnmrxYQMP4Bx4eOK4sTXG0VgGf/DRur+q+/ce' +
+                 'Ra426fTFc6pWIu24Z1KdHXkkrq43L53SEiUdHxplJpH6ajU9/sSvKgdxf3T6fa3MFdHcIlRpY7FSrQw5mIQIsE/t2af+rn4SB25bJTX5gUagK/' +
+                 'OnhWWTTUrpolQMVVCJsf2ty59qoRNLKtc9SKNU9aUv/6UW7l5XgM0/e/2Gzs4vaef4tPbt3acawXZ292h07yEkq6Su9rxGd0ywOM1BuSO6xa8x' +
+                 'tprZGoVpHxrWQE9vyyN6XDP6m8WWZej8uPkdPBr/6KFIFgJQxarFOBf1hfO42Ux3jNZKxHgA3Y3nEvq9555WZmRYG9z8zstvaKVxTX/6h3+nni' +
+                 '2jWlq+q9jqKhit6J2fv6Husc3w3QY+ktqYAZy/AVlysVwRmBsCNgnK2pnPqEFDLS8uanluXsW1MmZinYbxYIm0uqhUW1tWKSOnLNXiMNO8xuEa' +
+                 '6XawKB60ERF4PO1pobAu/6N35dR8Pfj0F9RYX9HN91f09W9+TUcePqqD2KPRgV16GwL210qK8IR2UIOOkFBYoowIjI+Oq6ezVx5BXPzgjM6fOc' +
+                 'v1UL0jW9Q9tFl9E1v4nemxuKq7K4s6++F7wM0M8iiJBVYceNBQhG28INJnOs9lzr146lXlJka1sPCRvI4Ep0rp9IXzil+e0ej2KQ1MbkODbRWW' +
+                 'lvXQw4+jAld07r0TYInKJBIKKXESgh7sH1S5uKy3X3pd2fZePfDEMWXb2pSGCYwzigjWo3PrtU1IXkWTE+P6aOaSnP2f2XbcABISE2CgNMY6YQ' +
+                 '0qMXUkba3XS8ozMd0tr+v6uy9r4WYJh023JtbUf/8R9WXbNcjp/esfMpjX1bd5VCdf/IraByfxj7XWhNY3MaaIEr7xvW9rx8HDOnT4MKQeqlwq' +
+                 'qcSnjqtfXyvy+wZoYyrETxrsptIZup3sGXowKmDZ1JzuMhaoKyootU7Jd05gAV3dNzKgX9t3VHnooKO7XecuXdaP3vyJmoM71AE0cgMDKhdW1d' +
+                 '59QJOPPKeFi++obWhcTiqh8sqSrpy9pIc++1vajPzduX2rZUKMegRhSQx9dDV2jFGhYirHvz4NWEa/rS/97TPk1zLvcEyPy4b9m6R7uITPy7Tp' +
+                 'hlPVviCjgXy7Ii+tTz6eRyPv6M7MVeYPHwnDRKyFeviRQxoc3w7+MvJ6uvT9f/iqvHRSFfhv8eYd3XfwEY0MDrRkLU5SgkoBcbCVMc5mvaA11M' +
+                 'hQjJvgeZLkV8sUtQYPPjF13MKsWoi0maIcuiztprRO2c2bhAwgX64V9EZlVi+9/Lr++e//CxzW8HCYhME++AvXTWNYTkYdXR1678o1bR8d0cju' +
+                 '/br03o9VafAapKNHA8MjqlLKKKwTRF5KZZWHchaX7vLaI61hRtQIairMXVNpdQntL0FXhgzoKlNa82arxUPQpjGn+DB8IM1iQQe8FDyY3qzBmq' +
+                 'v9BzbLwt20D3QCcDq9XKHzA51aXtN3z8yoWC3qZ//3PQ4Z1z2/9Lxmr76hfHtOa8wkZZyuydo6nNrTO6AZ5HNhpazh4QEtzi0pne/S5O5DyB7j' +
+                 'QKWo6ipu+9DTe44bJqd/W9kzpE46WvNIQ8bB1HSP2619+TEtc9Lpia2a2nWfTnx8VgFOpbGKKTh4L0M7hgPOGknj9+Y/UQYcjRLEgp9QOo0bj+' +
+                 'exZjFtcKDB/iFdOHVamZ5NeMXNOvOzN5XpH1COVyBl3tmM79yPs69qZfEWXXxs6rgDJkJjucFTa/6lvGbEZJqUj8+btLK6cO0m7mRQA2Rzz/ig' +
+                 'tkAPYaJLV9fvauTg3la5eWujh+7Zp070+dSb36EqednQUrFYaPk+wxTkXFfnVzR9725tH+7W17/6N5o++qTSSaMewo7d1ImXfqqe0VEapmCcPv' +
+                 'kjOBenbN5yhh6LggXDiQFOpwQneryU3Ma88q0X/loduJR/xQn/Bjz264f2a3rPDr2yeg1IJPTAxE61k4UAz7hpYETvnX9fRRowm0spXF9SJtut' +
+                 'VfbYCp1tLs7rhf9+XcM7dqoP5Siu4XjogdM/+jdlmFNWdu3W7vufMPMZ2eJjvJyZT8VYaMyDbSE7dla/P7Rb+5nAtk/vUsfAmJLZNm3GI37tX/' +
+                 '5R8zdnMaW+rq0taGeySw8O9yuB+qQzSSXzbVor3UU2E9o2sk1VMBiATwvIFHn9cfql1+T2T2rrrild/+gS+Pd06fw5dY5OKNkzrbOv/q9WTdB/' +
+                 '8o3faRrD0IQ4I17q2Ik0L40YroHi4WyfBiHLC9dv8l5lSO7GKr6us/UW4M5yRXunJ/XvF99VjtdLxyh7Clp59+oNOryMA5JKFfxfrajevm5983' +
+                 '9eVC9Bu6kk3Rpjhs5oDQPx8KHDKi0uKc7rvpuzV9DneZWv3lZnNqFPSBQvl+gsAEnDMvzgcAF7JdjQuJvV3eu3dcNHQW7fQbZu6QvPHCPLpvSW' +
+                 'esZ36MbdWW1AB59nhkgy17w2O6+35md0pGerNvf2Afq0SoU5XeZ5WAnvx9CFjWcQUtmGhOG90++j8bzriaqLVJG3upQ7GmpA+gV14g9j5n8rNP' +
+                 'mveTOA+LSmORc8hbyauHFjHo30NTa5Q2+9+rbOnO/TA/fdo8WovTUaVJbnOAizh+3r6hovIcsr+t2pw8oyeKUTvho02nfeep/MnFJ/Wx88yHxt' +
+                 'pBQYeGA8qldVXLpBQ0Js0JJxVnVUKT3UoxS2bfHKrP4fwws6EafQtaUAAAAASUVORK5CYII=',
+        composer: 'Brian May',
+        genre: 'Classic Rock',
+        length: 122,
+        elapsed: 5,
+        number: 1,
+    },
+    isPlaying: true,
+    isStopped: false,
+    isShuffleEnabled: false,
+    volume: 60,
+    nowPlayingApplication: {
+        name: 'Music',
+        identifier: 'com.apple.Music',
+        // On a real device, this instead will be `xui://application/icon/com.apple.Music`, with much higher resolution
+        // Base64 is used here just for the sake of being able to include an image directly inside this script
+        icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEsAAABLCAYAAAA4TnrqAAAEGWlDQ1BrQ0dDb2xvclNwYWNlR2VuZXJpY1JHQgAAOI' +
+              '2NVV1oHFUUPrtzZyMkzlNsNIV0qD8NJQ2TVjShtLp/3d02bpZJNtoi6GT27s6Yyc44M7v9oU9FUHwx6psUxL+3gCAo9Q/bPrQvlQol2tQgKD60+I' +
+              'NQ6Ium65k7M5lpurHeZe58853vnnvuuWfvBei5qliWkRQBFpquLRcy4nOHj4g9K5CEh6AXBqFXUR0rXalMAjZPC3e1W99Dwntf2dXd/p+tt0YdFS' +
+              'BxH2Kz5qgLiI8B8KdVy3YBevqRHz/qWh72Yui3MUDEL3q44WPXw3M+fo1pZuQs4tOIBVVTaoiXEI/MxfhGDPsxsNZfoE1q66ro5aJim3XdoLFw72' +
+              'H+n23BaIXzbcOnz5mfPoTvYVz7KzUl5+FRxEuqkp9G/Ajia219thzg25abkRE/BpDc3pqvphHvRFys2weqvp+krbWKIX7nhDbzLOItiM8358pTwd' +
+              'irqpPFnMF2xLc1WvLyOwTAibpbmvHHcvttU57y5+XqNZrLe3lE/Pq8eUj2fXKfOe3pfOjzhJYtB/yll5SDFcSDiH+hRkH25+L+sdxKEAMZahrlSX' +
+              '8ukqMOWy/jXW2m6M9LDBc31B9LFuv6gVKg/0Szi3KAr1kGq1GMjU/aLbnq6/lRxc4XfJ98hTargX++DbMJBSiYMIe9Ck1YAxFkKEAG3xbYaKmDDg' +
+              'YyFK0UGYpfoWYXG+fAPPI6tJnNwb7ClP7IyF+D+bjOtCpkhz6CFrIa/I6sFtNl8auFXGMTP34sNwI/JhkgEtmDz14ySfaRcTIBInmKPE32kxyyE2' +
+              'Tv+thKbEVePDfW/byMM1Kmm0XdObS7oGD/MypMXFPXrCwOtoYjyyn7BV29/MZfsVzpLDdRtuIZnbpXzvlf+ev8MvYr/Gqk4H/kV/G3csdazLuyTM' +
+              'PsbFhzd1UabQbjFvDRmcWJxR3zcfHkVw9GfpbJmeev9F08WW8uDkaslwX6avlWGU6NRKz0g/SHtCy9J30o/ca9zX3Kfc19zn3BXQKRO8ud477hLn' +
+              'Afc1/G9mrzGlrfexZ5GLdn6ZZrrEohI2wVHhZywjbhUWEy8icMCGNCUdiBlq3r+xafL549HQ5jH+an+1y+LlYBifuxAvRN/lVVVOlwlCkdVm9NOL' +
+              '5BE4wkQ2SMlDZU97hX86EilU/lUmkQUztTE6mx1EEPh7OmdqBtAvv8HdWpbrJS6tJj3n0CWdM6busNzRV3S9KTYhqvNiqWmuroiKgYhshMjmhTh9' +
+              'ptWhsF7970j/SbMrsPE1suR5z7DMC+P/Hs+y7ijrQAlhyAgccjbhjPygfeBTjzhNqy28EdkUh8C+DU9+z2v/oyeH791OncxHOs5y2AtTc7nb/f73' +
+              'TWPkD/qwBnjX8BoJ98VQNcC+8AAAAJcEhZcwAACxMAAAsTAQCanBgAAAFZaVRYdFhNTDpjb20uYWRvYmUueG1wAAAAAAA8eDp4bXBtZXRhIHhtbG' +
+              '5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJYTVAgQ29yZSA1LjQuMCI+CiAgIDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My' +
+              '5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+CiAgICAgIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiCiAgICAgICAgICAgIHhtbG' +
+              '5zOnRpZmY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vdGlmZi8xLjAvIj4KICAgICAgICAgPHRpZmY6T3JpZW50YXRpb24+MTwvdGlmZjpPcmllbnRhdG' +
+              'lvbj4KICAgICAgPC9yZGY6RGVzY3JpcHRpb24+CiAgIDwvcmRmOlJERj4KPC94OnhtcG1ldGE+CkzCJ1kAAA1PSURBVHgB7ZtLbFxXHca/ufMee2' +
+              'LHz8RNaEndBlEBLdAN4tEiukA8BUUs2JUVEhJiU6FKCLGBBWLNAoFYoPIUAqSCKJXoAsRDRRUJFOfZ2EmaOm7iZ+Zxn3zfOffOTOwGe8Z3hhrNke' +
+              '/c97nn/M73/5+nMxEDhmFPBJw9PTV8yBAYwupCCENYQ1hdEOji0aGyhrC6INDFo0NlDWF1QaCLR3NdPPvGfTRuV5v2ddLEdjLIZDKppvlgwiKcFh' +
+              'jyyDjWm+yAI4gpAsu84bs7dwDTKRmB89Y30Lx+A40ry3C36ph+5GEUDlVBqqkBe+PAMubDH8EhCWNAsWJuA8MTb20D7vIKmotX0Ty/BPfsZfjnry' +
+              'G8soFMkEHjn6sofvNjuP8rn08V1v/GDGMw1pQi61sMGNkUfU1MR4/5VIwXg3EvLMI/cwn+uauIltaQ2QqQKReRG6sgP1pGeHwGyOeRn5vCrQvLCH' +
+              'wf2RyzmJK6BgtLidYWg+n0MQbMxib85etwl65SKS8jOPMyQqoGizeAdR9OqYjC+AjNqwK86QhCxhMSbRBqA8JA0QfwGzzJ5Yk6wZ7s41LocTcwWF' +
+              'KRgUPlCEywuUXFXIe/dAWBAXMBOLsIvHwdzqqLXKmA/PgocGgEODaL8O6cARMKTMTNC008YYbAGKfZw0GUySJwQlBzHUj0xc7zjltdHA4GVkhQrM' +
+              'qb15ZRe+ZZRAvngXOLcC5eQ/a1GgrFPJwJQjlEOAQTGTAO1RJRLQRBxYRBQCBZCyyBI1AEZK7rmmA5FpbgtcP+QSmu/sMyZpeBt7qG9Se+jJE/X0' +
+              'L+xCQyIyVkjs4gOp61CpEZcaMVIfQFhqAMCCrRQCK8eG+UBIIzqiIgqsZes8oKM6G514Z1QJQVkUAmm0XjXwsovXAZpUceQHirYVxXGEg5AWHING' +
+              '2mdRwQQgIoMa/OfRuanhNE+34gH+bkEGRphsYvxrh4P43Qf2UlvsL1kalUEDaoGpqWBaQ91SRlCBYzZdUk07ImZsAZhcXmxmNdS1RlwCWwBJmQvC' +
+              'yBdcKSulMANgBYtkwNnJCZZMnLNUtJChFptRy0gaVzZroTijlum53uW0gxNMJOAAqWLxOmyaYdBgZLCQ8zAmVhqXZixWbV1AFJTQGrqjYcA4LAbF' +
+              'OBoOTEdW6gxddp6qwPeC0Ln5xkxu1wYMzQJlnmFUR5ZkiZorKYfgOGcKyDZqYNKMGyoBK1mHcTNVE5ocBoIzS94/vs7tRZOxRY9vkcPCor6S+ar6' +
+              'fDagC1Ybt4WdvlqQiBsGZoIUkNUokgtc3JqEZgBIRgIpqvnmejHG49gFtz4boh/BzNebqM4vxhuGsuUOM1AsvyvVZIpzIcJCzCAGFlqK6WmnTNbg' +
+              'HbYZGg5Kxi1PA0imHm3VoDTVYMfoG+bGYEufkJVOZnMXviKEbvnsXo7CRGZ8axdnkFf3zqpwibFBjhtkM6tDpjbMfdhyOjiqjA0mFNpfizzLjAyJ' +
+              'x4GrKJ4dV8jhg04RKMS3VEsyNw7ptCaf4IxufnCOYIRo5MoTxRtX2+bek8dHQSmKmiubjF+NvK0rfTsMT+w4pTaWo3KSuigxcgAVmrwW368Ao0v9' +
+              'kKnPlp5O+bI5i7ULmHYOamUZo49Lpgkk54wks+KmBj1qVJe+w853ieBFp3KqH/sGQBDMYRo8CarIDG6hbce8eQ/8gDGCGc8j3cOFJQnBxHloraHg' +
+              'wYVXXKNHNud/yNKZj79hZrwizcLEceOn3W9gh7PN+Zsh4juuNrcanKFIJyCc0VD/jk2zD/5GeRK2hk4PZwm2I6wWTjiG5/fMeZT0gulVVgwzTtkH' +
+              '6M21MYK8vAyhXhrYSYes9bDaiIZgM6dhs0Zi6xmJ/tsez5XK33Rj5AscNnsRq1qtxzLK//YP9hxd+Vz/LYdAhzVJg8uoKU0+Fb7MXef1UgnsyQA4' +
+              'BSWCsk5dG60NvBwGCFbAp4KLJBqqZCR0Z6S/cd35Jzb9K65buSkFLXcHDtLLXC/YxgqePcv2CURU4uzTHt7wxMWcZEWBvaBmm71FPFRnMTpGaeBU' +
+              'NlpWR9rSQODhb7e16GTQf18aiyvgRKSZ3sep6d6Q6fpTojjdB/WHFCBcilz7Kd4/4oS8NAajY0mSvtW9KSPaYArP+w4iKVz3Lls5hqHSuklAfG1C' +
+              'YhM3RZFlJYy2e1b5vv9vozAFg2pabpQDPkTF4LVq+J3vleG3tAX+VxJEId8wRi++7ON7u50ndYSUKNGVJZHFxmiSc+K6Ui78ixx9GGJjvoflZf1p' +
+              'Ze6DusJL0CJDMUrMQM08tGG7oce5Om6DltUO27+/ti/2HF6ROgpmrDvsBK9Gt9leto3IyjhLEvO3CNUuuz8mw+aFS0T7Uh8cixe2ZY+iCaYUtZnJ' +
+              'Hm8IwfEVZc4vGtnndSjAaoI/Y11btx2HRocrxMfivg0HWirJ4/sO3FwZkhS1s+S8PF+/FZZrKDHDQ6oQrPjG7FQl24vIXzmw6KRY3GmvHYbdnd32' +
+              'n/YcXeVWryOP7uaTi5VRvuPfEa55JWpJ5EmK4X4Ma6i2s3XSy8UsePT9VRKo2gwQfV+G2FlDx8/2EphwpUlByvR1DdwgrZ+3YoI+X52mt1nL5Yw+' +
+              'nFJhaWfVzcjPCqR7WyuXCMK/3ybDJ4np09Mt813+ZPCsD6DytOpKa2XCmLPuu2Um/l6PUPElDrWy5+8Nsb+OVpD9f8PCocZa1yvVaplMWbuRoSbC' +
+              'q4VJ9PsIFZGJICnW1J6hssOV8FLRfS+J4mV13O7rgcHtYIxF6C/JMUtcL1Wl/8zjJOrZdwYnIEJzmAqKEeTaZyWQkabCUweqMeh8qVX7xNvXv73K' +
+              '5JShVWxBwIkpxv4jJyeZvSMy8yR9UymjXPTNnvmjI+YPwTs/2tn9zAwkYVb5kpoOZzHlFw5JIUtcBwL3iRmbzV5AiPdTHlkAosYyoGkPUrSmPAse' +
+              'ONmz5u0q+88Icm/vqLHEaPlrByQf5k94wk5vePs7fwq3M5nJwpYZMz0Ga+kfEb4ZqSsXB0RYAU+w5lpQRt37C0AE2morC81MSll1wsvRTgyr8jrJ' +
+              'zPYO0qB+G4OLZyLE8zpCk6HkveZHUXp2vjPHXRYz+vbCoGTe+bN00bykLXuY4UJKYMf+S7yjTVbJyu3YvGvL7rz75gqWDljxYX6njue3VcfMZBfb' +
+              'EAZ4oriKdycMYcjJ9Uqxpo0k7UcNewL92wTdh/M5U4hzdvsT3Fd8w4WBuL0Bg4Mj0FqVXQ2DLBGheKHKs6xh3IPGNm5rn9/PQMKzGTvz+3iR895q' +
+              'N0bxUjx3IoH+MaBWZUOOSANdul5mFAUPJjWg6kWR0blNHkOL6U7OJbYxWua4+PNdmhQ22KwyhKr8fHUl6Rp6/Sqb3zuI74rHWi5ni/P0x+9yExva' +
+              'UzdTz9CR+HPzDOWWUOjTBhDbZxXC5/dJkVLvDjKhhuBCRIOjZrp2x278jJpsggwTtOcB4w8KhKNTmYeW2USmttF2GrwaulkgVev8Hvf6jq4b0nua' +
+              'CXwVYSNsb9/vYEi+ky4fmnGyjMjiIs0Mw40RywWWCAMFZlzNdegHisc3ONjcakplSh3ykkfvChkxV87n4Pp9c8VIts0DI+A0yQlA4mRiuhK5yk2K' +
+              'L/PLW+iW88NorRMrs8Mn09k1Lgp7sLiaq3Nnxc+puDwlzOrJky6mHCpBxB0l5wPB5rr4wJWkhYxSIPGHbLiNpZkt9Tj1fx0Ogmfvdak6DouOm8c3' +
+              'LgLBw23rHM5sTzaw0OvK/jT5+u4OH7WIAElTh487EUfrr3WTb9qPNfQW6t0keUVcL0TUy0gUI4oTETmqE55vV4r1cLpRCTkyRpgoUWn+zYyYSU6Z' +
+              'nDBfzwC2P47u838fOzdby0lcU6vzHNVcn3lkM8OhHh6yey+PCDhzFZ1erCdg29I9J9XOgeVpy/Ak0iO6LuhXwIATERMkEBC9j1SABJUVKdNvmzu4' +
+              '57mJsrmSTvpiw9JHMUsMOE8OSnJvCEOs6rXKZEvzhayhNOFhPVHFXKjzMkFY85Sfmne1hxAsYmc5h+IMTiX0KUJjlGpTXtHQoyfoWgtFdtWKACz1' +
+              '9o4EufcVAuc9LCtM/2lhsDLDbJqbECtG0P8k9SYuLrtt9P49wWRxcxSQ0qPfmS9z2ex8qLNThlqxzTRND9eFNzAezulFj9X77q4V0P1fDxj9paai' +
+              '+q6kyWAcF4xUyglQZtOldq5J+6jbMz/r0cdw1Lkar0lMh3v38UH/62j7PP1oyfylE9uRIdL/dZ7iM64E2uCT1ztoa3P7iJr321SuduVdVrxvSeGs' +
+              'JKgzad828goed/zhQsm+EIv/nZJn79/RA3X+GwMdtDqvFQDFGZDHD3yRAffCyLRx/lwlnO5/XTp/SbWM+wlLA2MHYxVj1cPOdifS0y/+p3mDXe9C' +
+              'y3aXZ74jVYBxmU8rsvWAkwQYt56NKOIEhm2GZQ9rIjBelc2DesJBkCZteDxlfkS2in1lSTpw72PjVYBxvD3lLfU224t6j//54awuqiTIewhrC6IN' +
+              'DFo0NlDWF1QaCLR4fKGsLqgkAXjw6V1QWs/wAwPYp3ZJkAuQAAAABJRU5ErkJggg==',
+        badge: '',
+        isInstalling: false,
+        isSystemApplication: true
+    },
+    supportedActions: {
+        skip: true,
+        skipFifteenSeconds: false,
+        goBackFifteenSeconds: false
+    }
+};
+
+//////////////////////////////////////////////////////////////////////
 // Weather conditions
 //////////////////////////////////////////////////////////////////////
 
-// These MUST be all specified in metric units for conversion to work correctly
+// All dates listed below will be automatically converted into Date objects for you.
+// However, you must keep the same format here for that to work!
 const metric_weather = {
     san_francisco: {
         now: {
@@ -6791,209 +6961,263 @@ const imperial_weather = {
 if (window.api !== undefined) {
     console.error('emulation.js :: Detected that Xen Widget API is available, aborting emulation.');
 } else {
+    let hasSeenLoad = false;
+    var api = {
+        weather: {
+            _callbacks: [],
+            observeData: function (callback) {
+                console.log('emulation.js :: registered weather callback');
+                api.weather._callbacks.push(callback);
+                if (hasSeenLoad) callback(api.weather);
+            }
+        },
+        system: {
+            _callbacks: [],
+            observeData: function (callback) {
+                console.log('emulation.js :: registered system callback');
+                api.system._callbacks.push(callback);
+                if (hasSeenLoad) callback(api.system);
+            }
+        },
+        resources: {
+            _callbacks: [],
+            observeData: function (callback) {
+                console.log('emulation.js :: registered resources callback');
+                api.resources._callbacks.push(callback);
+                if (hasSeenLoad) callback(api.resources);
+            }
+        },
+        media: {
+            _callbacks: [],
+            observeData: function (callback) {
+                console.log('emulation.js :: registered media callback');
+                api.media._callbacks.push(callback);
+                if (hasSeenLoad) callback(api.media);
+            },
+            goBackFifteenSeconds: function() {
+                console.log('Called goBackFifteenSeconds, but not doing anything');
+            },
+            nextTrack: function() {
+                console.log('Called nextTrack, but not doing anything');
+            },
+            observeElapsedTime: function (callback) {
+                console.log('Called observeElapsedTime, but not doing anything');
+            },
+            previousTrack: function() {
+                console.log('Called previousTrack, but not doing anything');
+            },
+            seekToPosition: function(value) {
+                console.log('Called seekToPosition, setting value');
+                if (value < 0) value = value;
+                if (value >= api.media.nowPlaying.elapsed) value = api.media.nowPlaying.elapsed;
 
-let hasSeenLoad = false;
-var api = {
-    weather: {
-        _callbacks: [],
-        observeData: function (callback) {
-            console.log('emulation.js :: registered weather callback');
-            api.weather._callbacks.push(callback);
-            if (hasSeenLoad) callback(api.weather);
+                api.media.nowPlaying.elapsed = value;
+
+                api.media._callbacks.forEach(function(fn) {
+                    fn(provider);
+                });
+            },
+            setVolume: function(value) {
+                console.log('Called setVolume, setting value');
+                if (value < 0) value = value;
+                if (value > 100) value = 100;
+
+                api.media.volume = 100;
+
+                api.media._callbacks.forEach(function(fn) {
+                    fn(provider);
+                });
+            },
+            skipFifteenSeconds: function() {
+                console.log('Called skipFifteenSeconds, but not doing anything');
+            },
+            togglePlayPause: function() {
+                console.log('Called togglePlayPause, setting value');
+                api.media.isPlaying = !api.media.isPlaying;
+
+                api.media._callbacks.forEach(function(fn) {
+                    fn(provider);
+                });
+            }
         }
-    },
-    system: {
-        _callbacks: [],
-        observeData: function (callback) {
-            console.log('emulation.js :: registered system callback');
-            api.system._callbacks.push(callback);
-            if (hasSeenLoad) callback(api.system);
-        }
-    },
-    resources: {
-        _callbacks: [],
-        observeData: function (callback) {
-            console.log('emulation.js :: registered resources callback');
-            api.resources._callbacks.push(callback);
-            if (hasSeenLoad) callback(api.resources);
-        }
-    },
-};
-
-// Apply configuration
-api.system = Object.assign(api.system, system);
-api.resources = Object.assign(api.resources, resources);
-
-const payload = configuration.weather.units === 'imperial' ? imperial_weather[configuration.weather.city] : metric_weather[configuration.weather.city];
-
-// Convert all weather timestamps to Date
-function datestringToInstance(str) {
-    if (str === null || str === undefined) {
-        return new Date(0);
-    }
-
-    // Example: 2020-03-05T03:48:34-0800
-    const parts = str.split('T');
-    if (parts.length !== 2) {
-        return new Date(0);
-    }
-
-    try {
-        const datePortion = parts[0];
-        const timePortion = parts[1].substring(0, 8);
-
-        // Parse out all relevant metadata from the date
-        const parsed = {
-            year: parseInt(datePortion.substring(0, 4)),
-            month: parseInt(datePortion.substring(5, 7)),
-            day: parseInt(datePortion.substring(8, 10)),
-            hour: parseInt(timePortion.substring(0, 2)),
-            minutes: parseInt(timePortion.substring(3, 5)),
-            seconds: parseInt(timePortion.substring(6, 8)),
-        };
-
-        let date = new Date();
-        date.setFullYear(parsed.year, parsed.month - 1, parsed.day);
-        date.setHours(parsed.hour, parsed.minutes, parsed.seconds);
-
-        return date;
-    } catch (e) {
-        console.error(e);
-        return new Date(0);
-    }
-}
-
-function timezoneOffset(str) {
-    if (str === null) return {
-        hour: 0,
-        minute: 0
     };
 
-    // Used in ISO 8061 spec for "no timezone"
-    if (str.endsWith('Z')) {
-        return {
-            hour: 0,
-            minute: 0
-        };
-    }
+    // Apply configuration
+    api.system = Object.assign(api.system, system);
+    api.resources = Object.assign(api.resources, resources);
+    api.media = Object.assign(api.media, media);
 
-    const parts = str.split('T');
-    if (parts.length !== 2) {
-        return {
-            hour: 0,
-            minute: 0
-        };
-    }
+    const payload = configuration.weather.units === 'imperial' ? imperial_weather[configuration.weather.city] : metric_weather[configuration.weather.city];
 
-    try {
-        const timezone = parts[1].substring(8);
-
-        // Parse out all relevant metadata from the date
-        const parsed = {
-            negative: timezone.charAt(0) === '-',
-            hour: parseInt(timezone.substring(1, 3)),
-            minutes: parseInt(timezone.substring(3))
-        };
-
-        return {
-            hour: parsed.negative ? 0 - parsed.hour : parsed.hour,
-            minute: parsed.negative ? 0 - parsed.minutes : parsed.minutes,
+    // Convert all weather timestamps to Date
+    function datestringToInstance(str) {
+        if (str === null || str === undefined) {
+            return new Date(0);
         }
-    } catch (e) {
-        console.error(e);
-        return {
+
+        // Example: 2020-03-05T03:48:34-0800
+        const parts = str.split('T');
+        if (parts.length !== 2) {
+            return new Date(0);
+        }
+
+        try {
+            const datePortion = parts[0];
+            const timePortion = parts[1].substring(0, 8);
+
+            // Parse out all relevant metadata from the date
+            const parsed = {
+                year: parseInt(datePortion.substring(0, 4)),
+                month: parseInt(datePortion.substring(5, 7)),
+                day: parseInt(datePortion.substring(8, 10)),
+                hour: parseInt(timePortion.substring(0, 2)),
+                minutes: parseInt(timePortion.substring(3, 5)),
+                seconds: parseInt(timePortion.substring(6, 8)),
+            };
+
+            let date = new Date();
+            date.setFullYear(parsed.year, parsed.month - 1, parsed.day);
+            date.setHours(parsed.hour, parsed.minutes, parsed.seconds);
+
+            return date;
+        } catch (e) {
+            console.error(e);
+            return new Date(0);
+        }
+    }
+
+    function timezoneOffset(str) {
+        if (str === null) return {
             hour: 0,
             minute: 0
         };
+
+        // Used in ISO 8061 spec for "no timezone"
+        if (str.endsWith('Z')) {
+            return {
+                hour: 0,
+                minute: 0
+            };
+        }
+
+        const parts = str.split('T');
+        if (parts.length !== 2) {
+            return {
+                hour: 0,
+                minute: 0
+            };
+        }
+
+        try {
+            const timezone = parts[1].substring(8);
+
+            // Parse out all relevant metadata from the date
+            const parsed = {
+                negative: timezone.charAt(0) === '-',
+                hour: parseInt(timezone.substring(1, 3)),
+                minutes: parseInt(timezone.substring(3))
+            };
+
+            return {
+                hour: parsed.negative ? 0 - parsed.hour : parsed.hour,
+                minute: parsed.negative ? 0 - parsed.minutes : parsed.minutes,
+            }
+        } catch (e) {
+            console.error(e);
+            return {
+                hour: 0,
+                minute: 0
+            };
+        }
     }
-}
 
-// Convert this to offset from current timezone
-const timezoneOffsetGMT = timezoneOffset(payload.now.sun.sunset);
-const realOffsetMinutes = new Date().getTimezoneOffset() * -1; // positive is returned when before GMT
+    // Convert this to offset from current timezone
+    const timezoneOffsetGMT = timezoneOffset(payload.now.sun.sunset);
+    const realOffsetMinutes = new Date().getTimezoneOffset() * -1; // positive is returned when before GMT
 
-const realOffset = {
-    hours: Math.floor(realOffsetMinutes / 60),
-    minutes: realOffsetMinutes - (Math.floor(realOffsetMinutes / 60) * 60)
-};
+    const realOffset = {
+        hours: Math.floor(realOffsetMinutes / 60),
+        minutes: realOffsetMinutes - (Math.floor(realOffsetMinutes / 60) * 60)
+    };
 
-timezoneOffsetGMT.hour = timezoneOffsetGMT.hour - realOffset.hours;
-timezoneOffsetGMT.minute = timezoneOffsetGMT.minute - realOffset.minutes;
+    timezoneOffsetGMT.hour = timezoneOffsetGMT.hour - realOffset.hours;
+    timezoneOffsetGMT.minute = timezoneOffsetGMT.minute - realOffset.minutes;
 
-// `now` properties
-payload.now.moon.moonrise = datestringToInstance(payload.now.moon.moonrise);
-payload.now.moon.moonset = datestringToInstance(payload.now.moon.moonset);
+    // `now` properties
+    payload.now.moon.moonrise = datestringToInstance(payload.now.moon.moonrise);
+    payload.now.moon.moonset = datestringToInstance(payload.now.moon.moonset);
 
-payload.now.sun.sunrise = datestringToInstance(payload.now.sun.sunrise);
-payload.now.sun.sunset = datestringToInstance(payload.now.sun.sunset);
+    payload.now.sun.sunrise = datestringToInstance(payload.now.sun.sunrise);
+    payload.now.sun.sunset = datestringToInstance(payload.now.sun.sunset);
 
-// `hourly` properties
-for (let i = 0; i < payload.hourly.length; i++) {
-    // Comes through as UNIX timestamp
-    let _date = new Date(payload.hourly[i].timestamp );
+    // `hourly` properties
+    for (let i = 0; i < payload.hourly.length; i++) {
+        // Comes through as UNIX timestamp
+        let _date = new Date(payload.hourly[i].timestamp );
 
-    // Apply timezone offset to get local apparent time
-    _date.setHours(_date.getHours() + timezoneOffsetGMT.hour, _date.getMinutes() + timezoneOffsetGMT.minute);
+        // Apply timezone offset to get local apparent time
+        _date.setHours(_date.getHours() + timezoneOffsetGMT.hour, _date.getMinutes() + timezoneOffsetGMT.minute);
 
-    payload.hourly[i].timestamp = _date;
-}
+        payload.hourly[i].timestamp = _date;
+    }
 
-// `daily` properties
-for (let i = 0; i < payload.daily.length; i++) {
-    // Comes through as UNIX timestamp
-    let _date = new Date(payload.daily[i].timestamp );
+    // `daily` properties
+    for (let i = 0; i < payload.daily.length; i++) {
+        // Comes through as UNIX timestamp
+        let _date = new Date(payload.daily[i].timestamp );
 
-    // Apply timezone offset to get local apparent time
-    _date.setHours(_date.getHours() + timezoneOffsetGMT.hour, _date.getMinutes() + timezoneOffsetGMT.minute);
+        // Apply timezone offset to get local apparent time
+        _date.setHours(_date.getHours() + timezoneOffsetGMT.hour, _date.getMinutes() + timezoneOffsetGMT.minute);
 
-    payload.daily[i].timestamp = _date;
+        payload.daily[i].timestamp = _date;
 
-    payload.daily[i].moon.moonrise = datestringToInstance(payload.daily[i].moon.moonrise );
-    payload.daily[i].moon.moonset = datestringToInstance(payload.daily[i].moon.moonset );
-    payload.daily[i].sun.sunrise = datestringToInstance(payload.daily[i].sun.sunrise );
-    payload.daily[i].sun.sunset = datestringToInstance(payload.daily[i].sun.sunset);
-}
+        payload.daily[i].moon.moonrise = datestringToInstance(payload.daily[i].moon.moonrise );
+        payload.daily[i].moon.moonset = datestringToInstance(payload.daily[i].moon.moonset );
+        payload.daily[i].sun.sunrise = datestringToInstance(payload.daily[i].sun.sunrise );
+        payload.daily[i].sun.sunset = datestringToInstance(payload.daily[i].sun.sunset);
+    }
 
-// `nightly` properties
-for (let i = 0; i < payload.nightly.length; i++) {
-    payload.nightly[i].moon.moonrise = datestringToInstance(payload.nightly[i].moon.moonrise);
-    payload.nightly[i].moon.moonset = datestringToInstance(payload.nightly[i].moon.moonset);
-}
+    // `nightly` properties
+    for (let i = 0; i < payload.nightly.length; i++) {
+        payload.nightly[i].moon.moonrise = datestringToInstance(payload.nightly[i].moon.moonrise);
+        payload.nightly[i].moon.moonset = datestringToInstance(payload.nightly[i].moon.moonset);
+    }
 
-// Metadata - do not convert to local apparent time
-payload.metadata.updateTimestamp = new Date(payload.metadata.updateTimestamp);
+    // Metadata - do not convert to local apparent time
+    payload.metadata.updateTimestamp = new Date(payload.metadata.updateTimestamp);
 
-api.weather = Object.assign(api.weather, payload);
+    api.weather = Object.assign(api.weather, payload);
 
-function applyCallbacks(provider) {
-    provider._callbacks.forEach(function(fn) {
-        fn(provider);
+    function applyCallbacks(provider) {
+        provider._callbacks.forEach(function(fn) {
+            fn(provider);
+        });
+    }
+
+    // Override toLocaleTimeString to use our 12/24 hour metadata
+    const oldToLocaleTimeString = Date.prototype.toLocaleTimeString;
+    Date.prototype.toLocaleTimeString = function(locales, options) {
+        const is24h = api.system.isTwentyFourHourTimeEnabled;
+        if (!options) options = { 'hour12': !is24h };
+        else if (!('no12HourHook' in options)) options = {
+            'hour12': !is24h,
+            ...options
+        }
+
+        return oldToLocaleTimeString.apply(this, [locales, options]);
+    }
+
+    // On load, apply all the observeData calls
+    window.addEventListener('load', function() {
+        console.log('emulation.js :: on document load');
+        setTimeout(function() {
+            applyCallbacks(api.system);
+            applyCallbacks(api.resources);
+            applyCallbacks(api.media);
+            applyCallbacks(api.weather);
+
+            hasSeenLoad = true;
+            console.log('emulation.js :: notified all observeData callees');
+        }, 500);
     });
-}
-
-// Override toLocaleTimeString to use our 12/24 hour metadata
-const oldToLocaleTimeString = Date.prototype.toLocaleTimeString;
-Date.prototype.toLocaleTimeString = function(locales, options) {
-    const is24h = api.system.isTwentyFourHourTimeEnabled;
-    if (!options) options = { 'hour12': !is24h };
-    else options = {
-        'hour12': !is24h,
-        ...options
-    }
-
-    return oldToLocaleTimeString.apply(this, [locales, options]);
-}
-
-// On load, apply all the observeData calls
-window.addEventListener('load', function() {
-    console.log('emulation.js :: on document load');
-    setTimeout(function() {
-        applyCallbacks(api.system);
-        applyCallbacks(api.resources);
-        applyCallbacks(api.weather);
-
-        hasSeenLoad = true;
-        console.log('emulation.js :: notified all observeData callees');
-    }, 500);
-});
 }
