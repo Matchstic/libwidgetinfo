@@ -24,7 +24,11 @@ To use this script, download it to your widget's folder, and then add it to your
 
  The script will automatically detect if it is running on a real device, and disables itself in that case. However, you MUST remove the script before releasing your widget to a wider audience.
 
- You are free to edit individual data points in the emulation script. This is to allow you to check how your widget will function under different conditions.
+ You are free to edit individual data points in the emulation script. This allows you to check how your widget will function under different conditions.
+
+ ### Caveats
+
+ It is important to note that [Resource Packs](additional-documentation/resource-packs.html) do not work when running your widget on a desktop, via `emulation.js`. You will need to test that on a real device.
 
  ### Future Changes
 
