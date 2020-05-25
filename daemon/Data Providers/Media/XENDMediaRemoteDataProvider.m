@@ -394,6 +394,9 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
                     }
                 }
                 
+                // Make a copy, because underlying data may be freed when we least expect it
+                nowPlayingTrack = [nowPlayingTrack mutableCopy];
+                
                 // Exit dispatch group
                 dispatch_group_leave(serviceGroup);
             });
@@ -420,7 +423,7 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
     // Volume state
     dispatch_group_enter(serviceGroup);
     dispatch_async(self.updateQueue, ^{
-        float vol;
+        float vol = 0;
         [[objc_getClass("AVSystemController") sharedAVSystemController] getVolume:&vol forCategory:@"Audio/Video"];
         
         // Change it to be a percent between 0 and 100
