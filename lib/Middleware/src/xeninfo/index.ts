@@ -46,7 +46,12 @@ export default class XenInfoMiddleware implements XenHTMLMiddleware {
         // Call mainUpdate with changed namespace
         if ((window as any).mainUpdate !== undefined) {
             // Hitting user-defined code at this point, which very well may throw an exception
-            (window as any).mainUpdate(namespace);
+            try {
+                (window as any).mainUpdate(namespace);
+            } catch (e) {
+                // This does lose callstack symbols, but its legacy widgets so idc
+                window.onerror(e);
+            }
         }
     }
 }
