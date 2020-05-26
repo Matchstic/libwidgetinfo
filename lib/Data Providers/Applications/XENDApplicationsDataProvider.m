@@ -15,6 +15,8 @@
 
 #import "XENDApplicationsDataProvider.h"
 #import "PrivateHeaders.h"
+#import <objc/runtime.h>
+#import <dlfcn.h>
 
 @implementation XENDApplicationsDataProvider
 
@@ -48,9 +50,82 @@
     
     // Using private SpringBoard function to launch application
     // This feature is not available elsewhere.
+    // NOTE: This also needs to request the device to unlock, if necessary
     if ([[UIApplication sharedApplication] respondsToSelector:@selector(launchApplicationWithIdentifier:suspended:)]) {
         
-        [(SpringBoard*)[UIApplication sharedApplication] launchApplicationWithIdentifier:bundleIdentifer suspended:NO];
+        // Use the unlock request system to get past auth, and then do the application launch
+        SBLockScreenManager *manager = [objc_getClass("SBLockScreenManager") sharedInstance];
+        if ([manager respondsToSelector:@selector(unlockWithRequest:completion:)] && manager.isUILocked) {
+            
+            if (!objc_getClass("SBLockScreenUnlockRequest")) {
+                NSLog(@"ERROR :: Cannot use unlock API, because SBLockScreenUnlockRequest is missing");
+                callback(@{});
+                return;
+            }
+            
+            SBLockScreenUnlockRequest *unlockRequest = [[objc_getClass("SBLockScreenUnlockRequest") alloc] init];
+            unlockRequest.name = @"libwidgetinfo";
+            
+            /*
+             Sources (SpringBoardUI, needs some more research):
+             None
+             Boot
+             TransientOverlay
+             Logout
+             Plugin
+             Blocked
+             Keyboard
+             LostMode
+             IdleTimer
+             Restoring
+             Activation
+             LiftToWake
+             LockButton
+             RemoteLock
+             SOSDismiss
+             PowerDownDismiss
+             SmartCover
+             Notification
+             Authentication
+             NotificationCenter
+             Mesa
+             Siri
+             Touch
+             HomeButton
+             OtherButton
+             VolumeButton
+             ACPowerChange
+             ExternalRequest
+             ApplicationRequest
+             SpringBoardRequest
+             17 == SystemServiceRequest
+             ChargingAccessoryChange
+             CoverSheet
+             ControlCenter
+             CameraButton
+             MouseButton
+             */
+            // Source == SystemServiceRequest
+            unlockRequest.source = 17;
+            
+            /*
+             intents:
+             0 == none
+             1 == dismiss
+             2 == authenticate
+             3 == authenticate and dismiss
+             */
+            unlockRequest.intent = 3;
+            
+            [manager unlockWithRequest:unlockRequest completion:^(BOOL success) {
+                NSLog(@"DEBUG :: Called unlock with request %d", success);
+                if (success) {
+                    [(SpringBoard*)[UIApplication sharedApplication] launchApplicationWithIdentifier:bundleIdentifer suspended:NO];
+                }
+            }];
+        } else {
+            [(SpringBoard*)[UIApplication sharedApplication] launchApplicationWithIdentifier:bundleIdentifer suspended:NO];
+        }
     }
     
     callback(@{});
