@@ -24,4 +24,11 @@
  */
 - (void)requestIconDataForBundleIdentifier:(NSString*)bundleIdentifer callback:(void (^)(NSDictionary *result))callback;
 
+/**
+ * Requests for the specified application to be launched into the foreground
+ * @param bundleIdentifer The application to open
+ * @param callback The callback invoked after a response is recieved
+ */
+- (void)requestApplicationLaunchForBundleIdentifier:(NSString*)bundleIdentifer callback:(void (^)(NSDictionary *result))callback;
+
 @end

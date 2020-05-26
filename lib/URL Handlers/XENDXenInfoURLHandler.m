@@ -19,6 +19,7 @@
 #import "../Internal/XENDWidgetManager-Internal.h"
 #import "../Data Providers/Applications/XENDApplicationsDataProvider.h"
 #import "../Data Providers/Media/XENDMediaDataProvider.h"
+#import "../Data Providers/Applications/XENDApplicationsDataProvider.h"
 
 @implementation XENDXenInfoURLHandler
 
@@ -67,6 +68,9 @@
     XENDLog(@"*** XenInfo compatibility: handling navigation request: %@", url);
 
     XENDMediaDataProvider *media = (XENDMediaDataProvider*)[[XENDWidgetManager sharedInstance] providerForNamespace:@"media"];
+    XENDApplicationsDataProvider *apps = (XENDApplicationsDataProvider*)[[XENDWidgetManager sharedInstance] providerForNamespace:@"applications"];
+    
+    NSArray *splitAction = [[url absoluteString] componentsSeparatedByString:@":"];
     
     // Forward requests onto correct provider
     if ([[url absoluteString] isEqualToString:@"xeninfo:playpause"]) {
@@ -77,6 +81,32 @@
         return YES;
     } else if ([[url absoluteString] isEqualToString:@"xeninfo:prevtrack"]) {
         [media didReceiveWidgetMessage:@{} functionDefinition:@"previousTrack" callback:^(NSDictionary *res) {}];
+        return YES;
+    } else if ([[url absoluteString] hasPrefix:@"xeninfo:openurl"]) {
+        // Open the URL
+        NSString *parameter = [[splitAction lastObject] stringByRemovingPercentEncoding];
+        NSString* address = [NSString stringWithFormat:@"http://%@", parameter];
+        NSURL *url = [NSURL URLWithString:address];
+        
+        if (@available(iOS 10.0, *)) {
+            [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+        } else {
+            [[UIApplication sharedApplication] openURL:url];
+        }
+        
+        return YES;
+    } else if ([[url absoluteString] hasPrefix:@"xeninfo:consolelog"]) {
+        // Open the URL
+        NSString *parameter = [[splitAction lastObject] stringByRemovingPercentEncoding];
+        XENDLog(parameter);
+        
+        return YES;
+    } else if ([[url absoluteString] hasPrefix:@"xeninfo:openapp"]) {
+        // Open the URL
+        NSString *bundleIdentifier = [[splitAction lastObject] stringByRemovingPercentEncoding];
+        
+        [apps requestApplicationLaunchForBundleIdentifier:bundleIdentifier callback:^(NSDictionary *result) {}];
+        
         return YES;
     } else {
         return NO;

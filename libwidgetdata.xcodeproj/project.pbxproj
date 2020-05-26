@@ -343,6 +343,7 @@
 		C9DBDBA5244C7C12009E855E /* XENDNaturalConditionGenerator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XENDNaturalConditionGenerator.m; path = "daemon/Data Providers/Weather/XENDNaturalConditionGenerator.m"; sourceTree = SOURCE_ROOT; };
 		C9DBDBB2244C9679009E855E /* XENDLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XENDLogger.m; sourceTree = "<group>"; };
 		C9DBDBB3244C9679009E855E /* XENDLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XENDLogger.h; sourceTree = "<group>"; };
+		C9F132FC247D9BF700EACE93 /* PrivateHeaders.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrivateHeaders.h; sourceTree = "<group>"; };
 		C9F2601E240581FF003A5A85 /* XENDWeatherHooks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XENDWeatherHooks.h; path = "daemon/Data Providers/Weather/XENDWeatherHooks.h"; sourceTree = SOURCE_ROOT; };
 		C9F2601F240581FF003A5A85 /* XENDWeatherHooks.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XENDWeatherHooks.m; path = "daemon/Data Providers/Weather/XENDWeatherHooks.m"; sourceTree = SOURCE_ROOT; };
 		C9F2F3592301BE4100E4863B /* IS2PreProcessor.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = IS2PreProcessor.mm; sourceTree = "<group>"; };
@@ -638,6 +639,7 @@
 			children = (
 				C99BBEF824670F9300A6F426 /* XENDApplicationsDataProvider.h */,
 				C99BBEF924670F9300A6F426 /* XENDApplicationsDataProvider.m */,
+				C9F132FC247D9BF700EACE93 /* PrivateHeaders.h */,
 			);
 			path = Applications;
 			sourceTree = "<group>";

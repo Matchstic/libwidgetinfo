@@ -14,6 +14,7 @@
 **/
 
 #import "XENDApplicationsDataProvider.h"
+#import "PrivateHeaders.h"
 
 @implementation XENDApplicationsDataProvider
 
@@ -22,9 +23,37 @@
 }
 
 - (void)requestIconDataForBundleIdentifier:(NSString*)bundleIdentifer callback:(void (^)(NSDictionary *result))callback {
-    [self didReceiveWidgetMessage:@{
-        @"identifier": bundleIdentifer
-    } functionDefinition:@"_loadIcon" callback:callback];
+    
+    // Using UIKit private API to fetch icon
+    // This works inside both SpringBoard and Preferences, the main targets
+    NSData *png;
+    if (!bundleIdentifer || [bundleIdentifer isEqualToString:@""]) {
+        png = (id)[NSNull null];
+    } else {
+        UIImage *icon = [UIImage _applicationIconImageForBundleIdentifier:bundleIdentifer format:2 scale:[UIScreen mainScreen].scale];
+        
+        png = UIImagePNGRepresentation(icon);
+    }
+    
+    if (!png) {
+        png = (id)[NSNull null];
+    }
+    
+    callback(@{
+        @"data": png
+    });
+}
+
+- (void)requestApplicationLaunchForBundleIdentifier:(NSString*)bundleIdentifer callback:(void (^)(NSDictionary *result))callback {
+    
+    // Using private SpringBoard function to launch application
+    // This feature is not available elsewhere.
+    if ([[UIApplication sharedApplication] respondsToSelector:@selector(launchApplicationWithIdentifier:suspended:)]) {
+        
+        [(SpringBoard*)[UIApplication sharedApplication] launchApplicationWithIdentifier:bundleIdentifer suspended:NO];
+    }
+    
+    callback(@{});
 }
 
 @end
