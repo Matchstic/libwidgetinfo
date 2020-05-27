@@ -42,6 +42,8 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
     [internalSharedInstance springboardRelaunched];
 }
 
+static NSArray *whitelist;
+
 @implementation XENDMediaRemoteDataProvider
 
 + (void)load {
@@ -278,6 +280,24 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
                                              ^(int pid) {
         if (pid > 0) {
             NSString *bundleIdentifier = [self bundleIdentifierForPID:pid];
+            
+            // Check for Apple whitelist
+            if (!whitelist)
+                whitelist = @[
+                    @"com.apple.Music",
+                    @"com.apple.webkit.WebContent",
+                    @"com.apple.mobilesafari",
+                    @"com.apple.podcasts"
+                ];
+            if ([bundleIdentifier hasPrefix:@"com.apple"] && ![whitelist containsObject:bundleIdentifier]) {
+                
+                isStopped = YES;
+                
+                // Exit dispatch group
+                dispatch_group_leave(serviceGroup);
+                
+                return;
+            }
             
             nowPlayingApplication = [[XENDApplicationsManager sharedInstance] metadataForApplication:bundleIdentifier];
             [nowPlayingTrack setObject:[nowPlayingApplication objectForKey:@"name"] forKey:@"title"];
