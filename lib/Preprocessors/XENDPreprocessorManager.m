@@ -53,6 +53,22 @@
     return array;
 }
 
+- (BOOL)needsPreprocessing:(NSString*)filepath {
+    NSError *error;
+    NSString *html = [NSString stringWithContentsOfFile:filepath encoding:NSUTF8StringEncoding error:&error];
+    
+    // Ask preprocessors if they'd do anything for this
+    BOOL needsProcessing = NO;
+    for (id<XENDPreProcessor> preprocessor in self.preprocessors) {
+        if ([preprocessor needsPreprocessing:html]) {
+            needsProcessing = YES;
+            break;
+        }
+    }
+    
+    return needsProcessing;
+}
+
 - (NSString*)parseDocument:(NSString*)filepath {
     NSString *baseDocumentPath = [filepath stringByDeletingLastPathComponent];
     

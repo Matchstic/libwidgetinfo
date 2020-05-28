@@ -21,6 +21,10 @@
 
 @implementation IS2PreProcessor
 
+- (BOOL)needsPreprocessing:(NSString*)html {
+    return [html rangeOfString:@"text/cycript"].location != NSNotFound;
+}
+
 - (NSString*)parseScriptNodeContents:(NSString*)contents withAttributes:(NSDictionary*)attributes {
     // Ensure that this is Cycript
     BOOL isCycriptType = NO;

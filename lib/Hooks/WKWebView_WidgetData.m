@@ -85,8 +85,6 @@
         NSString *filePath = [URL path];
         NSURL *baseUrl = [URL URLByDeletingLastPathComponent];
         
-        NSString *preprocessedDocument = [[XENDPreprocessorManager sharedInstance] parseDocument:filePath];
-        
         // Setup our hijacked navigation delegate if required
         if (![self hijackedNavigationDelegate]) {
             [self setHijackedNavigationDelegate:[[XENDHijackedWebViewDelegate alloc] initWithOriginalDelegate:self.navigationDelegate]];
@@ -97,7 +95,15 @@
         // Register widget
         [[XENDWidgetManager sharedInstance] registerWebView:self];
         
-        return [self loadHTMLString:preprocessedDocument baseURL:baseUrl];
+        if ([[XENDPreprocessorManager sharedInstance] needsPreprocessing:filePath]) {
+            NSLog(@"DEBUG :: Pre-processing IS required for %@", filePath);
+            
+            NSString *preprocessedDocument = [[XENDPreprocessorManager sharedInstance] parseDocument:filePath];
+            return [self loadHTMLString:preprocessedDocument baseURL:baseUrl];
+        } else {
+            NSLog(@"DEBUG :: Pre-processing not required for %@", filePath);
+            return [self xenhtml_loadFileURL:URL allowingReadAccessToURL:readAccessURL];
+        }
     }
 }
 

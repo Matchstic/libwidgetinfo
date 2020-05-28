@@ -15,6 +15,7 @@
 
 @protocol XENDPreProcessor <NSObject>
 
+- (BOOL)needsPreprocessing:(NSString*)html;
 - (NSString*)parseScriptNodeContents:(NSString*)contents withAttributes:(NSDictionary*)attributes;
 
 @end

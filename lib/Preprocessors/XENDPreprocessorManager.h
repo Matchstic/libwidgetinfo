@@ -19,5 +19,6 @@
 
 + (instancetype)sharedInstance;
 - (NSString*)parseDocument:(NSString*)filepath;
+- (BOOL)needsPreprocessing:(NSString*)filepath;
 
 @end
