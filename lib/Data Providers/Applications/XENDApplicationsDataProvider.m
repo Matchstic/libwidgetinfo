@@ -24,6 +24,21 @@
     return @"applications";
 }
 
+- (void)didReceiveWidgetMessage:(NSDictionary *)data functionDefinition:(NSString *)definition callback:(void (^)(NSDictionary *))callback {
+    
+    if ([definition isEqualToString:@"launchApplication"]) {
+        NSString *bundleIdentifier = [data objectForKey:@"identifier"];
+        [self requestApplicationLaunchForBundleIdentifier:bundleIdentifier callback:callback];
+        
+    } else if ([definition isEqualToString:@"deleteApplication"]) {
+        NSString *bundleIdentifier = [data objectForKey:@"identifier"];
+        [self requestApplicationDeleteForBundleIdentifier:bundleIdentifier callback:callback];
+        
+    } else {
+        callback(@{});
+    }
+}
+
 - (void)requestIconDataForBundleIdentifier:(NSString*)bundleIdentifer callback:(void (^)(NSDictionary *result))callback {
     
     // Using UIKit private API to fetch icon
@@ -129,6 +144,14 @@
     }
     
     callback(@{});
+}
+
+- (void)requestApplicationDeleteForBundleIdentifier:(NSString*)bundleIdentifer callback:(void (^)(NSDictionary *result))callback {
+    
+    // Prompt the user to confirm they want to delete the application
+    // This is intentionally SpringBoard only
+    
+    
 }
 
 @end

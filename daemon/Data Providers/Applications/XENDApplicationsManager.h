@@ -14,8 +14,13 @@
 **/
 
 #import <Foundation/Foundation.h>
+#import "PrivateHeaders.h"
 
-@interface XENDApplicationsManager : NSObject
+@protocol XENDApplicationsManagerDelegate <NSObject>
+- (void)applicationsMapDidUpdate:(NSArray*)map;
+@end
+
+@interface XENDApplicationsManager : NSObject <LSApplicationWorkspaceObserverProtocol, FBSApplicationDataStoreRepositoryClientObserver>
 
 /**
  * Provides a shared instance of the applications manager, creating if necessary
@@ -28,8 +33,8 @@
 - (NSDictionary*)metadataForApplication:(NSString*)bundleIdentifier;
 
 /**
- Loads icon data for the specified application
+ Fetches the current application map
  */
-- (NSData*)iconForApplication:(NSString*)bundleIdentifier;
+- (NSArray*)currentApplicationMap;
 
 @end

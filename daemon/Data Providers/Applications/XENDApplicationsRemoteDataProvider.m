@@ -14,7 +14,10 @@
 **/
 
 #import "XENDApplicationsRemoteDataProvider.h"
-#import "XENDApplicationsManager.h"
+
+@interface XENDApplicationsManager (Private)
+- (void)_setDelegate:(id<XENDApplicationsManagerDelegate>)delegate;
+@end
 
 @implementation XENDApplicationsRemoteDataProvider
 
@@ -22,20 +25,28 @@
     return @"applications";
 }
 
-- (void)didReceiveWidgetMessage:(NSDictionary*)data functionDefinition:(NSString*)definition callback:(void(^)(NSDictionary*))callback {
+- (void)intialiseProvider {
+    XENDApplicationsManager *manager = [XENDApplicationsManager sharedInstance];
     
-    if ([definition isEqualToString:@"_loadIcon"]) {
-        callback([self _loadIcon:data]);
-    } else {
-        callback(@{});
-    }
+    // Initial update
+    self.cachedDynamicProperties = [@{
+        @"allApplications": [manager currentApplicationMap]
+    } mutableCopy];
+    
+    // Set delegate for monitored updates
+    [manager _setDelegate:self];
 }
 
-- (NSDictionary*)_loadIcon:(NSDictionary*)data {
-    NSData *result = [[XENDApplicationsManager sharedInstance] iconForApplication:[data objectForKey:@"identifier"]];
-    return @{
-        @"data": result != nil ? result : [NSNull null]
-    };
+- (void)didReceiveWidgetMessage:(NSDictionary*)data functionDefinition:(NSString*)definition callback:(void(^)(NSDictionary*))callback {
+    callback(@{});
+}
+
+#pragma mark - Manager delegate
+
+- (void)applicationsMapDidUpdate:(NSArray *)map {
+    self.cachedDynamicProperties = [@{
+        @"allApplications": map
+    } mutableCopy];
 }
 
 @end

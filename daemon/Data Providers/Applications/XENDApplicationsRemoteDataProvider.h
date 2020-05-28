@@ -14,7 +14,8 @@
 **/
 
 #import "XENDBaseRemoteDataProvider.h"
+#import "XENDApplicationsManager.h"
 
-@interface XENDApplicationsRemoteDataProvider : XENDBaseRemoteDataProvider
+@interface XENDApplicationsRemoteDataProvider : XENDBaseRemoteDataProvider <XENDApplicationsManagerDelegate>
 
 @end

@@ -159,5 +159,71 @@ CFPropertyListRef MGCopyAnswer(CFStringRef property);
 
 @end
 
+@interface FBSApplicationDataStore : NSObject
+
+@property (nonatomic, strong, readonly) NSString * bundleID;
+
+-(id)init;
+-(void)removeAllObjects;
+-(id)objectForKey:(id)arg1 ;
+-(void)removeObjectForKey:(id)arg1 ;
+-(void)setObject:(id)arg1 forKey:(id)arg2 ;
+-(id)initWithBundleIdentifier:(id)arg1 ;
+-(void)objectForKey:(id)arg1 withResult:(/*^block*/id)arg2 ;
+-(void)safeObjectForKey:(id)arg1 ofType:(Class)arg2 withResult:(/*^block*/id)arg3 ;
+-(id)archivedObjectForKey:(id)arg1 ;
+-(void)archivedObjectForKey:(id)arg1 withResult:(/*^block*/id)arg2 ;
+-(void)safeArchivedObjectForKey:(id)arg1 ofType:(Class)arg2 withResult:(/*^block*/id)arg3 ;
+-(id)archivedXPCCodableObjectForKey:(id)arg1 ofType:(Class)arg2 ;
+-(void)archivedXPCCodableObjectForKey:(id)arg1 ofType:(Class)arg2 withResult:(/*^block*/id)arg3 ;
+-(void)setArchivedXPCCodableObject:(id)arg1 forKey:(id)arg2 ;
+-(id)safeArchivedObjectForKey:(id)arg1 ofType:(Class)arg2 ;
+-(void)setArchivedObject:(id)arg1 forKey:(id)arg2 ;
+-(id)safeObjectForKey:(id)arg1 ofType:(Class)arg2 ;
+@end
+
+@protocol FBSApplicationDataStoreRepositoryClientObserver <NSObject>
+
+@optional
+-(void)applicationDataStoreRepositoryClient:(id)arg1 application:(id)arg2 changedObject:(id)arg3 forKey:(id)arg4;
+-(void)applicationDataStoreRepositoryClient:(id)arg1 storeInvalidatedForApplication:(id)arg2;
+@end
+
+@interface FBSApplicationDataStoreRepositoryClient : NSObject
+- (void)addObserver:(id<FBSApplicationDataStoreRepositoryClientObserver>)arg1;
+@end
+
+@interface FBSApplicationDataStoreClientFactory : NSObject
+@property (nonatomic,retain) NSArray * prefetchedKeys;
++ (instancetype)sharedInstance;
+- (FBSApplicationDataStoreRepositoryClient*)checkout;
+@end
+
+@protocol LSApplicationWorkspaceObserverProtocol <NSObject>
+
+@optional
+-(void)applicationInstallsDidStart:(id)arg1;
+-(void)applicationInstallsDidChange:(id)arg1;
+-(void)applicationInstallsDidUpdateIcon:(id)arg1;
+-(void)applicationsWillInstall:(id)arg1;
+-(void)applicationsDidInstall:(id)arg1;
+-(void)pluginsDidInstall:(id)arg1;
+-(void)applicationsDidFailToInstall:(id)arg1;
+-(void)applicationsWillUninstall:(id)arg1;
+-(void)pluginsWillUninstall:(id)arg1;
+-(void)applicationsDidUninstall:(id)arg1;
+-(void)pluginsDidUninstall:(id)arg1;
+-(void)applicationsDidFailToUninstall:(id)arg1;
+-(void)applicationInstallsArePrioritized:(id)arg1 arePaused:(id)arg2;
+-(void)applicationInstallsDidPause:(id)arg1;
+-(void)applicationInstallsDidResume:(id)arg1;
+-(void)applicationInstallsDidCancel:(id)arg1;
+-(void)applicationInstallsDidPrioritize:(id)arg1;
+-(void)applicationStateDidChange:(id)arg1;
+-(void)applicationIconDidChange:(id)arg1;
+-(void)networkUsageChanged:(BOOL)arg1;
+-(BOOL)observeLaunchProhibitedApps;
+@end
+
 
 #endif /* PrivateHeaders_h */
