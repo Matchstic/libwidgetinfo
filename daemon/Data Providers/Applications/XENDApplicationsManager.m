@@ -215,9 +215,4 @@ static inline void stateChangedCallback(CFNotificationCenterRef center, void *ob
         [self loadApplicationsMap];
 }
 
-- (void)applicationDataStoreRepositoryClient:(id)arg1 storeInvalidatedForApplication:(id)arg2 {
-    XENDLog(@"DEBUG :: applicationDataStoreRepositoryClient:storeInvalidatedForApplication:");
-    XENDLog(@"%@", arg2);
-}
-
 @end
