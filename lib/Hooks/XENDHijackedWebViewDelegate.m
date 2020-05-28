@@ -98,6 +98,18 @@
        return;
     }
     
+    // Allow same URL
+    if ([[navigationAction.request URL] isEqual:[webView URL]]) {
+        decisionHandler(WKNavigationActionPolicyAllow);
+        return;
+    }
+    
+    // Deal with iframe loads
+    if (!navigationAction.targetFrame.mainFrame) {
+        decisionHandler(WKNavigationActionPolicyAllow);
+        return;
+    }
+    
     if ([url hasPrefix:@"xeninfo:"]) {
         // Forward "actions" to the legacy handler
         if ([XENDXenInfoURLHandler handleNavigationRequest:navigationAction.request.URL]) {
