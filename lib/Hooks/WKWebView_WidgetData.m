@@ -95,13 +95,10 @@
         // Register widget
         [[XENDWidgetManager sharedInstance] registerWebView:self];
         
-        if ([[XENDPreprocessorManager sharedInstance] needsPreprocessing:filePath]) {
-            NSLog(@"DEBUG :: Pre-processing IS required for %@", filePath);
-            
+        if ([[XENDPreprocessorManager sharedInstance] needsPreprocessing:filePath]) {            
             NSString *preprocessedDocument = [[XENDPreprocessorManager sharedInstance] parseDocument:filePath];
             return [self loadHTMLString:preprocessedDocument baseURL:baseUrl];
         } else {
-            NSLog(@"DEBUG :: Pre-processing not required for %@", filePath);
             return [self xenhtml_loadFileURL:URL allowingReadAccessToURL:readAccessURL];
         }
     }
