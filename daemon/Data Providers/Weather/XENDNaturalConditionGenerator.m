@@ -57,10 +57,9 @@
             
             forecast.high = [self temperatureForValue:model.maxTemp units:units];
             forecast.low = [self temperatureForValue:model.minTemp units:units];
-            forecast.icon = model.conditionIcon.longLongValue;
-            forecast.dayOfWeek = model.weekdayNumber.longLongValue;
-            forecast.dayNumber = model.forecastDayIndex.longLongValue;
-            
+            forecast.icon = ![model.conditionIcon isEqual:[NSNull null]] ? model.conditionIcon.longLongValue : 0;
+            forecast.dayOfWeek = ![model.weekdayNumber isEqual:[NSNull null]] ? model.weekdayNumber.longLongValue : 0;
+            forecast.dayNumber = ![model.forecastDayIndex isEqual:[NSNull null]] ? model.forecastDayIndex.longLongValue : 0;
             
             [result addObject:forecast];
         }
@@ -85,8 +84,8 @@
             
             forecast.hourIndex = i;
             forecast.temperature = [self temperatureForValue:model.temperature units:units];
-            forecast.conditionCode = model.conditionIcon.longLongValue;
-            forecast.percentPrecipitation = model.precipProbability.floatValue;
+            forecast.conditionCode = ![model.conditionIcon isEqual:[NSNull null]] ? model.conditionIcon.longLongValue : 0;
+            forecast.percentPrecipitation = ![model.precipProbability isEqual:[NSNull null]] ? model.precipProbability.floatValue : 0;
             
             NSDate *time = [NSDate dateWithTimeIntervalSince1970:model.validUNIXTime];
             NSDateComponents *forecastComponents = [calendar components:NSCalendarUnitHour fromDate:time];
@@ -114,19 +113,31 @@
     if (objc_getClass("City") && objc_getClass("WFTemperature")) {
         City *city = [[objc_getClass("City") alloc] init];
         
-        [city setConditionCode:observation.conditionIcon.longLongValue];
+        [city setConditionCode:![observation.conditionIcon isEqual:[NSNull null]] ? observation.conditionIcon.longLongValue : 0];
+        
         [city setCoordinate:CLLocationCoordinate2DMake(latitude, longitude)];
+        
         [city setDayForecasts:[self dayForecastsFromModel:dayForecasts units:units]];
-        [city setDewPoint:observation.dewpoint.floatValue];
+        
+        [city setDewPoint:![observation.dewpoint isEqual:[NSNull null]] ? observation.dewpoint.floatValue : 0];
+        
         [city setFeelsLike:[self temperatureForValue:observation.feelsLike units:units]];
-        [city setHeatIndex:observation.heatIndex.floatValue];
+        
+        [city setHeatIndex:![observation.heatIndex isEqual:[NSNull null]] ? observation.heatIndex.floatValue : 0];
+        
         [city setHourlyForecasts:[self hourForecastsFromModel:hourForecasts units:units]];
-        [city setHumidity:observation.relativeHumidity.floatValue];
+        
+        [city setHumidity:![observation.relativeHumidity isEqual:[NSNull null]] ? observation.relativeHumidity.floatValue : 0];
+         
         [city setLatitude:latitude];
         [city setLongitude:longitude];
-        [city setPrecipitationPast24Hours:observation.precipTotal.doubleValue];
-        [city setPressure:observation.pressure.floatValue];
-        [city setPressureRising:observation.pressureTendency.longLongValue];
+        
+        [city setPrecipitationPast24Hours:![observation.precipTotal isEqual:[NSNull null]] ? observation.precipTotal.doubleValue : 0];
+        
+        [city setPressure:![observation.pressure isEqual:[NSNull null]] ? observation.pressure.floatValue : 0];
+        
+        [city setPressureRising:![observation.pressureTendency isEqual:[NSNull null]] ? observation.pressureTendency.longLongValue : 0];
+        
         [city setIsDay:isDay];
 
         NSDateComponents *sunriseComponents = [self localTimezoneDateComponentsForString:sunrise];
@@ -147,13 +158,17 @@
         [city setUpdateTime:[NSDate date]];
         [city setTimeZone:[self timezoneFromSample:sunset]];
         [city setTimeZoneUpdateDate:[NSDate date]];
-        
         [city setTemperature:[self temperatureForValue:observation.temperature units:units]];
-        [city setUVIndex:observation.uvIndex.longLongValue];
-        [city setVisibility:observation.visibility.floatValue];
-        [city setWindChill:observation.windChill.floatValue];
-        [city setWindDirection:observation.windDirection.floatValue];
-        [city setWindSpeed:observation.windSpeed.floatValue];
+        
+        [city setUVIndex:![observation.uvIndex isEqual:[NSNull null]] ? observation.uvIndex.longLongValue : 0];
+        
+        [city setVisibility:![observation.visibility isEqual:[NSNull null]] ? observation.visibility.floatValue : 0];
+        
+        [city setWindChill:![observation.windChill isEqual:[NSNull null]] ? observation.windChill.floatValue : 0];
+        
+        [city setWindDirection:![observation.windDirection isEqual:[NSNull null]] ? observation.windDirection.floatValue : 0];
+        
+        [city setWindSpeed:![observation.windSpeed isEqual:[NSNull null]] ? observation.windSpeed.floatValue : 0];
         
         if ([city respondsToSelector:@selector(naturalLanguageDescriptionWithDescribedCondition:)]) {
             long long describedCondition = 0;
