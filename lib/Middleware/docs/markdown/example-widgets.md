@@ -3,7 +3,7 @@
 
 A number of default widgets are available to use as examples for writing your own.
 
-These all reside in `/var/mobile/Library/Widgets/Universal`, and collectively demonstrate all aspects of the API.
+These are available in the different sub-folders of `/var/mobile/Library/Widgets`, and collectively demonstrate all aspects of the API.
 
 ### Available Examples
 
@@ -14,3 +14,4 @@ These all reside in `/var/mobile/Library/Widgets/Universal`, and collectively de
 | Resources \| Battery | Inline      | Resources           |
 | Weather \| Card      | Inline      | Weather             |
 | Weather \| Forecast  | Callback    | Weather, System     |
+| Apps \| List         | Callback    | Applications        |
