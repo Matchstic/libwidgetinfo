@@ -35,6 +35,8 @@ export interface ApplicationMetadata {
      * Specifies if this application is a system app (e.g., installed to `/Applications`).
      *
      * Any application installed from Cydia/Zebra/Sileo will have this set as `true`.
+     *
+     * A system app cannot be uninstalled.
      */
     isSystemApplication: boolean;
 }
@@ -184,6 +186,12 @@ export default class Applications extends Base implements ApplicationsProperties
      */
     public async deleteApplication(bundleIdentifier: string): Promise<NativeError> {
         return new Promise<NativeError>((resolve, reject) => {
+            const app = this.applicationForIdentifier(bundleIdentifier);
+            if (app.isSystemApplication) {
+                resolve({ code: 0, message: '' });
+                return;
+            }
+
             this.connection.sendNativeMessage({
                 namespace: DataProviderUpdateNamespace.Applications,
                 functionDefinition: 'deleteApplication',
