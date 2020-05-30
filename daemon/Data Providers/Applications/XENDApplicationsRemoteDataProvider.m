@@ -38,7 +38,15 @@
 }
 
 - (void)didReceiveWidgetMessage:(NSDictionary*)data functionDefinition:(NSString*)definition callback:(void(^)(NSDictionary*))callback {
-    callback(@{});
+    
+    if ([definition isEqualToString:@"_delete"]) {
+        NSString *bundleIdentifier = [data objectForKey:@"identifier"];
+        BOOL success = [[XENDApplicationsManager sharedInstance] deleteApplication:bundleIdentifier];
+        
+        callback(@{});
+    } else {
+        callback(@{});
+    }
 }
 
 #pragma mark - Manager delegate

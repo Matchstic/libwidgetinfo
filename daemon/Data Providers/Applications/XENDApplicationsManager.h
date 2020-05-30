@@ -37,4 +37,9 @@
  */
 - (NSArray*)currentApplicationMap;
 
+/**
+ Undertakes deletion of this application
+ */
+- (BOOL)deleteApplication:(NSString*)bundleIdentifier;
+
 @end

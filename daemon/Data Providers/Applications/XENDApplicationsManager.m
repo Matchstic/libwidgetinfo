@@ -214,6 +214,10 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
     };
 }
 
+- (BOOL)deleteApplication:(NSString*)bundleIdentifier {
+    return [[LSApplicationWorkspace defaultWorkspace] uninstallApplication:bundleIdentifier withOptions:nil];
+}
+
 #pragma mark - State changes
 
 - (void)applicationStateDidChange:(id)arg1 {
