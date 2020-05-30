@@ -163,6 +163,9 @@ CFPropertyListRef MGCopyAnswer(CFStringRef property);
 
 @property (nonatomic, strong, readonly) NSString * bundleID;
 
++ (void)setPrefetchedKeys:(id)arg1;
++ (void)synchronize;
++ (void)synchronizeWithCompletion:(/*^block*/ id)arg1 ;
 -(id)init;
 -(void)removeAllObjects;
 -(id)objectForKey:(id)arg1 ;
@@ -190,12 +193,16 @@ CFPropertyListRef MGCopyAnswer(CFStringRef property);
 @end
 
 @interface FBSApplicationDataStoreRepositoryClient : NSObject
+- (void)synchronizeWithCompletion:(/*^block*/id)arg1 ;
 - (void)addObserver:(id<FBSApplicationDataStoreRepositoryClientObserver>)arg1;
+- (void)invalidate;
+- (void)removeObserver:(id)arg1;
 @end
 
 @interface FBSApplicationDataStoreClientFactory : NSObject
 @property (nonatomic,retain) NSArray * prefetchedKeys;
 + (instancetype)sharedInstance;
+- (void)checkin;
 - (FBSApplicationDataStoreRepositoryClient*)checkout;
 @end
 

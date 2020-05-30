@@ -25,13 +25,13 @@
 @property (nonatomic, strong) NSMutableDictionary *_dataStores;
 @property (nonatomic, strong) FBSApplicationDataStoreRepositoryClient *client;
 - (void)loadApplicationsMap;
+- (void)springboardRelaunched;
 @end
 
-extern CFNotificationCenterRef CFNotificationCenterGetDistributedCenter(void);
+static XENDApplicationsManager *internalSharedInstance;
 
-static inline void stateChangedCallback(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
-    
-    [[XENDApplicationsManager sharedInstance] loadApplicationsMap];
+static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef info) {
+    [internalSharedInstance springboardRelaunched];
 }
 
 @implementation XENDApplicationsManager
@@ -56,19 +56,52 @@ static inline void stateChangedCallback(CFNotificationCenterRef center, void *ob
     self = [super init];
     
     if (self) {
+        internalSharedInstance = self;
+        
         self._dataStores = [NSMutableDictionary dictionary];
-        [self loadApplicationsMap];
         
         // Add observer for application state changes
         [[LSApplicationWorkspace defaultWorkspace] addObserver:self];
         
+        // Observe SpringBoard relaunch
+        CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, &onSpringBoardLaunch, CFSTR("SBSpringBoardDidLaunchNotification"), NULL, 0);
+        
         // Do the same for badge changes
         // Needs to be held strongly - we are responsible for managing it
+        [objc_getClass("FBSApplicationDataStore") setPrefetchedKeys:@[@"SBApplicationBadgeKey"]];
+        
         self.client = [[objc_getClass("FBSApplicationDataStoreClientFactory") sharedInstance] checkout];
         [self.client addObserver:self];
+        
+        // Load application map
+        [self loadApplicationsMap];
     }
     
     return self;
+}
+
+- (void)springboardRelaunched {
+    /*
+     Behind the scenes, our client instance will auto-reconnect to the FrontBoardServices server,
+     in this case being SpringBoard.
+     
+     However, that does not handle re-notifying the server that we have requested observation of data
+     stores. Therefore, we need to clear the local list of them, and then re-add ourselves to
+     cause the re-notification to happen.
+     */
+    [self._dataStores removeAllObjects];
+    
+    // Ensure client observer list is empty
+    [self.client removeObserver:self];
+    
+    [self.client synchronizeWithCompletion:^{
+        // Calling this when observers is empty notifies SB of wanting observation
+        // XXX: Absolutely necessary, else observation fails after SB restart!
+        [self.client addObserver:self];
+        
+        // Reload map
+        [self loadApplicationsMap];
+    }];
 }
 
 - (void)_setDelegate:(id<XENDApplicationsManagerDelegate>)delegate {
@@ -209,10 +242,14 @@ static inline void stateChangedCallback(CFNotificationCenterRef center, void *ob
 
 #pragma mark - FBSApplicationDataStoreRepositoryClientObserver
 
-- (void)applicationDataStoreRepositoryClient:(FBSApplicationDataStoreRepositoryClient*)arg1 application:(id)arg2 changedObject:(NSObject*)arg3 forKey:(NSString *)arg4 {
+- (void)applicationDataStoreRepositoryClient:(FBSApplicationDataStoreRepositoryClient*)arg1 application:(NSString*)arg2 changedObject:(NSObject*)arg3 forKey:(NSString *)arg4 {
     
-    if ([arg4 isEqualToString:@"SBApplicationBadgeKey"])
+    if ([arg4 isEqualToString:@"SBApplicationBadgeKey"]) {
+        // Drop this data store so that it gets recreated
+        [self._dataStores removeObjectForKey:arg2];
+        
         [self loadApplicationsMap];
+    }
 }
 
 @end

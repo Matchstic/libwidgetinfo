@@ -47,6 +47,8 @@
     self.cachedDynamicProperties = [@{
         @"allApplications": map
     } mutableCopy];
+    
+    [self notifyRemoteForNewDynamicProperties];
 }
 
 @end
