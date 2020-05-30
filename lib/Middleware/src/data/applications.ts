@@ -51,21 +51,20 @@ export interface ApplicationsProperties {
  *
  * This includes both user-installed and system apps, which includes those installed by a package manager.
  *
- * ** This is not yet complete **
- * ** Available in Xen HTML 2.0~beta2 or newer **
+ * <b>This is not yet complete; available in Xen HTML 2.0~beta2 or newer</b>
  *
  * @example
- * api.applications.observeData(function(newData) {
+ * api.apps.observeData(function(newData) {
  *              console.log('Applications data has updated');
  *
  *              // Update UI for new apps
  *              doSomethingWithAllApps(newData.allApplications);
  *
  *              // Perhaps setup a dock
- *              document.getElementById('dockAppOne').src = api.applications.applicationForIdentifier('com.apple.Music').icon;
- *              document.getElementById('dockAppTwo').src = api.applications.applicationForIdentifier('com.apple.MobileSMS').icon;
+ *              document.getElementById('dockAppOne').src = api.apps.applicationForIdentifier('com.apple.Music').icon;
+ *              document.getElementById('dockAppTwo').src = api.apps.applicationForIdentifier('com.apple.MobileSMS').icon;
  *              // ... and so on
- * })
+ * });
  */
 export default class Applications extends Base implements ApplicationsProperties {
 
@@ -75,6 +74,8 @@ export default class Applications extends Base implements ApplicationsProperties
 
     /**
      * This is an alphabetically ordered list of all applications installed currently on the user's device.
+     *
+     * It represents all apps that are shown on the user's Homescreen, and is a combination of both user and 'sysem' apps.
      *
      * It is expected that you will use native JavaScript functions like map(), forEach() and
      * find() to work with this array of applications.
@@ -106,7 +107,7 @@ export default class Applications extends Base implements ApplicationsProperties
      * Provides a filtered list of applications to only those that are user-installed
      *
      * @example
-     * var userApps = api.applications.userApplications;
+     * var userApps = api.apps.userApplications;
      */
     public get userApplications(): ApplicationMetadata[] {
         return this.allApplications.filter((app: ApplicationMetadata) => {
@@ -120,7 +121,7 @@ export default class Applications extends Base implements ApplicationsProperties
      * An application is a 'system' app if it cannot be uninstalled
      *
      * @example
-     * var systemApps = api.applications.systemApplications;
+     * var systemApps = api.apps.systemApplications;
      */
     public get systemApplications(): ApplicationMetadata[] {
         return this.allApplications.filter((app: ApplicationMetadata) => {
@@ -133,7 +134,7 @@ export default class Applications extends Base implements ApplicationsProperties
      * @param bundleIdentifier Application bundle identifier to lookup
      *
      * @example
-     * var messagesApp = api.applications.applicationForIdentifier('com.apple.MobileSMS');
+     * var messagesApp = api.apps.applicationForIdentifier("com.apple.MobileSMS");
      * var unreadMessages = messagesApp.badge;
      * document.getElementById('appIcon').src = messagesApp.icon;
      */
@@ -148,7 +149,7 @@ export default class Applications extends Base implements ApplicationsProperties
      * @param bundleIdentifier Application bundle identifier to lookup
      *
      * @example
-     * var spotifyInstalled = api.applications.applicationIsPresent('com.spotify.client');
+     * var spotifyInstalled = api.apps.applicationIsPresent("com.spotify.client");
      */
     public applicationIsPresent(bundleIndentifier: string): boolean {
         return this.applicationForIdentifier(bundleIndentifier) !== undefined;
@@ -159,7 +160,7 @@ export default class Applications extends Base implements ApplicationsProperties
      * @param bundleIdentifier The application to launch
      *
      * @example
-     * api.applications.launchApplication('com.apple.Music');
+     * api.apps.launchApplication("com.apple.Music");
      */
     public async launchApplication(bundleIdentifier: string): Promise<NativeError> {
         return new Promise<NativeError>((resolve, reject) => {
@@ -174,14 +175,12 @@ export default class Applications extends Base implements ApplicationsProperties
     }
 
     /**
-     * @ignore
-     *
      * Deletes an application from the user's device
      * The user will be requested to confirm this action by a dialog.
      * @param identifier The application to delete
      *
      * @example
-     * api.applications.deleteApplication('com.cardify.tinder');
+     * api.apps.deleteApplication("com.cardify.tinder");
      */
     public async deleteApplication(bundleIdentifier: string): Promise<NativeError> {
         return new Promise<NativeError>((resolve, reject) => {

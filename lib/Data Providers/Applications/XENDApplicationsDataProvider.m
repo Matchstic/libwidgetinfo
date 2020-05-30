@@ -40,7 +40,9 @@
 }
 
 - (NSDictionary*)applicationMetadataForIdentifier:(NSString*)bundleIdentifier {
-    for (NSDictionary *item in self.cachedDynamicProperties) {
+    NSArray *applications = [self.cachedDynamicProperties objectForKey:@"allApplications"];
+    
+    for (NSDictionary *item in applications) {
         if ([[item objectForKey:@"identifier"] isEqualToString:bundleIdentifier])
             return item;
     }
