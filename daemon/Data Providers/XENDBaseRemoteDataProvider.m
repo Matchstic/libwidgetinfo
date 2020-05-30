@@ -51,6 +51,14 @@
     return result;
 }
 
+- (void)setCachedDynamicProperties:(NSMutableDictionary *)cachedDynamicProperties {
+    // Do a deep copy of the properties for safety
+    id buffer = [NSKeyedArchiver archivedDataWithRootObject:cachedDynamicProperties];
+    cachedDynamicProperties = [NSKeyedUnarchiver unarchiveObjectWithData:buffer];
+    
+    _cachedDynamicProperties = cachedDynamicProperties;
+}
+
 - (void)didReceiveWidgetMessage:(NSDictionary*)data functionDefinition:(NSString*)definition callback:(void(^)(NSDictionary*))callback {
     callback(@{});
 }
