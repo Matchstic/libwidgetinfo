@@ -14,6 +14,7 @@
 **/
 
 #import "XENDBaseRemoteDataProvider.h"
+#import "XENDLogger.h"
 
 @implementation XENDBaseRemoteDataProvider
 
@@ -75,6 +76,9 @@
 
 - (void)notifyRemoteForNewDynamicProperties {
     NSString *providerNamespace = [[self class] providerNamespace];
+    
+    XENDLog(@"DEBUG :: New data in %@", providerNamespace);
+    
     [self.connection notifyUpdatedDynamicProperties:self.cachedDynamicProperties forNamespace:providerNamespace];
 }
 
