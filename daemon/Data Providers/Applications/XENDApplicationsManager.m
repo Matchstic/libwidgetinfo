@@ -220,10 +220,6 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
 
 #pragma mark - State changes
 
-- (void)applicationStateDidChange:(id)arg1 {
-    [self loadApplicationsMap];
-}
-
 - (void)applicationsDidInstall:(id)arg1 {
     [self loadApplicationsMap];
 }
