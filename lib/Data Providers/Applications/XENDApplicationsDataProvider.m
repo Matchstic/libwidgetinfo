@@ -52,24 +52,32 @@
 
 - (void)requestIconDataForBundleIdentifier:(NSString*)bundleIdentifer callback:(void (^)(NSDictionary *result))callback {
     
-    // Using UIKit private API to fetch icon
-    // This works inside both SpringBoard and Preferences, the main targets
-    NSData *png;
-    if (!bundleIdentifer || [bundleIdentifer isEqualToString:@""]) {
-        png = (id)[NSNull null];
-    } else {
-        UIImage *icon = [UIImage _applicationIconImageForBundleIdentifier:bundleIdentifer format:2 scale:[UIScreen mainScreen].scale];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        // Using UIKit private API to fetch icon
+        // This works inside both SpringBoard and Preferences, the main targets
+        NSData *png;
+        if (!bundleIdentifer || [bundleIdentifer isEqualToString:@""]) {
+            png = (id)[NSNull null];
+        } else {
+            // Wrapping in exception handler to catch theme tweaks doing weird things
+            @try {
+                UIImage *icon = [UIImage _applicationIconImageForBundleIdentifier:bundleIdentifer format:2 scale:[UIScreen mainScreen].scale];
+                
+                png = UIImagePNGRepresentation(icon);
+            } @catch (NSException *e) {
+                NSLog(@"%@", e);
+            }
+        }
         
-        png = UIImagePNGRepresentation(icon);
-    }
-    
-    if (!png) {
-        png = (id)[NSNull null];
-    }
-    
-    callback(@{
-        @"data": png
+        if (!png) {
+            png = (id)[NSNull null];
+        }
+        
+        callback(@{
+            @"data": png
+        });
     });
+
 }
 
 - (void)requestApplicationLaunchForBundleIdentifier:(NSString*)bundleIdentifer callback:(void (^)(NSDictionary *result))callback {
