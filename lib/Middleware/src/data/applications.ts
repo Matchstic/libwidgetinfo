@@ -56,6 +56,7 @@ export interface ApplicationsProperties {
  * <b>This is not yet complete; available in Xen HTML 2.0~beta2 or newer</b>
  *
  * @example
+ * <script>
  * api.apps.observeData(function(newData) {
  *              console.log('Applications data has updated');
  *
@@ -67,6 +68,7 @@ export interface ApplicationsProperties {
  *              document.getElementById('dockAppTwo').src = api.apps.applicationForIdentifier('com.apple.MobileSMS').icon;
  *              // ... and so on
  * });
+ * </script>
  */
 export default class Applications extends Base implements ApplicationsProperties {
 
@@ -109,7 +111,9 @@ export default class Applications extends Base implements ApplicationsProperties
      * Provides a filtered list of applications to only those that are user-installed
      *
      * @example
+     * <script>
      * var userApps = api.apps.userApplications;
+     * </script>
      */
     public get userApplications(): ApplicationMetadata[] {
         return this.allApplications.filter((app: ApplicationMetadata) => {
@@ -123,7 +127,9 @@ export default class Applications extends Base implements ApplicationsProperties
      * An application is a 'system' app if it cannot be uninstalled
      *
      * @example
+     * <script>
      * var systemApps = api.apps.systemApplications;
+     * </script>
      */
     public get systemApplications(): ApplicationMetadata[] {
         return this.allApplications.filter((app: ApplicationMetadata) => {
@@ -136,9 +142,11 @@ export default class Applications extends Base implements ApplicationsProperties
      * @param bundleIdentifier Application bundle identifier to lookup
      *
      * @example
+     * <script>
      * var messagesApp = api.apps.applicationForIdentifier("com.apple.MobileSMS");
      * var unreadMessages = messagesApp.badge;
      * document.getElementById('appIcon').src = messagesApp.icon;
+     * </script>
      */
     public applicationForIdentifier(bundleIdentifier: string): ApplicationMetadata {
         return this.allApplications.find((v: ApplicationMetadata) => {
@@ -151,7 +159,9 @@ export default class Applications extends Base implements ApplicationsProperties
      * @param bundleIdentifier Application bundle identifier to lookup
      *
      * @example
+     * <script>
      * var spotifyInstalled = api.apps.applicationIsPresent("com.spotify.client");
+     * </script>
      */
     public applicationIsPresent(bundleIndentifier: string): boolean {
         return this.applicationForIdentifier(bundleIndentifier) !== undefined;
@@ -162,7 +172,9 @@ export default class Applications extends Base implements ApplicationsProperties
      * @param bundleIdentifier The application to launch
      *
      * @example
+     * <script>
      * api.apps.launchApplication("com.apple.Music");
+     * </script>
      */
     public async launchApplication(bundleIdentifier: string): Promise<NativeError> {
         return new Promise<NativeError>((resolve, reject) => {
@@ -182,7 +194,9 @@ export default class Applications extends Base implements ApplicationsProperties
      * @param identifier The application to delete
      *
      * @example
+     * <script>
      * api.apps.deleteApplication("com.cardify.tinder");
+     * </script>
      */
     public async deleteApplication(bundleIdentifier: string): Promise<NativeError> {
         return new Promise<NativeError>((resolve, reject) => {
