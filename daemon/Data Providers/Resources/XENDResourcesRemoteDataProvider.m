@@ -23,7 +23,6 @@
 #define MAX_AMPERAGE_SAMPLES 30
 #define MIN_AMPERAGE_SAMPLES 10
 #define AMPERAGE_SAMPLE_RATE 60
-#define AMPERAGE_DELAYED_SAMPLE_RATE 1800 // 30 mins
 #define SAMPLE_COUNT_TO_FORCE_UPDATE 10 // Leads to a forced update every 10 mins
 
 @interface XENDResourcesRemoteDataProvider ()
@@ -176,24 +175,6 @@ static void powerSourceChanged(void *context) {
     
     // Remaining Battery Life [h] = Battery Remaining Capacity [mAh/mWh] / Battery Rolling Average Drain Rate [mA/mW]
     return (remainingCapacity / drainRate) * 60;
-}
-
-- (void)noteDeviceDidEnterSleep {
-    // Drop down to minimal sampling during sleep
-    
-    [self.amperageSampler invalidate];
-    self.amperageSampler = nil;
-    
-    self.amperageSampler = [NSTimer scheduledTimerWithTimeInterval:AMPERAGE_DELAYED_SAMPLE_RATE target:self selector:@selector(_averageAmperageSampleFired:) userInfo:nil repeats:YES];
-}
-
-- (void)noteDeviceDidExitSleep {
-    // Restore faster sampling when awake
-    
-    [self.amperageSampler invalidate];
-    self.amperageSampler = nil;
-    
-    self.amperageSampler = [NSTimer scheduledTimerWithTimeInterval:AMPERAGE_SAMPLE_RATE target:self selector:@selector(_averageAmperageSampleFired:) userInfo:nil repeats:YES];
 }
 
 - (void)_averageAmperageSampleFired:(NSTimer*)timer {
