@@ -30,6 +30,8 @@ int libwidgetinfo_main_ipc(void) {
     // Run the run loop forever.
     [[NSRunLoop currentRunLoop] run];
     
+    XENDLog(@"*** [libwidgetinfo] :: FATAL :: Runloop exited?!");
+    
     return EXIT_SUCCESS;
 }
 
@@ -52,8 +54,6 @@ int libwidgetinfo_main_ipc(void) {
 }
 
 - (void)initialise {
-	[super initialise];
-    
     self.requiresPropertiesPushAfterSleep = NO;
 	
     [OBJCIPC activate];
@@ -86,6 +86,9 @@ int libwidgetinfo_main_ipc(void) {
             callback(result);
         }];
     }];
+    
+    // Setup data providers after IPC is initialised
+    [super initialise];
 }
 
 - (void)broadcastMessage:(NSString*)name {    
