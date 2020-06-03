@@ -94,6 +94,7 @@
         NSError *error = [[NSError alloc] initWithDomain:NSCocoaErrorDomain code:kXENLocationErrorNotInitialised userInfo:nil];
         
         completionHandler(error, nil);
+        return;
     }
     
     if (![self locationServicesAvailable]) {
