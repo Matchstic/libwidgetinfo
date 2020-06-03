@@ -187,7 +187,6 @@
 
 - (void)onUpdatedWeatherConditions:(NSDictionary*)transformedConditions {
 	self.cachedDynamicProperties = [transformedConditions mutableCopy];
-    [self notifyRemoteForNewDynamicProperties];
 }
 
 - (CLLocation*)defaultLocation {

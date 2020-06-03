@@ -33,6 +33,12 @@ int libwidgetinfo_main_ipc(void) {
     return EXIT_SUCCESS;
 }
 
+@interface XENDIPCDaemonListener ()
+
+@property (nonatomic, readwrite) BOOL requiresPropertiesPushAfterSleep;
+
+@end
+
 @implementation XENDIPCDaemonListener
 
 - (instancetype)init {
@@ -47,6 +53,8 @@ int libwidgetinfo_main_ipc(void) {
 
 - (void)initialise {
 	[super initialise];
+    
+    self.requiresPropertiesPushAfterSleep = NO;
 	
     [OBJCIPC activate];
     
@@ -90,8 +98,15 @@ int libwidgetinfo_main_ipc(void) {
 - (void)notifyUpdatedDynamicProperties:(NSDictionary*)dynamicProperties forNamespace:(NSString*)dataProviderNamespace {
     // Emit notification for changed properties
     
-	XENDLog(@"*** Notifying clients of new properties available to fetch");
-    [self broadcastMessage:WIDGET_INFO_MESSAGE_PROPERTIES_CHANGED];
+    if ([[self stateManagerInstance] sleepState]) {
+        // Display is off, do nothing
+        // Need to notify clients of new state when coming back from sleep
+        
+        self.requiresPropertiesPushAfterSleep = YES;
+    } else {
+        XENDLog(@"*** Notifying clients of new properties available to fetch");
+        [self broadcastMessage:WIDGET_INFO_MESSAGE_PROPERTIES_CHANGED];
+    }
 }
 
 - (void)noteDeviceDidEnterSleep {
@@ -108,6 +123,13 @@ int libwidgetinfo_main_ipc(void) {
     [self requestCurrentDeviceStateWithCallback:^(NSDictionary *result) {
         [self broadcastMessage:WIDGET_INFO_MESSAGE_DEVICE_STATE_CHANGED];
     }];
+    
+    if (self.requiresPropertiesPushAfterSleep) {
+        self.requiresPropertiesPushAfterSleep = NO;
+        
+        XENDLog(@"*** Notifying clients of new properties available to fetch, due to wake event");
+        [self broadcastMessage:WIDGET_INFO_MESSAGE_PROPERTIES_CHANGED];
+    }
 }
 
 - (void)networkWasConnected {

@@ -467,8 +467,6 @@ static NSArray *whitelist;
         [self.cachedDynamicProperties setObject:@(isPlaying) forKey:@"isPlaying"];
         [self.cachedDynamicProperties setObject:@(adjustedVolume) forKey:@"volume"];
         [self.cachedDynamicProperties setObject:@(elapsedChangedTime) forKey:@"_elapsedChangedTime"];
-        
-        [self notifyRemoteForNewDynamicProperties];
     });
 }
 
@@ -502,8 +500,6 @@ static NSArray *whitelist;
     } mutableCopy];
     
     self.currentArtwork = nil;
-    
-    [self notifyRemoteForNewDynamicProperties];
 }
 
 - (NSString*)bundleIdentifierForPID:(int)pid {
