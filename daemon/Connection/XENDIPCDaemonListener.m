@@ -35,9 +35,8 @@ int libwidgetinfo_main_ipc(void) {
     return EXIT_SUCCESS;
 }
 
-static void exceptionHandler(NSException *exception)
-{
-    NSArray *stack = [exception callStackReturnAddresses];
+static void exceptionHandler(NSException *exception) {
+    NSArray *stack = [exception callStackSymbols];
     XENDLog(@"FATAL :: EXCEPTION!");
     XENDLog(@"%@", exception);
     XENDLog(@"Stack trace: %@", stack);
