@@ -38,4 +38,14 @@
  */
 - (NSDictionary*)summariseState;
 
+/**
+ The current sleep state of the device
+ */
+- (BOOL)sleepState;
+
+/**
+ The current network state
+ */
+- (BOOL)networkState;
+
 @end

@@ -49,15 +49,23 @@
     NSMutableDictionary *result = [NSMutableDictionary dictionary];
     [result setObject:self.cachedDynamicProperties forKey:@"dynamic"];
     [result setObject:self.cachedStaticProperties forKey:@"static"];
-    return result;
+    return [result copy];
 }
 
 - (void)setCachedDynamicProperties:(NSMutableDictionary *)cachedDynamicProperties {
+    BOOL isIdentical = [cachedDynamicProperties isEqualToDictionary:_cachedDynamicProperties];
+    
     // Do a deep copy of the properties for safety
     id buffer = [NSKeyedArchiver archivedDataWithRootObject:cachedDynamicProperties];
     cachedDynamicProperties = [NSKeyedUnarchiver unarchiveObjectWithData:buffer];
     
     _cachedDynamicProperties = cachedDynamicProperties;
+    
+    if (!isIdentical) {
+        [self notifyRemoteForNewDynamicProperties];
+    } else {
+        XENDLog(@"DEBUG :: Ignoring update request because data has not changed");
+    }
 }
 
 - (void)didReceiveWidgetMessage:(NSDictionary*)data functionDefinition:(NSString*)definition callback:(void(^)(NSDictionary*))callback {

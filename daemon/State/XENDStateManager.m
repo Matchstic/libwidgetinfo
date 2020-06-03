@@ -94,6 +94,14 @@
     return self;
 }
 
+- (BOOL)sleepState {
+    return self.lastObservedSleepState;
+}
+
+- (BOOL)networkState {
+    return self.lastObservedNetworkState;
+}
+
 - (void)restartHourlyTimer {
     if (self.hourlyTimer) {
         [self.hourlyTimer invalidate];

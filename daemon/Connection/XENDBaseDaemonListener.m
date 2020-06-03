@@ -41,6 +41,10 @@
 	self.stateManager = [[XENDStateManager alloc] initWithDelegate:self];
 }
 
+- (XENDStateManager*)stateManagerInstance {
+    return self.stateManager;
+}
+
 - (NSDictionary*)_loadDataProviders {
     NSMutableDictionary *result = [NSMutableDictionary dictionary];
     

@@ -23,6 +23,7 @@
 #define MAX_AMPERAGE_SAMPLES 30
 #define MIN_AMPERAGE_SAMPLES 10
 #define AMPERAGE_SAMPLE_RATE 60
+#define AMPERAGE_DELAYED_SAMPLE_RATE 1800 // 30 mins
 #define SAMPLE_COUNT_TO_FORCE_UPDATE 10 // Leads to a forced update every 10 mins
 
 @interface XENDResourcesRemoteDataProvider ()
@@ -121,14 +122,18 @@ static void powerSourceChanged(void *context) {
     
     // Calculate health
     double maxCapacity = [[extensiveBatteryInfo objectForKey:@"DesignCapacity"] doubleValue];
-    double absoluteCapacity = [[extensiveBatteryInfo objectForKey:@"AbsoluteCapacity"] doubleValue];
+    double absoluteCapacity = [[extensiveBatteryInfo objectForKey:@"AppleRawMaxCapacity"] doubleValue];
+    
+    if (maxCapacity == 0) maxCapacity = -1;
+    if (absoluteCapacity == 0) absoluteCapacity = -1;
+    
     int healthPercentage = (absoluteCapacity / maxCapacity) * 100.0;
     if (healthPercentage == NAN) healthPercentage = 100;
     
     // Generate capacity information
     NSDictionary *capacity = @{
         @"current": [extensiveBatteryInfo objectForKey:@"AppleRawCurrentCapacity"] ? [extensiveBatteryInfo objectForKey:@"AppleRawCurrentCapacity"] : @-1,
-        @"maximim": [extensiveBatteryInfo objectForKey:@"AbsoluteCapacity"] ? [extensiveBatteryInfo objectForKey:@"AbsoluteCapacity"] : @-1,
+        @"maximum": [extensiveBatteryInfo objectForKey:@"AppleRawMaxCapacity"] ? [extensiveBatteryInfo objectForKey:@"AppleRawMaxCapacity"] : @-1,
         @"design": [extensiveBatteryInfo objectForKey:@"DesignCapacity"] ? [extensiveBatteryInfo objectForKey:@"DesignCapacity"] : @-1,
     };
 
@@ -147,7 +152,6 @@ static void powerSourceChanged(void *context) {
     self.cachedDynamicProperties = [@{
         @"battery": resultData
     } mutableCopy];
-    [self notifyRemoteForNewDynamicProperties];
 }
 
 // Returns in minutes
@@ -172,6 +176,24 @@ static void powerSourceChanged(void *context) {
     
     // Remaining Battery Life [h] = Battery Remaining Capacity [mAh/mWh] / Battery Rolling Average Drain Rate [mA/mW]
     return (remainingCapacity / drainRate) * 60;
+}
+
+- (void)noteDeviceDidEnterSleep {
+    // Drop down to minimal sampling during sleep
+    
+    [self.amperageSampler invalidate];
+    self.amperageSampler = nil;
+    
+    self.amperageSampler = [NSTimer scheduledTimerWithTimeInterval:AMPERAGE_DELAYED_SAMPLE_RATE target:self selector:@selector(_averageAmperageSampleFired:) userInfo:nil repeats:YES];
+}
+
+- (void)noteDeviceDidExitSleep {
+    // Restore faster sampling when awake
+    
+    [self.amperageSampler invalidate];
+    self.amperageSampler = nil;
+    
+    self.amperageSampler = [NSTimer scheduledTimerWithTimeInterval:AMPERAGE_SAMPLE_RATE target:self selector:@selector(_averageAmperageSampleFired:) userInfo:nil repeats:YES];
 }
 
 - (void)_averageAmperageSampleFired:(NSTimer*)timer {
