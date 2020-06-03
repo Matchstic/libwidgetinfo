@@ -34,6 +34,7 @@ static XENDMediaRemoteDataProvider *internalSharedInstance;
 @property (nonatomic, strong) NSData *currentArtwork;
 @property (nonatomic, readwrite) int updateRequestId;
 @property (nonatomic, readwrite) long long lastElapsedTimeObservation;
+@property (nonatomic, readwrite) int lastVolume;
 
 - (void)springboardRelaunched;
 @end
@@ -164,6 +165,7 @@ static NSArray *whitelist;
     self.updateRequestId = 0;
     self.updateQueue = dispatch_queue_create("com.matchstic.widgetinfo/media", NULL);
     self.lastElapsedTimeObservation = 0;
+    self.lastVolume = -1;
     
     internalSharedInstance = self;
     
@@ -213,7 +215,7 @@ static NSArray *whitelist;
     // Monitor volume state - also handles when the user changes volume via hardware keys
     [[NSNotificationCenter defaultCenter]
         addObserver:self
-        selector:@selector(onNowPlayingDataChanged:)
+        selector:@selector(volumeChanged:)
         name:@"AVSystemController_EffectiveVolumeDidChangeNotification"
         object:nil];
     
@@ -460,14 +462,32 @@ static NSArray *whitelist;
         }
         
         self.currentArtwork = currentArtwork;
-        [self.cachedDynamicProperties setObject:nowPlayingTrack forKey:@"nowPlaying"];
-        [self.cachedDynamicProperties setObject:nowPlayingApplication forKey:@"nowPlayingApplication"];
-        [self.cachedDynamicProperties setObject:allowedActions forKey:@"supportedActions"];
-        [self.cachedDynamicProperties setObject:@(isStopped) forKey:@"isStopped"];
-        [self.cachedDynamicProperties setObject:@(isPlaying) forKey:@"isPlaying"];
-        [self.cachedDynamicProperties setObject:@(adjustedVolume) forKey:@"volume"];
-        [self.cachedDynamicProperties setObject:@(elapsedChangedTime) forKey:@"_elapsedChangedTime"];
+        
+        self.cachedDynamicProperties = [@{
+            @"nowPlaying": nowPlayingTrack,
+            @"nowPlayingApplication": nowPlayingApplication,
+            @"supportedActions": allowedActions,
+            @"isStopped": @(isStopped),
+            @"isPlaying": @(isPlaying),
+            @"volume": @(adjustedVolume),
+            @"_elapsedChangedTime": @(elapsedChangedTime)
+        } mutableCopy];
     });
+}
+
+- (void)volumeChanged:(NSNotification*)notification {
+    float vol = 0;
+    [[objc_getClass("AVSystemController") sharedAVSystemController] getVolume:&vol forCategory:@"Audio/Video"];
+    
+    int testVolume = vol * 100;
+    
+    // Only update data for new volume changes
+    if (testVolume != self.lastVolume) {
+        [self onNowPlayingDataChanged:notification];
+        
+        // Update cache state
+        self.lastVolume = testVolume;
+    }
 }
 
 - (void)springboardRelaunched {
