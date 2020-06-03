@@ -35,6 +35,14 @@ int libwidgetinfo_main_ipc(void) {
     return EXIT_SUCCESS;
 }
 
+static void exceptionHandler(NSException *exception)
+{
+    NSArray *stack = [exception callStackReturnAddresses];
+    XENDLog(@"FATAL :: EXCEPTION!");
+    XENDLog(@"%@", exception);
+    XENDLog(@"Stack trace: %@", stack);
+}
+
 @interface XENDIPCDaemonListener ()
 
 @property (nonatomic, readwrite) BOOL requiresPropertiesPushAfterSleep;
@@ -55,6 +63,9 @@ int libwidgetinfo_main_ipc(void) {
 
 - (void)initialise {
     self.requiresPropertiesPushAfterSleep = NO;
+    
+    // Exception handler
+    NSSetUncaughtExceptionHandler(&exceptionHandler);
 	
     [OBJCIPC activate];
     
