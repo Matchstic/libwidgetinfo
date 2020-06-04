@@ -96,10 +96,6 @@
 		C99BBEFA24670F9300A6F426 /* XENDApplicationsDataProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = C99BBEF824670F9300A6F426 /* XENDApplicationsDataProvider.h */; };
 		C99BBEFB24670F9300A6F426 /* XENDApplicationsDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = C99BBEF924670F9300A6F426 /* XENDApplicationsDataProvider.m */; };
 		C99BBEFE24670FCA00A6F426 /* XENDApplicationsRemoteDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = C99BBEFD24670FCA00A6F426 /* XENDApplicationsRemoteDataProvider.m */; };
-		C9A5E98F2419519300FCD778 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9A5E98E2419519300FCD778 /* Foundation.framework */; };
-		C9A5E9A4241951A900FCD778 /* Connection.m in Sources */ = {isa = PBXBuildFile; fileRef = C912063E2416A8690081E307 /* Connection.m */; };
-		C9A5E9A5241951AB00FCD778 /* IPC.m in Sources */ = {isa = PBXBuildFile; fileRef = C91206402416A8690081E307 /* IPC.m */; };
-		C9A5E9A6241951AD00FCD778 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = C91206412416A8690081E307 /* Message.m */; };
 		C9AFC0572389617C007FD971 /* XENDWeatherDataProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = C9AFC0552389617C007FD971 /* XENDWeatherDataProvider.h */; };
 		C9AFC0582389617C007FD971 /* XENDWeatherDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = C9AFC0562389617C007FD971 /* XENDWeatherDataProvider.m */; };
 		C9AFC05B23896298007FD971 /* XENDWeatherRemoteDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = C9AFC05A23896298007FD971 /* XENDWeatherRemoteDataProvider.m */; };
@@ -307,7 +303,6 @@
 		C99BBEF924670F9300A6F426 /* XENDApplicationsDataProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XENDApplicationsDataProvider.m; sourceTree = "<group>"; };
 		C99BBEFC24670FCA00A6F426 /* XENDApplicationsRemoteDataProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XENDApplicationsRemoteDataProvider.h; path = "daemon/Data Providers/Applications/XENDApplicationsRemoteDataProvider.h"; sourceTree = SOURCE_ROOT; };
 		C99BBEFD24670FCA00A6F426 /* XENDApplicationsRemoteDataProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XENDApplicationsRemoteDataProvider.m; path = "daemon/Data Providers/Applications/XENDApplicationsRemoteDataProvider.m"; sourceTree = SOURCE_ROOT; };
-		C9A5E98D2419519300FCD778 /* libobjcipc.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libobjcipc.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9A5E98E2419519300FCD778 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		C9A5E9902419519300FCD778 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		C9AFC0552389617C007FD971 /* XENDWeatherDataProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XENDWeatherDataProvider.h; sourceTree = "<group>"; };
@@ -407,14 +402,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C9A5E9892419519300FCD778 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				C9A5E98F2419519300FCD778 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -765,7 +752,6 @@
 				C9F2F40E2301C3E000E4863B /* Frameworks */,
 				C9204FC823317EBD00F9F535 /* libwidgetinfodaemon.a */,
 				C9F2F3FD2301BF4F00E4863B /* libwidgetinfo.a */,
-				C9A5E98D2419519300FCD778 /* libobjcipc.a */,
 				C979629B24268D34007849D8 /* liblogger.a */,
 			);
 			sourceTree = "<group>";
@@ -911,13 +897,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		C9A5E98A2419519300FCD778 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		C9F2F3382301BE1E00E4863B /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -1032,23 +1011,6 @@
 			productReference = C979629B24268D34007849D8 /* liblogger.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		C9A5E98C2419519300FCD778 /* objcipc */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = C9A5E9A32419519300FCD778 /* Build configuration list for PBXNativeTarget "objcipc" */;
-			buildPhases = (
-				C9A5E9882419519300FCD778 /* Sources */,
-				C9A5E9892419519300FCD778 /* Frameworks */,
-				C9A5E98A2419519300FCD778 /* Headers */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = objcipc;
-			productName = libobjcipc;
-			productReference = C9A5E98D2419519300FCD778 /* libobjcipc.a */;
-			productType = "com.apple.product-type.library.static";
-		};
 		C9F2F33A2301BE1E00E4863B /* libwidgetinfo */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C9F2F3532301BE1E00E4863B /* Build configuration list for PBXNativeTarget "libwidgetinfo" */;
@@ -1080,9 +1042,6 @@
 					C979629A24268D34007849D8 = {
 						CreatedOnToolsVersion = 11.3.1;
 					};
-					C9A5E98C2419519300FCD778 = {
-						CreatedOnToolsVersion = 11.3.1;
-					};
 					C9F2F33A2301BE1E00E4863B = {
 						CreatedOnToolsVersion = 10.2.1;
 					};
@@ -1102,7 +1061,6 @@
 			targets = (
 				C9F2F33A2301BE1E00E4863B /* libwidgetinfo */,
 				C9204FC723317EBD00F9F535 /* Daemon */,
-				C9A5E98C2419519300FCD778 /* objcipc */,
 				C979629A24268D34007849D8 /* logger */,
 			);
 		};
@@ -1141,16 +1099,6 @@
 			files = (
 				C99BBEF22466F96300A6F426 /* NSDictionary+XENSafeObjectForKey.m in Sources */,
 				C9DBDBB4244C967A009E855E /* XENDLogger.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C9A5E9882419519300FCD778 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				C9A5E9A6241951AD00FCD778 /* Message.m in Sources */,
-				C9A5E9A4241951A900FCD778 /* Connection.m in Sources */,
-				C9A5E9A5241951AB00FCD778 /* IPC.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1485,62 +1433,6 @@
 			};
 			name = Release;
 		};
-		C9A5E9A12419519300FCD778 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = (
-					arm64,
-					arm64e,
-					armv7,
-					armv7s,
-				);
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_STYLE = Automatic;
-				GCC_PRECOMPILE_PREFIX_HEADER = NO;
-				GCC_PREFIX_HEADER = "";
-				INSTALL_PATH = /usr/lib;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				iOSOpenDevBuildPackageOnAnyBuild = NO;
-				iOSOpenDevCopyOnBuild = NO;
-				iOSOpenDevDevice = 192.168.0.0;
-				iOSOpenDevInstallOnAnyBuild = NO;
-				iOSOpenDevInstallOnProfiling = NO;
-				iOSOpenDevRespringOnInstall = YES;
-				iOSOpenDevUsePackageVersionPList = YES;
-			};
-			name = Debug;
-		};
-		C9A5E9A22419519300FCD778 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = (
-					arm64,
-					arm64e,
-					armv7,
-					armv7s,
-				);
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_STYLE = Automatic;
-				GCC_PRECOMPILE_PREFIX_HEADER = NO;
-				GCC_PREFIX_HEADER = "";
-				INSTALL_PATH = /usr/lib;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				iOSOpenDevBuildPackageOnAnyBuild = NO;
-				iOSOpenDevCopyOnBuild = NO;
-				iOSOpenDevDevice = 192.168.0.0;
-				iOSOpenDevInstallOnAnyBuild = NO;
-				iOSOpenDevInstallOnProfiling = NO;
-				iOSOpenDevRespringOnInstall = YES;
-				iOSOpenDevUsePackageVersionPList = YES;
-			};
-			name = Release;
-		};
 		C9F2F3512301BE1E00E4863B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1683,15 +1575,6 @@
 			buildConfigurations = (
 				C97962A124268D34007849D8 /* Debug */,
 				C97962A224268D34007849D8 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		C9A5E9A32419519300FCD778 /* Build configuration list for PBXNativeTarget "objcipc" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				C9A5E9A12419519300FCD778 /* Debug */,
-				C9A5E9A22419519300FCD778 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
