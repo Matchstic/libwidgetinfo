@@ -1,3 +1,3 @@
-[submodule "deps/libobjcipc"]
-	path = deps/libobjcipc
-	url = https://github.com/Matchstic/libobjcipc.git
+[submodule "deps/LightMessaging"]
+	path = deps/LightMessaging
+	url = https://github.com/rpetrich/LightMessaging.git

@@ -15,7 +15,9 @@
 
 #import "XENDProxyIPCConnection.h"
 #import "XENDLogger.h"
-#import "../../../deps/libobjcipc/objcipc.h"
+
+#define ROCKETBOOTSTRAP_LOAD_DYNAMIC
+#import "../../../deps/LightMessaging/LightMessaging.h"
 
 @interface XENDProxyIPCConnection ()
 - (void)_updateProperties;
@@ -40,6 +42,11 @@ static inline void propertiesChangedCallback(CFNotificationCenterRef center, voi
     [internalConnection _updateProperties];
 }
 
+static LMConnection widgetinfodService = {
+    MACH_PORT_NULL,
+    "com.matchstic.widgetinfod.server"
+};
+
 @implementation XENDProxyIPCConnection
 
 - (void)initialise {
@@ -56,9 +63,31 @@ static inline void propertiesChangedCallback(CFNotificationCenterRef center, voi
     [self _sendTestConnection];
 }
 
+- (NSDictionary*)_sendMessageWithName:(NSString*)name args:(NSDictionary*)args {
+    NSDictionary *data = @{
+        @"messageName": name,
+        @"args": args
+    };
+    
+    // send the message, and hopefully have it placed in the response buffer
+    LMResponseBuffer buffer;
+    kern_return_t result = LMConnectionSendTwoWayPropertyList(&widgetinfodService, 0, data, &buffer);
+
+    // if it failed, log and return nil
+    if (result != KERN_SUCCESS) {
+        XENDLog(@"ERROR :: Failed to contact widgetinfod, with error %i", result);
+        return nil;
+    }
+
+    // return what we got back
+    return LMResponseConsumePropertyList(&buffer);
+}
+
 - (void)_sendTestConnection {
     // Send test connection to server
-    [OBJCIPC sendMessageToServerWithMessageName:@"testConnection" dictionary:@{} replyHandler:^(NSDictionary *data) {
+    
+    NSDictionary *response = [self _sendMessageWithName:@"testConnection" args:@{}];
+    if (response) {
         XENDLog(@"INFO :: Daemon connection established");
         
         // Notify providers of connection
@@ -68,8 +97,8 @@ static inline void propertiesChangedCallback(CFNotificationCenterRef center, voi
         
         // Current state is included in response
         
-        self.currentDeviceState = [data objectForKey:@"deviceState"];
-    }];
+        self.currentDeviceState = [response objectForKey:@"deviceState"];
+    }
 }
 
 #pragma mark - Subclass overrides
@@ -82,9 +111,8 @@ static inline void propertiesChangedCallback(CFNotificationCenterRef center, voi
         @"namespace": providerNamespace
     };
     
-    [OBJCIPC sendMessageToServerWithMessageName:@"didReceiveWidgetMessage" dictionary:args replyHandler:^(NSDictionary *data) {
-        callback(data);
-    }];
+    NSDictionary *response = [self _sendMessageWithName:@"didReceiveWidgetMessage" args:args];
+    callback(response);
 }
 
 - (void)requestCurrentPropertiesInNamespace:(NSString*)providerNamespace callback:(void(^)(NSDictionary*))callback {
@@ -92,22 +120,20 @@ static inline void propertiesChangedCallback(CFNotificationCenterRef center, voi
         @"namespace": providerNamespace
     };
     
-    [OBJCIPC sendMessageToServerWithMessageName:@"requestCurrentProperties" dictionary:args replyHandler:^(NSDictionary *data) {
-        callback(data);
-    }];
+    NSDictionary *response = [self _sendMessageWithName:@"requestCurrentProperties" args:args];
+    callback(response);
 }
 
 - (void)requestCurrentDeviceStateWithCallback:(void(^)(NSDictionary*))callback {
-    [OBJCIPC sendMessageToServerWithMessageName:@"requestCurrentDeviceState" dictionary:@{} replyHandler:^(NSDictionary *data) {
-        callback(data);
-    }];
+    NSDictionary *response = [self _sendMessageWithName:@"requestCurrentDeviceState" args:@{}];
+    callback(response);
 }
 
 - (void)_updateProperties {
     for (NSString *namespace in self.registeredProxyProviders.allKeys) {
         [self requestCurrentPropertiesInNamespace:namespace callback:^(NSDictionary *data) {
             if (data == nil) {
-                XENDLog(@"ERROR :: Cannot fetch new properties");
+                XENDLog(@"ERROR :: Cannot fetch new properties in namespace %@", namespace);
             } else {
                 // Only pass through dynamic properties, statics were fetched previously
                 [self notifyUpdatedDynamicProperties:[data objectForKey:@"dynamic"] forNamespace:namespace];

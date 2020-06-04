@@ -15,7 +15,9 @@
 
 #import "XENDIPCDaemonListener.h"
 #import "XENDLogger.h"
-#import "../../deps/libobjcipc/objcipc.h"
+
+#define ROCKETBOOTSTRAP_LOAD_DYNAMIC
+#import "../../deps/LightMessaging/LightMessaging.h"
 
 #define WIDGET_INFO_MESSAGE_PROPERTIES_CHANGED @"com.matchstic.libwidgetinfo/propertiesChanged"
 #define WIDGET_INFO_MESSAGE_DEVICE_STATE_CHANGED @"com.matchstic.libwidgetinfo/deviceStateChanged"
@@ -42,10 +44,63 @@ static void exceptionHandler(NSException *exception) {
     XENDLog(@"Stack trace: %@", stack);
 }
 
+static XENDIPCDaemonListener *internalSharedInstance;
+
+// See: https://github.com/hbang/libcephei/blob/1a8b97709f1dae9f4371e73ac17cb57a8ebaa556/HBPreferencesServer.x#L10
+static void HandleReceivedMessage(CFMachPortRef port, void *bytes, CFIndex size, void *info) {
+LMMessage *request = bytes;
+
+    // check that we aren’t being given a corrupt message
+    if ((size_t)size < sizeof(LMMessage)) {
+        XENDLog(@"received a bad message? size = %li", size);
+
+        // send a blank reply, free the buffer, and return
+        LMSendReply(request->head.msgh_remote_port, NULL, 0);
+        LMResponseBufferFree(bytes);
+
+        return;
+    }
+    
+    NSDictionary <NSString *, id> *userInfo = LMResponseConsumePropertyList((LMResponseBuffer *)request);
+    
+    NSString *messageName = [userInfo objectForKey:@"messageName"];
+    NSDictionary *args = [userInfo objectForKey:@"args"];
+    
+    void (^callback)(NSDictionary *result) = ^(NSDictionary *result) {
+        // Send a reply to the message
+        
+        LMSendPropertyListReply(request->head.msgh_remote_port, result);
+        LMResponseBufferFree(bytes);
+    };
+    
+    // Call appropriate method in the listener
+    if ([messageName isEqualToString:@"testConnection"]) {
+        [internalSharedInstance requestCurrentDeviceStateWithCallback:^(NSDictionary* state) {
+            callback(@{
+                @"success": @YES,
+                @"deviceState": state
+            });
+        }];
+    } else if ([messageName isEqualToString:@"didReceiveWidgetMessage"]) {
+        [internalSharedInstance didReceiveWidgetMessage:[args objectForKey:@"data"] functionDefinition:[args objectForKey:@"definition"] inNamespace:[args objectForKey:@"namespace"] callback:^(NSDictionary *result) {
+            callback(result);
+        }];
+    } else if ([messageName isEqualToString:@"requestCurrentProperties"]) {
+        [internalSharedInstance requestCurrentPropertiesInNamespace:[args objectForKey:@"namespace"] callback:^(NSDictionary *result) {
+            callback(result);
+        }];
+    } else if ([messageName isEqualToString:@"requestCurrentDeviceState"]) {
+        [internalSharedInstance requestCurrentDeviceStateWithCallback:^(NSDictionary *result) {
+            callback(result);
+        }];
+    } else {
+        XENDLog(@"ERROR :: Unknown message sent to widgetinfod");
+        callback(@{});
+    }
+}
+
 @interface XENDIPCDaemonListener ()
-
 @property (nonatomic, readwrite) BOOL requiresPropertiesPushAfterSleep;
-
 @end
 
 @implementation XENDIPCDaemonListener
@@ -54,6 +109,7 @@ static void exceptionHandler(NSException *exception) {
     self = [super init];
     
     if (self) {
+        internalSharedInstance = self;
 		[self initialise];
     }
     
@@ -65,37 +121,14 @@ static void exceptionHandler(NSException *exception) {
     
     // Exception handler
     NSSetUncaughtExceptionHandler(&exceptionHandler);
-	
-    [OBJCIPC activate];
     
-    // Setup IPC handlers
-    
-    [OBJCIPC registerIncomingMessageFromAppHandlerForMessageName:@"testConnection" handler:^(NSDictionary *args, void (^callback)(NSDictionary* response)) {
-        [self requestCurrentDeviceStateWithCallback:^(NSDictionary* state) {
-            callback(@{
-                @"success": @YES,
-                @"deviceState": state
-            });
-        }];
-    }];
-    
-    [OBJCIPC registerIncomingMessageFromAppHandlerForMessageName:@"didReceiveWidgetMessage" handler:^(NSDictionary *args, void (^callback)(NSDictionary* response)) {
-        [self didReceiveWidgetMessage:[args objectForKey:@"data"] functionDefinition:[args objectForKey:@"definition"] inNamespace:[args objectForKey:@"namespace"] callback:^(NSDictionary *result) {
-            callback(result);
-        }];
-    }];
-    
-    [OBJCIPC registerIncomingMessageFromAppHandlerForMessageName:@"requestCurrentProperties" handler:^(NSDictionary *args, void (^callback)(NSDictionary* response)) {
-        [self requestCurrentPropertiesInNamespace:[args objectForKey:@"namespace"] callback:^(NSDictionary *result) {
-            callback(result);
-        }];
-    }];
-    
-    [OBJCIPC registerIncomingMessageFromAppHandlerForMessageName:@"requestCurrentDeviceState" handler:^(NSDictionary *args, void (^callback)(NSDictionary* response)) {
-        [self requestCurrentDeviceStateWithCallback:^(NSDictionary *result) {
-            callback(result);
-        }];
-    }];
+    // start the data service
+    kern_return_t result = LMStartService("com.matchstic.widgetinfod.server", CFRunLoopGetCurrent(), HandleReceivedMessage);
+
+    // if it failed, log it
+    if (result != KERN_SUCCESS) {
+        XENDLog(@"ERROR :: Failed to start data server, with error %i", result);
+    }
     
     // Setup data providers after IPC is initialised
     [super initialise];
