@@ -69,7 +69,10 @@ LMMessage *request = bytes;
     void (^callback)(NSDictionary *result) = ^(NSDictionary *result) {
         // Send a reply to the message
         
-        LMSendPropertyListReply(request->head.msgh_remote_port, result);
+        // Convert result to NSData
+        NSData *message = [NSKeyedArchiver archivedDataWithRootObject:result];
+        
+        LMSendNSDataReply(request->head.msgh_remote_port, message);
         LMResponseBufferFree(bytes);
     };
     

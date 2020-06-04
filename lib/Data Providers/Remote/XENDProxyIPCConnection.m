@@ -79,8 +79,25 @@ static LMConnection widgetinfodService = {
         return nil;
     }
 
-    // return what we got back
-    return LMResponseConsumePropertyList(&buffer);
+    // Convert response back to NSDictionary
+    
+    uint32_t length = LMMessageGetDataLength(&buffer.message);
+    
+    id dictionary;
+    if (length) {
+        CFDataRef data = CFDataCreateWithBytesNoCopy(kCFAllocatorDefault, (const UInt8 *)LMMessageGetData(&buffer.message), length, kCFAllocatorNull);
+        
+        NSData *bridged = LMBridgedCast_(NSData *, data);
+        
+        dictionary = [NSKeyedUnarchiver unarchiveObjectWithData:bridged];
+        CFRelease(data);
+    } else {
+        result = nil;
+    }
+    
+    LMResponseBufferFree(&buffer);
+    
+    return dictionary;
 }
 
 - (void)_sendTestConnection {
