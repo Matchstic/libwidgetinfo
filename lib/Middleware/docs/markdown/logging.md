@@ -12,7 +12,7 @@ The Xen HTML API allows you to view logs from your widgets in real-time, on a Ma
 
 You can setup Xen HTML to log these messages to the filesystem.
 
-To turn this on, go to Settings -> Xen HTML -> Support -> Developer Options, and enable "Redirect console.log to Filesystem". You will need to respring to apply this change.
+To turn this on, go to Settings -> Xen HTML -> Advanced, and enable "Widget Logging". You will need to respring to apply this change.
 
 Logs can then be found in the following directory: `/var/mobile/Library/Logs/Xen-HTML/`.
 
