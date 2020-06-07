@@ -71,6 +71,9 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
 #pragma mark - Grab API key from Weather.framework
 
 - (void)intialiseProvider {
+    // Only initialise once
+    if (self.hasInitialised) return;
+    
     internalSharedInstance = self;
     
     // Watch for SpringBoard launched event
