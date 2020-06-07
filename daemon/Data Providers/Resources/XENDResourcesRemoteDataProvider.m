@@ -128,6 +128,8 @@ static void powerSourceChanged(void *context) {
     
     int healthPercentage = (absoluteCapacity / maxCapacity) * 100.0;
     if (healthPercentage == NAN) healthPercentage = 100;
+    else if (healthPercentage > 100) healthPercentage = 100;
+    else if (healthPercentage < 0) healthPercentage = 0;
     
     // Generate capacity information
     NSDictionary *capacity = @{
