@@ -22,7 +22,6 @@
 @interface XENDApplicationsManager ()
 @property (nonatomic, weak) id<XENDApplicationsManagerDelegate> delegate;
 @property (nonatomic, strong) NSArray *_currentMap;
-@property (nonatomic, strong) NSMutableDictionary *_dataStores;
 @property (nonatomic, strong) FBSApplicationDataStoreRepositoryClient *client;
 - (void)loadApplicationsMap;
 - (void)springboardRelaunched;
@@ -58,8 +57,6 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
     if (self) {
         internalSharedInstance = self;
         
-        self._dataStores = [NSMutableDictionary dictionary];
-        
         // Add observer for application state changes
         [[LSApplicationWorkspace defaultWorkspace] addObserver:self];
         
@@ -89,7 +86,6 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
      stores. Therefore, we need to clear the local list of them, and then re-add ourselves to
      cause the re-notification to happen.
      */
-    [self._dataStores removeAllObjects];
     
     // Ensure client observer list is empty
     [self.client removeObserver:self];
@@ -110,13 +106,8 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
 
 - (FBSApplicationDataStore*)dataStoreForApplication:(NSString*)bundleIdentifier {
     // This store appears to hold some metadata about applications, such as scene and badge states
-    FBSApplicationDataStore *store = [self._dataStores objectForKey:bundleIdentifier];
-    if (!store) {
-        store = [[objc_getClass("FBSApplicationDataStore") alloc] initWithBundleIdentifier:bundleIdentifier];
-        
-        if (store)
-            [self._dataStores setObject:store forKey:bundleIdentifier];
-    }
+    
+    FBSApplicationDataStore *store = [[objc_getClass("FBSApplicationDataStore") alloc] initWithBundleIdentifier:bundleIdentifier];
     
     return store;
 }
@@ -208,7 +199,7 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
         @"name": [proxy localizedName] ? [proxy localizedName] : @"",
         @"identifier": proxy.applicationIdentifier,
         @"icon": [NSString stringWithFormat:@"xui://application/icon/%@", proxy.applicationIdentifier],
-        @"badge": badgeValue ? badgeValue : @"",
+        @"badge": badgeValue ? [badgeValue copy] : @"",
         @"isInstalling": @(proxy.isPlaceholder),
         @"isSystemApplication": @(isSystem)
     };
@@ -226,14 +217,6 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
 
 -(void)applicationsDidUninstall:(NSArray*)arg1 {
     [self loadApplicationsMap];
-    
-    // Argument is an array of LSApplicationProxy instances
-    for (LSApplicationProxy *proxy in arg1) {
-        if (![[proxy class] isKindOfClass:[LSApplicationProxy class]]) continue;
-        
-        // Clear our cached data store for this application
-        [self._dataStores removeObjectForKey:proxy.applicationIdentifier];
-    }
 }
 
 -(void)applicationInstallsDidStart:(id)arg1 {
@@ -245,9 +228,7 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
 - (void)applicationDataStoreRepositoryClient:(FBSApplicationDataStoreRepositoryClient*)arg1 application:(NSString*)arg2 changedObject:(NSObject*)arg3 forKey:(NSString *)arg4 {
     
     if ([arg4 isEqualToString:@"SBApplicationBadgeKey"]) {
-        // Drop this data store so that it gets recreated
-        [self._dataStores removeObjectForKey:arg2];
-        
+        // Recreate map for new badge info
         [self loadApplicationsMap];
     }
 }
