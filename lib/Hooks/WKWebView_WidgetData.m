@@ -104,9 +104,7 @@
     }
 }
 
-- (void)xenhtml_stopLoading {
-    NSString *url = [self.URL absoluteString];
-    
+- (void)xenhtml_stopLoading {    
     [[XENDWidgetManager sharedInstance] deregisterWebView:self];
     
     // Call original stopLoading - not a loop ;P

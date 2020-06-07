@@ -97,7 +97,7 @@ static void powerSourceChanged(void *context) {
     
     IORegistryEntryCreateCFProperties(powerSource, &batteryProperties, NULL, 0);
     
-    NSDictionary *extensiveBatteryInfo = (__bridge_transfer NSDictionary *)batteryProperties;
+    NSDictionary *extensiveBatteryInfo = (NSDictionary*)CFBridgingRelease(batteryProperties);
     
     NSNumber *chargingState = @0;
     if ([[internalBatteryData objectForKey:@kIOPSIsChargedKey] boolValue] ||
@@ -189,9 +189,9 @@ static void powerSourceChanged(void *context) {
     
     IORegistryEntryCreateCFProperties(powerSource, &batteryProperties, NULL, 0);
     
-    NSDictionary *extensiveBatteryInfo = (__bridge_transfer NSDictionary *)batteryProperties;
+    NSDictionary *extensiveBatteryInfo = (NSDictionary*)CFBridgingRelease(batteryProperties);
     
-    NSNumber *sample = [extensiveBatteryInfo objectForKey:@"Amperage"];
+    NSNumber *sample = [[extensiveBatteryInfo objectForKey:@"Amperage"] copy];
     
     BOOL willBecomeViable = self.amperageSamples.count == MIN_AMPERAGE_SAMPLES - 1;
     if (self.amperageSamples.count == MAX_AMPERAGE_SAMPLES) {
