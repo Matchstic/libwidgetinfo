@@ -293,7 +293,7 @@ static NSString *preferencesId = @"com.matchstic.xenhtml.libwidgetinfo";
     NSDictionary *payload = @{ @"namespace": providerNamespace, @"payload": data };
     NSDictionary *retval = @{ @"type": @"dataupdate", @"data": payload };
     
-    NSString *updateString = [NSString stringWithFormat:@"api._middleware.onInternalNativeMessage(%@)",
+    NSString *updateString = [NSString stringWithFormat:@"if (window.api !== undefined) { api._middleware.onInternalNativeMessage(%@); }",
                               [self _parseToJSON:retval]];
     
     // Loop over widget array, and call update as required.
