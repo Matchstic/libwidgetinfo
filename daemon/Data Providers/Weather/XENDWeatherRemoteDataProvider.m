@@ -21,11 +21,18 @@
 
 #include <dlfcn.h>
 
-@implementation XENDWeatherRemoteDataProvider
+@interface XENDWeatherRemoteDataProvider ()
+@property (nonatomic, readwrite) BOOL hasInitialised;
+- (void)springboardRelaunched;
+@end
 
-+ (void)initialize {
-    dlopen("/System/Library/PrivateFrameworks/Weather.framework/Weather", RTLD_NOW);
+static XENDWeatherRemoteDataProvider *internalSharedInstance;
+
+static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef info) {
+    [internalSharedInstance springboardRelaunched];
 }
+
+@implementation XENDWeatherRemoteDataProvider
 
 + (NSString*)providerNamespace {
     return @"weather";
@@ -64,11 +71,22 @@
 #pragma mark - Grab API key from Weather.framework
 
 - (void)intialiseProvider {
+    internalSharedInstance = self;
+    
+    // Watch for SpringBoard launched event
+    // This is to re-initialise once the user interface is running post-reboot
+    CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, &onSpringBoardLaunch, CFSTR("SBSpringBoardDidLaunchNotification"), NULL, 0);
+    
+    // Load weather framework
+    dlopen("/System/Library/PrivateFrameworks/Weather.framework/Weather", RTLD_NOW);
+    
     // Make sure that our private API usage is going to be safe
     if (![self _privateFrameworkUsageIsValid]) {
         XENDLog(@"libwidgetinfo :: Weather provider is using invalid private framework API");
         return;
     }
+    
+    self.hasInitialised = YES;
     
     CFPreferencesAppSynchronize(CFSTR("com.apple.weather"));
     
@@ -155,6 +173,13 @@
     }
     
     return YES;
+}
+
+- (void)springboardRelaunched {
+    // Try to re-initialise if necessary
+    if (!self.hasInitialised) {
+        [self intialiseProvider];
+    }
 }
 
 - (void)onAPIKeyNotification:(NSNotification*)notification {
