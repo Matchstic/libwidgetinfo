@@ -196,8 +196,8 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
     NSObject *badgeValue = [dataStore safeObjectForKey:@"SBApplicationBadgeKey" ofType:[NSObject class]];
     
     return @{
-        @"name": [proxy localizedName] ? [proxy localizedName] : @"",
-        @"identifier": proxy.applicationIdentifier,
+        @"name": [proxy localizedName] ? [[proxy localizedName] copy] : @"",
+        @"identifier": [proxy.applicationIdentifier copy],
         @"icon": [NSString stringWithFormat:@"xui://application/icon/%@", proxy.applicationIdentifier],
         @"badge": badgeValue ? [badgeValue copy] : @"",
         @"isInstalling": @(proxy.isPlaceholder),

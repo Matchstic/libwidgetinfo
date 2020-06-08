@@ -37,10 +37,14 @@
 - (WFTemperature*)temperatureForValue:(NSNumber*)value units:(struct XTWCUnits)units {
     WFTemperature *temp = [[objc_getClass("WFTemperature") alloc] init];
     
-    if (units.temperature == METRIC)
-        [temp setCelsius:value.doubleValue];
-    else
-        [temp setFahrenheit:value.doubleValue];
+    if ([value isEqual:[NSNull null]]) {
+        [temp setCelsius:0];
+    } else {
+        if (units.temperature == METRIC)
+            [temp setCelsius:value.doubleValue];
+        else
+            [temp setFahrenheit:value.doubleValue];
+    }
         
     return temp;
 }

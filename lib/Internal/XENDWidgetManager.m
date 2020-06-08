@@ -92,13 +92,13 @@ static NSString *preferencesId = @"com.matchstic.xenhtml.libwidgetinfo";
 }
 
 - (void)registerWebView:(WKWebView*)webView {
-    if (![self.managedWebViews containsObject:webView]) {
+    if (![[self.managedWebViews copy] containsObject:webView]) {
         [self.managedWebViews addObject:webView];
     }
 }
 
 - (void)deregisterWebView:(WKWebView*)webView {
-    if ([self.managedWebViews containsObject:webView]) {
+    if ([[self.managedWebViews copy] containsObject:webView]) {
         [self.managedWebViews removeObject:webView];
     }
 }
@@ -297,7 +297,7 @@ static NSString *preferencesId = @"com.matchstic.xenhtml.libwidgetinfo";
                               [self _parseToJSON:retval]];
     
     // Loop over widget array, and call update as required.
-    for (WKWebView *widget in self.managedWebViews) {
+    for (WKWebView *widget in [self.managedWebViews copy]) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [widget evaluateJavaScript:updateString completionHandler:^(id object, NSError *error) {
                 if (error) {
