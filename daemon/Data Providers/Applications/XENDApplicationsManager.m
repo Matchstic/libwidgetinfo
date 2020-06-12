@@ -21,8 +21,9 @@
 
 @interface XENDApplicationsManager ()
 @property (nonatomic, weak) id<XENDApplicationsManagerDelegate> delegate;
-@property (nonatomic, strong) NSArray *_currentMap;
+@property (nonatomic, strong) NSMutableArray *currentMap;
 @property (nonatomic, strong) FBSApplicationDataStoreRepositoryClient *client;
+@property (nonatomic, strong) dispatch_queue_t updateQueue;
 - (void)loadApplicationsMap;
 - (void)springboardRelaunched;
 @end
@@ -56,6 +57,7 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
     
     if (self) {
         internalSharedInstance = self;
+        self.updateQueue = dispatch_queue_create("com.matchstic.widgetinfod.apps", NULL);
         
         // Add observer for application state changes
         [[LSApplicationWorkspace defaultWorkspace] addObserver:self];
@@ -113,34 +115,36 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
 }
 
 - (void)loadApplicationsMap {
-    NSArray *allApplications = [[LSApplicationWorkspace defaultWorkspace] allApplications];
-    
-    NSMutableArray *applicationMap = [NSMutableArray array];
-    
-    for (LSApplicationProxy *proxy in allApplications) {
-        NSDictionary *metadata = [self metadataForApplication:proxy.applicationIdentifier];
+    dispatch_async(self.updateQueue, ^{
+        NSArray *allApplications = [[LSApplicationWorkspace defaultWorkspace] allApplications];
         
-        if (metadata)
-            [applicationMap addObject:metadata];
-    }
-    
-    // Sort the map alphabetically
-    applicationMap = [[applicationMap sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
-        NSString *first = [[a objectForKey:@"name"] lowercaseString];
-        NSString *second = [[b objectForKey:@"name"] lowercaseString];
-        return [first compare:second];
-    }] mutableCopy];
-    
-    self._currentMap = applicationMap;
-    
-    // Notify delegate of new map
-    if (self.delegate && [self.delegate respondsToSelector:@selector(applicationsMapDidUpdate:)]) {
-        [self.delegate applicationsMapDidUpdate:self._currentMap];
-    }
+        NSMutableArray *applicationMap = [NSMutableArray array];
+        
+        for (LSApplicationProxy *proxy in allApplications) {
+            NSDictionary *metadata = [self metadataForApplication:proxy.applicationIdentifier];
+            
+            if (metadata)
+                [applicationMap addObject:metadata];
+        }
+        
+        // Sort the map alphabetically
+        applicationMap = [[applicationMap sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+            NSString *first = [[a objectForKey:@"name"] lowercaseString];
+            NSString *second = [[b objectForKey:@"name"] lowercaseString];
+            return [first compare:second];
+        }] mutableCopy];
+        
+        self.currentMap = applicationMap;
+        
+        // Notify delegate of new map
+        if (self.delegate && [self.delegate respondsToSelector:@selector(applicationsMapDidUpdate:)]) {
+            [self.delegate applicationsMapDidUpdate:self.currentMap];
+        }
+    });
 }
 
 - (NSArray*)currentApplicationMap {
-    return self._currentMap ? self._currentMap : @[];
+    return self.currentMap ? self.currentMap : @[];
 }
 
 - (NSDictionary*)metadataForApplication:(NSString*)bundleIdentifier {
@@ -225,11 +229,36 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
 
 #pragma mark - FBSApplicationDataStoreRepositoryClientObserver
 
-- (void)applicationDataStoreRepositoryClient:(FBSApplicationDataStoreRepositoryClient*)arg1 application:(NSString*)arg2 changedObject:(NSObject*)arg3 forKey:(NSString *)arg4 {
+- (void)applicationDataStoreRepositoryClient:(FBSApplicationDataStoreRepositoryClient*)arg1 application:(NSString*)arg2 changedObject:(NSObject*)badgeValue forKey:(NSString *)arg4 {
     
     if ([arg4 isEqualToString:@"SBApplicationBadgeKey"]) {
-        // Recreate map for new badge info
-        [self loadApplicationsMap];
+        // Update entry for this application
+        dispatch_async(self.updateQueue, ^{
+            NSDictionary *item = nil;
+            for (NSDictionary *app in self.currentMap) {
+                if ([[app objectForKey:@"identifier"] isEqualToString:arg2]) {
+                    item = app;
+                    break;
+                }
+            }
+            
+            if (item) {
+                NSMutableDictionary *newItem = [item mutableCopy];
+                [newItem setObject:badgeValue ? [badgeValue copy] : @"" forKey:@"badge"];
+                
+                NSInteger index = [self.currentMap indexOfObject:item];
+                
+                if (index != NSNotFound) {
+                    [self.currentMap replaceObjectAtIndex:index withObject:newItem];
+                    
+                    // Notify delegate of new map
+                    if (self.delegate && [self.delegate respondsToSelector:@selector(applicationsMapDidUpdate:)]) {
+                        [self.delegate applicationsMapDidUpdate:self.currentMap];
+                    }
+                }
+
+            }
+        });
     }
 }
 
