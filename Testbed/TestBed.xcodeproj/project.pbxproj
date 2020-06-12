@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		C920500023365A7F00F9F535 /* libwidgetinfodaemon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9204FFF2336577000F9F535 /* libwidgetinfodaemon.a */; };
 		C97962AB24268E83007849D8 /* liblogger.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C97962AA24268E7E007849D8 /* liblogger.a */; };
-		C9A5E9B02419523E00FCD778 /* libobjcipc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9A5E9AF2419523E00FCD778 /* libobjcipc.a */; };
 		C9B3511A2465A6C600E531E1 /* MediaRemote.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C9B351182465A6C600E531E1 /* MediaRemote.tbd */; };
 		C9B3D6FA245DCB41004D048E /* IOKit.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C9B3D6F7245DCAE2004D048E /* IOKit.tbd */; };
 		C9D0737D2469884A0072AEDB /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9D0737B2469884A0072AEDB /* MobileCoreServices.framework */; };
@@ -53,13 +52,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = C979629B24268D34007849D8;
 			remoteInfo = logger;
-		};
-		C9A5E9AE2419523E00FCD778 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C9F2F3FE2301C02D00E4863B /* libwidgetdata.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = C9A5E98D2419519300FCD778;
-			remoteInfo = objcipc;
 		};
 		C9F2F4022301C02D00E4863B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -110,7 +102,6 @@
 				C9B3511A2465A6C600E531E1 /* MediaRemote.tbd in Frameworks */,
 				C9B3D6FA245DCB41004D048E /* IOKit.tbd in Frameworks */,
 				C97962AB24268E83007849D8 /* liblogger.a in Frameworks */,
-				C9A5E9B02419523E00FCD778 /* libobjcipc.a in Frameworks */,
 				C9F2F4132301C6FE00E4863B /* libc++.tbd in Frameworks */,
 				C9F2F4152301CB9C00E4863B /* WebKit.framework in Frameworks */,
 				C9F2F4112301C6B000E4863B /* libwidgetinfo.a in Frameworks */,
@@ -176,7 +167,6 @@
 			children = (
 				C9F2F4032301C02D00E4863B /* libwidgetinfo.a */,
 				C9204FFF2336577000F9F535 /* libwidgetinfodaemon.a */,
-				C9A5E9AF2419523E00FCD778 /* libobjcipc.a */,
 				C97962AA24268E7E007849D8 /* liblogger.a */,
 			);
 			name = Products;
@@ -256,13 +246,6 @@
 			fileType = archive.ar;
 			path = liblogger.a;
 			remoteRef = C97962A924268E7E007849D8 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		C9A5E9AF2419523E00FCD778 /* libobjcipc.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libobjcipc.a;
-			remoteRef = C9A5E9AE2419523E00FCD778 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		C9F2F4032301C02D00E4863B /* libwidgetinfo.a */ = {
