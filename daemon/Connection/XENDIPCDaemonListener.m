@@ -23,18 +23,20 @@
 #define WIDGET_INFO_MESSAGE_DEVICE_STATE_CHANGED @"com.matchstic.libwidgetinfo/deviceStateChanged"
 
 int libwidgetinfo_main_ipc(void) {
-    XENDLog(@"*** [libwidgetinfo] :: Loading up daemon.");
+    @autoreleasepool {
+        XENDLog(@"*** [libwidgetinfo] :: Loading up daemon.");
     
-    // Initialize our daemon
-	XENDIPCDaemonListener *listener;
-	listener = [[XENDIPCDaemonListener alloc] init];
-    
-    // Run the run loop forever.
-    [[NSRunLoop currentRunLoop] run];
-    
-    XENDLog(@"*** [libwidgetinfo] :: FATAL :: Runloop exited?!");
-    
-    return EXIT_SUCCESS;
+        // Initialize our daemon
+        XENDIPCDaemonListener *listener;
+        listener = [[XENDIPCDaemonListener alloc] init];
+        
+        // Run the run loop forever.
+        [[NSRunLoop currentRunLoop] run];
+        
+        XENDLog(@"*** [libwidgetinfo] :: FATAL :: Runloop exited?!");
+        
+        return EXIT_SUCCESS;
+    };
 }
 
 static void exceptionHandler(NSException *exception) {
@@ -109,6 +111,9 @@ LMMessage *request = bytes;
 @implementation XENDIPCDaemonListener
 
 - (instancetype)init {
+    if (internalSharedInstance)
+        return internalSharedInstance;
+    
     self = [super init];
     
     if (self) {
