@@ -76,12 +76,15 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
     
     internalSharedInstance = self;
     
-    // Watch for SpringBoard launched event
-    // This is to re-initialise once the user interface is running post-reboot
-    CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, &onSpringBoardLaunch, CFSTR("SBSpringBoardDidLaunchNotification"), NULL, 0);
-    
-    // Load weather framework
-    dlopen("/System/Library/PrivateFrameworks/Weather.framework/Weather", RTLD_NOW);
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        // Load weather framework
+        dlopen("/System/Library/PrivateFrameworks/Weather.framework/Weather", RTLD_NOW);
+        
+        // Watch for SpringBoard launched event
+        // This is to re-initialise once the user interface is running post-reboot
+        CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, &onSpringBoardLaunch, CFSTR("SBSpringBoardDidLaunchNotification"), NULL, 0);
+    });
     
     // Make sure that our private API usage is going to be safe
     if (![self _privateFrameworkUsageIsValid]) {
