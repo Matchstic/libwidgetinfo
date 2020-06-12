@@ -144,7 +144,6 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
         [self refreshWeather];
     } else {
         // Restart the timer for this remaining interval
-        XENDLog(@"Restarting weather update timer, with interval: %f minutes", (float)nextFireInterval / 60.0);
         [self _restartUpdateTimerWithInterval:nextFireInterval];
     }
 }
@@ -498,8 +497,6 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
                            [[self _deviceLanguage] isEqualToString:@"en_GB"] ||
                            [[self _deviceLanguage] isEqualToString:@"en-AU"] ||
                            [[self _deviceLanguage] isEqualToString:@"en_AU"];
-    
-    XENDLog(@"Checking locale: %@, isMetric: %d, isMetricWeather: %d, isHybridBritish: %d", [self _deviceLanguage], [self _useMetric], [self _useMetricWeather], isHybridBritish);
     
     if (isHybridBritish) {
         units.speed = IMPERIAL;
