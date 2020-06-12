@@ -86,9 +86,4 @@
  */
 - (NSString*)escapeString:(NSString*)input;
 
-/**
- * Notifies the origin counterpart of updated dynamic data
- */
-- (void)notifyRemoteForNewDynamicProperties;
-
 @end

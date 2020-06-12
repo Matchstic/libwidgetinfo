@@ -53,18 +53,16 @@
 }
 
 - (void)setCachedDynamicProperties:(NSMutableDictionary *)cachedDynamicProperties {
-    BOOL isIdentical = [cachedDynamicProperties isEqualToDictionary:_cachedDynamicProperties];
-    
     // Do a deep copy of the properties for safety
     id buffer = [NSKeyedArchiver archivedDataWithRootObject:cachedDynamicProperties];
     cachedDynamicProperties = [NSKeyedUnarchiver unarchiveObjectWithData:buffer];
     
+    BOOL isIdentical = [cachedDynamicProperties isEqualToDictionary:_cachedDynamicProperties];
+    
     _cachedDynamicProperties = cachedDynamicProperties;
     
-    if (!isIdentical) {
+    if (!isIdentical && [cachedDynamicProperties count] > 0) {
         [self notifyRemoteForNewDynamicProperties];
-    } else {
-        XENDLog(@"DEBUG :: Ignoring update request because data has not changed");
     }
 }
 
