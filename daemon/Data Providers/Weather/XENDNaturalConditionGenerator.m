@@ -189,8 +189,11 @@
         NSString *timeComponent = [[dateString componentsSeparatedByString:@"T"] lastObject];
         NSArray *timeIndices = [timeComponent componentsSeparatedByString:@":"];
         
-        components.hour = atol([[timeIndices objectAtIndex:0] UTF8String]);
-        components.minute = atol([[timeIndices objectAtIndex:1] UTF8String]);
+        NSString *hour = [timeIndices objectAtIndex:0];
+        NSString *min = [timeIndices objectAtIndex:1];
+        
+        components.hour = hour ? atol([hour UTF8String]) : 0;
+        components.minute = min ? atol([min UTF8String]) : 0;
     } @catch (NSException *e) {
         components.hour = 0;
         components.minute = 0;
@@ -206,8 +209,12 @@
         NSString *timezone = [[timeIndices lastObject] substringFromIndex:2];
         
         BOOL positiveOffset = [timezone hasPrefix:@"+"];
-        int offsetHours = atoi([[timezone substringWithRange:NSMakeRange(1, 2)] UTF8String]) * (positiveOffset ? 1 : -1);
-        int offsetMinutes = atoi([[timezone substringWithRange:NSMakeRange(3, 2)] UTF8String]);
+        
+        NSString *hour = [timezone substringWithRange:NSMakeRange(1, 2)];
+        NSString *min = [timezone substringWithRange:NSMakeRange(3, 2)];
+        
+        int offsetHours = hour ? (atoi([hour UTF8String]) * (positiveOffset ? 1 : -1)) : 0;
+        int offsetMinutes = min ? atoi([min UTF8String]) : 0;
         
         int offsetSeconds = offsetMinutes * 60 + (offsetHours * 60 * 60);
         
@@ -224,8 +231,12 @@
         NSString *timezone = [[timeIndices lastObject] substringFromIndex:2];
         
         BOOL positiveOffset = [timezone hasPrefix:@"+"];
-        int offsetHours = atoi([[timezone substringWithRange:NSMakeRange(1, 2)] UTF8String]) * (positiveOffset ? 1 : -1);
-        int offsetMinutes = atoi([[timezone substringWithRange:NSMakeRange(3, 2)] UTF8String]);
+        
+        NSString *hour = [timezone substringWithRange:NSMakeRange(1, 2)];
+        NSString *min = [timezone substringWithRange:NSMakeRange(3, 2)];
+        
+        int offsetHours = hour ? (atoi([hour UTF8String]) * (positiveOffset ? 1 : -1)) : 0;
+        int offsetMinutes = min ? atoi([min UTF8String]) : 0;
         
         NSCalendar *calendar = [NSCalendar currentCalendar];
         [calendar setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
