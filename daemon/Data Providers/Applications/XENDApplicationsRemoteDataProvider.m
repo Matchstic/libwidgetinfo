@@ -30,7 +30,7 @@
     
     // Initial update
     self.cachedDynamicProperties = [@{
-        @"allApplications": [manager currentApplicationMap]
+        @"allApplications": [[manager currentApplicationMap] copy]
     } mutableCopy];
     
     // Set delegate for monitored updates
