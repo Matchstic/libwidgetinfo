@@ -259,7 +259,7 @@
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
-    XENDLog(@"Did update locations: %@", locations);
+    XENDLog(@"Did update locations: <private>");
     
     CLLocation *mostRecentLocation = [[locations lastObject] copy];
     
