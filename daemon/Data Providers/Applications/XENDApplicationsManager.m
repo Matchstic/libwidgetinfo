@@ -57,7 +57,7 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
     
     if (self) {
         internalSharedInstance = self;
-        self.updateQueue = dispatch_queue_create("com.matchstic.widgetinfod.apps", NULL);
+        self.updateQueue = dispatch_queue_create("com.matchstic.widgetinfod.apps", DISPATCH_QUEUE_SERIAL);
         
         // Add observer for application state changes
         [[LSApplicationWorkspace defaultWorkspace] addObserver:self];
