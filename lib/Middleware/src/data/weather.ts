@@ -1063,7 +1063,7 @@ export default class Weather extends Base implements WeatherProperties {
     _setData(payload: WeatherProperties) {
         // Apply throttling if necessary
         // Needs a delay of minimum 10 seconds before a new update can be applied
-        if (Date.now() < this.lastUpdateTime + 10000) {
+        /*if (Date.now() < this.lastUpdateTime + 10000) {
             const delay = (this.lastUpdateTime + 10000) - Date.now();
 
             if (this.updateThrottleTimeout) {
@@ -1077,7 +1077,7 @@ export default class Weather extends Base implements WeatherProperties {
             console.log('DEBUG :: Weather _setData is delayed by ' + delay + 'ms');
 
             return;
-        }
+        }*/
 
         // Don't try to parse an empty object
         if (payload.now === undefined) return;
