@@ -1053,31 +1053,11 @@ export default class Weather extends Base implements WeatherProperties {
         super.observeData(callback);
     }
 
-    private lastUpdateTime: number = 0;
-    private updateThrottleTimeout: any = null;
-
     // Overridden to inject Date objects
     /**
      * @ignore
      */
     _setData(payload: WeatherProperties) {
-        // Apply throttling if necessary
-        // Needs a delay of minimum 10 seconds before a new update can be applied
-        /*if (Date.now() < this.lastUpdateTime + 10000) {
-            const delay = (this.lastUpdateTime + 10000) - Date.now();
-
-            if (this.updateThrottleTimeout) {
-                clearTimeout(this.updateThrottleTimeout);
-            }
-
-            this.updateThrottleTimeout = setTimeout(() => {
-                this._setData(payload);
-            }, delay);
-
-            console.log('DEBUG :: Weather _setData is delayed by ' + delay + 'ms');
-
-            return;
-        }*/
 
         // Don't try to parse an empty object
         if (payload.now === undefined) return;
@@ -1141,9 +1121,6 @@ export default class Weather extends Base implements WeatherProperties {
 
         // Pass through to implementation
         super._setData(newPayload);
-
-        // Update last-update-time
-        this.lastUpdateTime = Date.now();
     }
 
     /**
