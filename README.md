@@ -24,6 +24,14 @@ Support for the following older widget data libraries is as follows:
 
 This is currently only built for Xen HTML to integrate with. Using it in other tweaks really doesn't work right now; it'll lead to at least two instances of the daemon running, and class name clashes inside applications. You'll also have issues with `dpkg` trying to overwrite `libwidgetinfo.js`.
 
+### Layout
+
+Anything running inside the process hosting a `WKWebViw` is in `lib`.
+
+TypeScript API lives in `lib/middleware`.
+
+The `daemon` subfolder contains everything that runs out-of-process. 
+
 ### Usage
 
 This project can be bundled by doing the following:
