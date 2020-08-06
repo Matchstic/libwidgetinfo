@@ -26,7 +26,7 @@ This is currently only built for Xen HTML to integrate with. Using it in other t
 
 ### Layout
 
-Anything running inside the process hosting a `WKWebViw` is in `lib`.
+Anything running inside the process hosting a `WKWebView` is in `lib`.
 
 TypeScript API lives in `lib/middleware`.
 
