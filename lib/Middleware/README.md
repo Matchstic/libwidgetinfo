@@ -37,7 +37,7 @@ A number of other features and improvements are also made available through the 
 
 A number of example widgets are available to use for learning the API, or simply to use on a daily basis.
 
-After installing Xen HTML, these can be found at `/var/mobile/Library/Universal`. More information can be found [here](additional-documentation/example-widgets.html)
+After installing Xen HTML, these can be found at `/var/mobile/Library/Widgets/Universal`. More information can be found [here](additional-documentation/example-widgets.html)
 
 ### Backwards compatibility
 

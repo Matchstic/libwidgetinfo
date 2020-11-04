@@ -106,17 +106,31 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
         WFLocation *location = [[objc_getClass("WFLocation") alloc] init];
         [location setGeoLocation:[self defaultLocation]];
         
-        request = [objc_getClass("WFWeatherChannelRequestFormatterV2") forecastRequest:2
-                                                                 forLocation:location
-                                                                      locale:nil
-                                                                        date:[NSDate date]
-                                                                       rules:@[]];
+        Class clazz = objc_getClass("WFWeatherChannelRequestFormatterV2");
+        
+        // 14
+        if ([clazz respondsToSelector:@selector(forecastRequest:forLocation:withUnits:locale:date:rules:)]) {
+            
+            request = [clazz forecastRequest:2
+                                forLocation:location
+                                   withUnits:0
+                                     locale:nil
+                                       date:[NSDate date]
+                                      rules:@[]];
+        } else if ([clazz respondsToSelector:@selector(forecastRequest:forLocation:locale:date:rules:)]) {
+         
+            request = [clazz forecastRequest:2
+                                    forLocation:location
+                                         locale:nil
+                                           date:[NSDate date]
+                                          rules:@[]];
+        }
     } else if (objc_getClass("WFWeatherChannelRequestFormatter")) {
         WFLocation *location = [[objc_getClass("WFLocation") alloc] init];
         [location setGeoLocation:[self defaultLocation]];
         
         request = [objc_getClass("WFWeatherChannelRequestFormatter") forecastRequestForLocation:location
-                                                                                           date:[NSDate date]];
+            date:[NSDate date]];
     } else {
         // Fallback approach
         
@@ -132,6 +146,11 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
         [[XENDLocationManager sharedInstance] reverseGeocodeLocation:[self defaultLocation] completionHandler:^(NSDictionary *data, NSError *error) {
             // no-op
         }];
+    }
+    
+    if (!request) {
+        XENDLog(@"libwidgetinfo :: Weather provider did not provide a valid request to parse");
+        return;
     }
     
     // Read off the API key
