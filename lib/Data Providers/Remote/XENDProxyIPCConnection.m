@@ -20,6 +20,8 @@
 #import "../../../deps/LightMessaging/LightMessaging.h"
 
 @interface XENDProxyIPCConnection ()
+@property (nonatomic, strong) NSTimer *retryConnectionTimer;
+@property (nonatomic, readwrite) NSTimeInterval lastRetryTimeout;
 - (void)_updateProperties;
 - (void)_updateDeviceState;
 @end
@@ -115,7 +117,33 @@ static LMConnection widgetinfodService = {
         // Current state is included in response
         
         self.currentDeviceState = [response objectForKey:@"deviceState"];
+        self.lastRetryTimeout = 0;
+    } else {
+        // try again in a few seconds, up to 1 minute
+        if (self.lastRetryTimeout == 0) {
+            self.lastRetryTimeout = 2;
+        } else {
+            self.lastRetryTimeout *= 2;
+        }
+        
+        if (self.lastRetryTimeout > 60) {
+            self.lastRetryTimeout = 60;
+        }
+        
+        if (self.retryConnectionTimer) {
+            [self.retryConnectionTimer invalidate];
+            self.retryConnectionTimer = nil;
+        }
+        
+        self.retryConnectionTimer = [NSTimer scheduledTimerWithTimeInterval:self.lastRetryTimeout target:self selector:@selector(_retryTestConnection:) userInfo:nil repeats:NO];
     }
+}
+
+- (void)_retryTestConnection:(NSTimer*)timer {
+    [self.retryConnectionTimer invalidate];
+    self.retryConnectionTimer = nil;
+    
+    [self _sendTestConnection];
 }
 
 #pragma mark - Subclass overrides
