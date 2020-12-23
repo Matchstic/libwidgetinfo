@@ -39,7 +39,7 @@
 		self.scale              = (id)[NSNull null];
 		self.source             = (id)[NSNull null];
 		self.validFromUNIXTime  = 0;
-		self.pollutants         = @[];
+        self.pollutants         = @{};
     }
     
     return self;

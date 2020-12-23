@@ -41,7 +41,7 @@
     
     if ([definition isEqualToString:@"_delete"]) {
         NSString *bundleIdentifier = [data objectForKey:@"identifier"];
-        BOOL success = [[XENDApplicationsManager sharedInstance] deleteApplication:bundleIdentifier];
+        [[XENDApplicationsManager sharedInstance] deleteApplication:bundleIdentifier];
         
         callback(@{});
     } else {

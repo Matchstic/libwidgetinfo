@@ -1034,7 +1034,7 @@
 		C9F2F3322301BE1E00E4863B /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1020;
+				LastUpgradeCheck = 1210;
 				TargetAttributes = {
 					C9204FC723317EBD00F9F535 = {
 						CreatedOnToolsVersion = 10.2.1;
@@ -1053,6 +1053,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = C9F2F3312301BE1E00E4863B;
 			productRefGroup = C9F2F3312301BE1E00E4863B;
@@ -1230,7 +1231,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/daemon/frameworks",
 				);
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = libwidgetinfodaemon;
 				SKIP_INSTALL = YES;
@@ -1302,7 +1303,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/daemon/frameworks",
 				);
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = libwidgetinfodaemon;
 				SKIP_INSTALL = YES;
@@ -1363,7 +1364,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1505,7 +1506,7 @@
 					"$(SRCROOT)/Shared",
 				);
 				INSTALL_PATH = /usr/lib;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -1515,6 +1516,8 @@
 					"-Wno-shorten-64-to-32",
 					"-Wno-bitwise-op-parentheses",
 					"-Wno-logical-op-parentheses",
+					"-Wno-missing-prototypes",
+					"-Wno-unused-const-variable",
 				);
 			};
 			name = Debug;
@@ -1544,7 +1547,7 @@
 					"$(SRCROOT)/Shared",
 				);
 				INSTALL_PATH = /usr/lib;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -1554,6 +1557,8 @@
 					"-Wno-shorten-64-to-32",
 					"-Wno-bitwise-op-parentheses",
 					"-Wno-logical-op-parentheses",
+					"-Wno-missing-prototypes",
+					"-Wno-unused-const-variable",
 				);
 			};
 			name = Release;

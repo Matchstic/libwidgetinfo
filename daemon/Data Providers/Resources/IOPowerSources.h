@@ -139,7 +139,7 @@ CFDictionaryRef IOPSGetPowerSourceDescription(CFTypeRef blob, CFTypeRef ps);
     @result Returns NULL if an error was encountered, otherwise a CFRunLoopSource. Caller must
         release the CFRunLoopSource.
 */
-CFRunLoopSourceRef IOPSNotificationCreateRunLoopSource(IOPowerSourceCallbackType, void *);
+CFRunLoopSourceRef IOPSNotificationCreateRunLoopSource(IOPowerSourceCallbackType callback, void *context);
 
 /*!
  * @function    IOPSGetTimeRemainingEstimate

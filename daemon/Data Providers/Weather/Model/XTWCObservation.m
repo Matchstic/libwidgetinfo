@@ -37,7 +37,7 @@
     self = [super init];
     
     if (self) {
-        self.cloudCoverDescription  = @"SKC";
+        self.cloudCoverDescription  = @0;
         self.conditionIcon          = @0;
         self.conditionDescription   = @"";
         self.dayIndicator           = @"X";
