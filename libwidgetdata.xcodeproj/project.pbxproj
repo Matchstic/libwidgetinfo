@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C907D958259E7BF50068EA3B /* XENDFilesystemProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = C907D956259E7BF50068EA3B /* XENDFilesystemProvider.h */; };
+		C907D959259E7BF50068EA3B /* XENDFilesystemProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = C907D957259E7BF50068EA3B /* XENDFilesystemProvider.m */; };
 		C90DE50123D396EA00D0FAFD /* XTWCHourlyForecast.m in Sources */ = {isa = PBXBuildFile; fileRef = C90DE50023D396EA00D0FAFD /* XTWCHourlyForecast.m */; };
 		C91206242414619D0081E307 /* XENDIPCDaemonListener.m in Sources */ = {isa = PBXBuildFile; fileRef = C91206232414619D0081E307 /* XENDIPCDaemonListener.m */; };
 		C91206472416B05E0081E307 /* XENDProxyIPCConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = C91206452416B05E0081E307 /* XENDProxyIPCConnection.h */; };
@@ -179,6 +181,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C907D956259E7BF50068EA3B /* XENDFilesystemProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XENDFilesystemProvider.h; sourceTree = "<group>"; };
+		C907D957259E7BF50068EA3B /* XENDFilesystemProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XENDFilesystemProvider.m; sourceTree = "<group>"; };
 		C90DE4FF23D396EA00D0FAFD /* XTWCHourlyForecast.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XTWCHourlyForecast.h; path = "daemon/Data Providers/Weather/Model/XTWCHourlyForecast.h"; sourceTree = SOURCE_ROOT; };
 		C90DE50023D396EA00D0FAFD /* XTWCHourlyForecast.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XTWCHourlyForecast.m; path = "daemon/Data Providers/Weather/Model/XTWCHourlyForecast.m"; sourceTree = SOURCE_ROOT; };
 		C90DE50223D3C4C200D0FAFD /* XTWCUnits.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XTWCUnits.h; path = "daemon/Data Providers/Weather/Model/XTWCUnits.h"; sourceTree = SOURCE_ROOT; };
@@ -416,6 +420,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C907D952259E7BCB0068EA3B /* Filesystem */ = {
+			isa = PBXGroup;
+			children = (
+				C907D956259E7BF50068EA3B /* XENDFilesystemProvider.h */,
+				C907D957259E7BF50068EA3B /* XENDFilesystemProvider.m */,
+			);
+			path = Filesystem;
+			sourceTree = "<group>";
+		};
 		C912062B2416A8690081E307 /* libobjcipc */ = {
 			isa = PBXGroup;
 			children = (
@@ -858,6 +871,7 @@
 		C9F2F4062301C34A00E4863B /* Data Providers */ = {
 			isa = PBXGroup;
 			children = (
+				C907D952259E7BCB0068EA3B /* Filesystem */,
 				C99BBEF724670F8000A6F426 /* Applications */,
 				C9204FC223317DC800F9F535 /* Remote */,
 				C919CA69233026A4001391A5 /* XENDBaseDataProvider.h */,
@@ -905,6 +919,7 @@
 				C9F2F3A72301BE4100E4863B /* XENDPreprocessorManager.h in Headers */,
 				C9B3D6FE245DCFD7004D048E /* XENDResourcesDataProvider.h in Headers */,
 				C91F4036242FB1DA00E30466 /* tag_sizes.h in Headers */,
+				C907D958259E7BF50068EA3B /* XENDFilesystemProvider.h in Headers */,
 				C9204FF92336509900F9F535 /* XENDMediaDataProvider.h in Headers */,
 				C91F4032242FB1DA00E30466 /* replacement.h in Headers */,
 				C94927812468B0D400B7DF85 /* XENDXenInfoURLHandler.h in Headers */,
@@ -1109,6 +1124,7 @@
 			files = (
 				C91F3FAA242FA9B100E30466 /* OGText.m in Sources */,
 				C94927822468B0D400B7DF85 /* XENDXenInfoURLHandler.m in Sources */,
+				C907D959259E7BF50068EA3B /* XENDFilesystemProvider.m in Sources */,
 				C91F4028242FB1DA00E30466 /* utf8.c in Sources */,
 				C91F4039242FB1DA00E30466 /* tokenizer.c in Sources */,
 				C919CA6C233026A4001391A5 /* XENDBaseDataProvider.m in Sources */,
