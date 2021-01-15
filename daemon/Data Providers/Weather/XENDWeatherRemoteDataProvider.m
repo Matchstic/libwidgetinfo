@@ -108,15 +108,24 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
         
         Class clazz = objc_getClass("WFWeatherChannelRequestFormatterV2");
         
-        // 14
-        if ([clazz respondsToSelector:@selector(forecastRequest:forLocation:withUnits:locale:date:rules:)]) {
-            
+        // 14.3
+        if ([clazz respondsToSelector:@selector(forecastRequest:forLocation:withUnits:locale:date:rules:options:)]) {
+            request = [clazz forecastRequest:2
+                                forLocation:location
+                                   withUnits:0
+                                     locale:nil
+                                       date:[NSDate date]
+                                      rules:@[]
+                                    options:nil];
+        // 14.0
+        } else if ([clazz respondsToSelector:@selector(forecastRequest:forLocation:withUnits:locale:date:rules:)]) {
             request = [clazz forecastRequest:2
                                 forLocation:location
                                    withUnits:0
                                      locale:nil
                                        date:[NSDate date]
                                       rules:@[]];
+        // 13
         } else if ([clazz respondsToSelector:@selector(forecastRequest:forLocation:locale:date:rules:)]) {
          
             request = [clazz forecastRequest:2

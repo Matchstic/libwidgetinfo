@@ -118,10 +118,13 @@
 
 // WeatherFoundation.framework
 
-// iOS 14
+// Adds the Weather.com API key to an NSURLQueryItem
 @interface WFWeatherChannelRequestFormatterV2 : NSObject
 
-// Adds the Weather.com API key to an NSURLQueryItem
+// iOS 14.3
++ (id)forecastRequest:(unsigned long long)arg1 forLocation:(id)arg2 withUnits:(int)arg3 locale:(id)arg4 date:(id)arg5 rules:(id)arg6 options:(id)arg6;
+
+// iOS 14.0
 + (id)forecastRequest:(unsigned long long)arg1 forLocation:(id)arg2 withUnits:(int)arg3 locale:(id)arg4 date:(id)arg5 rules:(id)arg6;
 
 // iOS 13
