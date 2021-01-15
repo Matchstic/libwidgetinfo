@@ -255,6 +255,14 @@ export default class Filesystem extends Base {
      * The return type is a Promise, which either resolves to <code>true</code>, or rejects with an error code
      * (listed in {@link FilesystemErrorCode})
      *
+     * <b>Example</b>
+     *
+     * <code>
+     * api.fs.delete('/path/to/file.txt').catch((error) => {
+     *    // Handle error when deleting the file
+     * });
+     * </code>
+     *
      * @param path Path to delete
      */
     public async delete(path: string): Promise<boolean> {
@@ -283,6 +291,18 @@ export default class Filesystem extends Base {
      *
      * The return type is a Promise, which resolves to <code>true</code> or <code>false</code>
      *
+     * <b>Example</b>
+     *
+     * <code>
+     * api.fs.exists('/path/to/file.txt').then((exists) => {
+     *    if (exists) {
+     *        // File exists, do whatever you need to
+     *    }
+     * }).catch((error) => {
+     *    // Handle error when deleting the file
+     * });
+     * </code>
+     *
      * @param path Path to check
      */
     public async exists(path: string): Promise<boolean> {
@@ -297,7 +317,7 @@ export default class Filesystem extends Base {
                 if (error && error !== 0) {
                     reject(error);
                 } else {
-                    resolve(true);
+                    resolve(data.result);
                 }
             });
         });
@@ -310,6 +330,17 @@ export default class Filesystem extends Base {
      * (listed in {@link FilesystemErrorCode})
      *
      * If the directory doesn't exist or its actually a file, this will error!
+     *
+     * <b>Example</b>
+     *
+     * <code>
+     * api.fs.list('/path/to/directory').then((list) => {
+     *     // list is an array of strings
+     *     // e.g., [ "file.txt", "thing.json", "subdirectory1", ... ]
+     * }).catch((error) => {
+     *    // Handle error
+     * });
+     * </code>
      *
      * @param path Directory to list contents of
      */
@@ -336,6 +367,14 @@ export default class Filesystem extends Base {
      *
      * The return type is a Promise, which either resolves to <code>true</code>, or rejects with an error code
      * (listed in {@link FilesystemErrorCode})
+     *
+     * <b>Example</b>
+     *
+     * <code>
+     * api.fs.mkdir('/path/to/new/directory').catch((error) => {
+     *    // Handle error when creating the directory
+     * });
+     * </code>
      *
      * @param path Directory path to create
      * @param createIntermediate Whether to create parent directories if they also do not exist yet. Defaults to true
@@ -365,6 +404,16 @@ export default class Filesystem extends Base {
      *
      * The return type is a Promise, which either resolves to a metadata object ({@link FilesystemMetadata}), or rejects
      * with an error code (listed in {@link FilesystemErrorCode})
+     *
+     * <b>Example</b>
+     *
+     * <code>
+     * api.fs.metadata('/path/to/file/or/directory').then((metadata) => {
+     *     // Metadata can now be worked with
+     * }).catch((error) => {
+     *     // Handle error
+     * });
+     * </code>
      *
      * @param path Path to lookup
      */

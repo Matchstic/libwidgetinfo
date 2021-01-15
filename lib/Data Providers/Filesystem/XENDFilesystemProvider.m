@@ -14,6 +14,7 @@
 **/
 
 #import "XENDFilesystemProvider.h"
+#import "XENDLogger.h"
 
 #define MISSING         @-3
 #define BAD_REQUEST     @-2
@@ -47,6 +48,7 @@
             callback(@{});
         }
     } @catch (NSException *e) {
+        XENDLog(@"%@", e);
         callback(@{
             @"error": BAD_REQUEST
         });
@@ -349,14 +351,18 @@
         @"result": @{
             @"isDirectory": @(isDirectory),
             @"type": [attributes fileType],
-            @"created": @([[attributes fileCreationDate] timeIntervalSince1970]),
-            @"modified": @([[attributes fileModificationDate] timeIntervalSince1970]),
+            @"created": @([[attributes fileCreationDate] timeIntervalSince1970] * 1000),
+            @"modified": @([[attributes fileModificationDate] timeIntervalSince1970] * 1000),
             @"size": @([attributes fileSize]),
             @"permissions": @([attributes filePosixPermissions]),
-            @"owner": [attributes fileOwnerAccountName],
-            @"group": [attributes fileGroupOwnerAccountName]
+            @"owner": [self safetyFirst:[attributes fileOwnerAccountName] defaultValue:@"mobile"],
+            @"group": [self safetyFirst:[attributes fileGroupOwnerAccountName] defaultValue:@""],
         }
     };
+}
+
+- (NSString*)safetyFirst:(id)arg1 defaultValue:(NSString*)arg2 {
+    return arg1 ? arg1 : arg2;
 }
 
 @end
