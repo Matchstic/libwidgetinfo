@@ -141,6 +141,8 @@ export default class Filesystem extends Base {
      * api.fs.read('/path/to/file.txt').then((data) => {
      *    // data is a string
      *    console.log(data);
+     * }).catch((error) => {
+     *    // Handle error when reading the file
      * });
      * </code>
      *
@@ -150,6 +152,8 @@ export default class Filesystem extends Base {
      * api.fs.read('/path/to/file.plist', 'plist').then((data) => {
      *    // data is an object, with keys corresponding to whatever is in the plist
      *    console.log(data);
+     * }).catch((error) => {
+     *    // Handle error when reading the file
      * });
      * </code>
      *
@@ -159,6 +163,8 @@ export default class Filesystem extends Base {
      * api.fs.read('/path/to/file.json').then((data) => {
      *    // assuming data is an object like: { size: 10 }
      *    console.log(data.size);
+     * }).catch((error) => {
+     *    // Handle error when reading the file
      * });
      * </code>
      *
@@ -200,19 +206,25 @@ export default class Filesystem extends Base {
      * Writing text to a file:
      *
      * <code>
-     * api.fs.write('/path/to/file.txt', 'example string to write');
+     * api.fs.write('/path/to/file.txt', 'example string to write').catch((error) => {
+     *    // Handle error when writing the file
+     * });
      * </code>
      *
      * Writing a plist from an object:
      *
      * <code>
-     * api.fs.write('/path/to/file.plist', { data: 'test' }, 'plist');
+     * api.fs.write('/path/to/file.plist', { data: 'test' }, 'plist').catch((error) => {
+     *    // Handle error when writing the file
+     * });
      * </code>
      *
      * You can write JSON content without needing to `JSON.stringify` an object first:
      *
      * <code>
-     * api.fs.write('/path/to/file.json', { data: 'test' });
+     * api.fs.write('/path/to/file.json', { data: 'test' }).catch((error) => {
+     *    // Handle error when writing the file
+     * });
      * </code>
      *
      * @param path Path to write to
