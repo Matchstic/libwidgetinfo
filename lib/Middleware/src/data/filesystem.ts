@@ -110,7 +110,7 @@ interface FilesystemMetadata {
  * The Filesystem provider gives access to filesystem operations including
  * read, write, and delete.
  *
- * You cannot read contents of files outside of /var/mobile for security purposes,
+ * You cannot read contents of files outside of <code>/var/mobile</code> for security purposes,
  * and you also cannot write/delete files when the widget is being previewed in Settings.
  *
  * All functions provided can be called at any time in your scripts.
@@ -133,50 +133,46 @@ export default class Filesystem extends Base {
      * The return type is a Promise, which either resolves to your data, or rejects with an error code
      * (listed in {@link FilesystemErrorCode})
      *
-     * <b>Examples</b>
+     * @example
      *
-     * Reading from a text file:
-     *
-     * <code>
+     * <script>
+     * // Reading from a text file:
      * api.fs.read('/path/to/file.txt').then((data) => {
-     *    // data is a string
-     *    console.log(data);
+     *     // data is a string
+     *     console.log(data);
      * }).catch((error) => {
-     *    // Handle error when reading the file
+     *     // Handle error when reading the file
      * });
-     * </code>
      *
-     * Reading from a plist file:
-     *
-     * <code>
+     * // Reading from a plist file:
      * api.fs.read('/path/to/file.plist', 'plist').then((data) => {
-     *    // data is an object, with keys corresponding to whatever is in the plist
-     *    console.log(data);
+     *     // data is an object, with keys corresponding to whatever is in the plist
+     *     console.log(data);
      * }).catch((error) => {
-     *    // Handle error when reading the file
+     *     // Handle error when reading the file
      * });
-     * </code>
      *
-     * You can read JSON directly without having to call `JSON.parse()`:
-     *
-     * <code>
+     * // You can read JSON directly without having to call `JSON.parse()`:
      * api.fs.read('/path/to/file.json').then((data) => {
-     *    // assuming data is an object like: { size: 10 }
-     *    console.log(data.size);
+     *     // assuming data is an object like: { size: 10 }
+     *     console.log(data.size);
      * }).catch((error) => {
-     *    // Handle error when reading the file
+     *     // Handle error when reading the file
      * });
-     * </code>
+     * </script>
      *
      * @param path Path to read from
      * @param mimetype Expected type of the data, either <code>text</code> or <code>plist</code>. Default is <code>text</code>
      */
-    public async read(path: string, mimetype: string = 'text'): Promise<string | Object> {
+    public async read(path: string, mimetype?: string): Promise<string | Object> {
         return new Promise<string | Object>((resolve, reject) => {
             this.connection.sendNativeMessage({
                 namespace: DataProviderUpdateNamespace.Filesystem,
                 functionDefinition: 'read',
-                data: { path, mimetype }
+                data: {
+                    path,
+                    mimetype: mimetype ? mimetype : 'text'
+                }
             }, (data: any) => {
                 const error = data.error;
 
@@ -201,42 +197,38 @@ export default class Filesystem extends Base {
      * The return type is a Promise, which either resolves to <code>true</code>, or rejects with an error code
      * (listed in {@link FilesystemErrorCode})
      *
-     * <b>Examples</b>
+     * @example
      *
-     * Writing text to a file:
-     *
-     * <code>
+     * <script>
+     * // Writing text to a file:
      * api.fs.write('/path/to/file.txt', 'example string to write').catch((error) => {
-     *    // Handle error when writing the file
+     *     // Handle error when writing the file
      * });
-     * </code>
      *
-     * Writing a plist from an object:
-     *
-     * <code>
+     * // Writing a plist from an object:
      * api.fs.write('/path/to/file.plist', { data: 'test' }, 'plist').catch((error) => {
-     *    // Handle error when writing the file
+     *     // Handle error when writing the file
      * });
-     * </code>
      *
-     * You can write JSON content without needing to `JSON.stringify` an object first:
-     *
-     * <code>
+     * // You can write JSON content without needing to `JSON.stringify` an object first:
      * api.fs.write('/path/to/file.json', { data: 'test' }).catch((error) => {
-     *    // Handle error when writing the file
+     *     // Handle error when writing the file
      * });
-     * </code>
+     * </script>
      *
      * @param path Path to write to
      * @param content Content to write
      * @param mimetype Type of the data to write, either <code>text</code> or <code>plist</code>. Default is <code>text</code>
      */
-    public async write(path: string, content: string | Object, mimetype: string = 'text'): Promise<boolean> {
+    public async write(path: string, content: string | Object, mimetype?: string): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             this.connection.sendNativeMessage({
                 namespace: DataProviderUpdateNamespace.Filesystem,
                 functionDefinition: 'write',
-                data: { path, mimetype, content }
+                data: {
+                    path,
+                    mimetype: mimetype ? mimetype : 'text', content
+                }
             }, (data: any) => {
                 const error = data.error;
 
@@ -255,13 +247,12 @@ export default class Filesystem extends Base {
      * The return type is a Promise, which either resolves to <code>true</code>, or rejects with an error code
      * (listed in {@link FilesystemErrorCode})
      *
-     * <b>Example</b>
-     *
-     * <code>
+     * @example
+     * <script>
      * api.fs.delete('/path/to/file.txt').catch((error) => {
-     *    // Handle error when deleting the file
+     *              // Handle error when deleting the file
      * });
-     * </code>
+     * </script>
      *
      * @param path Path to delete
      */
@@ -291,17 +282,14 @@ export default class Filesystem extends Base {
      *
      * The return type is a Promise, which resolves to <code>true</code> or <code>false</code>
      *
-     * <b>Example</b>
-     *
-     * <code>
+     * @example
+     * <script>
      * api.fs.exists('/path/to/file.txt').then((exists) => {
-     *    if (exists) {
-     *        // File exists, do whatever you need to
-     *    }
+     *
      * }).catch((error) => {
-     *    // Handle error when deleting the file
+     *              // Handle error when deleting the file
      * });
-     * </code>
+     * </script>
      *
      * @param path Path to check
      */
@@ -331,16 +319,15 @@ export default class Filesystem extends Base {
      *
      * If the directory doesn't exist or its actually a file, this will error!
      *
-     * <b>Example</b>
-     *
-     * <code>
+     * @example
+     * <script>
      * api.fs.list('/path/to/directory').then((list) => {
-     *     // list is an array of strings
-     *     // e.g., [ "file.txt", "thing.json", "subdirectory1", ... ]
+     *              // list is an array of strings
+     *              // e.g., [ "file.txt", "thing.json", "subdirectory1", ... ]
      * }).catch((error) => {
-     *    // Handle error
+     *              // Handle error
      * });
-     * </code>
+     * </script>
      *
      * @param path Directory to list contents of
      */
@@ -368,23 +355,25 @@ export default class Filesystem extends Base {
      * The return type is a Promise, which either resolves to <code>true</code>, or rejects with an error code
      * (listed in {@link FilesystemErrorCode})
      *
-     * <b>Example</b>
-     *
-     * <code>
+     * @example
+     * <script>
      * api.fs.mkdir('/path/to/new/directory').catch((error) => {
-     *    // Handle error when creating the directory
+     *              // Handle error when creating the directory
      * });
-     * </code>
+     * </script>
      *
      * @param path Directory path to create
      * @param createIntermediate Whether to create parent directories if they also do not exist yet. Defaults to true
      */
-    public async mkdir(path: string, createIntermediate: boolean = true): Promise<boolean> {
+    public async mkdir(path: string, createIntermediate?: boolean): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             this.connection.sendNativeMessage({
                 namespace: DataProviderUpdateNamespace.Filesystem,
                 functionDefinition: 'mkdir',
-                data: { path, createIntermediate }
+                data: {
+                    path,
+                    createIntermediate: createIntermediate !== undefined ? createIntermediate : true
+                }
             }, (data: any) => {
                 const error = data.error;
 
@@ -405,15 +394,14 @@ export default class Filesystem extends Base {
      * The return type is a Promise, which either resolves to a metadata object ({@link FilesystemMetadata}), or rejects
      * with an error code (listed in {@link FilesystemErrorCode})
      *
-     * <b>Example</b>
-     *
-     * <code>
+     * @example
+     * <script>
      * api.fs.metadata('/path/to/file/or/directory').then((metadata) => {
-     *     // Metadata can now be worked with
+     *              // Metadata can now be worked with
      * }).catch((error) => {
-     *     // Handle error
+     *              // Handle error
      * });
-     * </code>
+     * </script>
      *
      * @param path Path to lookup
      */

@@ -53,7 +53,7 @@ export interface ApplicationsProperties {
  *
  * This includes both user-installed and system apps, which includes those installed by a package manager.
  *
- * <b>This is not yet complete; available in Xen HTML 2.0~beta2 or newer</b>
+ * <b>Available in Xen HTML 2.0~beta2 or newer</b>
  *
  * @example
  * <script>
