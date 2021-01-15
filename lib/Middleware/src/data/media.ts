@@ -266,7 +266,7 @@ export default class Media extends Base implements MediaProperties {
             namespace: DataProviderUpdateNamespace.Media,
             functionDefinition: 'togglePlayPause',
             data: {}
-        }, () => {});
+        });
     }
 
     /**
@@ -280,7 +280,7 @@ export default class Media extends Base implements MediaProperties {
             namespace: DataProviderUpdateNamespace.Media,
             functionDefinition: 'nextTrack',
             data: {}
-        }, () => {});
+        });
     }
 
     /**
@@ -294,7 +294,7 @@ export default class Media extends Base implements MediaProperties {
             namespace: DataProviderUpdateNamespace.Media,
             functionDefinition: 'previousTrack',
             data: {}
-        }, () => {});
+        });
     }
 
     /**
@@ -308,7 +308,7 @@ export default class Media extends Base implements MediaProperties {
             namespace: DataProviderUpdateNamespace.Media,
             functionDefinition: 'toggleShuffle',
             data: {}
-        }, () => {});
+        });
     }
 
     /**
@@ -322,7 +322,7 @@ export default class Media extends Base implements MediaProperties {
             namespace: DataProviderUpdateNamespace.Media,
             functionDefinition: 'toggleRepeat',
             data: {}
-        }, () => {});
+        });
     }
 
     /**
@@ -339,7 +339,7 @@ export default class Media extends Base implements MediaProperties {
             namespace: DataProviderUpdateNamespace.Media,
             functionDefinition: 'goBackFifteenSeconds',
             data: {}
-        }, () => {});
+        });
     }
 
     /**
@@ -356,7 +356,7 @@ export default class Media extends Base implements MediaProperties {
             namespace: DataProviderUpdateNamespace.Media,
             functionDefinition: 'skipFifteenSeconds',
             data: {}
-        }, () => {});
+        });
     }
 
     /**
@@ -383,7 +383,7 @@ export default class Media extends Base implements MediaProperties {
                 data: {
                     value: level
                 }
-            }, () => {});
+            });
         }, 50);
     }
 
@@ -414,8 +414,6 @@ export default class Media extends Base implements MediaProperties {
                 data: {
                     value: time
                 }
-            }, () => {
-
             });
         }, 50);
 

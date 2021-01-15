@@ -49,8 +49,8 @@ export default class NativeInterface {
             const data = message.data;
 
             // If there is a valid callback ID, call on it
-            if (callbackId !== -1 && this.pendingCallbacks[callbackId] !== undefined && this.pendingCallbacks[callbackId] !== null) {
-                this.pendingCallbacks[callbackId](data);
+            if (callbackId !== -1 && this.pendingCallbacks.get(callbackId) !== undefined && this.pendingCallbacks.get(callbackId) !== null) {
+                this.pendingCallbacks.get(callbackId)(data);
 
                 // Remove the pending callback
                 this.pendingCallbacks.delete(callbackId);

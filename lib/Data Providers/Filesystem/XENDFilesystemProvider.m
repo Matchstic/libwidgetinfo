@@ -28,31 +28,45 @@
 }
 
 - (void)didReceiveWidgetMessage:(NSDictionary*)data functionDefinition:(NSString*)definition callback:(void(^)(NSDictionary*))callback {
-    if ([definition isEqualToString:@"list"]) {
-        callback([self filesInDirectory:data]);
-    } else if ([definition isEqualToString:@"read"]) {
-        callback([self read:data]);
-    } else if ([definition isEqualToString:@"write"]) {
-        callback([self write:data]);
-    } else if ([definition isEqualToString:@"delete"]) {
-        callback([self delete:data]);
-    } else if ([definition isEqualToString:@"mkdir"]) {
-        callback([self makeDirectory:data]);
-    } else if ([definition isEqualToString:@"metadata"]) {
-        callback([self metadata:data]);
-    } else if ([definition isEqualToString:@"exists"]) {
-        callback([self exists:data]);
-    }else {
-        callback(@{});
+    @try {
+        if ([definition isEqualToString:@"list"]) {
+            callback([self filesInDirectory:data]);
+        } else if ([definition isEqualToString:@"read"]) {
+            callback([self read:data]);
+        } else if ([definition isEqualToString:@"write"]) {
+            callback([self write:data]);
+        } else if ([definition isEqualToString:@"delete"]) {
+            callback([self delete:data]);
+        } else if ([definition isEqualToString:@"mkdir"]) {
+            callback([self makeDirectory:data]);
+        } else if ([definition isEqualToString:@"metadata"]) {
+            callback([self metadata:data]);
+        } else if ([definition isEqualToString:@"exists"]) {
+            callback([self exists:data]);
+        } else {
+            callback(@{});
+        }
+    } @catch (NSException *e) {
+        callback(@{
+            @"error": BAD_REQUEST
+        });
     }
 }
 
 - (BOOL)allowedAccess:(NSString*)path {
+#if TARGET_IPHONE_SIMULATOR
+    return YES;
+#else
     return [path hasPrefix:@"/var/mobile/"];
+#endif
 }
 
 - (BOOL)privileged {
+#if TARGET_IPHONE_SIMULATOR
+    return YES;
+#else
     return [[[NSBundle mainBundle] bundleIdentifier] isEqualToString:@"com.apple.springboard"];
+#endif
 }
 
 /*
@@ -131,6 +145,18 @@
         content = [NSString stringWithContentsOfFile:path
                                          encoding:NSUTF8StringEncoding
                                             error:NULL];
+        
+        if ([path hasSuffix:@".json"]) {
+            // Convert automatically
+            NSData *data = [content dataUsingEncoding:NSUTF8StringEncoding];
+
+            NSError *error;
+            NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+            
+            if (!error) {
+                content = jsonDict;
+            }
+        }
     } else if ([type isEqualToString:@"plist"]) {
         content = [NSDictionary dictionaryWithContentsOfFile:path];
     } else {
@@ -171,9 +197,26 @@
     NSError *error;
     BOOL success = YES;
     if ([@"text" isEqualToString:type]) {
-        success = [content writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:&error];
+        if ([content isKindOfClass:[NSDictionary class]]) {
+            // Convert to JSON and write that instead
+            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:content
+                                                               options:NSJSONWritingPrettyPrinted
+                                                                 error:&error];
+            
+            success = !error ? [jsonData writeToFile:path atomically:YES] : NO;
+        } else if ([content isKindOfClass:[NSString class]]) {
+            success = [content writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:&error];
+        } else {
+            success = NO;
+        }
     } else if ([@"plist" isEqualToString:type]) {
-        success = [content writeToFile:path atomically:YES];
+        if ([content isKindOfClass:[NSDictionary class]]) {
+            success = [content writeToFile:path atomically:YES];
+        } else if ([content isKindOfClass:[NSString class]]) {
+            success = [content writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:&error];
+        } else {
+            success = NO;
+        }
     } else {
         return @{
             @"error": BAD_REQUEST
@@ -182,7 +225,7 @@
     
     if (!success) {
         return @{
-            @"error": error ? [NSNumber numberWithInt:[error code]] : MISSING
+            @"error": error ? [NSNumber numberWithInt:[error code]] : BAD_REQUEST
         };
     } else {
         return @{

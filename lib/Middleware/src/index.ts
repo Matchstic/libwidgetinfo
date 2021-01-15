@@ -12,6 +12,7 @@ import XENDSystemProvider from './data/system';
 import XENDWeatherProvider from './data/weather';
 import XENDApplicationsProvider from './data/applications';
 import XENDResourcesProvider from './data/resources';
+import XENDFilesystemProvider from './data/filesystem';
 
 import NativeInterface from './native-interface';
 
@@ -40,6 +41,7 @@ class XENDMiddleware extends NativeInterface {
         this.dataProviders.set(DataProviderUpdateNamespace.Weather, new XENDWeatherProvider(this));
         this.dataProviders.set(DataProviderUpdateNamespace.Applications, new XENDApplicationsProvider(this));
         this.dataProviders.set(DataProviderUpdateNamespace.Resources, new XENDResourcesProvider(this));
+        this.dataProviders.set(DataProviderUpdateNamespace.Filesystem, new XENDFilesystemProvider(this));
 
         // Initialise some compat stuff that doesn't rely on code that could be loaded a little later
         this.infostats2.initialise(this, this.dataProviders);
@@ -103,7 +105,8 @@ class XENDMiddleware extends NativeInterface {
             system:     this.dataProviderInNamespace(DataProviderUpdateNamespace.System),
             weather:    this.dataProviderInNamespace(DataProviderUpdateNamespace.Weather),
             apps:       this.dataProviderInNamespace(DataProviderUpdateNamespace.Applications),
-            resources:  this.dataProviderInNamespace(DataProviderUpdateNamespace.Resources)
+            resources:  this.dataProviderInNamespace(DataProviderUpdateNamespace.Resources),
+            fs:         this.dataProviderInNamespace(DataProviderUpdateNamespace.Filesystem),
         };
 
         window.addEventListener('DOMContentLoaded', (event) => {
@@ -156,4 +159,5 @@ export default class XENDApi {
     public weather: XENDWeatherProvider               = this._middleware.dataProviderInNamespace(DataProviderUpdateNamespace.Weather);
     public apps: XENDApplicationsProvider             = this._middleware.dataProviderInNamespace(DataProviderUpdateNamespace.Applications);
     public resources: XENDResourcesProvider           = this._middleware.dataProviderInNamespace(DataProviderUpdateNamespace.Resources);
+    public fs: XENDFilesystemProvider                 = this._middleware.dataProviderInNamespace(DataProviderUpdateNamespace.Filesystem);
 }

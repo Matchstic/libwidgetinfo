@@ -409,17 +409,11 @@ export default class System extends Base implements SystemProperties {
 
     // This is not exposed publicly
     // To do logging, console.* is sufficient
-    private async log(message: string): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-
-            this.connection.sendNativeMessage({
-                namespace: DataProviderUpdateNamespace.System,
-                functionDefinition: 'log',
-                data: { message: message, path: window.location.pathname }
-            }, () => {
-                resolve();
-            });
-
+    private log(message: string): void {
+        this.connection.sendNativeMessage({
+            namespace: DataProviderUpdateNamespace.System,
+            functionDefinition: 'log',
+            data: { message: message, path: window.location.pathname }
         });
     }
 }

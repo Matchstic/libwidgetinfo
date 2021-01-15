@@ -113,6 +113,8 @@ interface FilesystemMetadata {
  * You cannot read contents of files outside of /var/mobile for security purposes,
  * and you also cannot write/delete files when the widget is being previewed in Settings.
  *
+ * All functions provided can be called at any time in your scripts.
+ *
  * <b>Available in Xen HTML 2.0~beta6 or newer</b>
  */
 export default class Filesystem extends Base {
@@ -131,6 +133,35 @@ export default class Filesystem extends Base {
      * The return type is a Promise, which either resolves to your data, or rejects with an error code
      * (listed in {@link FilesystemErrorCode})
      *
+     * <b>Examples</b>
+     *
+     * Reading from a text file:
+     *
+     * <code>
+     * api.fs.read('/path/to/file.txt').then((data) => {
+     *    // data is a string
+     *    console.log(data);
+     * });
+     * </code>
+     *
+     * Reading from a plist file:
+     *
+     * <code>
+     * api.fs.read('/path/to/file.plist', 'plist').then((data) => {
+     *    // data is an object, with keys corresponding to whatever is in the plist
+     *    console.log(data);
+     * });
+     * </code>
+     *
+     * You can read JSON directly without having to call `JSON.parse()`:
+     *
+     * <code>
+     * api.fs.read('/path/to/file.json').then((data) => {
+     *    // assuming data is an object like: { size: 10 }
+     *    console.log(data.size);
+     * });
+     * </code>
+     *
      * @param path Path to read from
      * @param mimetype Expected type of the data, either <code>text</code> or <code>plist</code>. Default is <code>text</code>
      */
@@ -143,7 +174,7 @@ export default class Filesystem extends Base {
             }, (data: any) => {
                 const error = data.error;
 
-                if (error !== 0) {
+                if (error && error !== 0) {
                     reject(error);
                 } else {
                     resolve(data.result);
@@ -159,10 +190,30 @@ export default class Filesystem extends Base {
      * is automatically translated from JSON into plist format for you. Make sure to set the
      * <code>mimetype</code> parameter to switch between these two options.
      *
-     * If the directory your path points to doesn't exist, this will error.
+     * If the file your path points to doesn't exist, this will error.
      *
      * The return type is a Promise, which either resolves to <code>true</code>, or rejects with an error code
      * (listed in {@link FilesystemErrorCode})
+     *
+     * <b>Examples</b>
+     *
+     * Writing text to a file:
+     *
+     * <code>
+     * api.fs.write('/path/to/file.txt', 'example string to write');
+     * </code>
+     *
+     * Writing a plist from an object:
+     *
+     * <code>
+     * api.fs.write('/path/to/file.plist', { data: 'test' }, 'plist');
+     * </code>
+     *
+     * You can write JSON content without needing to `JSON.stringify` an object first:
+     *
+     * <code>
+     * api.fs.write('/path/to/file.json', { data: 'test' });
+     * </code>
      *
      * @param path Path to write to
      * @param content Content to write
@@ -177,7 +228,7 @@ export default class Filesystem extends Base {
             }, (data: any) => {
                 const error = data.error;
 
-                if (error !== 0) {
+                if (error && error !== 0) {
                     reject(error);
                 } else {
                     resolve(true);
@@ -203,7 +254,7 @@ export default class Filesystem extends Base {
             }, (data: any) => {
                 const error = data.error;
 
-                if (error !== 0) {
+                if (error && error !== 0) {
                     reject(error);
                 } else {
                     resolve(true);
@@ -231,7 +282,7 @@ export default class Filesystem extends Base {
             }, (data: any) => {
                 const error = data.error;
 
-                if (error !== 0) {
+                if (error && error !== 0) {
                     reject(error);
                 } else {
                     resolve(true);
@@ -259,7 +310,7 @@ export default class Filesystem extends Base {
             }, (data: any) => {
                 const error = data.error;
 
-                if (error !== 0) {
+                if (error && error !== 0) {
                     reject(error);
                 } else {
                     resolve(data.results);
@@ -286,7 +337,7 @@ export default class Filesystem extends Base {
             }, (data: any) => {
                 const error = data.error;
 
-                if (error !== 0) {
+                if (error && error !== 0) {
                     reject(error);
                 } else {
                     resolve(true);
@@ -314,7 +365,7 @@ export default class Filesystem extends Base {
             }, (data: any) => {
                 const error = data.error;
 
-                if (error !== 0) {
+                if (error && error !== 0) {
                     reject(error);
                 } else {
                     resolve(data.result);

@@ -56,7 +56,7 @@ export default class IS2System extends IS2Base {
 
         this._lookupMap['getBrightness']                = () => { /* not implemented */ return 1; };
         this._lookupMap['setBrightness:']               = (args: any[]) => { /* not implemented */ };
-        this._lookupMap['getLowPowerMode']              = () => { /* not implemented */ return false; };
+        this._lookupMap['getLowPowerMode']              = () => { return this.systemProvider.isLowPowerModeEnabled; };
         this._lookupMap['setLowPowerMode:']             = (args: any[]) => { /* not implemented */ };
 
         const emptyImage = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
