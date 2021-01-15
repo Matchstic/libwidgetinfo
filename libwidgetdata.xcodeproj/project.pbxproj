@@ -1527,7 +1527,6 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
-				VALID_ARCHS = "arm64 arm64e armv7 armv7s";
 				WARNING_CFLAGS = (
 					"-Wno-shorten-64-to-32",
 					"-Wno-bitwise-op-parentheses",
@@ -1568,7 +1567,6 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
-				VALID_ARCHS = "arm64 arm64e armv7 armv7s";
 				WARNING_CFLAGS = (
 					"-Wno-shorten-64-to-32",
 					"-Wno-bitwise-op-parentheses",
