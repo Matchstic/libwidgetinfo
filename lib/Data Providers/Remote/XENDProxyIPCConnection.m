@@ -14,6 +14,7 @@
 **/
 
 #import "XENDProxyIPCConnection.h"
+#import "XENDWidgetManager.h"
 #import "XENDLogger.h"
 
 #define ROCKETBOOTSTRAP_LOAD_DYNAMIC
@@ -21,13 +22,17 @@
 
 @interface XENDProxyIPCConnection ()
 @property (nonatomic, strong) NSTimer *retryConnectionTimer;
-@property (nonatomic, readwrite) NSTimeInterval lastRetryTimeout;
 - (void)_updateProperties;
 - (void)_updateDeviceState;
 @end
 
+@interface XENDWidgetManager (PrivateIPC)
+- (void)remoteConnectionInitialised;
+@end
+
 #define WIDGET_INFO_MESSAGE_PROPERTIES_CHANGED @"com.matchstic.libwidgetinfo/propertiesChanged"
 #define WIDGET_INFO_MESSAGE_DEVICE_STATE_CHANGED @"com.matchstic.libwidgetinfo/deviceStateChanged"
+#define RETRY_TIMEOUT 5
 
 // Only cleared when current process is killed
 static XENDProxyIPCConnection *internalConnection;
@@ -117,25 +122,17 @@ static LMConnection widgetinfodService = {
         // Current state is included in response
         
         self.currentDeviceState = [response objectForKey:@"deviceState"];
-        self.lastRetryTimeout = 0;
+        
+        // Request widget reload if this connection was delayed
+        [[XENDWidgetManager sharedInstance] remoteConnectionInitialised];
     } else {
-        // try again in a few seconds, up to 1 minute
-        if (self.lastRetryTimeout == 0) {
-            self.lastRetryTimeout = 2;
-        } else {
-            self.lastRetryTimeout *= 2;
-        }
-        
-        if (self.lastRetryTimeout > 60) {
-            self.lastRetryTimeout = 60;
-        }
-        
+        // try again in a few seconds
         if (self.retryConnectionTimer) {
             [self.retryConnectionTimer invalidate];
             self.retryConnectionTimer = nil;
         }
         
-        self.retryConnectionTimer = [NSTimer scheduledTimerWithTimeInterval:self.lastRetryTimeout target:self selector:@selector(_retryTestConnection:) userInfo:nil repeats:NO];
+        self.retryConnectionTimer = [NSTimer scheduledTimerWithTimeInterval:RETRY_TIMEOUT target:self selector:@selector(_retryTestConnection:) userInfo:nil repeats:NO];
     }
 }
 
