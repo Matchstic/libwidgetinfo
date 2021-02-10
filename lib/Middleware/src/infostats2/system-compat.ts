@@ -47,6 +47,8 @@ export default class IS2System extends IS2Base {
         this._lookupMap['takeScreenshot']               = () => { this.systemProvider.invokeScreenshot(); };
         this._lookupMap['lockDevice']                   = () => { this.systemProvider.lockDevice(); };
         this._lookupMap['openSwitcher']                 = () => { this.systemProvider.openApplicationSwitcher(); };
+
+        // TODO: Use Applications provider for this
         this._lookupMap['openApplication:']             = (args: any[]) => { /* not implemented */ };
         this._lookupMap['openSiri']                     = () => { this.systemProvider.openSiri(); };
         this._lookupMap['respring']                     = () => { this.systemProvider.respringDevice(); };

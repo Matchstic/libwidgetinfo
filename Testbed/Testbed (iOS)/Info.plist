@@ -50,5 +50,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSCalendarsUsageDescription</key>
+	<string>DEBUG</string>
 </dict>
 </plist>

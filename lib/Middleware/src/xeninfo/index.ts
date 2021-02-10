@@ -5,6 +5,7 @@ import XenInfoWeather from './weather-compat';
 import XenInfoBattery from './battery-compat';
 import XenInfoSystem from './system-compat';
 import XenInfoMedia from './media-compat';
+import XenInfoEvents from './events-compat';
 
 /**
  * @ignore
@@ -23,6 +24,7 @@ export default class XenInfoMiddleware implements XenHTMLMiddleware {
         this.compat.push(new XenInfoBattery(this.providers, this.notifyXenInfoDataChanged));
         this.compat.push(new XenInfoSystem(this.providers, this.notifyXenInfoDataChanged));
         this.compat.push(new XenInfoMedia(this.providers, this.notifyXenInfoDataChanged));
+        this.compat.push(new XenInfoEvents(this.providers, this.notifyXenInfoDataChanged));
     }
 
     public onFirstUpdate() {

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		C920500023365A7F00F9F535 /* libwidgetinfodaemon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9204FFF2336577000F9F535 /* libwidgetinfodaemon.a */; };
 		C97962AB24268E83007849D8 /* liblogger.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C97962AA24268E7E007849D8 /* liblogger.a */; };
+		C98B0F6D25D49A8C00E28CF8 /* EventKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C98B0F6C25D49A8C00E28CF8 /* EventKit.framework */; };
 		C9B3511A2465A6C600E531E1 /* MediaRemote.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C9B351182465A6C600E531E1 /* MediaRemote.tbd */; };
 		C9B3D6FA245DCB41004D048E /* IOKit.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C9B3D6F7245DCAE2004D048E /* IOKit.tbd */; };
 		C9D0737D2469884A0072AEDB /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9D0737B2469884A0072AEDB /* MobileCoreServices.framework */; };
@@ -70,6 +71,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C98B0F6C25D49A8C00E28CF8 /* EventKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EventKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.3.sdk/System/Library/Frameworks/EventKit.framework; sourceTree = DEVELOPER_DIR; };
 		C9B351182465A6C600E531E1 /* MediaRemote.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = MediaRemote.tbd; path = ../daemon/frameworks/MediaRemote.tbd; sourceTree = "<group>"; };
 		C9B3D6F7245DCAE2004D048E /* IOKit.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = IOKit.tbd; path = ../daemon/frameworks/IOKit.tbd; sourceTree = "<group>"; };
 		C9D0737B2469884A0072AEDB /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS13.2.sdk/System/Library/Frameworks/MobileCoreServices.framework; sourceTree = DEVELOPER_DIR; };
@@ -97,6 +99,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C98B0F6D25D49A8C00E28CF8 /* EventKit.framework in Frameworks */,
 				C9D0737F2469884E0072AEDB /* libMobileGestalt.tbd in Frameworks */,
 				C9D0737D2469884A0072AEDB /* MobileCoreServices.framework in Frameworks */,
 				C9B3511A2465A6C600E531E1 /* MediaRemote.tbd in Frameworks */,
@@ -133,6 +136,7 @@
 		C9EF3F3A21D4F7F900611626 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C98B0F6C25D49A8C00E28CF8 /* EventKit.framework */,
 				C9D0737E2469884E0072AEDB /* libMobileGestalt.tbd */,
 				C9D0737B2469884A0072AEDB /* MobileCoreServices.framework */,
 				C9B351182465A6C600E531E1 /* MediaRemote.tbd */,

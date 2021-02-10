@@ -90,6 +90,9 @@
 		C94927822468B0D400B7DF85 /* XENDXenInfoURLHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = C94927802468B0D400B7DF85 /* XENDXenInfoURLHandler.m */; };
 		C97CF9F323217A1200A3A014 /* XENDHijackedWebViewDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = C97CF9F123217A1200A3A014 /* XENDHijackedWebViewDelegate.h */; };
 		C97CF9F423217A1200A3A014 /* XENDHijackedWebViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C97CF9F223217A1200A3A014 /* XENDHijackedWebViewDelegate.m */; };
+		C98B0F5C25D4871300E28CF8 /* XENDCalendarDataProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = C98B0F5A25D4871300E28CF8 /* XENDCalendarDataProvider.h */; };
+		C98B0F5D25D4871300E28CF8 /* XENDCalendarDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = C98B0F5B25D4871300E28CF8 /* XENDCalendarDataProvider.m */; };
+		C98B0F6825D49A6B00E28CF8 /* EventKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C98B0F6725D49A6B00E28CF8 /* EventKit.framework */; };
 		C993D33323DCE6D60084ED1E /* XENDStateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C993D33223DCE6D60084ED1E /* XENDStateManager.m */; };
 		C993D33623DCEFCE0084ED1E /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = C993D33523DCEFCE0084ED1E /* Reachability.m */; };
 		C993D33823DCF5CE0084ED1E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C993D33723DCF5CE0084ED1E /* SystemConfiguration.framework */; };
@@ -295,6 +298,9 @@
 		C97CF9ED23216ED600A3A014 /* XENDPreProcessor-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "XENDPreProcessor-Protocol.h"; sourceTree = "<group>"; };
 		C97CF9F123217A1200A3A014 /* XENDHijackedWebViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XENDHijackedWebViewDelegate.h; sourceTree = "<group>"; };
 		C97CF9F223217A1200A3A014 /* XENDHijackedWebViewDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XENDHijackedWebViewDelegate.m; sourceTree = "<group>"; };
+		C98B0F5A25D4871300E28CF8 /* XENDCalendarDataProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XENDCalendarDataProvider.h; sourceTree = "<group>"; };
+		C98B0F5B25D4871300E28CF8 /* XENDCalendarDataProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XENDCalendarDataProvider.m; sourceTree = "<group>"; };
+		C98B0F6725D49A6B00E28CF8 /* EventKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EventKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/System/Library/Frameworks/EventKit.framework; sourceTree = DEVELOPER_DIR; };
 		C993D33123DCE6D60084ED1E /* XENDStateManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XENDStateManager.h; path = daemon/State/XENDStateManager.h; sourceTree = SOURCE_ROOT; };
 		C993D33223DCE6D60084ED1E /* XENDStateManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XENDStateManager.m; path = daemon/State/XENDStateManager.m; sourceTree = SOURCE_ROOT; };
 		C993D33423DCEFCE0084ED1E /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
@@ -413,6 +419,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C98B0F6825D49A6B00E28CF8 /* EventKit.framework in Frameworks */,
 				C9F2F4102301C3E100E4863B /* WebKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -609,6 +616,15 @@
 				C9F886FF232ED8E800E87EF3 /* XENDWidgetMessageHandler.m */,
 			);
 			path = Internal;
+			sourceTree = "<group>";
+		};
+		C98B0F5925D486FD00E28CF8 /* Calendar */ = {
+			isa = PBXGroup;
+			children = (
+				C98B0F5A25D4871300E28CF8 /* XENDCalendarDataProvider.h */,
+				C98B0F5B25D4871300E28CF8 /* XENDCalendarDataProvider.m */,
+			);
+			path = Calendar;
 			sourceTree = "<group>";
 		};
 		C993D33023DCE6C80084ED1E /* State */ = {
@@ -871,6 +887,7 @@
 		C9F2F4062301C34A00E4863B /* Data Providers */ = {
 			isa = PBXGroup;
 			children = (
+				C98B0F5925D486FD00E28CF8 /* Calendar */,
 				C907D952259E7BCB0068EA3B /* Filesystem */,
 				C99BBEF724670F8000A6F426 /* Applications */,
 				C9204FC223317DC800F9F535 /* Remote */,
@@ -898,6 +915,7 @@
 		C9F2F40E2301C3E000E4863B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C98B0F6725D49A6B00E28CF8 /* EventKit.framework */,
 				C9B3D6F5245DCA9C004D048E /* IOKit.tbd */,
 				C9B3D6F3245DCA13004D048E /* IOKit.framework */,
 				C993D33723DCF5CE0084ED1E /* SystemConfiguration.framework */,
@@ -969,6 +987,7 @@
 				C9F2F40C2301C3A200E4863B /* WKWebView_WidgetData.h in Headers */,
 				C919CA67233022E8001391A5 /* XENDSystemDataProvider.h in Headers */,
 				C9F886FC232ED8DA00E87EF3 /* XENDWidgetManager.h in Headers */,
+				C98B0F5C25D4871300E28CF8 /* XENDCalendarDataProvider.h in Headers */,
 				C9F2F3992301BE4100E4863B /* Location.hpp in Headers */,
 				C9204FF22336487200F9F535 /* XENDProxyBaseConnection.h in Headers */,
 				C91206472416B05E0081E307 /* XENDProxyIPCConnection.h in Headers */,
@@ -1150,6 +1169,7 @@
 				C9F88701232ED8E800E87EF3 /* XENDWidgetMessageHandler.m in Sources */,
 				C919CA6323302171001391A5 /* XENDProxyDataProvider.m in Sources */,
 				C97CF9F423217A1200A3A014 /* XENDHijackedWebViewDelegate.m in Sources */,
+				C98B0F5D25D4871300E28CF8 /* XENDCalendarDataProvider.m in Sources */,
 				C92013E32411A711009CBBFB /* XENDBaseURLHandler.m in Sources */,
 				C9F2F3A42301BE4100E4863B /* Output.cpp in Sources */,
 				C9F2F3822301BE4100E4863B /* IS2PreProcessor.mm in Sources */,

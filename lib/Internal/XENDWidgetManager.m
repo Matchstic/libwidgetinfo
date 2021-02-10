@@ -25,6 +25,7 @@
 #import "../Data Providers/Resources/XENDResourcesDataProvider.h"
 #import "../Data Providers/Applications/XENDApplicationsDataProvider.h"
 #import "../Data Providers/Filesystem/XENDFilesystemProvider.h"
+#import "../Data Providers/Calendar/XENDCalendarDataProvider.h"
 
 // URL handler imports
 #import "../URL Handlers/XENDWidgetWeatherURLHandler.h"
@@ -315,6 +316,8 @@ static NSString *preferencesId = @"com.matchstic.xenhtml.libwidgetinfo";
     // Load previous dynamics state
     NSDictionary *currentCachedDynamicState = [self _loadCurrentDynamicStateFromDisk];
     
+    // TODO: this sucks 
+    
     XENDSystemDataProvider *system = [[XENDSystemDataProvider alloc] init];
     [system registerDelegate:self];
     [result setObject:system forKey:[XENDSystemDataProvider providerNamespace]];
@@ -350,6 +353,12 @@ static NSString *preferencesId = @"com.matchstic.xenhtml.libwidgetinfo";
     [result setObject:fs forKey:[XENDFilesystemProvider providerNamespace]];
     if (currentCachedDynamicState && [fs.cachedDynamicProperties isEqualToDictionary:@{}])
         fs.cachedDynamicProperties = [currentCachedDynamicState objectForKey:[XENDFilesystemProvider providerNamespace]];
+    
+    XENDCalendarDataProvider *calendar = [[XENDCalendarDataProvider alloc] init];
+    [calendar registerDelegate:self];
+    [result setObject:calendar forKey:[XENDCalendarDataProvider providerNamespace]];
+    if (currentCachedDynamicState && [calendar.cachedDynamicProperties isEqualToDictionary:@{}])
+        calendar.cachedDynamicProperties = [currentCachedDynamicState objectForKey:[XENDCalendarDataProvider providerNamespace]];
     
     return result;
 }
