@@ -70,9 +70,7 @@
     
     NSLog(@"%@: %@", widgetName, [data objectForKey:@"message"]);
     
-    // Write to filesystem
-    // TODO: Hook up to a debug logging toggle
-    
+    // Write to filesystem    
     [[XENDLogger sharedInstance] appendToFile:widgetName logMessage:[data objectForKey:@"message"]];
     
     return @{};

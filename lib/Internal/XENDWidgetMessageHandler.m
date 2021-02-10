@@ -14,6 +14,7 @@
 **/
 
 #import "XENDWidgetMessageHandler.h"
+#import "XENDLogger.h"
 
 @interface XENDWidgetMessageHandler ()
 @property (nonatomic, weak) id<XENDWidgetMessageHandlerDelegate> delegate;
@@ -43,7 +44,7 @@
     if (self.delegate) {
         [self.delegate onMessageReceivedWithPayload:message.body forWebView:message.webView];
     } else {
-        NSLog(@"libwidgetinfo :: Received message, but no delegate is available to handle it");
+        XENDLog(@"libwidgetinfo :: Received message, but no delegate is available to handle it");
     }
 }
 

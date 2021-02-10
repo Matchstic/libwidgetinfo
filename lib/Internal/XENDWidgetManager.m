@@ -112,7 +112,7 @@ static NSString *preferencesId = @"com.matchstic.xenhtml.libwidgetinfo";
     dispatch_async(dispatch_get_main_queue(), ^{
         [webView evaluateJavaScript:updateString completionHandler:^(id object, NSError *error) {
             if (error) {
-                NSLog(@"notifyWebViewLoaded :: ERROR during JS execution: %@", error);
+                XENDLog(@"notifyWebViewLoaded :: ERROR during JS execution: %@", error);
             }
         }];
     });
@@ -125,7 +125,7 @@ static NSString *preferencesId = @"com.matchstic.xenhtml.libwidgetinfo";
     dispatch_async(dispatch_get_main_queue(), ^{
         [webView evaluateJavaScript:updateString completionHandler:^(id object, NSError *error) {
             if (error) {
-                NSLog(@"notifyWebViewLoaded :: ERROR during JS execution: %@", error);
+                XENDLog(@"notifyWebViewLoaded :: ERROR during JS execution: %@", error);
             }
         }];
     });
@@ -183,13 +183,13 @@ static NSString *preferencesId = @"com.matchstic.xenhtml.libwidgetinfo";
     
     // Validate initial payload
     if (!payload || ![payload isKindOfClass:[NSDictionary class]]) {
-        NSLog(@"libwidgetinfo :: Received a malformed webview message, ignoring");
+        XENDLog(@"libwidgetinfo :: Received a malformed webview message, ignoring");
         return;
     }
     
     // Validate webview
     if (![self.managedWebViews containsObject:webview]) {
-        NSLog(@"libwidgetinfo :: Received a webview message that we don't currently manage, ignoring");
+        XENDLog(@"libwidgetinfo :: Received a webview message that we don't currently manage, ignoring");
         return;
     }
     
@@ -197,7 +197,7 @@ static NSString *preferencesId = @"com.matchstic.xenhtml.libwidgetinfo";
     NSDictionary *innerPayload = [payload objectForKey:@"payload"];
     
     if (!callbackId || !innerPayload) {
-        NSLog(@"libwidgetinfo :: Received a malformed webview message, ignoring");
+        XENDLog(@"libwidgetinfo :: Received a malformed webview message, ignoring");
         return;
     }
     
@@ -223,13 +223,13 @@ static NSString *preferencesId = @"com.matchstic.xenhtml.libwidgetinfo";
                 [webview evaluateJavaScript:updateString
                           completionHandler:^(id res, NSError * _Nullable error) {
                     if (error) {
-                        NSLog(@"onMessageReceivedWithPayload :: ERROR during JS execution: %@", error);
+                        XENDLog(@"onMessageReceivedWithPayload :: ERROR during JS execution: %@", error);
                     }
                 }];
             });
         }];
     } else {
-        NSLog(@"libwidgetinfo :: Could not find provider for namespace: %@", namespace);
+        XENDLog(@"libwidgetinfo :: Could not find provider for namespace: %@", namespace);
     }
 }
 
@@ -281,7 +281,7 @@ static NSString *preferencesId = @"com.matchstic.xenhtml.libwidgetinfo";
     NSString *cachePath = [NSString stringWithFormat:@"%@/%@.plist", CACHE_BASE_PATH, preferencesId];
     
     NSMutableDictionary *cache = [NSMutableDictionary dictionaryWithContentsOfFile:cachePath];
-    if (!cache) cache = [NSMutableDictionary dictionary];
+    if (!cache) return nil;
     
     NSData *state = [cache objectForKey:@"cachedState"];
     
@@ -302,7 +302,7 @@ static NSString *preferencesId = @"com.matchstic.xenhtml.libwidgetinfo";
         dispatch_async(dispatch_get_main_queue(), ^{
             [widget evaluateJavaScript:updateString completionHandler:^(id object, NSError *error) {
                 if (error) {
-                    NSLog(@"updateWidgetsWithNewData :: ERROR during JS execution: %@", error);
+                    XENDLog(@"updateWidgetsWithNewData :: ERROR during JS execution: %@", error);
                 }
             }];
         });
@@ -399,6 +399,13 @@ static NSString *preferencesId = @"com.matchstic.xenhtml.libwidgetinfo";
 - (void)networkWasConnected {
     for (XENDBaseDataProvider *provider in self.dataProviders.allValues) {
         [provider networkWasConnected];
+    }
+}
+
+- (void)remoteConnectionInitialised {
+    XENDLog(@"DEBUG :: Reloading widgets after IPC connection");
+    for (WKWebView *webView in self.managedWebViews) {
+        [webView reload];
     }
 }
 

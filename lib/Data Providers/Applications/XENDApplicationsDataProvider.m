@@ -14,6 +14,7 @@
 **/
 
 #import "XENDApplicationsDataProvider.h"
+#import "XENDLogger.h"
 #import "PrivateHeaders.h"
 #import <objc/runtime.h>
 #import <dlfcn.h>
@@ -92,7 +93,7 @@
         if ([manager respondsToSelector:@selector(unlockWithRequest:completion:)] && manager.isUILocked) {
             
             if (!objc_getClass("SBLockScreenUnlockRequest")) {
-                NSLog(@"ERROR :: Cannot use unlock API, because SBLockScreenUnlockRequest is missing");
+                XENDLog(@"ERROR :: Cannot use unlock API, because SBLockScreenUnlockRequest is missing");
                 callback(@{});
                 return;
             }
@@ -212,8 +213,6 @@
     UIAlertAction *deleteAction = [UIAlertAction actionWithTitle:localisedOk style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
         
         // Request daemon to do the delete
-        NSLog(@"*** DEBUG :: Requesting delete");
-        
         [super didReceiveWidgetMessage:@{
             @"identifier": bundleIdentifer
         } functionDefinition:@"_delete" callback:callback];
