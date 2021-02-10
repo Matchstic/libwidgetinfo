@@ -22,6 +22,8 @@ export default class IS2Calendar extends IS2Base {
             delete this._observers[args[1]];
         };
 
+        // All 'fetch' APIs are synchronous, yet we can only do async
+        // Therefore, IS2 calendar compatibility is a no-go
         this._lookupMap['addCalendarEntryWithTitle:location:startTimeAsTimestamp:andEndTimeAsTimestamp:isAllDayEvent:'] = (args: any[]) => {};
         this._lookupMap['addCalendarEntryWithTitle:location:startTime:andEndTime:isAllDayEvent:'] = (args: any[]) => {};
         this._lookupMap['addCalendarEntryWithTitle:andLocation:'] = (args: any[]) => {};
