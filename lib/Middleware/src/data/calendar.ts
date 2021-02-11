@@ -1,21 +1,6 @@
 import { Base, DataProviderUpdateNamespace } from '../types';
 
 /**
- * Each method can return an error code which is documented here
- */
-enum CalendarErrorCode {
-    /**
-     * Missing data was expected by the API
-     */
-    BadRequest      = -1,
-
-    /**
-     * Default - no problems
-     */
-    OK              = 0
-}
-
-/**
  * Represents an entry in the user's calendar
  */
 export interface CalendarEvent {
@@ -180,7 +165,7 @@ export default class Calendar extends Base implements CalendarProperties {
      * You can optionally pass in a list of calendars to filter results to.
      *
      * The return type is a Promise, which either resolves to an array of {@link CalendarEvent}, or
-     * rejects with an error code (listed in {@link CalendarErrorCode})
+     * rejects.
      *
      * @example
      *
@@ -228,8 +213,8 @@ export default class Calendar extends Base implements CalendarProperties {
     /**
      * Creates a new calendar event for the given parameters
      *
-     * The return type is a Promise, which either resolves to a boolean stating if it was successful, or
-     * rejects with an error code (listed in {@link CalendarErrorCode})
+     * The return type is a Promise, which either resolves to the new event's ID, or
+     * rejects
      *
      * @example
      *
@@ -241,26 +226,26 @@ export default class Calendar extends Base implements CalendarProperties {
      *     end: Date.now() + oneHour
      * }).then((success) => {
      *     console.log(success);
-     * }).catch((error) => {
+     * }).catch(() => {
      *     // Handle error when creating the event
      * });
      * </script>
      *
      * @param params An object that matches {@link CalendarEventCreateParameters}
      */
-    public async create(params: CalendarEventCreateParameters): Promise<boolean> {
-        return new Promise<boolean>((resolve, reject) => {
+    public async create(params: CalendarEventCreateParameters): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
             this.connection.sendNativeMessage({
                 namespace: DataProviderUpdateNamespace.Calendar,
                 functionDefinition: 'create',
                 data: params
-            }, (data: { success: boolean, error?: number }) => {
+            }, (data: { id: string, error?: number }) => {
                 const error = data.error;
 
                 if (error && error !== 0) {
                     reject(error);
                 } else {
-                    resolve(data.success);
+                    resolve(data.id);
                 }
             });
         });
@@ -270,7 +255,7 @@ export default class Calendar extends Base implements CalendarProperties {
      * Deletes an event from the user's calendar
      *
      * The return type is a Promise, which either resolves to a boolean stating if it was successful, or
-     * rejects with an error code (listed in {@link CalendarErrorCode})
+     * rejects
      *
      * @example
      *
@@ -280,7 +265,7 @@ export default class Calendar extends Base implements CalendarProperties {
      *
      * api.calendar.delete(event.id).then((success) => {
      *     console.log(success);
-     * }).catch((error) => {
+     * }).catch(() => {
      *     // Handle error when deleting the event
      * });
      * </script>

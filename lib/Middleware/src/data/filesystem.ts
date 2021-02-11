@@ -287,7 +287,7 @@ export default class Filesystem extends Base {
      * api.fs.exists('/path/to/file.txt').then((exists) => {
      *
      * }).catch((error) => {
-     *              // Handle error when deleting the file
+     *              // Handle error
      * });
      * </script>
      *

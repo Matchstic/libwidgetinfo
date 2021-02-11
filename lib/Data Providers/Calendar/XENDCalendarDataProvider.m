@@ -112,6 +112,8 @@
             @"upcomingWeekEvents": array
         } mutableCopy];
         [self notifyWidgetManagerForNewProperties];
+        
+        NSLog(@"refreshed events");
     });
 }
 
@@ -161,12 +163,12 @@
     // Deconstruct input, and apply defaults
     NSString *title = [params objectForKey:@"title"];
     NSString *location = [params objectForKey:@"location"] ? [params objectForKey:@"location"] : @"";
-    int start = [params objectForKey:@"start"] ?
-                    [[params objectForKey:@"start"] intValue] / 1000:
+    double start = [params objectForKey:@"start"] ?
+                    [[params objectForKey:@"start"] doubleValue] / 1000:
                     [[NSDate date] timeIntervalSince1970];
-    int end = [params objectForKey:@"end"] ?
-                    [[params objectForKey:@"end"] intValue] / 1000 :
-                    [[NSDate date] timeIntervalSince1970] + (60 * 60);
+    double end = [params objectForKey:@"end"] ?
+                    [[params objectForKey:@"end"] doubleValue] / 1000 :
+                    start + (60 * 60);
     BOOL allDay = [params objectForKey:@"allDay"] ?
                     [[params objectForKey:@"allDay"] boolValue] :
                     NO;
@@ -188,15 +190,8 @@
     NSError *error;
     [self.store saveEvent:newEvent span:EKSpanThisEvent commit:YES error:&error];
     
-    BOOL success = !error;
-    
-    // Refresh if we need to
-    if (start < [[NSDate date] timeIntervalSince1970] + (60*60*24*7)) {
-        [self refresh];
-    }
-    
     return @{
-        @"success": @(success),
+        @"id": error ? @"" : newEvent.eventIdentifier,
         @"error": OK
     };
 }
@@ -212,17 +207,10 @@
     NSString *eventId = [data objectForKey:@"id"];
     EKEvent *event = [self.store eventWithIdentifier:eventId];
     
-    int startDate = [event.startDate timeIntervalSince1970];
-    
     NSError *error;
     [self.store removeEvent:event span:EKSpanThisEvent error:&error];
     
     BOOL success = !error;
-    
-    // Refresh if we need to
-    if (startDate < [[NSDate date] timeIntervalSince1970] + (60*60*24*7)) {
-        [self refresh];
-    }
     
     return @{
         @"success": @(success),
