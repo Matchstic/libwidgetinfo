@@ -124,7 +124,10 @@ static LMConnection widgetinfodService = {
         self.currentDeviceState = [response objectForKey:@"deviceState"];
         
         // Request widget reload if this connection was delayed
-        [[XENDWidgetManager sharedInstance] remoteConnectionInitialised];
+        // Threading sucks
+        dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+            [[XENDWidgetManager sharedInstance] remoteConnectionInitialised];
+        });
     } else {
         // try again in a few seconds
         if (self.retryConnectionTimer) {
