@@ -57,6 +57,10 @@
             callback([self create:data]);
         } else if ([definition isEqualToString:@"delete"]) {
             callback([self delete:data]);
+        } else if ([definition isEqualToString:@"lookupEvent"]) {
+            callback([self eventForId:data]);
+        } else if ([definition isEqualToString:@"lookupCalendar"]) {
+            callback([self calendarForId:data]);
         } else {
             callback(@{});
         }
@@ -214,6 +218,40 @@
     
     return @{
         @"success": @(success),
+        @"error": OK
+    };
+}
+
+- (NSDictionary*)eventForId:(NSDictionary*)data {
+    if (!data ||
+        ![data objectForKey:@"id"]) {
+        return @{
+            @"error": BAD_REQUEST
+        };
+    }
+    
+    NSString *eventId = [data objectForKey:@"id"];
+    EKEvent *event = [self.store eventWithIdentifier:eventId];
+    
+    return @{
+        @"event": [self eventToDictionary:event],
+        @"error": OK
+    };
+}
+
+- (NSDictionary*)calendarForId:(NSDictionary*)data {
+    if (!data ||
+        ![data objectForKey:@"id"]) {
+        return @{
+            @"error": BAD_REQUEST
+        };
+    }
+    
+    NSString *calendarId = [data objectForKey:@"id"];
+    EKCalendar *calendar = [self.store calendarWithIdentifier:calendarId];
+    
+    return @{
+        @"calendar": [self calendarToDictionary:calendar],
         @"error": OK
     };
 }

@@ -291,4 +291,86 @@ export default class Calendar extends Base implements CalendarProperties {
             });
         });
     }
+
+    /**
+     * Looks up an event by ID
+     *
+     * The return type is a Promise, which either resolves to an {@link CalendarEvent}, or
+     * rejects
+     *
+     * @example
+     *
+     * <script>
+     * // Example event ID
+     * const id = 'abc';
+     *
+     * api.calendar.lookupEvent(id).then((event) => {
+     *     console.log(event.title);
+     * }).catch(() => {
+     *     // Handle error
+     * });
+     * </script>
+     *
+     * @param id Event ID to lookup
+     */
+    public async lookupEvent(id: string): Promise<CalendarEvent> {
+        return new Promise<CalendarEvent>((resolve, reject) => {
+            this.connection.sendNativeMessage({
+                namespace: DataProviderUpdateNamespace.Calendar,
+                functionDefinition: 'lookupEvent',
+                data: {
+                    id
+                }
+            }, (data: { event: CalendarEvent, error?: number }) => {
+                const error = data.error;
+
+                if (error && error !== 0) {
+                    reject(error);
+                } else {
+                    resolve(data.event);
+                }
+            });
+        });
+    }
+
+    /**
+     * Looks up a calendar by ID
+     *
+     * The return type is a Promise, which either resolves to a {@link CalendarMetadata}, or
+     * rejects
+     *
+     * @example
+     *
+     * <script>
+     * // Example calendar ID
+     * const id = 'abc';
+     *
+     * api.calendar.lookupCalendar(id).then((event) => {
+     *     console.log(event.name);
+     * }).catch(() => {
+     *     // Handle error
+     * });
+     * </script>
+     *
+     * @param id Calendar ID to lookup
+     */
+    public async lookupCalendar(id: string): Promise<CalendarMetadata> {
+        return new Promise<CalendarMetadata>((resolve, reject) => {
+            this.connection.sendNativeMessage({
+                namespace: DataProviderUpdateNamespace.Calendar,
+                functionDefinition: 'lookupCalendar',
+                data: {
+                    id
+                }
+            }, (data: { calendar: CalendarMetadata, error?: number }) => {
+                const error = data.error;
+
+                if (error && error !== 0) {
+                    reject(error);
+                } else {
+                    resolve(data.calendar);
+                }
+            });
+        });
+    }
 }
