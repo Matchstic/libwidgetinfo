@@ -66,6 +66,10 @@
     }
 }
 
+- (void)noteSignificantTimeChange {
+    [self refresh];
+}
+
 #pragma mark Private
 
 - (void)refresh {
