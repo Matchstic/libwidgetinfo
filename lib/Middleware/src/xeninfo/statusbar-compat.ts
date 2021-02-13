@@ -26,14 +26,14 @@ export default class XenInfoStatusBar {
     }
 
     onDataChanged(data: CommunicationsProperties) {
-        (window as any).signalStrength = 0;
-        (window as any).signalBars = data.telephony.bars;
-        (window as any).signalName = data.telephony.operator;
-        (window as any).wifiStrength = 0;
-        (window as any).wifiBars = data.wifi.bars;
-        (window as any).wifiName = data.wifi.ssid;
-        (window as any).bluetoothOn = data.bluetooth.enabled;
-        (window as any).bluetooth = data.bluetooth.enabled;
-        (window as any).signalNetworkType = data.telephony.type;
+        (window as any).signalStrength = '0';
+        (window as any).signalBars = '' + data.telephony.bars;
+        (window as any).signalName = data.telephony.operator === '' ? 'NA' : data.telephony.operator;
+        (window as any).wifiStrength = '0';
+        (window as any).wifiBars = '' + data.wifi.bars;
+        (window as any).wifiName = data.wifi.ssid === '' ? 'NA' : data.wifi.ssid;
+        (window as any).bluetoothOn = '' + data.bluetooth.enabled;
+        (window as any).bluetooth = '' + data.bluetooth.enabled;
+        (window as any).signalNetworkType = data.telephony.type === '' ? 'NA' : data.telephony.type;
     }
 }

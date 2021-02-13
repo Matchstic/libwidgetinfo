@@ -128,7 +128,7 @@
 - (NSDictionary*)telelphonyData {
     NSDictionary *defaultData = @{
         @"airplaneMode": @NO,
-        @"bars": @1,
+        @"bars": @5,
         @"operator": @"Carrier",
         @"type": @"3G"
     };
