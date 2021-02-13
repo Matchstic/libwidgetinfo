@@ -13,6 +13,7 @@ import XENDWeatherProvider from './data/weather';
 import XENDApplicationsProvider from './data/applications';
 import XENDResourcesProvider from './data/resources';
 import XENDFilesystemProvider from './data/filesystem';
+import XENDCommunicationsProvider from './data/communications';
 
 import NativeInterface from './native-interface';
 
@@ -42,6 +43,7 @@ class XENDMiddleware extends NativeInterface {
         this.dataProviders.set(DataProviderUpdateNamespace.Applications, new XENDApplicationsProvider(this));
         this.dataProviders.set(DataProviderUpdateNamespace.Resources, new XENDResourcesProvider(this));
         this.dataProviders.set(DataProviderUpdateNamespace.Filesystem, new XENDFilesystemProvider(this));
+        this.dataProviders.set(DataProviderUpdateNamespace.Communications, new XENDCommunicationsProvider(this));
 
         // Initialise some compat stuff that doesn't rely on code that could be loaded a little later
         this.infostats2.initialise(this, this.dataProviders);
@@ -107,6 +109,7 @@ class XENDMiddleware extends NativeInterface {
             apps:       this.dataProviderInNamespace(DataProviderUpdateNamespace.Applications),
             resources:  this.dataProviderInNamespace(DataProviderUpdateNamespace.Resources),
             fs:         this.dataProviderInNamespace(DataProviderUpdateNamespace.Filesystem),
+            comms:      this.dataProviderInNamespace(DataProviderUpdateNamespace.Communications)
         };
 
         window.addEventListener('DOMContentLoaded', (event) => {
@@ -160,4 +163,5 @@ export default class XENDApi {
     public apps: XENDApplicationsProvider             = this._middleware.dataProviderInNamespace(DataProviderUpdateNamespace.Applications);
     public resources: XENDResourcesProvider           = this._middleware.dataProviderInNamespace(DataProviderUpdateNamespace.Resources);
     public fs: XENDFilesystemProvider                 = this._middleware.dataProviderInNamespace(DataProviderUpdateNamespace.Filesystem);
+    public comms: XENDCommunicationsProvider          = this._middleware.dataProviderInNamespace(DataProviderUpdateNamespace.Communications);
 }

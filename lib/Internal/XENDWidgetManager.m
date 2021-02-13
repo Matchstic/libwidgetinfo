@@ -26,6 +26,7 @@
 #import "../Data Providers/Applications/XENDApplicationsDataProvider.h"
 #import "../Data Providers/Filesystem/XENDFilesystemProvider.h"
 #import "../Data Providers/Calendar/XENDCalendarDataProvider.h"
+#import "../Data Providers/Communications/XENDCommsDataProvider.h"
 
 // URL handler imports
 #import "../URL Handlers/XENDWidgetWeatherURLHandler.h"
@@ -359,6 +360,12 @@ static NSString *preferencesId = @"com.matchstic.xenhtml.libwidgetinfo";
     [result setObject:calendar forKey:[XENDCalendarDataProvider providerNamespace]];
     if (currentCachedDynamicState && [calendar.cachedDynamicProperties isEqualToDictionary:@{}])
         calendar.cachedDynamicProperties = [currentCachedDynamicState objectForKey:[XENDCalendarDataProvider providerNamespace]];
+    
+    XENDCommsDataProvider *comms = [[XENDCommsDataProvider alloc] init];
+    [comms registerDelegate:self];
+    [result setObject:comms forKey:[XENDCommsDataProvider providerNamespace]];
+    if (currentCachedDynamicState && [comms.cachedDynamicProperties isEqualToDictionary:@{}])
+        comms.cachedDynamicProperties = [currentCachedDynamicState objectForKey:[XENDCommsDataProvider providerNamespace]];
     
     return result;
 }

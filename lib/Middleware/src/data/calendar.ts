@@ -373,4 +373,11 @@ export default class Calendar extends Base implements CalendarProperties {
             });
         });
     }
+
+    protected defaultData(): CalendarProperties {
+        return {
+            upcomingWeekEvents: [],
+            calendars: []
+        }
+    }
 }

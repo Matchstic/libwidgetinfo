@@ -18,7 +18,8 @@ export enum DataProviderUpdateNamespace {
     Resources = 'resources',
     Applications = 'applications',
     System = 'system',
-    Filesystem = 'fs'
+    Filesystem = 'fs',
+    Communications = 'comms'
 }
 
 /**

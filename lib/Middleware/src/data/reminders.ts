@@ -1,5 +1,22 @@
 import { Base } from '../types';
 
+export interface ReminderEntry {
+    title: string;
+    due: number;
+    notes: string;
+    url: string;
+    location: string;
+    repeat: unknown; // todo; define type
+    flagged: boolean;
+    priority: number;
+    list: RemindersList;
+    subtasks: any[]; // todo; define type
+}
+
+export interface RemindersList {
+
+}
+
 /**
  * @ignore
  */
