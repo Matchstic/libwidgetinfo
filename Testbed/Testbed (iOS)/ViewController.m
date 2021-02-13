@@ -47,7 +47,7 @@
     [self setupWebView];
     
     // Load the webview
-    NSString *testWidget = @"/Users/matt/iOS/Projects/Xen-HTML/Deploy/Package/var/mobile/Library/Widgets/Universal/Weather | Forecast/index.html";
+    NSString *testWidget = @"";
     NSURL *url = [NSURL fileURLWithPath:testWidget];
     
     [self.webView loadFileURL:url allowingReadAccessToURL:[NSURL fileURLWithPath:@"/" isDirectory:YES]];
