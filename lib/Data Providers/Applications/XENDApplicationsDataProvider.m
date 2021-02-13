@@ -40,6 +40,14 @@
     }
 }
 
+- (BOOL)privileged {
+#if TARGET_IPHONE_SIMULATOR
+    return YES;
+#else
+    return [[[NSBundle mainBundle] bundleIdentifier] isEqualToString:@"com.apple.springboard"];
+#endif
+}
+
 - (NSDictionary*)applicationMetadataForIdentifier:(NSString*)bundleIdentifier {
     NSArray *applications = [self.cachedDynamicProperties objectForKey:@"allApplications"];
     
@@ -82,6 +90,8 @@
 }
 
 - (void)requestApplicationLaunchForBundleIdentifier:(NSString*)bundleIdentifer callback:(void (^)(NSDictionary *result))callback {
+    
+    if (![self privileged]) return;
     
     // Using private SpringBoard function to launch application
     // This feature is not available elsewhere.
@@ -166,6 +176,8 @@
 }
 
 - (void)requestApplicationDeleteForBundleIdentifier:(NSString*)bundleIdentifer callback:(void (^)(NSDictionary *result))callback {
+    
+    if (![self privileged]) return;
     
     // Prompt the user to confirm they want to delete the application
     
