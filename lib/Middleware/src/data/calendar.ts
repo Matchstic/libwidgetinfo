@@ -295,7 +295,7 @@ export default class Calendar extends Base implements CalendarProperties {
     /**
      * Looks up an event by ID
      *
-     * The return type is a Promise, which either resolves to an {@link CalendarEvent}, or
+     * The return type is a Promise, which either resolves to an {@link CalendarEvent}, null (if not exists), or
      * rejects
      *
      * @example
@@ -327,7 +327,7 @@ export default class Calendar extends Base implements CalendarProperties {
                 if (error && error !== 0) {
                     reject(error);
                 } else {
-                    resolve(data.event);
+                    resolve(data.event || null);
                 }
             });
         });
@@ -336,7 +336,7 @@ export default class Calendar extends Base implements CalendarProperties {
     /**
      * Looks up a calendar by ID
      *
-     * The return type is a Promise, which either resolves to a {@link CalendarMetadata}, or
+     * The return type is a Promise, which either resolves to a {@link CalendarMetadata}, null (if not exists), or
      * rejects
      *
      * @example
@@ -368,7 +368,7 @@ export default class Calendar extends Base implements CalendarProperties {
                 if (error && error !== 0) {
                     reject(error);
                 } else {
-                    resolve(data.calendar);
+                    resolve(data.calendar || null);
                 }
             });
         });

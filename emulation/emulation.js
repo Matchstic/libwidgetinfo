@@ -62,6 +62,106 @@ const resources = {
 };
 
 //////////////////////////////////////////////////////////////////////
+// Apps data
+//////////////////////////////////////////////////////////////////////
+
+const apps = [
+    {
+        name: 'system-app',
+        identifier: 'com.example.systemapp',
+        icon: '',
+        badge: '',
+        isInstalling: false,
+        isSystemApplication: true
+    },
+    {
+        name: 'user-app',
+        identifier: 'com.example.userapp',
+        icon: '',
+        badge: '',
+        isInstalling: false,
+        isSystemApplication: false
+    }
+];
+
+//////////////////////////////////////////////////////////////////////
+// Communications data
+//////////////////////////////////////////////////////////////////////
+
+const comms = {
+    wifi: {
+        enabled: true,
+        bars: 3,
+        ssid: 'Network'
+    },
+    telephony: {
+        airplaneMode: false,
+        bars: 5,
+        operator: 'Carrier',
+        type: '4G'
+    },
+    bluetooth: {
+        enabled: true,
+        scanning: false,
+        discoverable: false,
+        devices: [
+            {
+                name: 'Device 1',
+                battery: 100,
+                supportsBattery: true,
+                majorClass: 1024
+            },
+            {
+                name: 'Device 2',
+                battery: 0,
+                supportsBattery: false,
+                majorClass: 2048
+            }
+        ]
+    }
+}
+
+//////////////////////////////////////////////////////////////////////
+// Calendar data
+//////////////////////////////////////////////////////////////////////
+
+const calendars = [
+    {
+        id: '1',
+        name: 'Calendar 1',
+        color: '#00FF00'
+    },
+    {
+        id: '2',
+        name: 'Calendar 2',
+        color: '#FF0000'
+    },
+];
+
+const now = Date.now();
+let events = [
+    {
+        id: '1',
+        title: 'Event 1',
+        location: 'New York',
+        allDay: false,
+        start: now,
+        end: now + (60 * 60 * 2 * 1000),
+        calendar: calendars[0]
+    },
+    {
+        id: '2',
+        title: 'Event 2',
+        location: '',
+        allDay: false,
+        start: now + (60 * 60 * 24 * 1000),
+        end: now + (60 * 60 * 25 * 1000),
+        calendar: calendars[1]
+    }
+];
+
+
+//////////////////////////////////////////////////////////////////////
 // System data
 //////////////////////////////////////////////////////////////////////
 
@@ -7039,6 +7139,216 @@ if (window.api !== undefined) {
                     fn(provider);
                 });
             }
+        },
+        apps: {
+            _callbacks: [],
+            observeData: function (callback) {
+                console.log('emulation.js :: registered apps callback');
+                api.apps._callbacks.push(callback);
+                if (hasSeenLoad) callback(api.apps);
+            },
+            applicationForIdentifier: function(identifier) {
+                return {
+                    name: 'debug-app',
+                    identifier,
+                    icon: '',
+                    badge: '',
+                    isInstalling: false,
+                    isSystemApplication: false
+                }
+            },
+            applicationIsPresent: function(identifier) {
+                return true;
+            },
+            launchApplication: function(identifier) {
+                return new Promise((resolve) => {
+                    console.log('Pretending to launch application');
+                    resolve();
+                })
+            },
+            deleteApplication: function(identifier) {
+                return new Promise((resolve) => {
+                    console.log('Pretending to delete application');
+                    resolve();
+                })
+            }
+        },
+        fs: {
+            read: function(path, mimetype) {
+                return new Promise((resolve) => {
+                    console.log('Pretending to read file');
+                    resolve('');
+                })
+            },
+            write: function(path, content, mimetype) {
+                return new Promise((resolve) => {
+                    console.log('Pretending to write file');
+                    resolve(true);
+                })
+            },
+            delete: function(path) {
+                return new Promise((resolve) => {
+                    console.log('Pretending to delete file');
+                    resolve(true);
+                })
+            },
+            exists: function(path) {
+                return new Promise((resolve) => {
+                    console.log('Pretending to check file exists');
+                    resolve(true);
+                })
+            },
+            list: function(path) {
+                return new Promise((resolve) => {
+                    console.log('Pretending to list directory');
+                    resolve([]);
+                })
+            },
+            mkdir: function(path, createIntermediate) {
+                return new Promise((resolve) => {
+                    console.log('Pretending to create directory');
+                    resolve(true);
+                })
+            },
+            metadata: function(path) {
+                return new Promise((resolve) => {
+                    console.log('Pretending to get file metadata');
+                    resolve({
+                        isDirectory: false,
+                        type: 'NSFileTypeRegular',
+                        created: Date.now(),
+                        modified: Date.now(),
+                        size: 1337,
+                        permissions: 775,
+                        owner: 'mobile',
+                        group: 'mobile'
+                    });
+                })
+            }
+        },
+        comms: {
+            _callbacks: [],
+            observeData: function (callback) {
+                console.log('emulation.js :: registered comms callback');
+                api.comms._callbacks.push(callback);
+                if (hasSeenLoad) callback(api.comms);
+            }
+        },
+        calendar: {
+            _callbacks: [],
+            observeData: function (callback) {
+                console.log('emulation.js :: registered calendar callback');
+                api.calendar._callbacks.push(callback);
+                if (hasSeenLoad) callback(api.calendar);
+            },
+            fetch: function(start, end, calendarsParam) {
+                return new Promise((resolve) => {
+                    const ids = calendarsParam ? calendarsParam.map((calendar) => {
+                        return calendar.id;
+                    }) : [];
+
+                    // Filter events list
+                    const filteredEvents = events.filter((event) => {
+                        // Filter by ID if necessary
+                        if (ids.length > 0 && !ids.includes(event.calendar.id)) return false;
+
+                        // Otherwise, filter by time
+                        return event.end >= start && event.start <= end;
+                    });
+
+                    resolve(filteredEvents);
+                })
+            },
+            create: function(params) {
+                return new Promise((resolve, reject) => {
+                    // Create event and add to list
+                    // Don't forget to sort by start date
+
+                    if (!params.title) {
+                        reject(-1);
+                        return;
+                    }
+
+                    let start = params.start || Date.now();
+                    let end = params.start && params.end ? params.end : start + (60 * 60 * 1000);
+                    if (params.allDay) {
+                        const startDate = new Date(start);
+                        startDate.setHours(0, 0, 0, 0);
+
+                        start = startDate.getTime();
+                        end = start + (60 * 60 * 24 * 1000);
+                    }
+
+                    let calendar = null;
+                    if (params.calendarId) {
+                        const found = calendars.find((calendar) => {
+                            calendar.id === params.calendarId;
+                        });
+
+                        calendar = found || calendars[0];
+                    } else {
+                        calendar = calendars[0];
+                    }
+
+                    const newEvent = {
+                        id: 'id' + Date.now(),
+                        title: params.title,
+                        location: params.location || '',
+                        start,
+                        end,
+                        allDay: params.allDay || false,
+                        calendar
+                    }
+
+                    events.push(newEvent);
+                    events = events.sort((a, b) => {
+                        return a.start - b.start;
+                    });
+
+                    // Update upcomingWeekEvents
+                    api.calendar.upcomingWeekEvents = events.filter((event) => {
+                        return event.start <= Date.now() + (60 * 60 * 24 * 7 * 1000)
+                    });
+
+                    resolve(newEvent.id);
+                });
+            },
+            delete: function(id) {
+                return new Promise((resolve) => {
+                    const exists = events.findIndex((event) => {
+                        return event.id === id;
+                    }) !== -1;
+
+                    if (!exists) {
+                        resolve(false);
+                    } else {
+                        events = events.filter((event) => {
+                            return event.id !== id;
+                        });
+
+                        // Update upcomingWeekEvents
+                        api.calendar.upcomingWeekEvents = events.filter((event) => {
+                            return event.start <= Date.now() + (60 * 60 * 24 * 7 * 1000)
+                        });
+
+                        resolve(true);
+                    }
+                });
+            },
+            lookupEvent: function(id) {
+                return new Promise((resolve) => {
+                    resolve(events.find((event) => {
+                        return event.id === id;
+                    }) || null);
+                });
+            },
+            lookupCalendar: function(id) {
+                return new Promise((resolve) => {
+                    resolve(calendars.find((calendar) => {
+                        return calendar.id === id;
+                    }) || null);
+                });
+            }
         }
     };
 
@@ -7046,6 +7356,23 @@ if (window.api !== undefined) {
     api.system = Object.assign(api.system, system);
     api.resources = Object.assign(api.resources, resources);
     api.media = Object.assign(api.media, media);
+    api.apps = Object.assign(api.apps, {
+        allApplications: apps,
+        userApplications: apps.filter((app) => {
+            return !app.isSystemApplication;
+        }),
+        systemApplications: apps.filter((app) => {
+            return app.isSystemApplication;
+        }),
+    });
+    // No apply for api.fs needed
+    api.comms = Object.assign(api.comms, comms);
+    api.calendar = Object.assign(api.calendar, {
+        calendars,
+        upcomingWeekEvents: events.filter((event) => {
+            return event.start <= Date.now() + (60 * 60 * 24 * 7 * 1000)
+        })
+    });
 
     const payload = configuration.weather.units === 'imperial' ? imperial_weather[configuration.weather.city] : metric_weather[configuration.weather.city];
 
@@ -7215,6 +7542,9 @@ if (window.api !== undefined) {
             applyCallbacks(api.resources);
             applyCallbacks(api.media);
             applyCallbacks(api.weather);
+            applyCallbacks(api.apps);
+            // No callbacks for api.fs needed
+            applyCallbacks(api.calendar);
 
             hasSeenLoad = true;
             console.log('emulation.js :: notified all observeData callees');
