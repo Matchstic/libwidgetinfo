@@ -1,25 +1,35 @@
 import IS2Base from './base';
+import Communications, { CommunicationsProperties } from '../data/communications';
 
 /**
  * @ignore
  */
 export default class IS2Telephony extends IS2Base {
+    private provider: Communications;
+
     constructor() {
         super();
         // Map ObjC selectors to JS functions
 
-        this._lookupMap['phoneSignalBars']                  = () => { /* not implemented */ return 0; };
-        this._lookupMap['phoneSignalRSSI']                  = () => { /* not implemented */ return 0; };
-        this._lookupMap['phoneCarrier']                     = () => { /* not implemented */ return ''; };
-        this._lookupMap['wifiEnabled']                      = () => { /* not implemented */ return true; };
-        this._lookupMap['wifiSignalBars']                   = () => { /* not implemented */ return 0; };
-        this._lookupMap['wifiName']                         = () => { /* not implemented */ return ''; };
-        this._lookupMap['airplaneModeEnabled']              = () => { /* not implemented */ return false; };
-        this._lookupMap['dataConnectionAvailableViaWiFi']   = () => { /* not implemented */ return true; };
-        this._lookupMap['dataConnectionAvailable ']         = () => { /* not implemented */ return true; };
+        this._lookupMap['phoneSignalBars']                  = () => { return this.provider.telephony.bars; };
+        this._lookupMap['phoneSignalRSSI']                  = () => { return 0; };
+        this._lookupMap['phoneCarrier']                     = () => { return this.provider.telephony.operator; };
+        this._lookupMap['wifiEnabled']                      = () => { return this.provider.wifi.enabled; };
+        this._lookupMap['wifiSignalBars']                   = () => { return this.provider.wifi.bars; };
+        this._lookupMap['wifiName']                         = () => { return this.provider.wifi.ssid; };
+        this._lookupMap['airplaneModeEnabled']              = () => { return this.provider.telephony.airplaneMode; };
+        this._lookupMap['dataConnectionAvailableViaWiFi']   = () => { return true; };
+        this._lookupMap['dataConnectionAvailable ']         = () => { return true; };
     }
 
-    public initialise() {
-        // no-op
+    public initialise(provider: Communications) {
+        this.provider = provider;
+
+        this.provider.observeData((_: CommunicationsProperties) => {
+            // Update observers so that they fetch new data
+            this.notifyObservers();
+        });
+
+        this.notifyObservers();
     }
 }

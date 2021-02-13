@@ -49,8 +49,11 @@ export default class IS2Middleware implements XenHTMLMiddleware {
         this.compatProviders['IS2Media'].initialise(providers.get(DataProviderUpdateNamespace.Media));
         this.compatProviders['IS2Notifications'].initialise();
         this.compatProviders['IS2Pedometer'].initialise();
-        this.compatProviders['IS2System'].initialise(providers.get(DataProviderUpdateNamespace.System), providers.get(DataProviderUpdateNamespace.Resources));
-        this.compatProviders['IS2Telephony'].initialise();
+        this.compatProviders['IS2System'].initialise(
+            providers.get(DataProviderUpdateNamespace.System),
+            providers.get(DataProviderUpdateNamespace.Resources),
+            providers.get(DataProviderUpdateNamespace.Applications));
+        this.compatProviders['IS2Telephony'].initialise(providers.get(DataProviderUpdateNamespace.Communications));
 
         // Location utilises the weather provider for data
         this.compatProviders['IS2Location'].initialise(providers.get(DataProviderUpdateNamespace.Weather));

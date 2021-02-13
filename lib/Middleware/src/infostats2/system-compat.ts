@@ -1,5 +1,6 @@
 import System from '../data/system';
 import Resources from '../data/resources';
+import Applications from '../data/applications';
 
 import IS2Base from './base';
 
@@ -9,6 +10,7 @@ import IS2Base from './base';
 export default class IS2System extends IS2Base {
     private systemProvider: System;
     private resourcesProvider: Resources;
+    private applicationsProvider: Applications;
 
     constructor() {
         super();
@@ -48,8 +50,7 @@ export default class IS2System extends IS2Base {
         this._lookupMap['lockDevice']                   = () => { this.systemProvider.lockDevice(); };
         this._lookupMap['openSwitcher']                 = () => { this.systemProvider.openApplicationSwitcher(); };
 
-        // TODO: Use Applications provider for this
-        this._lookupMap['openApplication:']             = (args: any[]) => { /* not implemented */ };
+        this._lookupMap['openApplication:']             = (args: any[]) => { this.applicationsProvider.launchApplication(args[0]); };
         this._lookupMap['openSiri']                     = () => { this.systemProvider.openSiri(); };
         this._lookupMap['respring']                     = () => { this.systemProvider.respringDevice(); };
         this._lookupMap['reboot']                       = () => { /* not implemented */ };
@@ -66,8 +67,9 @@ export default class IS2System extends IS2Base {
         this._lookupMap['getApplicationIconForBundleIdentifierBase64:'] = (args: any[]) => { /* not implemented */ return emptyImage; };
     }
 
-    public initialise(systemProvider: System, resourcesProvider: Resources) {
+    public initialise(systemProvider: System, resourcesProvider: Resources, applicationsProvider: Applications) {
         this.systemProvider = systemProvider;
         this.resourcesProvider = resourcesProvider;
+        this.applicationsProvider = applicationsProvider;
     }
 }
