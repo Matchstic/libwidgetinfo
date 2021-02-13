@@ -15,6 +15,8 @@
 
 #import "XENDCommsDataProvider.h"
 #import "Private.h"
+#import "XENDLogger.h"
+
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #import <objc/runtime.h>
 
@@ -274,9 +276,14 @@
             }
         }
         
-        return @{};
+        return @{
+            @"enabled": @(enabled),
+            @"scanning": @(scanning),
+            @"discoverable": @(discoverable),
+            @"devices": devices
+        };
     } @catch (NSException *e) {
-        return @{};
+        return defaultData;
     }
 }
 
