@@ -7,11 +7,13 @@ These are available in the different sub-folders of `/var/mobile/Library/Widgets
 
 ### Available Examples
 
-| Name                 | Syntax Used | Data Providers Used |
-|----------------------|-------------|---------------------|
-| Music \| Mini        | Inline      | Media               |
-| Music \| Player      | Callback    | Media               |
-| Resources \| Battery | Inline      | Resources           |
-| Weather \| Card      | Inline      | Weather             |
-| Weather \| Forecast  | Callback    | Weather, System     |
-| Apps \| List         | Callback    | Applications        |
+| Name                   | Syntax Used | Data Providers Used |
+|------------------------|-------------|---------------------|
+| Music \| Mini          | Inline      | Media               |
+| Music \| Player        | Callback    | Media               |
+| Resources \| Battery   | Inline      | Resources           |
+| Weather \| Card        | Inline      | Weather             |
+| Weather \| Forecast    | Callback    | Weather, System     |
+| Apps \| List           | Callback    | Applications        |
+| Bluetooth \| Connected | Callback    | Communications      |
+| Calendar \| Up Next    | Callback    | Calendar            |

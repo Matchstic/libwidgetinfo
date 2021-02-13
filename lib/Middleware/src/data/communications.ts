@@ -99,12 +99,28 @@ export interface CommunicationsBluetoothDevice {
     isAppleAudioDevice: boolean;
 
     /**
-     * The Bluetooth major class the device advertises
+     * The Bluetooth major class the device advertises.
+     *
+     * Possible values:
+     * - 0: Miscellanous devices
+     * - 256: Computers
+     * - 512: Phones
+     * - 768: Network device
+     * - 1024: Audio/video (headphones, speakers, ...)
+     * - 1280: Input peripherals (mice, keyboards, ...)
+     * - 1536: Imaging devices (scanners, printers, ...)
+     * - 1792: Wearable devices
+     * - 2048: Toys
+     * - 7936: Uncategorized
      */
     majorClass: number;
 
     /**
-     * The Bluetooth minor class the device advertises
+     * The Bluetooth minor class the device advertises.
+     *
+     * This is linked to the majorClass, to help further identify a device.
+     * There's far too many possibilites to list here, so its recommended
+     * to look at the Bluetooth specification for possible values.
      */
     minorClass: number;
 }
@@ -191,7 +207,7 @@ export default class Communications extends Base implements CommunicationsProper
     wifi: CommunicationsWiFi;
 
     /**
-     * An object containing various properties about cellular
+     * An object containing various properties about cellular.
      */
     telephony: CommunicationsTelephony;
 
