@@ -185,8 +185,19 @@ export default class Communications extends Base implements CommunicationsProper
     // CommunicationsProperties stub implementation
     /////////////////////////////////////////////////////////
 
+    /**
+     * An object containing various properties about WiFi
+     */
     wifi: CommunicationsWiFi;
+
+    /**
+     * An object containing various properties about cellular
+     */
     telephony: CommunicationsTelephony;
+
+    /**
+     * An object containing various properties about Bluetooth
+     */
     bluetooth: CommunicationsBluetooth;
 
     // Replicate here for documentation purposes
