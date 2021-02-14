@@ -32,7 +32,7 @@
 
 #define WIDGET_INFO_MESSAGE_PROPERTIES_CHANGED @"com.matchstic.libwidgetinfo/propertiesChanged"
 #define WIDGET_INFO_MESSAGE_DEVICE_STATE_CHANGED @"com.matchstic.libwidgetinfo/deviceStateChanged"
-#define RETRY_TIMEOUT 5
+#define RETRY_TIMEOUT 3
 
 // Only cleared when current process is killed
 static XENDProxyIPCConnection *internalConnection;
