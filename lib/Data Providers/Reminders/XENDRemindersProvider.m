@@ -56,8 +56,8 @@
             [self fetch:data callback:callback];
         } else if ([definition isEqualToString:@"create"]) {
             callback([self create:data]);
-        } else if ([definition isEqualToString:@"markCompleted"]) {
-            callback([self create:data]);
+        } else if ([definition isEqualToString:@"update"]) {
+            callback([self update:data]);
         } else if ([definition isEqualToString:@"delete"]) {
             callback([self delete:data]);
         } else if ([definition isEqualToString:@"lookupReminder"]) {
@@ -119,8 +119,6 @@
                 @"pending": array
             } mutableCopy];
             [self notifyWidgetManagerForNewProperties];
-            
-            NSLog(@"%@", self.cachedDynamicProperties);
         }];
     });
 }
@@ -229,8 +227,8 @@
     }
     
     // Pull out params
-    int start = [[data objectForKey:@"start"] intValue];
-    int end = [[data objectForKey:@"end"] intValue];
+    double start = [[data objectForKey:@"start"] doubleValue];
+    double end = [[data objectForKey:@"end"] doubleValue];
     BOOL completedState = [[data objectForKey:@"completedState"] boolValue];
     NSArray *ids = [data objectForKey:@"ids"];
     BOOL subsetFiltering = ids.count > 0;
@@ -335,7 +333,7 @@
     };
 }
 
-- (NSDictionary*)markCompleted:(NSDictionary*)data {
+- (NSDictionary*)update:(NSDictionary*)data {
     if (!data ||
         ![data objectForKey:@"id"] ||
         ![data objectForKey:@"state"]) {

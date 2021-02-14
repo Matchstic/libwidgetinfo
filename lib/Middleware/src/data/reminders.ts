@@ -139,7 +139,13 @@ export interface RemindersProperties {
 }
 
 /**
- * @ignore
+ * The Reminders provider gives you access to reminders the user has set in the stock Reminders
+ * application.
+ *
+ * You are able to query for both pending and completed reminders, can create/delete reminders, and
+ * additionally mark them as completed or not.
+ *
+ * <b>Available in Xen HTML 2.0~beta7 or newer</b>
  */
 export default class Reminders extends Base implements RemindersProperties {
 
@@ -187,6 +193,10 @@ export default class Reminders extends Base implements RemindersProperties {
      * within that timeframe.
      *
      * You can optionally pass in an array of lists to filter results.
+     *
+     * Be careful with how <code>completedState</code> is treated:
+     * - <code>true</code>: fetches reminders that have a <b>completed date</b> between start and end
+     * - <code>false</code>: fetches reminders that have a <b>due date</b> falling between start and end
      *
      * The return type is a Promise, which either resolves to an array of {@link ReminderEntry}, or
      * rejects.
@@ -287,11 +297,11 @@ export default class Reminders extends Base implements RemindersProperties {
      * @param id ID of the reminder to update
      * @param state New state to apply
      */
-    public async markCompleted(id: string, state: boolean): Promise<boolean> {
+    public async update(id: string, state: boolean): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             this.connection.sendNativeMessage({
                 namespace: DataProviderUpdateNamespace.Reminders,
-                functionDefinition: 'markCompleted',
+                functionDefinition: 'update',
                 data: {
                     id,
                     state
