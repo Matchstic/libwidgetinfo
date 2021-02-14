@@ -1,6 +1,6 @@
 /**
  * Name: emulation.js
- * Version: 0.0.2
+ * Version: 0.0.3
  *
  * This script is to allow testing of XH2-based widgets in a desktop browser.
  *
@@ -7061,6 +7061,12 @@ const imperial_weather = {
 if (window.api !== undefined) {
     console.error('emulation.js :: Detected that Xen Widget API is available, aborting emulation.');
 } else {
+    function applyCallbacks(provider) {
+        provider._callbacks.forEach(function(fn) {
+            fn(provider);
+        });
+    }
+    
     let hasSeenLoad = false;
     var api = {
         weather: {
@@ -7309,6 +7315,8 @@ if (window.api !== undefined) {
                     api.calendar.upcomingWeekEvents = events.filter((event) => {
                         return event.start <= Date.now() + (60 * 60 * 24 * 7 * 1000)
                     });
+                    
+                    applyCallbacks(api.calendar);
 
                     resolve(newEvent.id);
                 });
@@ -7330,6 +7338,8 @@ if (window.api !== undefined) {
                         api.calendar.upcomingWeekEvents = events.filter((event) => {
                             return event.start <= Date.now() + (60 * 60 * 24 * 7 * 1000)
                         });
+                        
+                        applyCallbacks(api.calendar);
 
                         resolve(true);
                     }
@@ -7515,12 +7525,6 @@ if (window.api !== undefined) {
 
     api.weather = Object.assign(api.weather, payload);
 
-    function applyCallbacks(provider) {
-        provider._callbacks.forEach(function(fn) {
-            fn(provider);
-        });
-    }
-
     // Override toLocaleTimeString to use our 12/24 hour metadata
     const oldToLocaleTimeString = Date.prototype.toLocaleTimeString;
     Date.prototype.toLocaleTimeString = function(locales, options) {
@@ -7543,6 +7547,7 @@ if (window.api !== undefined) {
             applyCallbacks(api.media);
             applyCallbacks(api.weather);
             applyCallbacks(api.apps);
+            applyCallbacks(api.comms);
             // No callbacks for api.fs needed
             applyCallbacks(api.calendar);
 
