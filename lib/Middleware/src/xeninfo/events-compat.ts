@@ -40,8 +40,8 @@ export default class XenInfoEvents {
                 location: event.location,
                 isAllDay: event.allDay,
                 date: formatDate(event.start),
-                startTimeTimestamp: event.start,
-                endTimeTimestamp: event.end,
+                startTimeTimestamp: event.start / 1000,
+                endTimeTimestamp: event.end / 1000,
                 associatedCalendarName: event.calendar.name,
                 associatedCalendarHexColor: event.calendar.color
             };
