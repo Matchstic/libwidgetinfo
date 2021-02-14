@@ -14,6 +14,7 @@
 **/
 
 #import <Foundation/Foundation.h>
+#import <CoreGraphics/CoreGraphics.h>
 #import "../Internal/XENDWidgetManager-Protocol.h"
 
 @interface XENDBaseDataProvider : NSObject
@@ -85,6 +86,11 @@
  * URL escapes the provided input
  */
 - (NSString*)escapeString:(NSString*)input;
+
+/**
+ Converts a colour ref into a hex string
+ */
+- (NSString *)hexStringFromColor:(CGColorRef)color;
 
 /**
  * Notifies the widget manager of updated data

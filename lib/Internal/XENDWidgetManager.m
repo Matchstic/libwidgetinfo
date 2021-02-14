@@ -27,6 +27,7 @@
 #import "../Data Providers/Filesystem/XENDFilesystemProvider.h"
 #import "../Data Providers/Calendar/XENDCalendarDataProvider.h"
 #import "../Data Providers/Communications/XENDCommsDataProvider.h"
+#import "../Data Providers/Reminders/XENDRemindersProvider.h"
 
 // URL handler imports
 #import "../URL Handlers/XENDWidgetWeatherURLHandler.h"
@@ -366,6 +367,12 @@ static NSString *preferencesId = @"com.matchstic.xenhtml.libwidgetinfo";
     [result setObject:comms forKey:[XENDCommsDataProvider providerNamespace]];
     if (currentCachedDynamicState && [comms.cachedDynamicProperties isEqualToDictionary:@{}])
         comms.cachedDynamicProperties = [currentCachedDynamicState objectForKey:[XENDCommsDataProvider providerNamespace]];
+    
+    XENDRemindersProvider *reminders = [[XENDRemindersProvider alloc] init];
+    [reminders registerDelegate:self];
+    [result setObject:reminders forKey:[XENDRemindersProvider providerNamespace]];
+    if (currentCachedDynamicState && [reminders.cachedDynamicProperties isEqualToDictionary:@{}])
+        reminders.cachedDynamicProperties = [currentCachedDynamicState objectForKey:[XENDRemindersProvider providerNamespace]];
     
     return result;
 }

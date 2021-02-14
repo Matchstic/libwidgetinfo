@@ -52,5 +52,7 @@
 	</array>
 	<key>NSCalendarsUsageDescription</key>
 	<string>DEBUG</string>
+	<key>NSRemindersUsageDescription</key>
+	<string>DEBUG</string>
 </dict>
 </plist>

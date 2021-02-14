@@ -98,6 +98,15 @@ static void onSpringBoardLaunch(CFNotificationCenterRef center, void *observer, 
     
     NSURLRequest *request = nil;
     
+    /*
+     * Hello future human!
+     *
+     * The general idea here is to read Apple's weather.com API from memory. I fully expect this
+     * to become impossible at some point, at which point there are two choices. 1) fully replace the
+     * entire weather API (which is a ton of work), or b) find the API key in Weather.framework from an older
+     * iOS version, and embed it here.
+     */
+    
     // iOS 13+
     if (objc_getClass("WFWeatherChannelRequestFormatterV2")) {
         // Specify a geocode request specifically

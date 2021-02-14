@@ -116,8 +116,6 @@
             @"upcomingWeekEvents": array
         } mutableCopy];
         [self notifyWidgetManagerForNewProperties];
-        
-        NSLog(@"refreshed events");
     });
 }
 
@@ -210,6 +208,11 @@
     
     NSString *eventId = [data objectForKey:@"id"];
     EKEvent *event = [self.store eventWithIdentifier:eventId];
+    if (!event) {
+        return @{
+            @"error": BAD_REQUEST
+        };
+    }
     
     NSError *error;
     [self.store removeEvent:event span:EKSpanThisEvent error:&error];
@@ -338,28 +341,8 @@
     return @{
         @"id": calendar.calendarIdentifier,
         @"name": [self escapeString:calendar.title],
-        @"color": [self _hexStringFromColor:calendar.CGColor],
+        @"color": [self hexStringFromColor:calendar.CGColor],
     };
-}
-
-/**
- Converts a colour ref into a hex string
- */
-- (NSString *)_hexStringFromColor:(CGColorRef)color {
-    if (!color) {
-        return @"#000000";
-    }
-    
-    const CGFloat *components = CGColorGetComponents(color);
-    
-    CGFloat r = components[0];
-    CGFloat g = components[1];
-    CGFloat b = components[2];
-    
-    return [NSString stringWithFormat:@"#%02lX%02lX%02lX",
-            lroundf(r * 255),
-            lroundf(g * 255),
-            lroundf(b * 255)];
 }
 
 @end

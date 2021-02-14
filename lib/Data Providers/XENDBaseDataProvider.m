@@ -14,6 +14,8 @@
 **/
 
 #import "XENDBaseDataProvider.h"
+#import <Foundation/Foundation.h>
+#import <CoreGraphics/CoreGraphics.h>
 
 @implementation XENDBaseDataProvider
 
@@ -86,6 +88,23 @@
     input = [input stringByReplacingOccurrencesOfString: @"\"" withString:@"\\\""];
     
     return input;
+}
+
+- (NSString *)hexStringFromColor:(CGColorRef)color {
+    if (!color) {
+        return @"#000000";
+    }
+    
+    const CGFloat *components = CGColorGetComponents(color);
+    
+    CGFloat r = components[0];
+    CGFloat g = components[1];
+    CGFloat b = components[2];
+    
+    return [NSString stringWithFormat:@"#%02lX%02lX%02lX",
+            lroundf(r * 255),
+            lroundf(g * 255),
+            lroundf(b * 255)];
 }
 
 - (void)notifyWidgetManagerForNewProperties {

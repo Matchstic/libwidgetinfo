@@ -119,6 +119,8 @@
 		C9BFD61723C154BD001F46F2 /* XTWCDailyForecast.m in Sources */ = {isa = PBXBuildFile; fileRef = C9BFD61623C154BD001F46F2 /* XTWCDailyForecast.m */; };
 		C9DBDBA6244C7C12009E855E /* XENDNaturalConditionGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = C9DBDBA5244C7C12009E855E /* XENDNaturalConditionGenerator.m */; };
 		C9DBDBB4244C967A009E855E /* XENDLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = C9DBDBB2244C9679009E855E /* XENDLogger.m */; };
+		C9E9621125D95ED800AA9E4E /* XENDRemindersProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = C9E9620F25D95ED800AA9E4E /* XENDRemindersProvider.h */; };
+		C9E9621225D95ED800AA9E4E /* XENDRemindersProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = C9E9621025D95ED800AA9E4E /* XENDRemindersProvider.m */; };
 		C9F26020240581FF003A5A85 /* XENDWeatherHooks.m in Sources */ = {isa = PBXBuildFile; fileRef = C9F2601F240581FF003A5A85 /* XENDWeatherHooks.m */; };
 		C9F2F3822301BE4100E4863B /* IS2PreProcessor.mm in Sources */ = {isa = PBXBuildFile; fileRef = C9F2F3592301BE4100E4863B /* IS2PreProcessor.mm */; };
 		C9F2F3842301BE4100E4863B /* Compile.hpp in Headers */ = {isa = PBXBuildFile; fileRef = C9F2F35C2301BE4100E4863B /* Compile.hpp */; };
@@ -353,6 +355,8 @@
 		C9DBDBA5244C7C12009E855E /* XENDNaturalConditionGenerator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XENDNaturalConditionGenerator.m; path = "daemon/Data Providers/Weather/XENDNaturalConditionGenerator.m"; sourceTree = SOURCE_ROOT; };
 		C9DBDBB2244C9679009E855E /* XENDLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XENDLogger.m; sourceTree = "<group>"; };
 		C9DBDBB3244C9679009E855E /* XENDLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XENDLogger.h; sourceTree = "<group>"; };
+		C9E9620F25D95ED800AA9E4E /* XENDRemindersProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XENDRemindersProvider.h; sourceTree = "<group>"; };
+		C9E9621025D95ED800AA9E4E /* XENDRemindersProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XENDRemindersProvider.m; sourceTree = "<group>"; };
 		C9F132FC247D9BF700EACE93 /* PrivateHeaders.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrivateHeaders.h; sourceTree = "<group>"; };
 		C9F2601E240581FF003A5A85 /* XENDWeatherHooks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XENDWeatherHooks.h; path = "daemon/Data Providers/Weather/XENDWeatherHooks.h"; sourceTree = SOURCE_ROOT; };
 		C9F2601F240581FF003A5A85 /* XENDWeatherHooks.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XENDWeatherHooks.m; path = "daemon/Data Providers/Weather/XENDWeatherHooks.m"; sourceTree = SOURCE_ROOT; };
@@ -786,6 +790,15 @@
 			path = Shared;
 			sourceTree = "<group>";
 		};
+		C9E9620E25D95EC800AA9E4E /* Reminders */ = {
+			isa = PBXGroup;
+			children = (
+				C9E9620F25D95ED800AA9E4E /* XENDRemindersProvider.h */,
+				C9E9621025D95ED800AA9E4E /* XENDRemindersProvider.m */,
+			);
+			path = Reminders;
+			sourceTree = "<group>";
+		};
 		C9F2F3312301BE1E00E4863B = {
 			isa = PBXGroup;
 			children = (
@@ -902,6 +915,7 @@
 		C9F2F4062301C34A00E4863B /* Data Providers */ = {
 			isa = PBXGroup;
 			children = (
+				C9E9620E25D95EC800AA9E4E /* Reminders */,
 				C92C795E25D8100A00E73E1A /* Communications */,
 				C98B0F5925D486FD00E28CF8 /* Calendar */,
 				C907D952259E7BCB0068EA3B /* Filesystem */,
@@ -989,6 +1003,7 @@
 				C9F2F3972301BE4100E4863B /* Local.hpp in Headers */,
 				C91F402E242FB1DA00E30466 /* util.h in Headers */,
 				C91F3FAB242FA9B100E30466 /* OGDocument.h in Headers */,
+				C9E9621125D95ED800AA9E4E /* XENDRemindersProvider.h in Headers */,
 				C9F2F3982301BE4100E4863B /* String.hpp in Headers */,
 				C91F4037242FB1DA00E30466 /* tag_strings.h in Headers */,
 				C91F3F9E242FA9B100E30466 /* OGNode.h in Headers */,
@@ -1173,6 +1188,7 @@
 				C9478BF22441D2DB00677E31 /* XENDLibraryURLHandler.m in Sources */,
 				C91F4035242FB1DA00E30466 /* parser.c in Sources */,
 				C9F2F40D2301C3A200E4863B /* WKWebView_WidgetData.m in Sources */,
+				C9E9621225D95ED800AA9E4E /* XENDRemindersProvider.m in Sources */,
 				C91F3FA9242FA9B100E30466 /* ObjectiveGumbo.m in Sources */,
 				C99BBEFB24670F9300A6F426 /* XENDApplicationsDataProvider.m in Sources */,
 				C9F2F38B2301BE4100E4863B /* Replace.cpp in Sources */,

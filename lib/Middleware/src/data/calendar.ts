@@ -345,8 +345,8 @@ export default class Calendar extends Base implements CalendarProperties {
      * // Example calendar ID
      * const id = 'abc';
      *
-     * api.calendar.lookupCalendar(id).then((event) => {
-     *     console.log(event.name);
+     * api.calendar.lookupCalendar(id).then((calendar) => {
+     *     console.log(calendar.name);
      * }).catch(() => {
      *     // Handle error
      * });
