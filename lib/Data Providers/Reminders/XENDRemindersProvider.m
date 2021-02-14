@@ -328,6 +328,8 @@
     NSError *error;
     [self.store saveReminder:newReminder commit:YES error:&error];
     
+    [self refresh];
+    
     return @{
         @"id": error ? @"" : newReminder.calendarItemIdentifier,
         @"error": OK
@@ -358,6 +360,8 @@
     NSError *error;
     [self.store saveReminder:reminder commit:YES error:&error];
     
+    [self refresh];
+    
     return @{
         @"success": @(!error),
         @"error": OK
@@ -382,6 +386,8 @@
     
     NSError *error;
     [self.store removeReminder:reminder commit:YES error:&error];
+    
+    [self refresh];
     
     return @{
         @"success": @(!error),
