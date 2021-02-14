@@ -5,22 +5,29 @@ import { Base, DataProviderUpdateNamespace } from '../types';
  */
 enum FilesystemErrorCode {
     /**
+     * Equals -3
+     *
      * Reading a file failed since it doesn't exist
      */
     MissingFile     = -3,
 
     /**
+     * Equals -2
      * Missing data was expected by the filesystem API
      */
     BadRequest      = -2,
 
     /**
+     * Equals -1
+     *
      * Usually raised when trying to read a file outside /var/mobile,
      * or writing/deleting a file when not running inside SpringBoard
      */
     SecurityError   = -1,
 
     /**
+     * Equals 0
+     *
      * Default - no problems
      */
     OK              = 0
