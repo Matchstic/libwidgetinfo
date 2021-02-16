@@ -22,11 +22,8 @@
 #define BAD_REQUEST     @-1
 #define OK              @0
 
-#define MANUAL_UPDATE_INTERVAL 3600
-
 @interface XENDRemindersProvider ()
 @property (nonatomic, strong) EKEventStore *store;
-@property (nonatomic, strong) NSTimer *updateTimer;
 @end
 
 @implementation XENDRemindersProvider
@@ -48,7 +45,7 @@
 #endif
     
     // First update and setup manual update timer
-    [self restartUpdates];
+    [self refresh];
 }
 
 - (void)didReceiveWidgetMessage:(NSDictionary*)data functionDefinition:(NSString*)definition callback:(void(^)(NSDictionary*))callback {
@@ -78,31 +75,10 @@
     [self refresh];
 }
 
-- (void)noteDeviceDidEnterSleep {
-    // Stop updates
-    [self.updateTimer invalidate];
-    self.updateTimer = nil;
-}
-
-- (void)noteDeviceDidExitSleep {
-    // Restart updates
-    [self restartUpdates];
-}
-
-- (void)restartUpdates {
-    // Do initial update
-    [self _remindersUpdateNotificationRecieved:nil];
-    
-    // Restart timer
-    self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:MANUAL_UPDATE_INTERVAL target:self selector:@selector(_remindersUpdateNotificationRecieved:) userInfo:nil repeats:YES];
-}
-
 #pragma mark Private
 
 - (void)refresh {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
-        [self.updateTimer invalidate];
-        
         // Get pending reminders
         [self _pendingRemindersWithCompletion:^(NSArray *reminders) {
             // Parse reminders
@@ -199,7 +175,7 @@
     
     // Fetch all that match the predicate
     [self.store fetchRemindersMatchingPredicate:predicate completion:^(NSArray *reminders) {
-        completionHandler(reminders);
+        completionHandler([reminders copy]);
     }];
 }
 
