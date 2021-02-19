@@ -8,6 +8,7 @@ import XenInfoMedia from './media-compat';
 import XenInfoEvents from './events-compat';
 import XenInfoStatusbar from './statusbar-compat';
 import XenInfoReminders from './reminders-compat';
+import XenInfoAlarms from './alarms-compat';
 
 /**
  * @ignore
@@ -29,6 +30,7 @@ export default class XenInfoMiddleware implements XenHTMLMiddleware {
         this.compat.push(new XenInfoEvents(this.providers, this.notifyXenInfoDataChanged));
         this.compat.push(new XenInfoStatusbar(this.providers, this.notifyXenInfoDataChanged));
         this.compat.push(new XenInfoReminders(this.providers, this.notifyXenInfoDataChanged));
+        this.compat.push(new XenInfoAlarms(this.providers, this.notifyXenInfoDataChanged));
     }
 
     public onFirstUpdate() {
