@@ -122,6 +122,9 @@ interface FilesystemMetadata {
  *
  * All functions provided can be called at any time in your scripts.
  *
+ * You can also use the Fileystem API to create your own Settings UI inside your widget. This gives you
+ * full control over the presentation of settings, and to apply any logic as needed.
+ *
  * <b>Available in Xen HTML 2.0~beta6 or newer</b>
  */
 export default class Filesystem extends Base {
@@ -199,7 +202,7 @@ export default class Filesystem extends Base {
      * is automatically translated from JSON into plist format for you. Make sure to set the
      * <code>mimetype</code> parameter to switch between these two options.
      *
-     * If the file your path points to doesn't exist, this will error.
+     * If any parent folder in your path doesn't exist, this will error.
      *
      * The return type is a Promise, which either resolves to <code>true</code>, or rejects with an error code
      * (listed in {@link FilesystemErrorCode})
@@ -428,5 +431,68 @@ export default class Filesystem extends Base {
                 }
             });
         });
+    }
+
+    private preferencesPath() {
+        return '/var/mobile/Library/Preferences';
+    }
+
+    /**
+     * This is a helper function around read() that loads JSON-based preferences for a given
+     * identifier.
+     *
+     * If no preferences exist, this will give you an empty object.
+     *
+     * Using this allows you to write your own Settings interface inside your widget.
+     *
+     * The return type is a Promise, which either resolves to your data, or rejects with an error code
+     * (listed in {@link FilesystemErrorCode})
+     *
+     * @example
+     *
+     * <script>
+     * api.fs.preferencesLoad('com.example.widget').then((preferences) => {
+     *     // assuming preferences is an object like: { size: 10 }
+     *     console.log(preferences.size);
+     * }).catch((error) => {
+     *     // Handle error when loading
+     * });
+     * </script>
+     *
+     * @param identifier A unique identifier for your widget. e.g., "com.example.widget"
+     */
+    public async preferencesLoad(identifier: string): Promise<any> {
+        const path = `${this.preferencesPath()}/${identifier}.json`;
+        try {
+            return await this.read(path);
+        } catch (e) {
+            return {};
+        }
+    }
+
+    /**
+     * This is a helper function around write() that stores JSON-based preferences for a given
+     * identifier. The storage location can be backed up automatically to iCloud, the same way
+     * tweak preferences are.
+     *
+     * Using this allows you to write your own Settings interface inside your widget.
+     *
+     * The return type is a Promise, which either resolves to <code>true</code>, or rejects with an error code
+     * (listed in {@link FilesystemErrorCode})
+     *
+     * @example
+     *
+     * <script>
+     * api.fs.preferencesWrite('com.example.widget', { size: 10 }).catch((error) => {
+     *     // Handle error when saving preferences
+     * });
+     * </script>
+     *
+     * @param identifier A unique identifier for your widget. e.g., "com.example.widget"
+     * @param object JSON object to store
+     */
+    public async preferencesWrite(identifier: string, object: any): Promise<boolean> {
+        const path = `${this.preferencesPath()}/${identifier}.json`;
+        return this.write(path, object);
     }
 }
