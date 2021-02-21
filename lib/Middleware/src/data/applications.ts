@@ -53,8 +53,6 @@ export interface ApplicationsProperties {
  *
  * This includes both user-installed and system apps, which includes those installed by a package manager.
  *
- * <b>Available in Xen HTML 2.0~beta2 or newer</b>
- *
  * @example
  * <script>
  * api.apps.observeData(function(newData) {

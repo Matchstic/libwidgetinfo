@@ -130,8 +130,6 @@ export interface CalendarProperties {
  * You can request a list of events occuring in specific timeframes, optionally filtered by
  * the calendars available in-app. Additionally, you can create new events or delete existing
  * ones.
- *
- * <b>Available in Xen HTML 2.0~beta7 or newer</b>
  */
 export default class Calendar extends Base implements CalendarProperties {
 

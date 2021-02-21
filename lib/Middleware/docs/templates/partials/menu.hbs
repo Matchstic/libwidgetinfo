@@ -56,13 +56,11 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                     {{#compare depth "===" 1 }}
                                     <li class="chapter inner">
                                         <a data-type="chapter-link" href="{{path}}/{{filename}}.html" data-context-id="additional">
-                                            <div class="menu-toggler linked" data-toggle="collapse" ${ isNormalMode ?
-                                            'data-target="#additional-page-{{id}}"' : 'data-target="#xs-additional-page-{{id}}"' }>
+                                            <div class="menu-toggler linked">
                                                 <span class="link-name"><span class="icon ion-ios-paper"></span>{{ name }}</span>
-                                                <span class="icon ion-ios-arrow-down"></span>
                                             </div>
                                         </a>
-                                        <ul class="links collapse" ${ isNormalMode ? 'id="additional-page-{{id}}"' : 'id="xs-additional-page-{{id}}"' }>
+                                        <ul class="links">
                                             {{#each children}}
                                             <li class="link {{#compare depth ">" 1 }}for-chapter{{depth}}{{/compare}}">
                                                 <a href="{{path}}/{{filename}}.html" data-type="entity-link" data-context="sub-entity" data-context-id="additional">{{ name

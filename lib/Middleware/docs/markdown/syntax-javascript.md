@@ -1,4 +1,4 @@
-## Syntax: Callback-based
+## Syntax: JavaScript
 ### Description
 
 You are free to interact with the Xen HTML API through pure JavaScript. This is typically done through registering callback functions, which are then executed whenever data changes.
@@ -32,14 +32,15 @@ It is important to be aware that widget data is loaded asynchronously; it is **n
 
 When building widgets to be callback-based, it is assumed that you have an understanding of how JavaScript works. Particularly, you should know how to work with the following data types:
 
-- number
-- string
-- boolean
-- Date
-- object
+- `number`
+- `string`
+- `boolean`
+- `Date`
+- `object`
 
 If not, it's easy to learn! Since widgets are effectively webpages, you can use any resource that teaches how to work with JavaScript. Recommended resources are as follows:
 
 - [W3Schools](https://www.w3schools.com/)
 - [Mozilla web docs (MDN)](https://developer.mozilla.org/en-US/)
 
+Of course, you can skip these resources and dive right in! The provided [example widgets](widget-setup/examples.html) show you the basics on how to work with these types.

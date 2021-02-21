@@ -6,19 +6,19 @@ In all widgets, you have access to the `api` object in the global namespace. Thi
 
 ### Syntax
 
-The Xen HTML API provides two approaches for interaction: **[Inline](additional-documentation/syntax:-inline-data.html)**, and **[Callback-based](additional-documentation/syntax:-callback-based.html)**.
+The Xen HTML API provides two approaches for interaction: **[Inline](additional-documentation/syntax:-inline-data.html)**, and **[JavaScript](additional-documentation/syntax:-javascript.html)**.
 
 Both can be used interchangably inside the same widget.
 
-Through the use of the new **Inline Syntax**, you can build widgets that can fit in a single Tweet:
+The **JavaScript Syntax** is the approach all developers will be used to; writing code to interact with an API. It relies on the idea of callbacks to notify your code when new data is available, for you to then handle appropriately.
+
+In constrast, the new **Inline Syntax** uses the idea of data binding. It allows you to build widgets that can fit in a single Tweet:
 
 ```html
 <html><head></head><body><p>{ weather.now.temperature.current }</p></body></html>
 ```
 
 The end result is that you no longer have to rely on JavaScript to write widgets, with basic implementations just requiring HTML and CSS.
-
-Also available is the **Callback-based Syntax**, which allows you to write fully JavaScript-based widgets.
 
 ### Other features and improvements
 
@@ -28,8 +28,10 @@ A number of other features and improvements are also made available through the 
     - This allows for sharing resources between widgets, such as icons and backgrounds
 - [Logging](additional-documentation/logging.html)
     - Access real-time logs from your widgets
-- [Widget Layout](additional-documentation/widget-layout.html)
+- [Widget Layout](additional-documentation/widget-setup/layout.html)
     - A central (and organised) folder on the filesystem to install widgets
+- [Improved Configuration](additional-documentation/widget-setup/configuration.html)
+    - Simplified settings interfaces for widgets
 - [URL Scheme Handling](additional-documentation/url-scheme-handling.html)
     - Open URLs in Safari and deep link to installed apps
 
@@ -37,7 +39,7 @@ A number of other features and improvements are also made available through the 
 
 A number of example widgets are available to use for learning the API, or simply to use on a daily basis.
 
-After installing Xen HTML, these can be found at `/var/mobile/Library/Widgets/Universal`. More information can be found [here](additional-documentation/example-widgets.html)
+After installing Xen HTML, these can be found at `/var/mobile/Library/Widgets/Universal`. More information can be found [here](additional-documentation/widget-setup/examples.html)
 
 ### Backwards compatibility
 

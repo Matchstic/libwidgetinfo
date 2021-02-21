@@ -144,8 +144,6 @@ export interface RemindersProperties {
  *
  * You are able to query for both pending and completed reminders, can create/delete reminders, and
  * additionally mark them as completed or not.
- *
- * <b>Available in Xen HTML 2.0~beta7 or newer</b>
  */
 export default class Reminders extends Base implements RemindersProperties {
 

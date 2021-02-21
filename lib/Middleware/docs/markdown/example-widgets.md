@@ -17,3 +17,4 @@ These are available in the different sub-folders of `/var/mobile/Library/Widgets
 | Apps \| List           | Callback    | Applications        |
 | Bluetooth \| Connected | Callback    | Communications      |
 | Calendar \| Up Next    | Callback    | Calendar            |
+| Reminders \| Pending   | Callback    | Reminders           |

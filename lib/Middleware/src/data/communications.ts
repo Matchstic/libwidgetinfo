@@ -174,8 +174,6 @@ export interface CommunicationsProperties {
  * Additionally, there is up to a 5 second lag between changing a setting, and it being reflected inside
  * widgets.
  *
- * <b>Available in Xen HTML 2.0~beta7 or newer</b>
- *
  * @example
  * Pure Javascript:
  * <script>

@@ -1,5 +1,15 @@
 [
     {
+        "title": "Syntax: JavaScript",
+        "file": "syntax-javascript.md",
+        "children": [
+            {
+                "title": "Native APIs",
+                "file": "native-js.md"
+            }
+        ]
+    },
+    {
         "title": "Syntax: Inline Data",
         "file": "syntax-inline.md",
         "children": [
@@ -14,32 +24,34 @@
         ]
     },
     {
-        "title": "Syntax: Callback-based",
-        "file": "syntax-callback-based.md"
-    },
-    {
-        "title": "Widget Layout",
-        "file": "widget-layout.md"
+        "title": "Widget Setup",
+        "file": "widget-setup.md",
+        "children": [
+            {
+                "title": "Layout",
+                "file": "widget-layout.md"
+            },
+            {
+                "title": "Configuration",
+                "file": "configuration.md"
+            },
+            {
+                "title": "Examples",
+                "file": "example-widgets.md"
+            }
+        ]
     },
     {
         "title": "Resource Packs",
         "file": "resource-packs.md"
     },
     {
-        "title": "Logging",
-        "file": "logging.md"
-    },
-    {
         "title": "URL Scheme Handling",
         "file": "url-schemes.md"
     },
     {
-        "title": "Example Widgets",
-        "file": "example-widgets.md"
-    },
-    {
-        "title": "Native JavaScript APIs",
-        "file": "native-js.md"
+        "title": "Logging",
+        "file": "logging.md"
     },
     {
         "title": "Emulation",

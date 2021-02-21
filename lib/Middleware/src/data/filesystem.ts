@@ -124,8 +124,6 @@ interface FilesystemMetadata {
  *
  * You can also use the Fileystem API to create your own Settings UI inside your widget. This gives you
  * full control over the presentation of settings, and to apply any logic as needed.
- *
- * <b>Available in Xen HTML 2.0~beta6 or newer</b>
  */
 export default class Filesystem extends Base {
 
