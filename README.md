@@ -24,6 +24,8 @@ Support for the following older widget data libraries is as follows:
 
 This is currently only built for Xen HTML to integrate with. Using it in other tweaks really doesn't work right now; it'll lead to at least two instances of the daemon running, and class name clashes inside applications. You'll also have issues with `dpkg` trying to overwrite `libwidgetinfo.js`.
 
+However, if Xen HTML is not installed, everything will be happy.
+
 ### Layout
 
 Anything running inside the process hosting a `WKWebView` is in `lib`.
@@ -76,11 +78,18 @@ int main (int argc, const char * argv[]) {
     - Run `yarn package`
     - Copy `libwidgetinfo/lib/Middleware/build/libwidgetinfo.js` to `/Library/Application Support/Widgets/` in the end `.deb`
     
+8. Generate documentation:
+
+    - Install `npm` and `yarn`
+    - `cd` to `libwidgetinfo/lib/Middleware`
+    - Run `yarn docs`
+    - Generated docs are then inside `libwidgetinfo/lib/Middleware/build/docs`
+    
 ### Testbed
     
 The Testbed Xcode project allows for running libwidgetinfo in a Simulated mode.
 
-This works out of the box, but you will need to update ViewController.m to point to a widget on your local filesystem.
+This works out of the box, but you will need to update `ViewController.m` to point to a widget on your local filesystem.
 
 ### Third-party Software
 
