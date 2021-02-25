@@ -657,6 +657,8 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
     BOOL isDayTime = [nowDate compare:sunriseDate] == NSOrderedDescending &&
                      [nowDate compare:sunsetDate] == NSOrderedAscending;
     
+    BOOL locationNull = [location isEqual:[NSNull null]] || !location;
+    
     // See: https://www.worldcommunitygrid.org/lt/images/climate/The_Weather_Company_APIs.pdf
     // This includes full descriptions for every field for documentation
     NSDictionary *now = @{
@@ -681,8 +683,8 @@ FOUNDATION_EXPORT NSLocaleKey const NSLocaleTemperatureUnit  __attribute__((weak
                             dayForecasts:dailyPredictions
                             hourForecasts:hourlyPredictions
                             isDay:isDayTime
-                            latitude:location.coordinate.latitude
-                            longitude:location.coordinate.longitude
+                            latitude:locationNull ? 0 : location.coordinate.latitude
+                            longitude:locationNull ? 0 : location.coordinate.longitude
                             sunrise:prediction.sunRiseISOTime
                             sunset:prediction.sunSetISOTime
                             units:[self _units]]
