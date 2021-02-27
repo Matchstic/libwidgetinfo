@@ -3,7 +3,7 @@
 
 Developing widgets directly on a device can be difficult.
 
-As part of the Xen HTML API, a script is made available to you that you can add into widgets during development. This hooks up a set of default data which you can then use (and modify) to develop your widgets.
+As part of the Xen HTML API, a script is made available to you that you can add into widgets during development. This hooks up a set of default data which you can then use (and modify) to develop your widgets. It also hooks up the widget configuration as detailed [here](widget-setup/configuration.html)
 
 The latest release of it can be downloaded from [here](https://raw.githubusercontent.com/Matchstic/libwidgetinfo/master/emulation/emulation.js).
 
