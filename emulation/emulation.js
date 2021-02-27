@@ -1,6 +1,6 @@
 /**
  * Name: emulation.js
- * Version: 0.0.3
+ * Version: 0.0.4
  *
  * This script is to allow testing of XH2-based widgets in a desktop browser.
  *
@@ -23,12 +23,55 @@
  * ______ WARNING: You MUST remove this script before releasing your widget! _______
  */
 
-// Change this configuration to load different weather conditions
-const configuration = {
-    weather: {
-        city: 'san_francisco',   // Options: san_francisco, london
-        units: 'metric'          // Options: metric, imperial
-    }
+//////////////////////////////////////////////////////////////////////
+// Your widget configuration
+//
+// This is where you define any options you have inside config.json to
+// be loaded automatically into your widget.
+//
+// More info here: https://incendo.ws/documentation/widget-api/additional-documentation/widget-setup/configuration.html
+//////////////////////////////////////////////////////////////////////
+
+const widgetConfiguration = {
+    'variableOne': 'xyz',
+    'variableTwo': true
+};
+
+/**
+ * The config above works for a config.json set out as follows:
+ *
+ * {
+ *     name: "Your Name",
+ *     options: [
+ *          {
+ *              type: "text",
+ *              text: "Text input",
+ *              key: "variableOne",
+ *              default: ""
+ *          },
+ *          {
+ *              type: "switch",
+ *              text: "Switch input",
+ *              key: "variableTwo",
+ *              default: false
+ *          }
+ *     ]
+ * }
+ *
+ * The key of each variable goes on the left in widgetConfiguration,
+ * and the value you want it to have on the right.
+ *
+ * Basically, you fill in widgetConfiguration, and all your code that expects `config.<thing>` works,
+ * assuming that <thing> is present.
+ */
+
+//////////////////////////////////////////////////////////////////////
+// Weather configuration
+//////////////////////////////////////////////////////////////////////
+
+const weatherConfig = {
+    city: 'san_francisco',   // Options: san_francisco, london
+    units: 'metric'          // Options: metric, imperial
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -7059,14 +7102,14 @@ const imperial_weather = {
 //////////////////////////////////////////////////////////////////////
 
 if (window.api !== undefined) {
-    console.error('emulation.js :: Detected that Xen Widget API is available, aborting emulation.');
+    console.error('emulation.js :: Detected that Xen Widget API is available, stopping emulation.');
 } else {
     function applyCallbacks(provider) {
         provider._callbacks.forEach(function(fn) {
             fn(provider);
         });
     }
-    
+
     let hasSeenLoad = false;
     var api = {
         weather: {
@@ -7315,7 +7358,7 @@ if (window.api !== undefined) {
                     api.calendar.upcomingWeekEvents = events.filter((event) => {
                         return event.start <= Date.now() + (60 * 60 * 24 * 7 * 1000)
                     });
-                    
+
                     applyCallbacks(api.calendar);
 
                     resolve(newEvent.id);
@@ -7338,7 +7381,7 @@ if (window.api !== undefined) {
                         api.calendar.upcomingWeekEvents = events.filter((event) => {
                             return event.start <= Date.now() + (60 * 60 * 24 * 7 * 1000)
                         });
-                        
+
                         applyCallbacks(api.calendar);
 
                         resolve(true);
@@ -7362,6 +7405,9 @@ if (window.api !== undefined) {
         }
     };
 
+    // Config
+    var config = widgetConfiguration;
+
     // Apply configuration
     api.system = Object.assign(api.system, system);
     api.resources = Object.assign(api.resources, resources);
@@ -7384,7 +7430,7 @@ if (window.api !== undefined) {
         })
     });
 
-    const payload = configuration.weather.units === 'imperial' ? imperial_weather[configuration.weather.city] : metric_weather[configuration.weather.city];
+    const payload = weatherConfig.units === 'imperial' ? imperial_weather[weatherConfig.city] : metric_weather[weatherConfig.city];
 
     // Convert all weather timestamps to Date
     function datestringToInstance(str) {
