@@ -33,6 +33,38 @@ To allow for existing widgets using older systems to function correctly, your wi
 
 The `options` key is where you specify configuration for your widget, that is then shown to the user when applying your widget. This is designed to be flexible - you can even specify nested pages of settings for organisation if you need to.
 
+Here's an idea of what you can build:
+
+![All options](everything.gif)
+
+<hr />
+
+#### **Example and Local Development**
+
+An example widget that shows how to use every possible field, and access them in code, **[is available here](https://incendo.ws/files/config-example-widget.zip)**.
+
+**As described in [Emulation](../emulation.html), widget configuration can be used during development off-device**. Simply update the appropriate section of the script provided on that page with your configuration options, then your code will be able to pick it up.
+
+<hr />
+
+#### **Basics**
+
+Every row in widget settings you display to the user needs to have two properties:
+
+| Property | Usage                        |
+|----------|------------------------------|
+| type     | The type of the row.         |
+| text     | Text to display for the row. |
+
+All rows that set values into your code have two more common properties:
+
+| Property | Usage                                                                                                 |
+|----------|-------------------------------------------------------------------------------------------------------|
+| key      | The variable name in code that this row should map to. For example, setting `key` to `test` will be accessible as `config.test` in your widget code |
+| default  | A default value that is given to your code for the `key` field if the user doesn't fill it in |
+
+All possible row types below have an associated example with them. The usage in code sections all use the `const` JavaScript keyword. If you've not encountered this before, think of it as a `var` that cannot be modified.
+
 A simple example of a widget that has one toggle switch for a setting:
 
 ```json
@@ -62,30 +94,6 @@ if (config.switchOne) {
 ```
 
 Notice how the `key` property of the switch matches up to the code.
-
-#### **Example and Local Development**
-
-An example widget that shows how to use every possible field, and access them in code, [is available here](https://incendo.ws/files/config-example-widget.zip).
-
-As described in [Emulation](../emulation.html), widget configuration can be used during development off-device. Simply update the appropriate section of the script provided on that page with your configuration options, then your code will be able to pick it up.
-
-#### **Basics**
-
-Every row in widget settings you display to the user needs to have two properties:
-
-| Property | Usage                        |
-|----------|------------------------------|
-| type     | The type of the row.         |
-| text     | Text to display for the row. |
-
-All rows that set values into your code have two more common properties:
-
-| Property | Usage                                                                                                 |
-|----------|-------------------------------------------------------------------------------------------------------|
-| key      | The variable name in code that this row should map to. For example, setting `key` to `test` will be accessible as `config.test` in your widget code |
-| default  | A default value that is given to your code for the `key` field if the user doesn't fill it in |
-
-All possible row types below have an associated example with them. The usage in code sections all use the `const` JavaScript keyword. If you've not encountered this before, think of it as a `var` that cannot be modified.
 
 <hr />
 
@@ -168,6 +176,39 @@ The `comment` row is a way to add informative text below a row. This helps users
 ![Comment example](comment.png)
 
 *An additional switch row is shown here to give some context of how it'll look in real-world usage.*
+
+<hr />
+
+#### **`link`**
+
+The `link` row is a way to add links to websites and apps into your widget settings. This is useful to, for example, link to your social media accounts. Alternatively, you could link to a bug tracking page for users to record any issues with your widget.
+
+**Properties:**
+
+| Property | Required | Usage                        |
+|----------|----------|------------------------------|
+| type     |   yes    | Set to `link`                |
+| text     |   yes    | The text describing the link |
+| url      |   yes    | The URL the link points to   |
+
+**Example:**
+
+```json
+{
+    "name": "Config Example",
+    "options": [
+        {
+            "type": "link",
+            "text": "Link to Google",
+            "url": "https://google.com"
+        }
+    ]
+}
+```
+
+**Screenshot:**
+
+![Link example](link.png)
 
 <hr />
 
@@ -329,7 +370,7 @@ Auto-correct is disabled on the keyboard, and the first character will be capita
         {
             "type": "text",
             "text": "Plain text field",
-            "default": "Hello",
+            "default": "Hello World",
             "key": "textPlain",
             "placeholder": "Example"
         },
@@ -646,12 +687,10 @@ This example has an extra text input field above the `page` row, and a few rows 
 
 ### Legacy Widget Configuration
 
-Widget preferences are currently using existing legacy systems, meaning that a new preferences API will become available as part of the new `config.json` system. This will be in beta 8.
-
-Right now, the following preference systems are respected in the Settings app:
+Existing legacy systems for widget settings are supported for widgets that need them. These are as follows:
 
 - `Options.plist`
-    - The widget must either be installed in the `iWidgets` folder, or in any of the [Install Locations](layout.html)
+    - The widget must be installed in the `iWidgets` folder
 - `config.js` (case in-sensitive)
     - Will be loaded as a fallback if `Options.plist` cannot be found
 
