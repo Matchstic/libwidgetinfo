@@ -29,6 +29,14 @@ For now, the following keys are recognised:
 
 To allow for existing widgets using older systems to function correctly, your widget must be installed in any of the [Install Locations](layout.html) for this file to be read.
 
+#### **Example and Local Development**
+
+An example widget that shows how to use every possible field, and access them in code, **[is available here](https://incendo.ws/files/config-example-widget.zip)**.
+
+**As described in [Emulation](../emulation.html), widget configuration can be used during development off-device**. Simply update the appropriate section of the script provided on that page with your configuration options, then your code will be able to pick it up.
+
+<hr />
+
 ### `options`
 
 The `options` key is where you specify configuration for your widget, that is then shown to the user when applying your widget. This is designed to be flexible - you can even specify nested pages of settings for organisation if you need to.
@@ -36,14 +44,6 @@ The `options` key is where you specify configuration for your widget, that is th
 Here's an idea of what you can build:
 
 ![All options](everything.gif)
-
-<hr />
-
-#### **Example and Local Development**
-
-An example widget that shows how to use every possible field, and access them in code, **[is available here](https://incendo.ws/files/config-example-widget.zip)**.
-
-**As described in [Emulation](../emulation.html), widget configuration can be used during development off-device**. Simply update the appropriate section of the script provided on that page with your configuration options, then your code will be able to pick it up.
 
 <hr />
 
