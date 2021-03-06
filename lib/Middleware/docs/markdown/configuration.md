@@ -537,6 +537,7 @@ This supports setting a variable that expects strings, or numbers.
 | key         |   yes    | The variable in your code the option picker should map onto                              |
 | default     |   yes    | Default value of the color picker. This can be either a string or number, but needs to match any of the `value` fields inside the `options` property |
 | options     |   yes    | A pre-defined array of options the user can choose between. Each entry follows the scheme:<br/><br/>• `text` - the text shown to the user to represent this option<br/>• `value` - the value (either a string or number) that this option represents. If this option is selected, this field gets passed into your code |
+| comment     |    no    | A comment that is displayed below the pre-defined array of options. Similarly to the `comment` type, you can use `\n` to create newlines in your comment. |
 
 **Example:**
 
