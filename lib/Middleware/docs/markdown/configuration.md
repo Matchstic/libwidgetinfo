@@ -428,7 +428,7 @@ document.getElementById('movable-element').style.left = (config.sliderVariable *
 
 The `color` row provides an easy way for users to select a color, with a visual picker. This allows for selecting from a color wheel, adjusting brightness of the color, as well as manually defining RGB values and a hex code.
 
-The chosen color is provided to your code as a 6-character hex string, for example: `#AA66DD`.
+The chosen color is provided to your code as an 8-character hex string, for example: `#AA66DD1C`. If you haven't seen an 8-character code before, the final two characters denote the opacity of the color.
 
 **Properties:**
 
@@ -437,7 +437,7 @@ The chosen color is provided to your code as a 6-character hex string, for examp
 | type        |   yes    | Set to `color`                                                                          |
 | text        |   yes    | A short descriptive text shown on left of the color picker. It is also used as the title of the page shown when picking colors. |
 | key         |   yes    | The variable in your code the color picker should map onto                              |
-| default     |   yes    | Default value of the color picker. This must be a 6-character hex code, prefixed by `#` |
+| default     |   yes    | Default value of the color picker. This must be a 6 or 8 character hex code, prefixed by `#` |
 
 **Example:**
 
