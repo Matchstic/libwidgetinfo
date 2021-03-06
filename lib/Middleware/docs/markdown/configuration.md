@@ -39,6 +39,8 @@ An example widget that shows how to use every possible field, and access them in
 
 ### `options`
 
+**Available in Xen HTML 2.0~beta8 or newer - not yet released**
+
 The `options` key is where you specify configuration for your widget, that is then shown to the user when applying your widget. This is designed to be flexible - you can even specify nested pages of settings for organisation if you need to.
 
 Here's an idea of what you can build:
@@ -97,6 +99,12 @@ Notice how the `key` property of the switch matches up to the code.
 
 <hr />
 
+Following is all possible setting types you can use in your configuration.
+
+Please note that the examples provided are everything you need to paste inside your own `options` key of `config.json`. If in doubt of how to use them, refer to the [example widget](https://incendo.ws/files/config-example-widget.zip).
+
+<hr />
+
 #### **`title`**
 
 The `title` row lets you place a title above one or more other rows.
@@ -112,23 +120,10 @@ The `title` row lets you place a title above one or more other rows.
 
 ```json
 {
-    "name": "Config Example",
-    "options": [
-        {
-            "type": "title",
-            "text": "Text of the title"
-        },
-        {
-            "type": "switch",
-            "text": "Switch input",
-            "default": true,
-            "key": "switchOne"
-        }
-    ]
+    "type": "title",
+    "text": "Text of the title"
 }
 ```
-
-*An additional switch row is added here to give some context of how it'll look in real-world usage.*
 
 **Screenshot:**
 
@@ -153,23 +148,10 @@ The `comment` row is a way to add informative text below a row. This helps users
 
 ```json
 {
-    "name": "Config Example",
-    "options": [
-        {
-            "type": "switch",
-            "text": "Switch input",
-            "default": true,
-            "key": "switchOne"
-        },
-        {
-            "type": "comment",
-            "text": "Some super informative text about something.\n\nThis line is rendered as a new paragraph below the previous one!"
-        }
-    ]
+    "type": "comment",
+    "text": "Some super informative text about something.\n\nThis line is rendered as a new paragraph below the previous one!"
 }
 ```
-
-*An additional switch row is added here to give some context of how it'll look in real-world usage.*
 
 **Screenshot:**
 
@@ -195,14 +177,9 @@ The `link` row is a way to add links to websites and apps into your widget setti
 
 ```json
 {
-    "name": "Config Example",
-    "options": [
-        {
-            "type": "link",
-            "text": "Link to Google",
-            "url": "https://google.com"
-        }
-    ]
+    "type": "link",
+    "text": "Link to Google",
+    "url": "https://google.com"
 }
 ```
 
@@ -228,28 +205,9 @@ Note: if you place multiple `gap` rows together, they will be condensed down int
 
 ```json
 {
-    "name": "Config Example",
-    "options": [
-        {
-            "type": "switch",
-            "text": "Switch input",
-            "default": true,
-            "key": "switchOne"
-        },
-        {
-            "type": "gap",
-        },
-        {
-            "type": "switch",
-            "text": "Another switch",
-            "default": false,
-            "key": "switchTwo"
-        }
-    ]
+    "type": "gap",
 }
 ```
-
-*Two additional switch rows are added here to give some context of how it'll look in real-world usage*
 
 **Screenshot:**
 
@@ -276,15 +234,10 @@ The `switch` row allows you to ask the user for a `true` or `false` state on a v
 
 ```json
 {
-    "name": "Config Example",
-    "options": [
-        {
-            "type": "switch",
-            "text": "Switch input",
-            "default": true,
-            "key": "switchVariable"
-        }
-    ]
+    "type": "switch",
+    "text": "Switch input",
+    "default": true,
+    "key": "switchVariable"
 }
 ```
 
@@ -319,15 +272,10 @@ The `number` row displays an input box that the user can type a number into. The
 
 ```json
 {
-    "name": "Config Example",
-    "options": [
-        {
-            "type": "number",
-            "text": "Number input",
-            "default": 1,
-            "key": "numberVariable"
-        }
-    ]
+    "type": "number",
+    "text": "Number input",
+    "default": 1,
+    "key": "numberVariable"
 }
 ```
 
@@ -363,6 +311,7 @@ Auto-correct is disabled on the keyboard, and the first character will be capita
 
 **Example:**
 
+Full `config.json` to demonstrate different usages:
 ```json
 {
     "name": "Config Example",
@@ -402,7 +351,9 @@ Auto-correct is disabled on the keyboard, and the first character will be capita
 }
 ```
 
-*This example includes all the possible `mode` variations - you only need one text row per variable.*
+This example includes all the possible `mode` variations - you only need one text row per variable.
+
+**Copy the relevant block for your needs, not the entire example!**
 
 **Screenshot:**
 
@@ -451,17 +402,12 @@ Selected values will usually be an arbitrary number of decimal places, but are d
 
 ```json
 {
-    "name": "Config Example",
-    "options": [
-        {
-            "type": "slider",
-            "min": 0.0,
-            "max": 1.0,
-            "text": "Slider input",
-            "default": 1.0,
-            "key": "sliderVariable"
-        }
-    ]
+    "type": "slider",
+    "min": 0.0,
+    "max": 1.0,
+    "text": "Slider input",
+    "default": 1.0,
+    "key": "sliderVariable"
 }
 ```
 
@@ -497,15 +443,10 @@ The chosen color is provided to your code as a 6-character hex string, for examp
 
 ```json
 {
-    "name": "Config Example",
-    "options": [
-        {
-            "type": "color",
-            "text": "Color input",
-            "default": "#FFFFFF",
-            "key": "colorSetting",
-        }
-    ]
+    "type": "color",
+    "text": "Color input",
+    "default": "#FFFFFF",
+    "key": "colorSetting",
 }
 ```
 
@@ -524,7 +465,9 @@ document.getElementById('thing').style.backgroundColor = config.colorSetting;
 
 #### **`option`**
 
-The `option` row gives you the capability to show a multiselect dialog, with pre-defined options. This is then shown to the user as a list of options to tap between.
+The `option` row gives you the capability to show a selection dialog, with pre-defined options. This is then shown to the user as a list of options to tap between.
+
+The result is a single selection; it does not support multiple selection.
 
 This supports setting a variable that expects strings, or numbers.
 
@@ -541,6 +484,7 @@ This supports setting a variable that expects strings, or numbers.
 
 **Example:**
 
+Full `config.json` to demonstrate different usages:
 ```json
 {
     "name": "Config Example",
@@ -587,13 +531,16 @@ This supports setting a variable that expects strings, or numbers.
                     "text": "Down",
                     "value": "down"
                 }
-            ]
+            ],
+            "comment": "Pick a direction from the list above"
         }
     ]
 }
 ```
 
 This example shows how the `option` row can work with both strings and numbers. Pay attention to the `default` key in either of the two rows, and notice how it always corresponds to a `value` on any of the provided `options`.
+
+**Copy the relevant block for your needs, not the entire example!**
 
 **Video:**
 
@@ -645,40 +592,26 @@ It follows the same layout as the top-level `options` field of `config.json`.
 
 ```json
 {
-    "name": "Config Example",
+    "type": "page",
+    "text": "Another page",
     "options": [
         {
-            "type": "text",
-            "text": "Text input",
-            "default": "",
-            "key": "textVariable",
-            "placeholder": "Example"
+            "type": "title",
+            "text": "Second page"
         },
         {
-            "type": "page",
-            "text": "Another page",
-            "options": [
-                {
-                    "type": "title",
-                    "text": "Second page"
-                },
-                {
-                    "type": "switch",
-                    "text": "Switch input 2",
-                    "default": true,
-                    "key": "switchTwo"
-                },
-                {
-                    "type": "comment",
-                    "text": "This is an example comment on a second page"
-                }
-            ]
+            "type": "switch",
+            "text": "Switch input 2",
+            "default": true,
+            "key": "switchTwo"
+        },
+        {
+            "type": "comment",
+            "text": "This is an example comment on a second page"
         }
     ]
 }
 ```
-
-This example has an extra text input field above the `page` row, and a few rows inside the `options` of the `page` row; a more real-world use case.
 
 **Video:**
 
