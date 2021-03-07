@@ -478,7 +478,7 @@ This supports setting a variable that expects strings, or numbers.
 | type        |   yes    | Set to `option`                                                                          |
 | text        |   yes    | A short descriptive text shown on left of the option picker. It is also used as the title of the page shown when picking between options. |
 | key         |   yes    | The variable in your code the option picker should map onto                              |
-| default     |   yes    | Default value of the color picker. This can be either a string or number, but needs to match any of the `value` fields inside the `options` property |
+| default     |   yes    | Default value of the option picker. This can be either a string or number, but needs to match any of the `value` fields inside the `options` property |
 | options     |   yes    | A pre-defined array of options the user can choose between. Each entry follows the scheme:<br/><br/>• `text` - the text shown to the user to represent this option<br/>• `value` - the value (either a string or number) that this option represents. If this option is selected, this field gets passed into your code |
 | comment     |    no    | A comment that is displayed below the pre-defined array of options. Similarly to the `comment` type, you can use `\n` to create newlines in your comment. |
 
@@ -569,6 +569,68 @@ switch (config.optionExampleString) {
         break;
     case 'down':
         break;
+}
+```
+
+<hr />
+
+#### **`multi`**
+
+The `multi` row provides an interface where users can select multiple items, and arrange them in order.
+
+The result is an array of the selected items, as ordered by the user. Both strings and numbers are supported as output values inside this array.
+
+**Properties:**
+
+| Property    | Required | Usage                                                                                   |
+|-------------|----------|-----------------------------------------------------------------------------------------|
+| type        |   yes    | Set to `multi`                                                                          |
+| text        |   yes    | A short descriptive text shown on left of the multi picker. It is also used as the title of the page shown when ordering items. |
+| key         |   yes    | The variable in your code the multi picker should map onto                              |
+| default     |   yes    | Default value of the multi picker. This is an array, with contents being either a string or number; these need to match any of the `value` fields inside the `options` property |
+| options     |   yes    | An array of options the user can choose between. Each entry follows the scheme:<br/><br/>• `text` - the text shown to the user to represent this option<br/>• `value` - the value (either a string or number) that this option represents. If this option is selected, this field gets passed into your code in the resultant array |
+
+**Example:**
+
+```json
+{
+    "default" : [ "n", "e" ],
+    "key" : "multiExample",
+    "type" : "multi",
+    "options" : [
+        {
+            "value" : "n",
+            "text" : "North"
+        },
+        {
+            "value" : "s",
+            "text" : "South"
+        },
+        {
+            "value" : "e",
+            "text" : "East"
+        },
+        {
+            "value" : "w",
+            "text" : "West"
+        }
+    ],
+    "text" : "Multiselect input",
+}
+```
+
+**Video:**
+
+![Multi example](multi.gif)
+
+**Usage in code:**
+
+```js
+// Array is ordered by user's choice.
+
+// Check if a given property is in the array given to your code
+if (config.multiExample.includes('s')) {
+    // User's choice contains the value representing 'South'
 }
 ```
 
