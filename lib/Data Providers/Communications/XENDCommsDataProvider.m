@@ -20,9 +20,9 @@
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #import <objc/runtime.h>
 
-// Whilst the internal state updates every 5 seconds, this does not result
+// Whilst the internal state updates every 10 seconds, this does not result
 // in widget updates unless data actually changes.
-#define UPDATE_INTERVAL 5
+#define UPDATE_INTERVAL 10
 
 @interface XENDCommsDataProvider ()
 @property (nonatomic, strong) NSTimer *updateTimer;
