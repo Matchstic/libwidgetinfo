@@ -230,49 +230,190 @@
     if (![self isSpringBoard]) return defaultData;
     
     @try {
-        BluetoothManager *bluetoothManager = [objc_getClass("BluetoothManager") sharedInstance];
-        
         BOOL enabled = NO;
         BOOL scanning = NO;
         BOOL discoverable = NO;
         NSMutableArray *devices = [NSMutableArray new];
         
-        if ([bluetoothManager respondsToSelector:@selector(enabled)])
-            enabled = [bluetoothManager enabled];
-        
-        if ([bluetoothManager respondsToSelector:@selector(deviceScanningInProgress)])
-            scanning = [bluetoothManager deviceScanningInProgress];
-        
-        if ([bluetoothManager respondsToSelector:@selector(isDiscoverable)])
-            discoverable = [bluetoothManager isDiscoverable];
-        
-        if ([bluetoothManager respondsToSelector:@selector(connectedDevices)]) {
-            NSArray *connectedDevices = [bluetoothManager connectedDevices];
+        // BluetoothManager
+        {
+            BluetoothManager *bluetoothManager = [objc_getClass("BluetoothManager") sharedInstance];
             
-            for (BluetoothDevice *device in connectedDevices) {
-                @try {
-                    NSString *name = [device name];
-                    NSString *address = [device address];
-                    int batteryLevel = [device batteryLevel];
-                    BOOL supportsBatteryLevel = [device supportsBatteryLevel];
-                    BOOL isAccessory = [device isAccessory];
-                    BOOL isAppleAudioDevice = [device isAppleAudioDevice];
-                    int minorClass = [device minorClass];
-                    int majorClass = [device majorClass];
-                    
-                    [devices addObject:@{
-                        @"name": [self escapeString:name],
-                        @"address": address,
-                        @"battery": @(batteryLevel),
-                        @"supportsBattery": @(supportsBatteryLevel),
-                        @"isAccessory": @(isAccessory),
-                        @"isAppleAudioDevice": @(isAppleAudioDevice),
-                        @"minorClass": @(minorClass),
-                        @"majorClass": @(majorClass)
-                    }];
-                } @catch (NSException *e) {
-                    continue;
+            if ([bluetoothManager respondsToSelector:@selector(enabled)])
+                enabled = [bluetoothManager enabled];
+            
+            if ([bluetoothManager respondsToSelector:@selector(deviceScanningInProgress)])
+                scanning = [bluetoothManager deviceScanningInProgress];
+            
+            if ([bluetoothManager respondsToSelector:@selector(isDiscoverable)])
+                discoverable = [bluetoothManager isDiscoverable];
+            
+            if ([bluetoothManager respondsToSelector:@selector(connectedDevices)]) {
+                NSArray *connectedDevices = [bluetoothManager connectedDevices];
+                
+                for (BluetoothDevice *device in connectedDevices) {
+                    @try {
+                        NSString *name = [device name];
+                        NSString *address = [device address];
+                        int batteryLevel = [device batteryLevel];
+                        BOOL supportsBatteryLevel = [device supportsBatteryLevel];
+                        BOOL isAccessory = [device isAccessory];
+                        BOOL isAppleAudioDevice = [device isAppleAudioDevice];
+                        int minorClass = [device minorClass];
+                        int majorClass = [device majorClass];
+                        
+                        [devices addObject:@{
+                            @"name": [self escapeString:name],
+                            @"address": address,
+                            @"battery": @(batteryLevel),
+                            @"supportsBattery": @(supportsBatteryLevel),
+                            @"isAccessory": @(isAccessory),
+                            @"isAppleAudioDevice": @(isAppleAudioDevice),
+                            @"minorClass": @(minorClass),
+                            @"majorClass": @(majorClass)
+                        }];
+                    } @catch (NSException *e) {
+                        continue;
+                    }
                 }
+            }
+        }
+        
+        // BCBatteryDeviceController for things like AirPods and the Apple Watch
+        {
+            BCBatteryDeviceController *batteryDeviceController = [objc_getClass("BCBatteryDeviceController") sharedInstance];
+            
+            // Likely takes some time due to sync-ness
+            NSArray *batteryDevices = [batteryDeviceController connectedDevices];
+            
+            // accessoryIdentifier will match to Bluetooth device address for non-Apple devices
+            // Use this to filter out already present things
+            
+            for (BCBatteryDevice *device in batteryDevices) {
+                // Ignore internal battery
+                if ([device.groupName isEqualToString:@"InternalBattery-0"]) continue;
+                
+                // Only ask for info about devices on transportType 3 (Bluetooth)
+                if (device.transportType != 3) continue;
+                
+                BOOL matched = NO;
+                
+                // Available on iOS 11 and later
+                if ([device respondsToSelector:@selector(accessoryIdentifier)]) {
+                    NSString *accessoryIdentifier = device.accessoryIdentifier;
+                    for (NSDictionary *item in devices) {
+                        if ([[item objectForKey:@"address"] isEqualToString:accessoryIdentifier]) matched = YES;
+                    }
+                }
+                
+                // Test against name to catch any stragglers
+                NSString *name = device.name;
+                for (NSDictionary *item in devices) {
+                    if ([[item objectForKey:@"name"] isEqualToString:name]) matched = YES;
+                }
+                
+                if (matched) continue;
+                
+                NSString *address = @"unknown";
+                int batteryLevel = device.percentCharge;
+                BOOL supportsBatteryLevel = YES;
+                BOOL isAccessory = YES;
+                
+                int minorClass = 0;
+                int majorClass = 0;
+                BOOL isAppleAudioDevice = NO;
+                                
+                if ([device respondsToSelector:@selector(accessoryCategory)]) {
+                    switch (device.accessoryCategory) {
+                        case 1: {
+                            // Speaker
+                            majorClass = 1024;
+                            minorClass = 0x14;
+                            
+                            isAppleAudioDevice = device.vendor == 1;
+                            break;
+                        }
+                        case 2: {
+                            // Headphones or Audio Battery Case
+                            majorClass = 1024;
+                            minorClass = 0x1C;
+                            
+                            isAppleAudioDevice = device.vendor == 1;
+                            break;
+                        }
+                        case 3: {
+                            // watch
+                            majorClass = 1792;
+                            minorClass = 0x18;
+                            
+                            break;
+                        }
+                        case 4: {
+                            // Battery Case
+                            // skipped
+                            break;
+                        }
+                        case 5: {
+                            // Keyboard
+                            majorClass = 1280;
+                            minorClass = 0x40;
+                            
+                            break;
+                        }
+                        case 6: {
+                            // Trackpad
+                            majorClass = 1280;
+                            minorClass = 0x80;
+                            
+                            break;
+                        }
+                        case 7: {
+                            // Pencil
+                            majorClass = 1280;
+                            minorClass = 0x9C;
+                            
+                            break;
+                        }
+                        case 8: {
+                            // Game Controller
+                            majorClass = 1280;
+                            minorClass = 0x88;
+                            
+                            break;
+                        }
+                        case 9: {
+                            // Mouse
+                            majorClass = 1280;
+                            minorClass = 0x80;
+                            
+                            break;
+                        }
+                        case 10: {
+                            // Hearing Aid
+                            majorClass = 1024;
+                            minorClass = 0x8;
+                            
+                            break;
+                        }
+                    }
+                } else {
+                    // Always as headphones
+                    minorClass = 1024;
+                    majorClass = 0x1;
+                    
+                    isAppleAudioDevice = device.vendor == 1;
+                }
+                
+                [devices addObject:@{
+                    @"name": [self escapeString:name],
+                    @"address": address,
+                    @"battery": @(batteryLevel),
+                    @"supportsBattery": @(supportsBatteryLevel),
+                    @"isAccessory": @(isAccessory),
+                    @"isAppleAudioDevice": @(isAppleAudioDevice),
+                    @"minorClass": @(minorClass),
+                    @"majorClass": @(majorClass)
+                }];
             }
         }
         

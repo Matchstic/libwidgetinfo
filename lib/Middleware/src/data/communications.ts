@@ -121,6 +121,11 @@ export interface CommunicationsBluetoothDevice {
      * This is linked to the majorClass, to help further identify a device.
      * There's far too many possibilites to list here, so its recommended
      * to look at the Bluetooth specification for possible values.
+     *
+     * Some notable combinations:
+     *
+     * - Apple Pencil -> majorClass 1280, minorClass 156
+     * - Apple Watch -> majorClass 1792, minorClass 24
      */
     minorClass: number;
 }

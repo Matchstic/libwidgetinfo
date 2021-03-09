@@ -54,6 +54,8 @@
 - (bool)supportsBatteryLevel;
 - (unsigned int)majorClass;
 - (unsigned int)minorClass;
+
+- (id)accessoryInfo;
 @end
 
 @interface BluetoothManager : NSObject
@@ -67,6 +69,41 @@
 // iOS 11+
 @interface SBAirplaneModeController : NSObject
 @property(nonatomic, getter=isInAirplaneMode) BOOL inAirplaneMode;
+@end
+
+
+@interface BCBatteryDevice : NSObject
+@property (nonatomic,copy) NSString * identifier;
+@property (nonatomic,copy) NSString * name;
+@property (assign,nonatomic) long long percentCharge;
+@property (assign,getter=isConnected,nonatomic) BOOL connected;
+@property (assign,getter=isCharging,nonatomic) BOOL charging;
+@property (assign,getter=isInternal,nonatomic) BOOL internal;
+@property (assign,getter=isPowerSource,nonatomic) BOOL powerSource;
+@property (assign,nonatomic) BOOL approximatesPercentCharge;
+@property (assign,nonatomic) unsigned long long parts;
+@property (assign,getter=isWirelesslyCharging,nonatomic) BOOL wirelesslyCharging;
+@property (nonatomic,copy) NSString * groupName;
+@property (nonatomic,copy,readonly) NSString * matchIdentifier;
+@property (assign,nonatomic) long long transportType;
+@property (assign,nonatomic) long long powerSourceState;
+@property (assign,getter=isFake,nonatomic) BOOL fake;
+@property (assign,getter=isBatterySaverModeActive,nonatomic) BOOL batterySaverModeActive;
+@property (assign,getter=isLowBattery,nonatomic) BOOL lowBattery;
+@property (nonatomic,copy) NSString * accessoryIdentifier;
+@property (assign,nonatomic) unsigned long long accessoryCategory;
+@property (nonatomic,copy) NSString * modelNumber;
+@property (nonatomic,readonly) long long vendor;
+@property (nonatomic,readonly) long long productIdentifier;
+@end
+
+@interface BCBatteryDeviceController : NSObject
+@property (nonatomic,copy,readonly) NSArray <BCBatteryDevice*>* connectedDevices;
++ (id)sharedInstance;
+- (NSArray *)connectedDevices;
+- (void)addBatteryDeviceObserver:(id)arg1 queue:(id)arg2;
+- (void)removeBatteryDeviceObserver:(id)arg1 ;
+- (void)connectedDevicesWithResult:(/*^block*/id)arg1;
 @end
 
 #endif /* XIStatusBarHeaders_h */
