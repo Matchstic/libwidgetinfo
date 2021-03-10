@@ -127,7 +127,7 @@
 }
 
 - (void)_powerInfoChanged:(NSNotification*)notification {
-    BOOL currentLowPowerMode = [self.cachedDynamicProperties objectForKey:@"isLowPowerModeEnabled"];
+    BOOL currentLowPowerMode = [[self.cachedDynamicProperties objectForKey:@"isLowPowerModeEnabled"] boolValue];
     BOOL newLowPowerMode = [self _isLowPowerModeEnabled];
     
     if (currentLowPowerMode != newLowPowerMode) {
