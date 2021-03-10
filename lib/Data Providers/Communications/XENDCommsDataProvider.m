@@ -296,25 +296,32 @@
                 // Only ask for info about devices on transportType 3 (Bluetooth)
                 if (device.transportType != 3) continue;
                 
-                BOOL matched = NO;
+                // If the previous API returned information, grab it here
+                NSMutableDictionary *existingDevice = nil;
+                NSInteger existingIndex = -1;
                 
                 // Available on iOS 11 and later
                 if ([device respondsToSelector:@selector(accessoryIdentifier)]) {
                     NSString *accessoryIdentifier = device.accessoryIdentifier;
                     for (NSDictionary *item in devices) {
-                        if ([[item objectForKey:@"address"] isEqualToString:accessoryIdentifier]) matched = YES;
+                        if ([[item objectForKey:@"address"] isEqualToString:accessoryIdentifier]) {
+                            existingDevice = [item mutableCopy];
+                            existingIndex = [devices indexOfObject:item];
+                            break;
+                        }
                     }
                 }
                 
                 // Test against name to catch any stragglers
                 NSString *name = device.name;
                 for (NSDictionary *item in devices) {
-                    if ([[item objectForKey:@"name"] isEqualToString:name]) matched = YES;
+                    if ([[item objectForKey:@"name"] isEqualToString:name]){
+                        existingDevice = [item mutableCopy];
+                        existingIndex = [devices indexOfObject:item];
+                        break;
+                    }
                 }
                 
-                if (matched) continue;
-                
-                NSString *address = @"unknown";
                 int batteryLevel = device.percentCharge;
                 BOOL supportsBatteryLevel = YES;
                 BOOL isAccessory = YES;
@@ -404,16 +411,30 @@
                     isAppleAudioDevice = device.vendor == 1;
                 }
                 
-                [devices addObject:@{
-                    @"name": [self escapeString:name],
-                    @"address": address,
-                    @"battery": @(batteryLevel),
-                    @"supportsBattery": @(supportsBatteryLevel),
-                    @"isAccessory": @(isAccessory),
-                    @"isAppleAudioDevice": @(isAppleAudioDevice),
-                    @"minorClass": @(minorClass),
-                    @"majorClass": @(majorClass)
-                }];
+                if (!existingDevice) {
+                    existingDevice = [@{
+                        @"name": [self escapeString:name],
+                        @"address": @"unknown",
+                        @"battery": @(batteryLevel),
+                        @"supportsBattery": @(supportsBatteryLevel),
+                        @"isAccessory": @(isAccessory),
+                        @"isAppleAudioDevice": @(isAppleAudioDevice),
+                        @"minorClass": @(minorClass),
+                        @"majorClass": @(majorClass)
+                    } mutableCopy];
+                } else {
+                    // Update existing device - assume minor/major class is correct?
+                    [existingDevice setObject:[self escapeString:name] forKey:@"name"];
+                    [existingDevice setObject:@(batteryLevel) forKey:@"battery"];
+                    [existingDevice setObject:@YES forKey:@"supportsBattery"];
+                    [existingDevice setObject:@YES forKey:@"isAccessory"];
+                    [existingDevice setObject:@(isAppleAudioDevice) forKey:@"isAppleAudioDevice"];
+                    
+                    // Remove existing item to avoid duplicates
+                    [devices removeObjectAtIndex:existingIndex];
+                }
+                
+                [devices addObject:existingDevice];
             }
         }
         
